@@ -18,10 +18,9 @@
     "qiskit",
     "ibm"
   ],
-  "dependencies": {
-    "node-red": "^1.3.5"
-  },
-  "node-red" : {
-    "nodes": {}
+  "node-red": {
+    "nodes": {
+      "quantum-circuit": "terra/quantum-circuit.js"
+    }
   }
 }
