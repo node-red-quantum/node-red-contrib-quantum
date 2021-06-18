@@ -20,7 +20,9 @@
   ],
   "node-red": {
     "nodes": {
-      "quantum-circuit": "terra/quantum-circuit.js"
+      "quantum-circuit": "terra/quantum-circuit/quantum-circuit.js",
+      "quantum-register": "terra/quantum-register/quantum-register.js",
+      "classical-register": "terra/classical-register/classical-register.js"
     }
   }
 }
