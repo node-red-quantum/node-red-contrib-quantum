@@ -124,3 +124,8 @@ dist/
 tmp/
 temp/
 
+# Linting config
+.eslintrc.*
+
+# Package files
+package-lock.json
