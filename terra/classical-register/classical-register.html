@@ -1,0 +1,31 @@
+<script type="text/javascript">
+  RED.nodes.registerType("classical-register", {
+    category: "quantum",
+    color: "#8A3FFC",
+    defaults: {
+      name: { value: "" },
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "function.svg",
+    paletteLabel: "classical register",
+    label: function () {
+      return this.name || this.paletteLabel;
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="classical-register">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+</script>
+
+<script type="text/html" data-help-name="classical-register">
+  <p>
+    Implement a classical register.
+    <br />
+    Create a new generic register.
+  </p>
+</script>
