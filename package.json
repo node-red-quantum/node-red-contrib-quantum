@@ -22,7 +22,8 @@
     "nodes": {
       "quantum-circuit": "terra/quantum-circuit/quantum-circuit.js",
       "quantum-register": "terra/quantum-register/quantum-register.js",
-      "classical-register": "terra/classical-register/classical-register.js"
+      "classical-register": "terra/classical-register/classical-register.js",
+      "aer-simulator": "aer/aer-simulator/aer-simulator.js"
     }
   }
 }
