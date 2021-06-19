@@ -25,5 +25,8 @@
       "classical-register": "terra/classical-register/classical-register.js",
       "aer-simulator": "aer/aer-simulator/aer-simulator.js"
     }
+  },
+  "dependencies": {
+    "python-shell": "^3.0.0"
   }
 }
