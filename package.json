@@ -19,7 +19,9 @@
     "ibm"
   ],
   "scripts": {
-    "start": "node-red || npx node-red"
+    "start": "node-red || npx node-red",
+    "setup": "./setup.sh",
+    "clean": "rm -r venv/"
   },
   "dependencies": {
     "python-shell": "^3.0.0"
