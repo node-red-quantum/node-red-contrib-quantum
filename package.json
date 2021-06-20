@@ -7,7 +7,7 @@
   "homepage": "https://github.com/louislefevre/node-red-contrib-quantum#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/louislefevre/node-red-contrib-quantum"
+    "url": "https://github.com/louislefevre/node-red-contrib-quantum.git"
   },
   "bugs": {
     "url": "https://github.com/louislefevre/node-red-contrib-quantum/issues"
@@ -18,13 +18,8 @@
     "qiskit",
     "ibm"
   ],
-  "node-red": {
-    "nodes": {
-      "quantum-circuit": "terra/quantum-circuit/quantum-circuit.js",
-      "quantum-register": "terra/quantum-register/quantum-register.js",
-      "classical-register": "terra/classical-register/classical-register.js",
-      "aer-simulator": "aer/aer-simulator/aer-simulator.js"
-    }
+  "scripts": {
+    "start": "node-red || npx node-red"
   },
   "dependencies": {
     "python-shell": "^3.0.0"
@@ -32,5 +27,13 @@
   "devDependencies": {
     "eslint": "^7.29.0",
     "eslint-config-google": "^0.14.0"
+  },
+  "node-red": {
+    "nodes": {
+      "quantum-circuit": "terra/quantum-circuit/quantum-circuit.js",
+      "quantum-register": "terra/quantum-register/quantum-register.js",
+      "classical-register": "terra/classical-register/classical-register.js",
+      "aer-simulator": "aer/aer-simulator/aer-simulator.js"
+    }
   }
 }
