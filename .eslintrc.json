@@ -14,6 +14,6 @@
     "rules": {
         "require-jsdoc":"off",
         "no-unused-vars": "warn",
-        "max-len": ["warn", { "code": 120, "comments": 80, "tabWidth": 2 }]
+        "max-len": ["warn", { "code": 120, "comments": 100, "tabWidth": 2 }]
     }
 }
