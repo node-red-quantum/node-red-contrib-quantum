@@ -21,7 +21,8 @@
   "scripts": {
     "start": "node-red || npx node-red",
     "setup": "bin/setup.sh",
-    "clean": "rm -r venv/"
+    "clean": "rm -r venv/",
+    "lint": "eslint --fix --ignore-path .gitignore ."
   },
   "dependencies": {
     "app-root-path": "^3.0.0",
