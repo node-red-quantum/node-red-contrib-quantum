@@ -24,6 +24,7 @@
     "clean": "rm -r venv/"
   },
   "dependencies": {
+    "app-root-path": "^3.0.0",
     "python-shell": "^3.0.0"
   },
   "devDependencies": {
