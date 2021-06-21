@@ -33,10 +33,10 @@
   },
   "node-red": {
     "nodes": {
-      "quantum-circuit": "terra/quantum-circuit/quantum-circuit.js",
-      "quantum-register": "terra/quantum-register/quantum-register.js",
-      "classical-register": "terra/classical-register/classical-register.js",
-      "aer-simulator": "aer/aer-simulator/aer-simulator.js"
+      "quantum-circuit": "quantum/terra/quantum-circuit/quantum-circuit.js",
+      "quantum-register": "quantum/terra/quantum-register/quantum-register.js",
+      "classical-register": "quantum/terra/classical-register/classical-register.js",
+      "aer-simulator": "quantum/aer/aer-simulator/aer-simulator.js"
     }
   }
 }
