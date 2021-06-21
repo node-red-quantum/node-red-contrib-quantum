@@ -20,7 +20,7 @@
   ],
   "scripts": {
     "start": "node-red || npx node-red",
-    "setup": "./setup.sh",
+    "setup": "bin/setup.sh",
     "clean": "rm -r venv/"
   },
   "dependencies": {
