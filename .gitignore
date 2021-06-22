@@ -125,13 +125,14 @@ temp/
 .eslintrc.js
 .eslintrc.yml
 
-# Package files
-package-lock.json
+### IntelliJ ###
+.idea/
+out/
 
+### Miscellaneous ###
 # Virtual environment folders
 venv/
 env/
 
-# IntelliJ
-.idea/
-out/
+# Local development notes
+dev/
