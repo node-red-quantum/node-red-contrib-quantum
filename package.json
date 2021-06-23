@@ -18,6 +18,11 @@
     "qiskit",
     "ibm"
   ],
+  "files": [
+    "bin/",
+    "quantum/",
+    "AUTHORS"
+  ],
   "scripts": {
     "start": "node-red || npx node-red",
     "setup": "bin/setup.sh",
