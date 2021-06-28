@@ -16,3 +16,8 @@ Quantum computing functionality for Node-RED.
   `http://127.0.0.1:1880/`  
 - Before committing any JavaScript code, run the linting command:  
   `npm run lint`  
+
+## Creating Nodes
+- A basic template for new nodes has been setup in the [*template*](template/) directory.  
+- Simply copy the [*node-template*](template/node-template) directory to the appropriate location (usually one of the directories under [*quantum*](quantum/)), and rename every instance of "node-template", "node template", or "NodeTemplate" with the name of your new node (including the folder and file names).  
+- For the node to appear in Node-RED, it needs to be added to [*package.json*](package.json). Navigate to the file and locate the "node-red" key, and under "nodes" add the name of your new node and the path of its JavaScript file from root (e.g.`"new-node": "quantum/terra/new-node/new-node.js"`).  
