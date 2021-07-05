@@ -25,7 +25,7 @@ function writeInput(input) {
  * @param {Function} callback Callback function to invoke on the output message
 */
 function readOutput(callback) {
-  pythonProcess.stdout.once('data', function(data) {
+  pythonProcess.stdout.on('data', function(data) {
     callback(data);
   });
 }
@@ -36,7 +36,7 @@ function readOutput(callback) {
  * @param {Function} callback Callback function to invoke on the error message
 */
 function readError(callback) {
-  pythonProcess.stderr.once('data', function(data) {
+  pythonProcess.stderr.on('data', function(data) {
     if (data.startsWith('Python 3.') || (data.startsWith('...')) || data.startsWith('>>>')) {
       callback(null);
     } else {
