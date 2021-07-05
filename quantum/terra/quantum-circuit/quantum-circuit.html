@@ -1,19 +1,40 @@
 <script type="text/javascript">
   RED.nodes.registerType("quantum-circuit", {
     category: "quantum",
-    color: "#8A3FFC",
+    color: "#33B1FF",
     defaults: {
       name: { value: "" },
-      qubits: { value: 0 },
-      cbits: { value: 0 },
+      cbits: { value: "", required: false },
+      outputs: { value: "", required: true }
     },
     inputs: 1,
-    outputs: 1,
     icon: "function.svg",
     paletteLabel: "quantum circuit",
+
     label: function () {
       return this.name || "quantum circuit";
     },
+
+    oneditprepare: function() {
+
+      $(".circuit-structure-qubits").on("click", function() {
+        $(".circuit-structure-registers").removeClass("selected");
+        $(this).addClass("selected");
+
+        $(".registers").hide();
+        $(".qubits").show();
+        $(".cbits").show();
+      }),
+
+      $(".circuit-structure-registers").on("click", function() {
+        $(".circuit-structure-qubits").removeClass("selected");
+        $(this).addClass("selected");
+
+        $(".qubits").hide();
+        $(".cbits").hide();
+        $(".registers").show();
+      })
+    }
   });
 </script>
 
@@ -22,22 +43,32 @@
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
-
+  <br>
+  <h3>Quantum Circuit Structure</h3>
   <div class="form-row">
-    <label for="node-input-qubits"><i class="fa fa-tag"></i> Qubits</label>
-    <input type="text" id="node-input-qubits" placeholder="Qubits" />
+    <span class="circuit-structure-toggle">
+      <button type="button" class="red-ui-button toggle selected circuit-structure-registers">Registers & Qubits</button>
+      <button type="button" class="red-ui-button toggle circuit-structure-qubits">Qubits only</button>
+    </span>
   </div>
-
-  <div class="form-row">
-    <label for="node-input-cbits"><i class="fa fa-tag"></i> Classical Bits</label>
-    <input type="text" id="node-input-cbits" placeholder="Classical Bits" />
+  <div class="form-row registers">
+    <label for="node-input-number-registers"><i class="fa fa-tag"></i> Number of registers</label>
+    <input type="number" id="node-input-outputs">
+  </div>
+  <div class="form-row qubits" hidden>
+    <label for="node-input-number-qubits"><i class="fa fa-tag"></i> Number of qubits</label>
+    <input type="number" id="node-input-outputs">
+  </div>
+  <div class="form-row cbits" hidden>
+    <label for="node-input-number-cbits"><i class="fa fa-tag"></i> Number of classical bits</label>
+    <input type="number" id="node-input-cbits">
   </div>
 </script>
 
+
+
 <script type="text/html" data-help-name="quantum-circuit">
   <p>
-    Create a new circuit.
-    <br />
-    A circuit is a list of instructions bound to some registers.
+    <!-- Node documentation goes here. -->
   </p>
 </script>
