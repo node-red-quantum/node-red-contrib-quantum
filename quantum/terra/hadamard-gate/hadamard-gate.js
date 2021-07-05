@@ -1,10 +1,11 @@
-module.exports = function (RED) {
-    'use strict';
+module.exports = function(RED) {
+  'use strict';
 
-    function NodeTemplateNode(config) {
-        RED.nodes.createNode(this, config);
-        const node = this;
-    }
+  function NodeTemplateNode(config) {
+    RED.nodes.createNode(this, config);
+    const node = this;
+  }
 
-    RED.nodes.registerType('node-template', NodeTemplateNode);
+  RED.nodes.registerType('node-template', NodeTemplateNode);
 };
+  
