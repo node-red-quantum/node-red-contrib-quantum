@@ -6,7 +6,7 @@
       name: { value: "" },
       structure: { value: "", required: true },
       cbits: { value: "", required: true },
-      outputs: { value: "", required: true }
+      outputs: { value: "", required: true },
     },
     inputs: 1,
     icon: "function.svg",
@@ -15,10 +15,11 @@
       return this.name || "quantum circuit";
     },
 
-    oneditprepare: function() {
-
-      if (document.getElementById("node-input-structure").value == "qubits") {} 
-      else {document.getElementById("node-input-structure").value = "registers"}
+    oneditprepare: function () {
+      if (document.getElementById("node-input-structure").value == "qubits") {
+      } else {
+        document.getElementById("node-input-structure").value = "registers";
+      }
 
       if (document.getElementById("node-input-structure").value == "registers") {
         $(".circuit-structure-registers").addClass("selected");
@@ -31,24 +32,24 @@
         document.getElementById("number-outputs").innerHTML = "Number of qubits";
       }
 
-      $(".circuit-structure-qubits").on("click", function() {
+      $(".circuit-structure-qubits").on("click", function () {
         $(".circuit-structure-registers").removeClass("selected");
         $(this).addClass("selected");
         $(".cbits").show();
         document.getElementById("number-outputs").innerHTML = "Number of qubits";
         document.getElementById("node-input-structure").value = "qubits";
         document.getElementById("node-input-cbits").value = "";
-      })
+      });
 
-      $(".circuit-structure-registers").on("click", function() {
+      $(".circuit-structure-registers").on("click", function () {
         $(".circuit-structure-qubits").removeClass("selected");
         $(this).addClass("selected");
         $(".cbits").hide();
         document.getElementById("number-outputs").innerHTML = "Number of registers";
         document.getElementById("node-input-structure").value = "registers";
         document.getElementById("node-input-cbits").value = "1"; // Required node property
-      })
-    }
+      });
+    },
   });
 </script>
 
@@ -57,7 +58,7 @@
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
-  <br>
+  <br />
   <h3>Quantum Circuit Structure</h3>
   <div class="form-row">
     <span class="circuit-structure-toggle">
@@ -66,21 +67,19 @@
     </span>
   </div>
   <div class="form-row">
-    <label for="node-input-number-registers" id="number-outputs"><i class="fa fa-tag"></i>     </label>
-    <input type="number" min="1" id="node-input-outputs">
+    <label for="node-input-number-registers" id="number-outputs"><i class="fa fa-tag"></i> </label>
+    <input type="number" min="1" id="node-input-outputs" />
   </div>
   <div class="form-row cbits">
     <label for="node-input-number-cbits"><i class="fa"></i>Number of classical bits</label>
-    <input type="number" min="1" id="node-input-cbits">
+    <input type="number" min="1" id="node-input-cbits" />
   </div>
   <!-- Do not delete -->
   <div hidden>
-    <input type="text" id="node-input-structure"/>
+    <input type="text" id="node-input-structure" />
   </div>
   <!------------------->
 </script>
-
-
 
 <script type="text/html" data-help-name="quantum-circuit">
   <p>
