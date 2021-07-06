@@ -5,6 +5,7 @@ module.exports = function(RED) {
 
     // Creating node with properties and context 
     RED.nodes.createNode(this, config);
+    this.name = config.name;
     this.outputs = config.outputs;
     const globalContext = this.context().global;
     const node = this;
@@ -14,21 +15,21 @@ module.exports = function(RED) {
       // Appending Qiskit script to the 'script' global variable
       var qiskitScript = (
         "\nqr" + msg.payload.register.toString() + 
-        " = QuantumRegister(" + this.outputs.toString() + 
-        ", '" + (this.name || ("R" + msg.payload.register.toString())) + "')"
+        " = QuantumRegister(" + node.outputs.toString() + 
+        ", '" + (node.name || ("R" + msg.payload.register.toString())) + "')"
       );
       var oldScript = globalContext.get("script");
       globalContext.set("script", oldScript + qiskitScript);
 
       // Completing the 'structure' global array 
-      var structure = globalContext.get("structure");
+      var structure = globalContext.get("quantumCircuit.structure");
       structure[msg.payload.register] = {
         registerType: "quantum",
-        registerName: (this.name || ("R" + msg.payload.register.toString())),
+        registerName: (node.name || ("R" + msg.payload.register.toString())),
         registerVar: "qr" + msg.payload.register.toString(),
-        bits: this.outputs
+        bits: node.outputs
       };
-      globalContext.set("structure", structure);
+      globalContext.set("quantumCircuit.structure", structure);
       
       // Counting the number of registers that were set in the 'structure' array
       var count = 0;
@@ -61,8 +62,8 @@ module.exports = function(RED) {
       // Creating an array of messages to be sent 
       // Each message represents a different qubit
       var i = 0;
-      var output = new Array(this.outputs);
-      for (i=0; i<this.outputs; i++){
+      var output = new Array(node.outputs);
+      for (i=0; i<node.outputs; i++){
         output[i] = {
           topic: "Quantum Circuit",
           payload: {

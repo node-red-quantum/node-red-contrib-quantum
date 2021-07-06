@@ -5,6 +5,7 @@ module.exports = function(RED) {
 
     // Creating node with properties and context 
     RED.nodes.createNode(this, config);
+    this.name = config.name;
     this.classicalBits = config.classicalBits;
     const globalContext = this.context().global;
     const node = this;
@@ -14,21 +15,21 @@ module.exports = function(RED) {
       // Appending Qiskit script to the 'script' global variable
       var qiskitScript = (
         "\ncr" + msg.payload.register.toString() + 
-        " = ClassicalRegister(" + this.classicalBits.toString() + 
-        ", '" + (this.name || ("R" + msg.payload.register.toString())) + "')"
+        " = ClassicalRegister(" + node.classicalBits.toString() + 
+        ", '" + (node.name || ("R" + msg.payload.register.toString())) + "')"
       );
       var oldScript = globalContext.get("script");
       globalContext.set("script", oldScript + qiskitScript);
 
       // Completing the 'structure' global array
-      var structure = globalContext.get("structure");
+      var structure = globalContext.get("quantumCircuit.structure");
       structure[msg.payload.register] = {
         registerType: "classical",
-        registerName: (this.name || ("R" + msg.payload.register.toString())),
+        registerName: (node.name || ("R" + msg.payload.register.toString())),
         registerVar: "cr" + msg.payload.register.toString(),
-        bits: parseInt(this.classicalBits)
+        bits: parseInt(node.classicalBits)
       };
-      globalContext.set("structure", structure);
+      globalContext.set("quantumCircuit.structure", structure);
       
       // Counting the number of registers that were set in the 'structure' array
       var count = 0;
