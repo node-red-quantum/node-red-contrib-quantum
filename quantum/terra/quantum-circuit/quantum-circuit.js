@@ -1,7 +1,7 @@
 module.exports = function(RED) {
   'use strict';
 
-  const runShell = require('../../python-shell');
+  const shell = require('../../python-shell');
 
   function QuantumCircuitNode(config) {
     RED.nodes.createNode(this, config);
@@ -10,7 +10,7 @@ module.exports = function(RED) {
     const node = this;
 
     this.on('input', function(msg) {
-      runShell(__dirname, 'quantum-circuit.py', [node.qubits, node.cbits], function(err, output) {
+      shell.runScript(__dirname, 'quantum-circuit.py', [node.qubits, node.cbits], function(err, output) {
         if (err) throw err;
         msg.payload = output;
         node.send(msg);
