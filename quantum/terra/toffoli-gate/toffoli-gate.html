@@ -1,0 +1,27 @@
+<script type="text/javascript">
+  RED.nodes.registerType("toffoli-gate", {
+    category: "quantum",
+    color: "#8A3FFC",
+    defaults: {
+      name: { value: "" },
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "function.svg",
+    paletteLabel: "toffoli gate",
+    label: function () {
+      return this.name || "toffoli gate";
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="toffoli-gate">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+</script>
+
+<script type="text/html" data-help-name="toffoli-gate">
+  <p>Add a Toffoli Gate to the circuit.</p>
+</script>
