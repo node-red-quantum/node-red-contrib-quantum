@@ -17,19 +17,15 @@
 
     oneditprepare: function () {
       if (document.getElementById("node-input-structure").value == "qubits") {
+        $(".circuit-structure-qubits").addClass("selected");
+        $(".cbits").show();
+        document.getElementById("number-outputs").innerHTML = "Number of qubits";
       } else {
         document.getElementById("node-input-structure").value = "registers";
-      }
-
-      if (document.getElementById("node-input-structure").value == "registers") {
         $(".circuit-structure-registers").addClass("selected");
         $(".cbits").hide();
         document.getElementById("number-outputs").innerHTML = "Number of registers";
         document.getElementById("node-input-cbits").value = "1"; // Required node property
-      } else {
-        $(".circuit-structure-qubits").addClass("selected");
-        $(".cbits").show();
-        document.getElementById("number-outputs").innerHTML = "Number of qubits";
       }
 
       $(".circuit-structure-qubits").on("click", function () {
