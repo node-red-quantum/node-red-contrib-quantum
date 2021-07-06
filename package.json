@@ -46,7 +46,8 @@
       "quantum-circuit": "quantum/nodes/quantum-circuit/quantum-circuit.js",
       "quantum-register": "quantum/nodes/quantum-register/quantum-register.js",
       "classical-register": "quantum/nodes/classical-register/classical-register.js",
-      "aer-simulator": "quantum/nodes/aer-simulator/aer-simulator.js"
+      "aer-simulator": "quantum/nodes/aer-simulator/aer-simulator.js",
+      "execute": "quantum/nodes/execute/execute.js"
     }
   }
 }
