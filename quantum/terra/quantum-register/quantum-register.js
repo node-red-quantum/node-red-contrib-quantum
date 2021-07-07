@@ -86,7 +86,7 @@ module.exports = function(RED) {
 
         // Sending one qubit object per node output
         send(output);
-      } 
+      }
     });
   }
 
