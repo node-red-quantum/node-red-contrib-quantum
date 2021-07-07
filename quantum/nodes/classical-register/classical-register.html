@@ -4,9 +4,10 @@
     color: "#8A3FFC",
     defaults: {
       name: { value: "" },
+      classicalBits: { value: "", required: true },
     },
     inputs: 1,
-    outputs: 1,
+    outputs: 0,
     icon: "function.svg",
     paletteLabel: "classical register",
     label: function () {
@@ -19,6 +20,10 @@
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-number-bits"><i class="fa fa-tag"></i> Number of bits</label>
+    <input type="number" min="1" id="node-input-classicalBits" />
   </div>
 </script>
 
