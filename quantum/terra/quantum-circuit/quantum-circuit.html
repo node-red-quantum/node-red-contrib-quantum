@@ -1,7 +1,7 @@
 <script type="text/javascript">
   RED.nodes.registerType("quantum-circuit", {
     category: "quantum",
-    color: "#33B1FF",
+    color: "#C0C0C0",
     defaults: {
       name: { value: "" },
       structure: { value: "", required: true },
@@ -25,10 +25,18 @@
       }
     },
     inputs: 1,
-    icon: "function.svg",
+    icon: "font-awesome/fa-play-circle",
+    align: 'left',
     paletteLabel: "quantum circuit",
     label: function () {
       return this.name || "quantum circuit";
+    },
+    outputLabels: function(index) {
+      if (this.structure === 'qubits') {
+        return "qubit " + index;
+      } else {
+        return "register " + index;
+      }
     },
 
     oneditprepare: function () {
