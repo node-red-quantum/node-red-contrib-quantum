@@ -47,13 +47,13 @@ function readError(callback) {
 
 
 /**
- * Runs a Python script and returns collected messages.
+ * Runs a Python script file.
  * @param {string}   scriptPath Directory path to the script (excludes file name)
  * @param {string}   scriptName File name of the script
  * @param {string[]} args       Arguments to pass to the script
  * @param {Function} callback   Callback function to invoke with the script results
 */
-function runScript(scriptPath, scriptName, args, callback) {
+module.exports.runScript = function(scriptPath, scriptName, args, callback) {
   if (!fileSystem.existsSync(pythonPath)) {
     throw new Error('cannot resolve Python virtual environment - execute the "npm run setup" command');
   }
@@ -67,10 +67,21 @@ function runScript(scriptPath, scriptName, args, callback) {
   pythonShell.run(scriptName, options, callback);
 };
 
+/**
+ * Runs a string of Python code.
+ * @param {string}   code     Python code to be executed
+ * @param {string[]} args     Arguments to pass to the code
+ * @param {Function} callback Callback function to invoke with the code results
+*/
+module.exports.runString = function(code, args, callback) {
+  if (!fileSystem.existsSync(pythonPath)) {
+    throw new Error('cannot resolve Python virtual environment - execute the "npm run setup" command');
+  }
 
-module.exports = {
-  writeInput,
-  readOutput,
-  readError,
-  runScript,
+  const options = {
+    pythonPath: pythonPath,
+    args: args,
+  };
+
+  pythonShell.runString(code, options, callback);
 };

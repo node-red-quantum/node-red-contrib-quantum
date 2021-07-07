@@ -34,19 +34,20 @@
     "python-shell": "^3.0.0"
   },
   "devDependencies": {
-    "node-red": "^1.3.5",
     "eslint": "^7.29.0",
-    "eslint-config-google": "^0.14.0"
+    "eslint-config-google": "^0.14.0",
+    "node-red": "^1.3.5"
   },
   "engines": {
     "node": ">=12.0.0"
   },
   "node-red": {
     "nodes": {
-      "quantum-circuit": "quantum/terra/quantum-circuit/quantum-circuit.js",
-      "quantum-register": "quantum/terra/quantum-register/quantum-register.js",
-      "classical-register": "quantum/terra/classical-register/classical-register.js",
-      "aer-simulator": "quantum/aer/aer-simulator/aer-simulator.js"
+      "quantum-circuit": "quantum/nodes/quantum-circuit/quantum-circuit.js",
+      "quantum-register": "quantum/nodes/quantum-register/quantum-register.js",
+      "classical-register": "quantum/nodes/classical-register/classical-register.js",
+      "aer-simulator": "quantum/nodes/aer-simulator/aer-simulator.js",
+      "execute": "quantum/nodes/execute/execute.js"
     }
   }
 }
