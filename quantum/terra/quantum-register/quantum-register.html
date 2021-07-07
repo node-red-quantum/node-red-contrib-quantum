@@ -4,7 +4,15 @@
     color: "#8A3FFC",
     defaults: {
       name: { value: "" },
-      outputs: { value: "", required: true },
+      outputs: { 
+        value: "", 
+        required: true,
+        validate: function (x) {
+          x = parseInt(x);
+          if (Number.isInteger(x) && x > 0){return true} 
+          else {return false}
+        }
+      },
     },
     inputs: 1,
     icon: "function.svg",

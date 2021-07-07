@@ -5,13 +5,13 @@ module.exports = function(RED) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
     this.name = config.name;
-    this.outputs = config.outputs;
+    this.outputs = parseInt(config.outputs);
     const globalContext = this.context().global;
     const node = this;
     const output = new Array(node.outputs);
 
     this.on('input', function(msg, send, done) {
-      // Throws a node connection error if:
+      // Throw a connection error if:
       // - The user did not initialise the quantum circuit using the 'Quantum Circuit' node
       // - The user did not select the 'Registers & Bits' option in the 'Quantum Circuit' node
       // - The user connects the node incorrectly

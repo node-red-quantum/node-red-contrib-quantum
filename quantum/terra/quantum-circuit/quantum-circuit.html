@@ -5,8 +5,24 @@
     defaults: {
       name: { value: "" },
       structure: { value: "", required: true },
-      cbits: { value: "", required: true },
-      outputs: { value: "", required: true },
+      cbits: { 
+        value: "", 
+        required: true, 
+        validate: function (x) {
+          x = parseInt(x);
+          if (Number.isInteger(x) && x > 0){return true} 
+          else {return false}
+        }
+      },
+      outputs: { 
+        value: "", 
+        required: true,
+        validate: function (x) {
+          x = parseInt(x);
+          if (Number.isInteger(x) && x > 0){return true} 
+          else {return false}
+        },
+      }
     },
     inputs: 1,
     icon: "function.svg",
@@ -25,7 +41,7 @@
         $(".circuit-structure-registers").addClass("selected");
         $(".cbits").hide();
         document.getElementById("number-outputs").innerHTML = "Number of registers";
-        document.getElementById("node-input-cbits").value = "1"; // Required node property
+        document.getElementById("node-input-cbits").value = 1; // Required node property
       }
 
       $(".circuit-structure-qubits").on("click", function () {
@@ -43,7 +59,7 @@
         $(".cbits").hide();
         document.getElementById("number-outputs").innerHTML = "Number of registers";
         document.getElementById("node-input-structure").value = "registers";
-        document.getElementById("node-input-cbits").value = "1"; // Required node property
+        document.getElementById("node-input-cbits").value = 1; // Required node property
       });
     },
   });

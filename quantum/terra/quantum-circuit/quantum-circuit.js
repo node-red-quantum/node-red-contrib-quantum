@@ -6,8 +6,8 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.structure = config.structure;
-    this.cbits = config.cbits;
-    this.outputs = config.outputs;
+    this.cbits = parseInt(config.cbits);
+    this.outputs = parseInt(config.outputs);
     const globalContext = this.context().global;
     const node = this;
     const output = new Array(node.outputs);
@@ -48,7 +48,7 @@ module.exports = function(RED) {
           registers: false,
           structure: {
             qbits: node.outputs,
-            cbits: parseInt(node.cbits),
+            cbits: node.cbits,
           },
         };
         globalContext.set('quantumCircuit', quantumCircuit);

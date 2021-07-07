@@ -5,12 +5,12 @@ module.exports = function(RED) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
     this.name = config.name;
-    this.classicalBits = config.classicalBits;
+    this.classicalBits = parseInt(config.classicalBits);
     const globalContext = this.context().global;
     const node = this;
 
     this.on('input', function(msg, send, done) {
-      // Throws an error if:
+      // Throw a connection error if:
       // - The user did not initialise the quantum circuit using the 'Quantum Circuit' node
       // - The user did not select the 'Registers & Bits' option in the 'Quantum Circuit' node
       // - The user connects the node incorrectly
@@ -40,7 +40,7 @@ module.exports = function(RED) {
           registerType: 'classical',
           registerName: (node.name || ('R' + msg.payload.register.toString())),
           registerVar: 'cr' + msg.payload.register.toString(),
-          bits: parseInt(node.classicalBits),
+          bits: node.classicalBits,
         };
         globalContext.set('quantumCircuit.structure', structure);
 
