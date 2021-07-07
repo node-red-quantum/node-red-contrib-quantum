@@ -1,7 +1,7 @@
 module.exports = function(RED) {
   'use strict';
 
-  const shell = require('../../python-shell');
+  const python = require('../../python-shell');
 
   function QuantumCircuitNode(config) {
     RED.nodes.createNode(this, config);
@@ -9,11 +9,14 @@ module.exports = function(RED) {
     this.cbits = config.cbits;
     const node = this;
 
-    this.on('input', function(msg) {
-      shell.runScript(__dirname, 'quantum-circuit.py', [node.qubits, node.cbits], function(err, output) {
-        if (err) throw err;
-        msg.payload = output;
-        node.send(msg);
+    this.on('input', async function(msg) {
+      await python.executeCommand('print(a * a)', (data, err) => {
+        if (err) {
+          node.error(err);
+        } else {
+          msg.payload = data;
+          node.send(msg);
+        }
       });
     });
   }
