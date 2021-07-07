@@ -15,13 +15,13 @@ module.exports = function(RED) {
       // - The user did not select the 'Registers & Bits' option in the 'Quantum Circuit' node
       // - The user connects the node incorrectly
       if (typeof(globalContext.get('quantumCircuit')) == 'undefined') {
-        throw 'Quantum circuits must be initialised using the "Quantum Circuit" node.';
+        throw new Error('Quantum circuits must be initialised using the "Quantum Circuit" node.');
       } else if (msg.payload.register === 'no registers' && msg.topic === 'Quantum Circuit') {
-        throw 'Select the "Registers & Qubits" option in the "Quantum Circuit" node properties to use registers.';
+        throw new Error('Select the "Registers & Qubits" option in the "Quantum Circuit" node properties to use registers.');
       } else if (typeof(msg.payload.register) !== 'number' && msg.topic === 'Quantum Circuit') {
-        throw 'Register nodes must be connected to the outputs of the "Quantum Circuit" node.';
+        throw new Error('Register nodes must be connected to the outputs of the "Quantum Circuit" node.');
       } else if (msg.topic !== 'Quantum Circuit') {
-        throw 'Register nodes must be connected to nodes from the quantum library only';
+        throw new Error('Register nodes must be connected to nodes from the quantum library only');
       }
       // If no connection errors
       else {
