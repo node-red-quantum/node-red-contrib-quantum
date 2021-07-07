@@ -1,18 +1,50 @@
 <script type="text/javascript">
   RED.nodes.registerType("quantum-circuit", {
     category: "quantum",
-    color: "#8A3FFC",
+    color: "#33B1FF",
     defaults: {
       name: { value: "" },
-      qubits: { value: 0 },
-      cbits: { value: 0 },
+      structure: { value: "", required: true },
+      cbits: { value: "", required: true },
+      outputs: { value: "", required: true },
     },
     inputs: 1,
-    outputs: 1,
     icon: "function.svg",
     paletteLabel: "quantum circuit",
     label: function () {
       return this.name || "quantum circuit";
+    },
+
+    oneditprepare: function () {
+      if (document.getElementById("node-input-structure").value == "qubits") {
+        $(".circuit-structure-qubits").addClass("selected");
+        $(".cbits").show();
+        document.getElementById("number-outputs").innerHTML = "Number of qubits";
+      } else {
+        document.getElementById("node-input-structure").value = "registers";
+        $(".circuit-structure-registers").addClass("selected");
+        $(".cbits").hide();
+        document.getElementById("number-outputs").innerHTML = "Number of registers";
+        document.getElementById("node-input-cbits").value = "1"; // Required node property
+      }
+
+      $(".circuit-structure-qubits").on("click", function () {
+        $(".circuit-structure-registers").removeClass("selected");
+        $(this).addClass("selected");
+        $(".cbits").show();
+        document.getElementById("number-outputs").innerHTML = "Number of qubits";
+        document.getElementById("node-input-structure").value = "qubits";
+        document.getElementById("node-input-cbits").value = "";
+      });
+
+      $(".circuit-structure-registers").on("click", function () {
+        $(".circuit-structure-qubits").removeClass("selected");
+        $(this).addClass("selected");
+        $(".cbits").hide();
+        document.getElementById("number-outputs").innerHTML = "Number of registers";
+        document.getElementById("node-input-structure").value = "registers";
+        document.getElementById("node-input-cbits").value = "1"; // Required node property
+      });
     },
   });
 </script>
@@ -22,22 +54,31 @@
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
-
+  <br />
+  <h3>Quantum Circuit Structure</h3>
   <div class="form-row">
-    <label for="node-input-qubits"><i class="fa fa-tag"></i> Qubits</label>
-    <input type="text" id="node-input-qubits" placeholder="Qubits" />
+    <span class="circuit-structure-toggle">
+      <button type="button" class="red-ui-button toggle circuit-structure-registers">Registers & Bits</button>
+      <button type="button" class="red-ui-button toggle circuit-structure-qubits">Bits only</button>
+    </span>
   </div>
-
   <div class="form-row">
-    <label for="node-input-cbits"><i class="fa fa-tag"></i> Classical Bits</label>
-    <input type="text" id="node-input-cbits" placeholder="Classical Bits" />
+    <label for="node-input-number-registers" id="number-outputs"><i class="fa fa-tag"></i> </label>
+    <input type="number" min="1" id="node-input-outputs" />
   </div>
+  <div class="form-row cbits">
+    <label for="node-input-number-cbits"><i class="fa"></i>Number of classical bits</label>
+    <input type="number" min="1" id="node-input-cbits" />
+  </div>
+  <!-- Do not delete -->
+  <div hidden>
+    <input type="text" id="node-input-structure" />
+  </div>
+  <!------------------->
 </script>
 
 <script type="text/html" data-help-name="quantum-circuit">
   <p>
-    Create a new circuit.
-    <br />
-    A circuit is a list of instructions bound to some registers.
+    <!-- Node documentation goes here. -->
   </p>
 </script>
