@@ -17,14 +17,12 @@ module.exports = function(RED) {
       if (typeof(globalContext.get('quantumCircuit')) == 'undefined') {
         throw new Error('Quantum circuits must be initialised using the "Quantum Circuit" node.');
       } else if (msg.payload.register === 'no registers' && msg.topic === 'Quantum Circuit') {
-        throw new Error('Select the "Registers & Qubits" option in the "Quantum Circuit" node properties to use registers.');
+        throw new Error('Select "Registers & Qubits" in the "Quantum Circuit" node properties to use registers.');
       } else if (typeof(msg.payload.register) !== 'number' && msg.topic === 'Quantum Circuit') {
         throw new Error('Register nodes must be connected to the outputs of the "Quantum Circuit" node.');
       } else if (msg.topic !== 'Quantum Circuit') {
         throw new Error('Register nodes must be connected to nodes from the quantum library only');
-      }
-      // If no connection errors
-      else {
+      } else { // If no connection errors
         // Appending Qiskit script to the 'script' global variable
         let qiskitScript = (
           '\ncr' + msg.payload.register.toString() +
