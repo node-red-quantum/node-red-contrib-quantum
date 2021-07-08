@@ -74,16 +74,15 @@ class PythonShell {
    *
    * @param {string} command Python command(s) to be executed. May be a single command or
    * multiple commands which are separated by a new line. If undefined, an empty line is executed.
-   *
    * @param {function(string, string):void} callback Callback function to be run on completion.
    * If command execution was succesful, arg0 of the callback function is the result and arg1 is
    * null. If the command returned an error, arg0 of the callback function is null and arg1 is the
    * error message. If undefined, the output is returned by the Promise, and any errors are returned
    * as strings rather than Error objects.
-   *
    * @return {Promise<string>} Returns a Promise object which will run the callback function,
    * passing the command output as a parameter. If the command is successful the Promise is
    * resolved, otherwise it is rejected.
+   * @throws {Error} Throws an Error if the Python process has not been started.
   */
   async execute(command, callback) {
     if (!this.process) {
@@ -114,9 +113,13 @@ class PythonShell {
    *
    * @return {Promise<string>} Returns a Promise object which contains Python interpreter
    * and system information. If not required, this can be ignored.
+   * @throws {Error} Throws an Error object if path to the Python executable cannot be found.
   */
   start() {
     if (!this.process) {
+      if (!fileSystem.existsSync(this.path)) {
+        throw new Error(`cannot resolve path for Python executable: ${this.path}`);
+      }
       this.process = childProcess.spawn(this.path, ['-u', '-i']);
       this.process.stdout.setEncoding('utf8');
       this.process.stderr.setEncoding('utf8');
@@ -145,6 +148,7 @@ class PythonShell {
    *
    * @return {Promise<string>} Returns a Promise object which contains Python interpreter
    * and system information. If not required, this can be ignored.
+   * @throws {Error} Throws an Error if the Python executable cannot be found.
   */
   restart() {
     this.stop();
@@ -162,14 +166,16 @@ module.exports.PythonShell = new PythonShell();
 
 /**
  * Runs a Python script file.
+ *
  * @param {string}   scriptPath Directory path to the script (excludes file name)
  * @param {string}   scriptName File name of the script
  * @param {string[]} args       Arguments to pass to the script
  * @param {Function} callback   Callback function to invoke with the script results
+ * @throws {Error} Throws an Error if the Python executable cannot be found.
 */
 module.exports.runScript = function(scriptPath, scriptName, args, callback) {
   if (!fileSystem.existsSync(pythonPath)) {
-    throw new Error('cannot resolve Python virtual environment - execute the "npm run setup" command');
+    throw new Error(`cannot resolve path for Python executable: ${pythonPath}`);
   }
 
   const options = {
@@ -183,13 +189,15 @@ module.exports.runScript = function(scriptPath, scriptName, args, callback) {
 
 /**
  * Runs a string of Python code.
+ *
  * @param {string}   code     Python code to be executed
  * @param {string[]} args     Arguments to pass to the code
  * @param {Function} callback Callback function to invoke with the code results
+ * @throws {Error} Throws an Error if the Python executable cannot be found.
 */
 module.exports.runString = function(code, args, callback) {
   if (!fileSystem.existsSync(pythonPath)) {
-    throw new Error('cannot resolve Python virtual environment - execute the "npm run setup" command');
+    throw new Error(`cannot resolve path for Python executable: ${pythonPath}`);
   }
 
   const options = {
