@@ -1,5 +1,6 @@
 const path = require('path');
 const appRoot = require('app-root-path').path;
+const dedent = require('dedent-js');
 const fileSystem = require('fs');
 const pythonScript = require('python-shell').PythonShell;
 const pythonPath = path.resolve(appRoot, 'venv/bin/python');
@@ -88,11 +89,10 @@ class PythonShell {
    * resolved, otherwise it is rejected.
   */
   async execute(command, callback) {
-    command = command ? command : '';
-    const promise = createPromise(this.process, this.commandQueue);
+    command = command ? dedent(command) : '';
+    command = '\nprint("#CommandStart#")\n' + command + '\nprint("#CommandEnd#")\n';
 
-    command = 'print("#CommandStart#")\n' + command + '\nprint("#CommandEnd#")';
-    if (command.charAt[command.length-1] != '\n') command += '\n';
+    const promise = createPromise(this.process, this.commandQueue);
     this.commandQueue.push({'command': command, 'data': '', 'errorData': '', 'pending': true});
     processQueue(this.process, this.commandQueue);
 
