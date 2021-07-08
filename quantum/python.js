@@ -64,9 +64,6 @@ class PythonShell {
   */
   constructor(path) {
     this.path = path ? path : pythonPath;
-    this.process = childProcess.spawn(this.path, ['-u', '-i']);
-    this.process.stdout.setEncoding('utf8');
-    this.process.stderr.setEncoding('utf8');
     this.commandQueue = [];
   }
 
@@ -89,6 +86,10 @@ class PythonShell {
    * resolved, otherwise it is rejected.
   */
   async execute(command, callback) {
+    if (!this.process || this.process.killed) {
+      throw new Error('Python process has not been started - call start() before executing commands.');
+    }
+
     command = command ? dedent(command) : '';
     command = '\nprint("#CommandStart#")\n' + command + '\nprint("#CommandEnd#")\n';
 
@@ -103,6 +104,27 @@ class PythonShell {
         .catch((err) => {
           return callback !== undefined ? callback(null, err.trim()) : err.trim();
         });
+  }
+
+  start() {
+    if (!this.process) {
+      this.process = childProcess.spawn(this.path, ['-u', '-i']);
+      this.process.stdout.setEncoding('utf8');
+      this.process.stderr.setEncoding('utf8');
+      return this.execute();
+    }
+  }
+
+  stop() {
+    if (this.process) {
+      this.process.kill();
+      this.process = null;
+    }
+  }
+
+  restart() {
+    this.stop();
+    return this.start();
   }
 }
 
