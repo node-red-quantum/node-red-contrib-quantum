@@ -1,7 +1,7 @@
 const path = require('path');
 const appRoot = require('app-root-path').path;
 const fileSystem = require('fs');
-const pythonShell = require('python-shell').PythonShell;
+const pythonScript = require('python-shell').PythonShell;
 const pythonPath = path.resolve(appRoot, 'venv/bin/python');
 const childProcess = require('child_process');
 
@@ -54,16 +54,35 @@ function createPromise(process, commandQueue) {
   });
 }
 
-
-class PythonProcess {
+class PythonShell {
+  /**
+   * Initialises a new Python shell instance.
+   *
+   * Each instance of PythonShell spawns its own shell, separate from all other instances.
+   * @param {string} path Location of the Python executable. Uses venv executable by default.
+  */
   constructor(path) {
-    this.path = path;
+    this.path = path ? path : pythonpath;
     this.process = childProcess.spawn(path, ['-u', '-i']);
     this.process.stdout.setEncoding('utf8');
     this.process.stderr.setEncoding('utf8');
     this.commandQueue = [];
   }
 
+  /**
+   * Executes a string of Python code and returns the output via a Promise.
+   *
+   * Calls to this function must be done asynchronously through the use of 'async' and 'await'.
+   * @param {string} command Python command(s) to be executed. May be a single command or
+   * multiple commands which are separated by a new line.
+   * @param {function(string, string):void} callback Callback function to be run on completion.
+   * If command execution was succesful, arg0 of the callback function is the result and arg1 is
+   * null. If the command returned an error, arg0 of the callback function is null and arg1 is the
+   * error message.
+   * @return {Promise<string>} Returns a Promise object which will run the callback function,
+   * passing the command output as a parameter. If the command is successful the Promise is
+   * resolved, otherwise it is rejected.
+  */
   execute(command, callback) {
     command = command ? command : '';
     callback = callback == undefined ? () => {} : callback;
@@ -84,8 +103,13 @@ class PythonProcess {
   }
 }
 
-module.exports.PythonProcess = new PythonProcess(pythonPath);
-
+/**
+ * The global Python shell for the project.
+ *
+ * This shell instance will be maintained throughout the entire lifetime of a flow. Any variables,
+ * functions, and objects which are created will be kept in memory until the flow ends.
+*/
+module.exports.PythonShell = new PythonShell(pythonPath);
 
 /**
  * Runs a Python script file.
@@ -105,7 +129,7 @@ module.exports.runScript = function(scriptPath, scriptName, args, callback) {
     args: args,
   };
 
-  pythonShell.run(scriptName, options, callback);
+  pythonScript.run(scriptName, options, callback);
 };
 
 /**
@@ -124,5 +148,5 @@ module.exports.runString = function(code, args, callback) {
     args: args,
   };
 
-  pythonShell.runString(code, options, callback);
+  pythonScript.runString(code, options, callback);
 };
