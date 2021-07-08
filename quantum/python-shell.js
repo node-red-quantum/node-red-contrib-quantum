@@ -4,82 +4,87 @@ const fileSystem = require('fs');
 const pythonShell = require('python-shell').PythonShell;
 const pythonPath = path.resolve(appRoot, 'venv/bin/python');
 const childProcess = require('child_process');
-const pythonProcess = childProcess.spawn(pythonPath, ['-u', '-i']);
-pythonProcess.stdout.setEncoding('utf8');
-pythonProcess.stderr.setEncoding('utf8');
-
-const commandQueue = [];
 
 
-function processQueue() {
-  if (commandQueue.length > 0 && commandQueue[0].state === 'pending') {
-    commandQueue[0].state = 'processing';
-    pythonProcess.stdin.write(commandQueue[0].command, encoding='utf8');
+function processQueue(process, commandQueue) {
+  if (commandQueue.length > 0 && commandQueue[0].pending) {
+    commandQueue[0].pending = false;
+    process.stdin.write(commandQueue[0].command);
   }
 };
 
-function createPromise() {
+function createPromise(process, commandQueue) {
   return new Promise((resolve, reject) => {
-    pythonProcess.stdout.removeAllListeners();
-    pythonProcess.stderr.removeAllListeners();
+    process.stdout.removeAllListeners();
+    process.stderr.removeAllListeners();
 
-    pythonProcess.stdout.on('data', function(data) {
-      let finished = false;
+    process.stdout.on('data', function(data) {
+      let done = false;
+
       if (data.match(/Command Start/)) {
         data = data.replace(/Command Start/, '');
-      }
-      if (data.match(/Command End/)) {
+      } if (data.match(/Command End/)) {
         data = data.replace(/Command End/, '');
-        finished = true;
-      }
-      if (commandQueue.length > 0) {
+        done = true;
+      } if (commandQueue.length > 0) {
         commandQueue[0].data += data;
       }
-      if (finished) {
+
+      if (done) {
         cmd = commandQueue.shift();
-        if (cmd && cmd.command) {
-          if (cmd.errorData.trim()) {
-            reject(cmd.errorData.trim());
-          } else {
-            resolve(cmd.data.trim());
-          }
-          processQueue();
+        if (cmd.errorData.trim()) {
+          reject(cmd.errorData);
+        } else {
+          resolve(cmd.data);
         }
+        processQueue(process, commandQueue);
       }
     });
 
-    pythonProcess.stderr.on('data', function(data) {
+    process.stderr.on('data', function(data) {
       if (data.includes('>>>')) {
         data = data.replaceAll('>>>', '');
-      }
-      if (data.includes('...')) {
+      } if (data.includes('...')) {
         data = data.replaceAll('...', '');
-      }
-      if (commandQueue.length > 0) {
+      } if (commandQueue.length > 0) {
         commandQueue[0].errorData += data;
       }
-      processQueue();
+      processQueue(process, commandQueue);
     });
   });
 }
 
-module.exports.executeCommand = function(command, callback) {
-  callback = callback === undefined ? () => {} : callback;
-  const promise = createPromise();
 
-  command = 'print("Command Start")\n' + command + '\nprint("Command End")';
-  if (command.charAt[command.length-1] != '\n') command += '\n';
-  commandQueue.push({'command': command, 'data': '', 'errorData': '', 'state': 'pending'});
-  processQueue();
+class PythonProcess {
+  constructor(path) {
+    this.path = path;
+    this.process = childProcess.spawn(path, ['-u', '-i']);
+    this.process.stdout.setEncoding('utf8');
+    this.process.stderr.setEncoding('utf8');
+    this.commandQueue = [];
+  }
 
-  return promise
-      .then((value) => {
-        callback(value, null);
-      })
-      .catch((err) => {
-        callback(null, err);
-      });
-};
+  execute(command, callback) {
+    command = command ? command : '';
+    callback = callback == undefined ? () => {} : callback;
+    const promise = createPromise(this.process, this.commandQueue);
+
+    command = 'print("Command Start")\n' + command + '\nprint("Command End")';
+    if (command.charAt[command.length-1] != '\n') command += '\n';
+    this.commandQueue.push({'command': command, 'data': '', 'errorData': '', 'pending': true});
+    processQueue(this.process, this.commandQueue);
+
+    return promise
+        .then((value) => {
+          callback(value.trim(), null);
+        })
+        .catch((err) => {
+          callback(null, err.trim());
+        });
+  }
+}
+
+module.exports.PythonProcess = new PythonProcess(pythonPath);
 
 
 /**
