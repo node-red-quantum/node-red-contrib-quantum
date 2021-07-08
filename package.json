@@ -46,7 +46,8 @@
       "quantum-circuit": "quantum/terra/quantum-circuit/quantum-circuit.js",
       "quantum-register": "quantum/terra/quantum-register/quantum-register.js",
       "classical-register": "quantum/terra/classical-register/classical-register.js",
-      "aer-simulator": "quantum/aer/aer-simulator/aer-simulator.js"
+      "aer-simulator": "quantum/aer/aer-simulator/aer-simulator.js",
+      "toffoli-gate": "quantum/terra/toffoli-gate/toffoli-gate.js"
     }
   }
 }
