@@ -1,0 +1,29 @@
+<script type="text/javascript">
+  RED.nodes.registerType("not-gate", {
+    category: "quantum",
+    color: "#33B1FF",
+    defaults: {
+      name: { value: "x" },
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "function.svg",
+    paletteLabel: "x",
+    label: function () {
+      return this.name || "x";
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="not-gate">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+</script>
+
+<script type="text/html" data-help-name="not-gate">
+  <p>
+    <!-- Node documentation goes here. -->
+  </p>
+</script>
