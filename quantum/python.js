@@ -75,8 +75,8 @@ class PythonShell {
    * @param {string} command Python command(s) to be executed. May be a single command or
    * multiple commands which are separated by a new line. If undefined, an empty line is executed.
    * @param {function(string, string):void} callback Callback function to be run on completion.
-   * If command execution was succesful, arg0 of the callback function is the result and arg1 is
-   * null. If the command returned an error, arg0 of the callback function is null and arg1 is the
+   * If command execution was succesful, arg1 of the callback function is the result and arg0 is
+   * null. If the command returned an error, arg1 of the callback function is null and arg0 is the
    * error message. If undefined, the output is returned by the Promise, and any errors are returned
    * as strings rather than Error objects.
    * @return {Promise<string>} Returns a Promise object which will run the callback function,
@@ -97,11 +97,11 @@ class PythonShell {
     processQueue(this.process, this.commandQueue);
 
     return promise
-        .then((value) => {
-          return callback !== undefined ? callback(value.trim(), null) : value.trim();
+        .then((data) => {
+          return callback !== undefined ? callback(null, data.trim()) : data.trim();
         })
         .catch((err) => {
-          return callback !== undefined ? callback(null, err.trim()) : err.trim();
+          return callback !== undefined ? callback(err.trim(), null) : err.trim();
         });
   }
 
