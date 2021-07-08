@@ -15,7 +15,6 @@ module.exports = function(RED) {
     const output = new Array(node.outputs);
 
     this.on('input', function(msg, send, done) {
-
       // Storing import script to the 'script' global variable
       let qiskitScript = dedent(`
         import numpy as np
@@ -62,9 +61,9 @@ module.exports = function(RED) {
           qc = QuantumCircuit(%s, %s)
           \n
         `);
-        qiskitScript = util.format(qiskitScript, 
-          node.outputs, 
-          node.cbits
+        qiskitScript = util.format(qiskitScript,
+            node.outputs,
+            node.cbits,
         );
 
         const oldScript = globalContext.get('script');

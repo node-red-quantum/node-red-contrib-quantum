@@ -5,7 +5,7 @@ module.exports = function(RED) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
     this.name = config.name;
-    this.classicalBits = parseInt(config.classicalBits); 
+    this.classicalBits = parseInt(config.classicalBits);
     const globalContext = this.context().global;
     const util = require('util');
     const dedent = require('dedent-js');
@@ -25,16 +25,15 @@ module.exports = function(RED) {
       } else if (msg.topic !== 'Quantum Circuit') {
         throw new Error('Register nodes must be connected to nodes from the quantum library only');
       } else { // If no connection errors
-
         // Appending Qiskit script to the 'script' global variable
         let qiskitScript = dedent(`
           cr%s = ClassicalRegister(%s, %s)
 
         `);
-        qiskitScript = util.format(qiskitScript, 
-          msg.payload.register, 
-          node.classicalBits, 
-          (node.name || ('R' + msg.payload.register.toString()))
+        qiskitScript = util.format(qiskitScript,
+            msg.payload.register,
+            node.classicalBits,
+            (node.name || ('R' + msg.payload.register.toString())),
         );
 
         let oldScript = globalContext.get('script');
@@ -62,21 +61,13 @@ module.exports = function(RED) {
         if (count == structure.length) {
           // Generating the corresponding Qiskit script
           qiskitScript = dedent(`
-            
+
             qc = QuantumCircuit(
           `);
 
           structure.map((register) => {
-            if (register.registerType === 'quantum') {
-              qiskitScript += dedent(`
-                qr%s, 
-              `);
-            } else {
-              qiskitScript += dedent(`
-                cr%s, 
-              `);
-            }
-            qiskitScript = util.format(qiskitScript, structure.indexOf(register));
+            qiskitScript += '%s, ';
+            qiskitScript = util.format(qiskitScript, register.registerVar);
           });
 
           qiskitScript = qiskitScript.substring(0, qiskitScript.length - 2);

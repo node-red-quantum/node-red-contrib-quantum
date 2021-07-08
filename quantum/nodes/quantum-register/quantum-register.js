@@ -26,16 +26,15 @@ module.exports = function(RED) {
       } else if (msg.topic !== 'Quantum Circuit') {
         throw new Error('Register nodes must be connected to nodes from the quantum library only');
       } else { // If no connection errors
-
         // Appending Qiskit script to the 'script' global variable
         let qiskitScript = dedent(`
           qr%s = QuantumRegister(%s, %s)
 
         `);
-        qiskitScript = util.format(qiskitScript, 
-          msg.payload.register, 
-          node.outputs,
-          (node.name || ('R' + msg.payload.register.toString()))
+        qiskitScript = util.format(qiskitScript,
+            msg.payload.register,
+            node.outputs,
+            (node.name || ('R' + msg.payload.register.toString())),
         );
 
         let oldScript = globalContext.get('script');
@@ -63,21 +62,13 @@ module.exports = function(RED) {
         if (count == structure.length) {
           // Generating the corresponding Qiskit script
           qiskitScript = dedent(`
-            
+
             qc = QuantumCircuit(
           `);
 
           structure.map((register) => {
-            if (register.registerType === 'quantum') {
-              qiskitScript += dedent(`
-                qr%s, 
-              `);
-            } else {
-              qiskitScript += dedent(`
-                cr%s, 
-              `);
-            }
-            qiskitScript = util.format(qiskitScript, structure.indexOf(register));
+            qiskitScript += '%s, ';
+            qiskitScript = util.format(qiskitScript, register.registerVar);
           });
 
           qiskitScript = qiskitScript.substring(0, qiskitScript.length - 2);
