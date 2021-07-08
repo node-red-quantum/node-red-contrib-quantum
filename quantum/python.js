@@ -57,7 +57,7 @@ function createPromise(process, commandQueue) {
 
 class PythonShell {
   /**
-   * Initialises a new Python shell instance.
+   * Initialises a new PythonShell instance.
    *
    * Each instance of PythonShell spawns its own shell, separate from all other instances.
    * @param {string} path Location of the Python executable. Uses venv executable by default.
@@ -70,7 +70,7 @@ class PythonShell {
   /**
    * Executes a string of Python code and returns the output via a Promise.
    *
-   * Calls to this function must be done asynchronously through the use of 'async' and 'await'.
+   * Calls to this method must be done asynchronously through the use of 'async' and 'await'.
    *
    * @param {string} command Python command(s) to be executed. May be a single command or
    * multiple commands which are separated by a new line. If undefined, an empty line is executed.
@@ -86,7 +86,7 @@ class PythonShell {
    * resolved, otherwise it is rejected.
   */
   async execute(command, callback) {
-    if (!this.process || this.process.killed) {
+    if (!this.process) {
       throw new Error('Python process has not been started - call start() before executing commands.');
     }
 
@@ -106,6 +106,15 @@ class PythonShell {
         });
   }
 
+  /**
+   * Spawns a new Python process.
+   *
+   * This method will only execute and return if there is no process currently running. To end the
+   * old process, call the stop() method.
+   *
+   * @return {Promise<string>} Returns a Promise object which contains Python interpreter
+   * and system information. If not required, this can be ignored.
+  */
   start() {
     if (!this.process) {
       this.process = childProcess.spawn(this.path, ['-u', '-i']);
@@ -115,6 +124,12 @@ class PythonShell {
     }
   }
 
+  /**
+   * End a currently running Python process.
+   *
+   * This method will only execute if there is a process currently running. To start a new process,
+   * call the start() method.
+  */
   stop() {
     if (this.process) {
       this.process.kill();
@@ -122,6 +137,15 @@ class PythonShell {
     }
   }
 
+  /**
+   * End the current Python process and start a new one.
+   *
+   * This method acts as a wrapper for executing stop() and then start(). It will only stop a
+   * process if there is a process currently running. If not, then only a new process is started.
+   *
+   * @return {Promise<string>} Returns a Promise object which contains Python interpreter
+   * and system information. If not required, this can be ignored.
+  */
   restart() {
     this.stop();
     return this.start();
