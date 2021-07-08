@@ -21,10 +21,10 @@ function createPromise(process, commandQueue) {
     process.stdout.on('data', function(data) {
       let done = false;
 
-      if (data.match(/Command Start/)) {
-        data = data.replace(/Command Start/, '');
-      } if (data.match(/Command End/)) {
-        data = data.replace(/Command End/, '');
+      if (data.match(/#CommandStart#/)) {
+        data = data.replace(/#CommandStart#/, '');
+      } if (data.match(/#CommandEnd#/)) {
+        data = data.replace(/#CommandEnd#/, '');
         done = true;
       } if (commandQueue.length > 0) {
         commandQueue[0].data += data;
@@ -62,8 +62,8 @@ class PythonShell {
    * @param {string} path Location of the Python executable. Uses venv executable by default.
   */
   constructor(path) {
-    this.path = path ? path : pythonpath;
-    this.process = childProcess.spawn(path, ['-u', '-i']);
+    this.path = path ? path : pythonPath;
+    this.process = childProcess.spawn(this.path, ['-u', '-i']);
     this.process.stdout.setEncoding('utf8');
     this.process.stderr.setEncoding('utf8');
     this.commandQueue = [];
@@ -73,32 +73,35 @@ class PythonShell {
    * Executes a string of Python code and returns the output via a Promise.
    *
    * Calls to this function must be done asynchronously through the use of 'async' and 'await'.
+   *
    * @param {string} command Python command(s) to be executed. May be a single command or
-   * multiple commands which are separated by a new line.
+   * multiple commands which are separated by a new line. If undefined, an empty line is executed.
+   *
    * @param {function(string, string):void} callback Callback function to be run on completion.
    * If command execution was succesful, arg0 of the callback function is the result and arg1 is
    * null. If the command returned an error, arg0 of the callback function is null and arg1 is the
-   * error message.
+   * error message. If undefined, the output is returned by the Promise, and any errors are returned
+   * as strings rather than Error objects.
+   *
    * @return {Promise<string>} Returns a Promise object which will run the callback function,
    * passing the command output as a parameter. If the command is successful the Promise is
    * resolved, otherwise it is rejected.
   */
-  execute(command, callback) {
+  async execute(command, callback) {
     command = command ? command : '';
-    callback = callback == undefined ? () => {} : callback;
     const promise = createPromise(this.process, this.commandQueue);
 
-    command = 'print("Command Start")\n' + command + '\nprint("Command End")';
+    command = 'print("#CommandStart#")\n' + command + '\nprint("#CommandEnd#")';
     if (command.charAt[command.length-1] != '\n') command += '\n';
     this.commandQueue.push({'command': command, 'data': '', 'errorData': '', 'pending': true});
     processQueue(this.process, this.commandQueue);
 
     return promise
         .then((value) => {
-          callback(value.trim(), null);
+          return callback !== undefined ? callback(value.trim(), null) : value.trim();
         })
         .catch((err) => {
-          callback(null, err.trim());
+          return callback !== undefined ? callback(null, err.trim()) : err.trim();
         });
   }
 }
@@ -109,7 +112,7 @@ class PythonShell {
  * This shell instance will be maintained throughout the entire lifetime of a flow. Any variables,
  * functions, and objects which are created will be kept in memory until the flow ends.
 */
-module.exports.PythonShell = new PythonShell(pythonPath);
+module.exports.PythonShell = new PythonShell();
 
 /**
  * Runs a Python script file.
