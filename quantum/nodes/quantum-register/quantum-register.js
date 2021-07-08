@@ -7,6 +7,8 @@ module.exports = function(RED) {
     this.name = config.name;
     this.outputs = parseInt(config.outputs);
     const globalContext = this.context().global;
+    const util = require('util');
+    const dedent = require('dedent-js');
     const node = this;
     const output = new Array(node.outputs);
 
@@ -24,12 +26,18 @@ module.exports = function(RED) {
       } else if (msg.topic !== 'Quantum Circuit') {
         throw new Error('Register nodes must be connected to nodes from the quantum library only');
       } else { // If no connection errors
+
         // Appending Qiskit script to the 'script' global variable
-        let qiskitScript = (
-          '\nqr' + msg.payload.register.toString() +
-          ' = QuantumRegister(' + node.outputs.toString() +
-          ', \'' + (node.name || ('R' + msg.payload.register.toString())) + '\')'
+        let qiskitScript = dedent(`
+          qr%s = QuantumRegister(%s, %s)
+
+        `);
+        qiskitScript = util.format(qiskitScript, 
+          msg.payload.register, 
+          node.outputs,
+          (node.name || ('R' + msg.payload.register.toString()))
         );
+
         let oldScript = globalContext.get('script');
         globalContext.set('script', oldScript + qiskitScript);
 
@@ -54,22 +62,34 @@ module.exports = function(RED) {
         // If they are all set: initialise the quantum circuit
         if (count == structure.length) {
           // Generating the corresponding Qiskit script
-          qiskitScript = '\n \nqc = QuantumCircuit(';
+          qiskitScript = dedent(`
+            
+            qc = QuantumCircuit(
+          `);
+
           structure.map((register) => {
             if (register.registerType === 'quantum') {
-              qiskitScript += ('qr' + structure.indexOf(register) + ',');
+              qiskitScript += dedent(`
+                qr%s, 
+              `);
             } else {
-              qiskitScript += ('cr' + structure.indexOf(register) + ',');
+              qiskitScript += dedent(`
+                cr%s, 
+              `);
             }
+            qiskitScript = util.format(qiskitScript, structure.indexOf(register));
           });
-          qiskitScript = qiskitScript.substring(0, qiskitScript.length - 1);
-          qiskitScript += ') \n';
+
+          qiskitScript = qiskitScript.substring(0, qiskitScript.length - 2);
+          qiskitScript += dedent(`
+            ) 
+            \n
+          `);
 
           // Appending the code to the 'script' global variable
           oldScript = globalContext.get('script');
           globalContext.set('script', oldScript + qiskitScript);
         }
-
         // Creating an array of messages to be sent
         // Each message represents a different qubit
         for (let i = 0; i < node.outputs; i++) {

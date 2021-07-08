@@ -5,8 +5,10 @@ module.exports = function(RED) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
     this.name = config.name;
-    this.classicalBits = parseInt(config.classicalBits);
+    this.classicalBits = parseInt(config.classicalBits); 
     const globalContext = this.context().global;
+    const util = require('util');
+    const dedent = require('dedent-js');
     const node = this;
 
     this.on('input', function(msg, send, done) {
@@ -23,12 +25,18 @@ module.exports = function(RED) {
       } else if (msg.topic !== 'Quantum Circuit') {
         throw new Error('Register nodes must be connected to nodes from the quantum library only');
       } else { // If no connection errors
+
         // Appending Qiskit script to the 'script' global variable
-        let qiskitScript = (
-          '\ncr' + msg.payload.register.toString() +
-          ' = ClassicalRegister(' + node.classicalBits.toString() +
-          ', \'' + (node.name || ('R' + msg.payload.register.toString())) + '\')'
+        let qiskitScript = dedent(`
+          cr%s = ClassicalRegister(%s, %s)
+
+        `);
+        qiskitScript = util.format(qiskitScript, 
+          msg.payload.register, 
+          node.classicalBits, 
+          (node.name || ('R' + msg.payload.register.toString()))
         );
+
         let oldScript = globalContext.get('script');
         globalContext.set('script', oldScript + qiskitScript);
 
@@ -53,16 +61,29 @@ module.exports = function(RED) {
         // If they are all set: initialise the quantum circuit
         if (count == structure.length) {
           // Generating the corresponding Qiskit script
-          qiskitScript = '\n \nqc = QuantumCircuit(';
+          qiskitScript = dedent(`
+            
+            qc = QuantumCircuit(
+          `);
+
           structure.map((register) => {
             if (register.registerType === 'quantum') {
-              qiskitScript += ('qr' + structure.indexOf(register) + ',');
+              qiskitScript += dedent(`
+                qr%s, 
+              `);
             } else {
-              qiskitScript += ('cr' + structure.indexOf(register) + ',');
+              qiskitScript += dedent(`
+                cr%s, 
+              `);
             }
+            qiskitScript = util.format(qiskitScript, structure.indexOf(register));
           });
-          qiskitScript = qiskitScript.substring(0, qiskitScript.length - 1);
-          qiskitScript += ') \n';
+
+          qiskitScript = qiskitScript.substring(0, qiskitScript.length - 2);
+          qiskitScript += dedent(`
+            ) 
+            \n
+          `);
 
           // Appending the code to the 'script' global variable
           oldScript = globalContext.get('script');
