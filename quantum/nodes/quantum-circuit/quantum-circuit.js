@@ -6,19 +6,22 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.structure = config.structure;
-    this.cbits = config.cbits;
-    this.outputs = config.outputs;
+    this.cbits = parseInt(config.cbits);
+    this.outputs = parseInt(config.outputs);
     const globalContext = this.context().global;
+    const util = require('util');
+    const dedent = require('dedent-js');
     const node = this;
     const output = new Array(node.outputs);
 
     this.on('input', function(msg, send, done) {
       // Storing import script to the 'script' global variable
-      let qiskitScript = (
-        'import numpy as np \n' +
-        'import qiskit \n' +
-        'from qiskit import * \n'
-      );
+      let qiskitScript = dedent(`
+        import numpy as np
+        import qiskit
+        from qiskit import *
+        \n
+      `);
       globalContext.set('script', qiskitScript);
 
       // If the user wants to use registers
@@ -48,17 +51,21 @@ module.exports = function(RED) {
           registers: false,
           structure: {
             qbits: node.outputs,
-            cbits: parseInt(node.cbits),
+            cbits: node.cbits,
           },
         };
         globalContext.set('quantumCircuit', quantumCircuit);
 
         // Appending Qiskit script to the 'script' global variable to initiate the quantum circuit
-        qiskitScript = (
-          '\nqc = QuantumCircuit(' +
-          node.outputs.toString() + ', ' +
-          node.cbits.toString() + ') \n'
+        qiskitScript = dedent(`
+          qc = QuantumCircuit(%s, %s)
+          \n
+        `);
+        qiskitScript = util.format(qiskitScript,
+            node.outputs,
+            node.cbits,
         );
+
         const oldScript = globalContext.get('script');
         globalContext.set('script', oldScript + qiskitScript);
 
