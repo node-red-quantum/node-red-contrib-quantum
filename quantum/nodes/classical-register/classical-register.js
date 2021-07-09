@@ -1,3 +1,5 @@
+const snippets = require('../../snippets');
+
 module.exports = function(RED) {
   'use strict';
 
@@ -8,7 +10,6 @@ module.exports = function(RED) {
     this.classicalBits = parseInt(config.classicalBits);
     const globalContext = this.context().global;
     const util = require('util');
-    const dedent = require('dedent-js');
     const node = this;
 
     this.on('input', function(msg, send, done) {
@@ -27,13 +28,9 @@ module.exports = function(RED) {
       } else {
         // If no connection errors
         // Appending Qiskit script to the 'script' global variable
-        let qiskitScript = dedent(`
-          cr%s = ClassicalRegister(%s, %s)
-
-        `);
-        qiskitScript = util.format(qiskitScript,
+        let qiskitScript = util.format(snippets.CLASSICAL_REGISTER,
             msg.payload.register,
-            node.classicalBits,
+            node.classicalBits + ',' +
             (node.name || ('R' + msg.payload.register.toString())),
         );
 
@@ -61,21 +58,11 @@ module.exports = function(RED) {
         // If they are all set: initialise the quantum circuit
         if (count == structure.length) {
           // Generating the corresponding Qiskit script
-          qiskitScript = dedent(`
-
-            qc = QuantumCircuit(
-          `);
+          qiskitScript = util.format(snippets.QUANTUM_CIRCUIT, '%s,'.repeat(count));
 
           structure.map((register) => {
-            qiskitScript += '%s, ';
             qiskitScript = util.format(qiskitScript, register.registerVar);
           });
-
-          qiskitScript = qiskitScript.substring(0, qiskitScript.length - 2);
-          qiskitScript += dedent(`
-            ) 
-            \n
-          `);
 
           // Appending the code to the 'script' global variable
           oldScript = globalContext.get('script');

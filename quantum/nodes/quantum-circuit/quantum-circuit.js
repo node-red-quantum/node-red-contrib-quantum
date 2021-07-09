@@ -1,3 +1,5 @@
+const snippets = require('../../snippets');
+
 module.exports = function(RED) {
   'use strict';
 
@@ -10,18 +12,12 @@ module.exports = function(RED) {
     this.outputs = parseInt(config.outputs);
     const globalContext = this.context().global;
     const util = require('util');
-    const dedent = require('dedent-js');
     const node = this;
     const output = new Array(node.outputs);
 
     this.on('input', function(msg, send, done) {
       // Storing import script to the 'script' global variable
-      let qiskitScript = dedent(`
-        import numpy as np
-        import qiskit
-        from qiskit import *
-        \n
-      `);
+      let qiskitScript = snippets.IMPORTS;
       globalContext.set('script', qiskitScript);
 
       // If the user wants to use registers
@@ -57,14 +53,7 @@ module.exports = function(RED) {
         globalContext.set('quantumCircuit', quantumCircuit);
 
         // Appending Qiskit script to the 'script' global variable to initiate the quantum circuit
-        qiskitScript = dedent(`
-          qc = QuantumCircuit(%s, %s)
-          \n
-        `);
-        qiskitScript = util.format(qiskitScript,
-            node.outputs,
-            node.cbits,
-        );
+        qiskitScript = util.format(snippets.QUANTUM_CIRCUIT, node.outputs + ',' + node.cbits);
 
         const oldScript = globalContext.get('script');
         globalContext.set('script', oldScript + qiskitScript);
