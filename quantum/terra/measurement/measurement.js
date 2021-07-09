@@ -1,6 +1,5 @@
 module.exports = function(RED) {
   'use strict';
-  let measurementNode = null;
   function MeasurementNode(config) {
     RED.nodes.createNode(this, config);
     measurementNode = this;
@@ -13,10 +12,10 @@ module.exports = function(RED) {
 
     this.on('input', function(msg, send, done) {
       let oldScript = globalContext.get('script');
-      console.log("node=", node);
-      //qc.measure(qr0[1], cr2e77640a_842f3c[2])
+      console.log('node=', node);
+      // qc.measure(qr0[1], cr2e77640a_842f3c[2])
       let qiskitScript = `\nqc.measure(${msg.payload.register}[${msg.payload.qubit}], `;
-      qiskitScript += `${node.selectedCreg}[${node.selectedCbit}])\n`
+      qiskitScript += `${node.selectedCreg}[${node.selectedCbit}])\n`;
       oldScript = globalContext.get('script');
       globalContext.set('script', oldScript + qiskitScript);
       node.send(msg);

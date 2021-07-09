@@ -66,17 +66,17 @@ module.exports = function(RED) {
   }
   // Defining post request handler for this node to save its config values
   // to frontend variable
-  RED.httpAdmin.post("/classical-register", RED.auth.needsPermission('classical-register.read'), function(req,res) {
+  RED.httpAdmin.post('/classical-register', RED.auth.needsPermission('classical-register.read'), function(req, res) {
     classicalRegister.classicalBits = req.body.cbits;
     res.json({success: true});
   });
 
   // Defining get request handler for other nodes to get latest data on
   // number of classical bits and variable name;
-  RED.httpAdmin.get("/classical-register", RED.auth.needsPermission('classical-register.read'), function(req,res) {
+  RED.httpAdmin.get('/classical-register', RED.auth.needsPermission('classical-register.read'), function(req, res) {
     res.json({
       bits: classicalRegister.classicalBits,
-      registerVar: classicalRegister.registerVar 
+      registerVar: classicalRegister.registerVar,
     });
   });
   RED.nodes.registerType('classical-register', ClassicalRegisterNode);
