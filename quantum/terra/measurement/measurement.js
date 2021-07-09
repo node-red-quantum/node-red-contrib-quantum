@@ -12,8 +12,6 @@ module.exports = function(RED) {
 
     this.on('input', function(msg, send, done) {
       let oldScript = globalContext.get('script');
-      console.log('node=', node);
-      // qc.measure(qr0[1], cr2e77640a_842f3c[2])
       let qiskitScript = `\nqc.measure(${msg.payload.register}[${msg.payload.qubit}], `;
       qiskitScript += `${node.selectedCreg}[${node.selectedCbit}])\n`;
       oldScript = globalContext.get('script');
