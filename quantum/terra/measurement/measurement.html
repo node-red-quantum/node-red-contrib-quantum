@@ -33,7 +33,7 @@
               $("<option></option>").attr("value", item).text(item)
           );
         });
-        // setting selected bit index from saved variable
+        // setting selected bit index from frontend variable
         $("#node-input-cbitindex").val(selectedCbit);
         
         // dynamically adding classical register variables name
@@ -42,7 +42,7 @@
         $("#node-input-cregindex").append(
           $("<option></option>").attr("value", cregVar).text(cregVar)
         );
-        // setting selected resiter variable name from saved variable
+        // setting selected resiter variable name from frontend variable
         $("#node-input-cregindex").val(selectedCreg);
       });
      
