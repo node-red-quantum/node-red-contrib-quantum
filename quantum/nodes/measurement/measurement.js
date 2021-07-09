@@ -2,7 +2,6 @@ module.exports = function(RED) {
   'use strict';
   function MeasurementNode(config) {
     RED.nodes.createNode(this, config);
-    measurementNode = this;
     this.name = config.name;
     this.cbitindex = config.cbitindex;
     this.selectedCbit = config.selectedCbit;
