@@ -13,6 +13,11 @@
     label: function () {
       return this.name || "classical register";
     },
+    oneditsave: function() {
+      var element = document.getElementById("node-input-classicalBits");
+      this.classicalBits = element.value;
+      $.post('classical-register', {cbits: this.classicalBits}, p => p);
+    }
   });
 </script>
 

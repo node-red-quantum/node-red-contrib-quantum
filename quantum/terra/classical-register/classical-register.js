@@ -1,18 +1,20 @@
 module.exports = function(RED) {
   'use strict';
-
+  let classicalRegister = null;
   function ClassicalRegisterNode(config) {
     // Creating node with properties and context
+    classicalRegister = this;
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.classicalBits = config.classicalBits;
     const globalContext = this.context().global;
     const node = this;
+    this.registerVar = 'cr' + node.id.replace('.', '_');
 
     this.on('input', function(msg, send, done) {
       // Appending Qiskit script to the 'script' global variable
       let qiskitScript = (
-        '\ncr' + msg.payload.register.toString() +
+        '\ncr' + node.id.replace('.', '_') +
         ' = ClassicalRegister(' + node.classicalBits.toString() +
         ', \'' + (node.name || ('R' + msg.payload.register.toString())) + '\')'
       );
@@ -24,7 +26,7 @@ module.exports = function(RED) {
       structure[msg.payload.register] = {
         registerType: 'classical',
         registerName: (node.name || ('R' + msg.payload.register.toString())),
-        registerVar: 'cr' + msg.payload.register.toString(),
+        registerVar: 'cr' + 'cr' + node.id.replace('.', '_'),
         bits: parseInt(node.classicalBits),
       };
       globalContext.set('quantumCircuit.structure', structure);
@@ -45,7 +47,7 @@ module.exports = function(RED) {
           if (register.registerType === 'quantum') {
             qiskitScript += ('qr' + structure.indexOf(register) + ',');
           } else {
-            qiskitScript += ('cr' + structure.indexOf(register) + ',');
+            qiskitScript += ('cr' + node.id.replace('.', '_') + ',');
           }
         });
         qiskitScript = qiskitScript.substring(0, qiskitScript.length - 1);
@@ -62,6 +64,20 @@ module.exports = function(RED) {
       }
     });
   }
+  // Defining post request handler for this node to save its config values
+  // to frontend variable
+  RED.httpAdmin.post("/classical-register", RED.auth.needsPermission('classical-register.read'), function(req,res) {
+    classicalRegister.classicalBits = req.body.cbits;
+    res.json({success: true});
+  });
 
+  // Defining get request handler for other nodes to get latest data on
+  // number of classical bits and variable name;
+  RED.httpAdmin.get("/classical-register", RED.auth.needsPermission('classical-register.read'), function(req,res) {
+    res.json({
+      bits: classicalRegister.classicalBits,
+      registerVar: classicalRegister.registerVar 
+    });
+  });
   RED.nodes.registerType('classical-register', ClassicalRegisterNode);
 };

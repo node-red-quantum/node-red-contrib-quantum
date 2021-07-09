@@ -47,7 +47,8 @@
       "quantum-register": "quantum/terra/quantum-register/quantum-register.js",
       "classical-register": "quantum/terra/classical-register/classical-register.js",
       "aer-simulator": "quantum/aer/aer-simulator/aer-simulator.js",
-      "execute": "quantum/terra/execute/execute.js"
+      "execute": "quantum/terra/execute/execute.js",
+      "measurement": "quantum/terra/measurement/measurement.js"
     }
   }
 }
