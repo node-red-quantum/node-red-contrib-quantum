@@ -1,8 +1,9 @@
 module.exports = function(RED) {
   'use strict';
-
+  let classicalRegister = null;
   function ClassicalRegisterNode(config) {
     // Creating node with properties and context
+    classicalRegister = this;
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.classicalBits = parseInt(config.classicalBits);
@@ -10,6 +11,7 @@ module.exports = function(RED) {
     const util = require('util');
     const dedent = require('dedent-js');
     const node = this;
+    this.registerVar = 'cr' + node.id.replace('.', '_');
 
     this.on('input', function(msg, send, done) {
       // Throw a connection error if:
@@ -32,7 +34,7 @@ module.exports = function(RED) {
 
         `);
         qiskitScript = util.format(qiskitScript,
-            msg.payload.register,
+            node.id.replace('.', '_'),
             node.classicalBits,
             (node.name || ('R' + msg.payload.register.toString())),
         );
@@ -45,7 +47,7 @@ module.exports = function(RED) {
         structure[msg.payload.register] = {
           registerType: 'classical',
           registerName: (node.name || ('R' + msg.payload.register.toString())),
-          registerVar: 'cr' + msg.payload.register.toString(),
+          registerVar: 'cr' + node.id.replace('.', '_'),
           bits: node.classicalBits,
         };
         globalContext.set('quantumCircuit.structure', structure);
@@ -89,6 +91,20 @@ module.exports = function(RED) {
       }
     });
   }
+  // Defining post request handler for this node to save its config values
+  // to frontend variable
+  RED.httpAdmin.post('/classical-register', RED.auth.needsPermission('classical-register.read'), function(req, res) {
+    classicalRegister.classicalBits = req.body.cbits;
+    res.json({success: true});
+  });
 
+  // Defining get request handler for other nodes to get latest data on
+  // number of classical bits and variable name;
+  RED.httpAdmin.get('/classical-register', RED.auth.needsPermission('classical-register.read'), function(req, res) {
+    res.json({
+      bits: classicalRegister.classicalBits,
+      registerVar: classicalRegister.registerVar,
+    });
+  });
   RED.nodes.registerType('classical-register', ClassicalRegisterNode);
 };
