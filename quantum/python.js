@@ -34,7 +34,7 @@ function createPromise(process, commandQueue) {
       }
 
       if (done) {
-        cmd = commandQueue.shift();
+        let cmd = commandQueue.shift();
         if (cmd.errorData.trim()) {
           reject(cmd.errorData);
         } else {
