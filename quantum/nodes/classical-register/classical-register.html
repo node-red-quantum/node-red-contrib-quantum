@@ -1,18 +1,29 @@
 <script type="text/javascript">
   RED.nodes.registerType("classical-register", {
     category: "quantum",
-    color: "#8A3FFC",
+    color: "#C0C0C0",
     defaults: {
       name: { value: "" },
-      classicalBits: { value: "", required: true },
+      classicalBits: { 
+        value: "", 
+        required: true ,
+        validate: function (x) {
+          x = parseInt(x);
+          if (Number.isInteger(x) && x > 0){return true} 
+          else {return false}
+        }
+      },
     },
     inputs: 1,
     outputs: 0,
-    icon: "function.svg",
+    icon: "font-awesome/fa-circle-o",
+    align: 'right',
     paletteLabel: "classical register",
     label: function () {
       return this.name || "classical register";
     },
+    inputLabels: "quantum circuit node",
+
     oneditsave: function() {
       var element = document.getElementById("node-input-classicalBits");
       this.classicalBits = element.value;
