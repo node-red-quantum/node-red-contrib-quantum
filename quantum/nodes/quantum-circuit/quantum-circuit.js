@@ -1,8 +1,9 @@
+'use strict';
+
+const util = require('util');
 const snippets = require('../../snippets');
 
 module.exports = function(RED) {
-  'use strict';
-
   function QuantumCircuitNode(config) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
@@ -11,9 +12,8 @@ module.exports = function(RED) {
     this.cbits = parseInt(config.cbits);
     this.outputs = parseInt(config.outputs);
     const globalContext = this.context().global;
-    const util = require('util');
+    const output = new Array(this.outputs);
     const node = this;
-    const output = new Array(node.outputs);
 
     this.on('input', function(msg, send, done) {
       // Storing import script to the 'script' global variable

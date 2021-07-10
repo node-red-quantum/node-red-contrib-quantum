@@ -1,15 +1,15 @@
+'use strict';
+
+const util = require('util');
 const snippets = require('../../snippets');
 
 module.exports = function(RED) {
-  'use strict';
-
   function ClassicalRegisterNode(config) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.classicalBits = parseInt(config.classicalBits);
     const globalContext = this.context().global;
-    const util = require('util');
     const node = this;
 
     this.on('input', function(msg, send, done) {

@@ -1,17 +1,17 @@
+'use strict';
+
+const util = require('util');
 const snippets = require('../../snippets');
 
 module.exports = function(RED) {
-  'use strict';
-
   function QuantumRegisterNode(config) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.outputs = parseInt(config.outputs);
     const globalContext = this.context().global;
-    const util = require('util');
+    const output = new Array(this.outputs);
     const node = this;
-    const output = new Array(node.outputs);
 
     this.on('input', function(msg, send, done) {
       // Throw a connection error if:
