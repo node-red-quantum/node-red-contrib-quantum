@@ -1,29 +1,31 @@
 <script type="text/javascript">
-    RED.nodes.registerType("cnot-gate", {
-      category: "quantum",
-      color: "#8A3FFC",
-      defaults: {
-        name: { value: "" },
-      },
-      inputs: 2,
-      outputs: 2,
-      icon: "function.svg",
-      paletteLabel: "cnot gate",
-      label: function () {
-        return this.name || "CNot";
-      },
-    });
-  </script>
+  RED.nodes.registerType("cnot-gate", {
+    category: "quantum",
+    color: "#8A3FFC",
+    defaults: {
+      name: {value: ""},
+      controlQubit1: {value: ""},
+      targetQubit: {value: ""},
+    },
+    inputs: 2,
+    outputs: 2,
+    icon: "function.svg",
+    paletteLabel: "cnot gate",
+    label: function () {
+      return this.name || "CNot";
+    },
+  });
+</script>
 
-  <script type="text/html" data-template-name="cnot-gate">
-    <div class="form-row">
-      <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-      <input type="text" id="node-input-name" placeholder="Name" />
-      <input type="text" id="control-qubit-1" placeholder="Control Qubit" />
-      <input type="text" id="target-qubit" placeholder="Target Qubit" />
-    </div>
-  </script>
+<script type="text/html" data-template-name="cnot-gate">
+  <div className="form-row">
+    <label htmlFor="node-input-name"><i className="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name"/>
+    <input type="text" id="node-input-controlQubit1" placeholder="Control Qubit"/>
+    <input type="text" id="node-input-targetQubit" placeholder="Target Qubit"/>
+  </div>
+</script>
 
-  <script type="text/html" data-help-name="cnot-gate">
-    <p>Add a CNot Gate to the circuit.</p>
-  </script>
+<script type="text/html" data-help-name="cnot-gate">
+  <p>Add a CNot Gate to the circuit.</p>
+</script>

@@ -6,6 +6,8 @@ module.exports = function (RED) {
       RED.nodes.createNode(this, config);
       this.name = config.name;
       this.outputs = config.outputs;
+      this.controlQubit1 = config.controlQubit1;
+      this.targetQubit = config.targetQubit;
       const globalContext = this.context().global;
       const node = this;
       const output = new Array(node.outputs);
@@ -18,9 +20,9 @@ module.exports = function (RED) {
         // Appending Qiskit script to the 'script' global variable
         let qiskitScript =
           "\nqc = cx(" +
-          document.getElementById("control-qubit-1").value +
+          this.controlQubit1 +
           ", " +
-          document.getElementById("target-qubit").value +
+          this.targetQubit +
           ")";
 
         let oldScript = globalContext.get("script");
