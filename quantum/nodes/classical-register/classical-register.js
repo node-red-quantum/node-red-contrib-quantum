@@ -26,53 +26,53 @@ module.exports = function(RED) {
         throw new Error('Register nodes must be connected to the outputs of the "Quantum Circuit" node.');
       } else if (msg.topic !== 'Quantum Circuit') {
         throw new Error('Register nodes must be connected to nodes from the quantum library only');
-      } else { // TODO: Remove redundant else
-        // Add arguments to classical register code
-        let registerScript = util.format(snippets.CLASSICAL_REGISTER,
-            msg.payload.register,
-            node.classicalBits + ',' +
+      }
+
+      // Add arguments to classical register code
+      let registerScript = util.format(snippets.CLASSICAL_REGISTER,
+          msg.payload.register,
+          node.classicalBits + ',' +
             (node.name || ('R' + msg.payload.register.toString())),
-        );
-        await shell.execute(registerScript, (err) => {
+      );
+      await shell.execute(registerScript, (err) => {
+        if (err) node.error(err);
+      });
+
+      // Completing the 'structure' global array
+      const structure = globalContext.get('quantumCircuit.structure');
+      structure[msg.payload.register] = {
+        registerType: 'classical',
+        registerName: (node.name || ('R' + msg.payload.register.toString())),
+        registerVar: 'cr' + msg.payload.register.toString(),
+        bits: node.classicalBits,
+      };
+      globalContext.set('quantumCircuit.structure', structure);
+
+      // Counting the number of registers that were set in the 'structure' array
+      let count = 0;
+      structure.map((x) => {
+        if (typeof(x) !== 'undefined') {
+          count += 1;
+        }
+      });
+
+      // If they are all set: initialise the quantum circuit
+      if (count == structure.length) {
+        // Add arguments to quantum circuit code
+        let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, '%s,'.repeat(count));
+
+        structure.map((register) => {
+          circuitScript = util.format(circuitScript, register.registerVar);
+        });
+
+        await shell.execute(circuitScript, (err) => {
           if (err) node.error(err);
         });
+      }
 
-        // Completing the 'structure' global array
-        const structure = globalContext.get('quantumCircuit.structure');
-        structure[msg.payload.register] = {
-          registerType: 'classical',
-          registerName: (node.name || ('R' + msg.payload.register.toString())),
-          registerVar: 'cr' + msg.payload.register.toString(),
-          bits: node.classicalBits,
-        };
-        globalContext.set('quantumCircuit.structure', structure);
-
-        // Counting the number of registers that were set in the 'structure' array
-        let count = 0;
-        structure.map((x) => {
-          if (typeof(x) !== 'undefined') {
-            count += 1;
-          }
-        });
-
-        // If they are all set: initialise the quantum circuit
-        if (count == structure.length) {
-          // Add arguments to quantum circuit code
-          let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, '%s,'.repeat(count));
-
-          structure.map((register) => {
-            circuitScript = util.format(circuitScript, register.registerVar);
-          });
-
-          await shell.execute(circuitScript, (err) => {
-            if (err) node.error(err);
-          });
-        }
-
-        // Notify the runtime when the node is done.
-        if (done) {
-          done();
-        }
+      // Notify the runtime when the node is done.
+      if (done) {
+        done();
       }
     });
   }

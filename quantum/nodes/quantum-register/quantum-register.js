@@ -27,64 +27,64 @@ module.exports = function(RED) {
         throw new Error('Register nodes must be connected to the outputs of the "Quantum Circuit" node.');
       } else if (msg.topic !== 'Quantum Circuit') {
         throw new Error('Register nodes must be connected to nodes from the quantum library only');
-      } else { // TODO: Remove redundant else
-        // Add arguments to quantum register code
-        let registerScript = util.format(snippets.QUANTUM_REGISTER,
-            msg.payload.register,
-            node.outputs + ',' +
+      }
+
+      // Add arguments to quantum register code
+      let registerScript = util.format(snippets.QUANTUM_REGISTER,
+          msg.payload.register,
+          node.outputs + ',' +
             (node.name || ('"r' + msg.payload.register.toString() + '"')),
-        );
+      );
 
-        // Completing the 'structure' global array
-        const structure = globalContext.get('quantumCircuit.structure');
-        structure[msg.payload.register] = {
-          registerType: 'quantum',
-          registerName: (node.name || ('R' + msg.payload.register.toString())),
-          registerVar: 'qr' + msg.payload.register.toString(),
-          bits: node.outputs,
-        };
-        globalContext.set('quantumCircuit.structure', structure);
+      // Completing the 'structure' global array
+      const structure = globalContext.get('quantumCircuit.structure');
+      structure[msg.payload.register] = {
+        registerType: 'quantum',
+        registerName: (node.name || ('R' + msg.payload.register.toString())),
+        registerVar: 'qr' + msg.payload.register.toString(),
+        bits: node.outputs,
+      };
+      globalContext.set('quantumCircuit.structure', structure);
 
-        // Counting the number of registers that were set in the 'structure' array
-        let count = 0;
-        structure.map((x) => {
-          if (typeof(x) !== 'undefined') {
-            count += 1;
-          }
+      // Counting the number of registers that were set in the 'structure' array
+      let count = 0;
+      structure.map((x) => {
+        if (typeof(x) !== 'undefined') {
+          count += 1;
+        }
+      });
+
+      // If they are all set: initialise the quantum circuit
+      if (count == structure.length) {
+        // Add arguments to quantum circuit code
+        let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, '%s,'.repeat(count));
+
+        structure.map((register) => {
+          circuitScript = util.format(circuitScript, register.registerVar);
         });
 
-        // If they are all set: initialise the quantum circuit
-        if (count == structure.length) {
-          // Add arguments to quantum circuit code
-          let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, '%s,'.repeat(count));
-
-          structure.map((register) => {
-            circuitScript = util.format(circuitScript, register.registerVar);
-          });
-
-          await shell.execute(circuitScript, (err) => {
-            if (err) node.error(err);
-          });
-        }
-        // Creating an array of messages to be sent
-        // Each message represents a different qubit
-        for (let i = 0; i < node.outputs; i++) {
-          output[i] = {
-            topic: 'Quantum Circuit',
-            payload: {
-              register: 'qr' + msg.payload.register.toString(),
-              qubit: i,
-            },
-          };
-        };
-
-        await shell.execute(registerScript, (err) => {
+        await shell.execute(circuitScript, (err) => {
           if (err) node.error(err);
         });
-
-        // Sending one qubit object per node output
-        send(output);
       }
+      // Creating an array of messages to be sent
+      // Each message represents a different qubit
+      for (let i = 0; i < node.outputs; i++) {
+        output[i] = {
+          topic: 'Quantum Circuit',
+          payload: {
+            register: 'qr' + msg.payload.register.toString(),
+            qubit: i,
+          },
+        };
+      };
+
+      await shell.execute(registerScript, (err) => {
+        if (err) node.error(err);
+      });
+
+      // Sending one qubit object per node output
+      send(output);
     });
   }
 
