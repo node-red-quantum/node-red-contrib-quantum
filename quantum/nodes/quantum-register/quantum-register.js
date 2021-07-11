@@ -74,7 +74,7 @@ module.exports = function(RED) {
         if (count == structure.length) {
           // Generating the corresponding Qiskit script
           qiskitScript = dedent(`
-
+             
             qc = QuantumCircuit(
           `);
 

@@ -57,10 +57,9 @@ module.exports = function(RED) {
             node.outputs,
             node.cbits,
         );
-
+        
         const oldScript = flowContext.get('script');
         flowContext.set('script', oldScript + qiskitScript);
-
         // Creating an array of messages to be sent
         // Each message represents a different qubit
         for (let i = 0; i < node.outputs; i++) {
