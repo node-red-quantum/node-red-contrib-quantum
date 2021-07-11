@@ -36,7 +36,7 @@ fi
 cd $red_path
 
 # Check if package is already installed. If no, install it.
-if [[ ! $(npm list -p $package) ]]; then
+if [[ ! $(npm list -p | grep $package) ]]; then
   echo "Installing $package"
   if npm install $repo_path; then
     echo "Successfully linked $package with Node-RED"
