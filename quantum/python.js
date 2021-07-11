@@ -67,6 +67,7 @@ class PythonShell {
   constructor(path) {
     this.path = path ? path : pythonPath;
     this.commandQueue = [];
+    this.script = '';
   }
 
   /**
@@ -92,6 +93,7 @@ class PythonShell {
     }
 
     command = command ? dedent(command) : '';
+    this.script += '\n' + command + '\n';
     command = '\nprint("#CommandStart#")\n' + command + '\nprint("#CommandEnd#")\n';
 
     const promise = createPromise(this.process, this.commandQueue);

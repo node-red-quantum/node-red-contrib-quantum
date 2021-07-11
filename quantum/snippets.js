@@ -13,22 +13,18 @@
 
 // Probably shouldn't use wildcard import here for efficiency but whatever will
 // worry about it later.
-const IMPORTS =`
-import numpy as np
-from qiskit import *
-`;
+const IMPORTS =
+`import numpy as np
+ from qiskit import *`;
 
-const QUANTUM_CIRCUIT = `
-qc = QuantumCircuit(%s)
-`;
+const QUANTUM_CIRCUIT =
+`qc = QuantumCircuit(%s)`;
 
-const CLASSICAL_REGISTER = `
-cr%s = ClassicalRegister(%s)
-`;
+const CLASSICAL_REGISTER =
+`cr%s = ClassicalRegister(%s)`;
 
-const QUANTUM_REGISTER = `
-qr%s = QuantumRegister(%s)
-`;
+const QUANTUM_REGISTER =
+`qr%s = QuantumRegister(%s)`;
 
 module.exports = {
   IMPORTS,
