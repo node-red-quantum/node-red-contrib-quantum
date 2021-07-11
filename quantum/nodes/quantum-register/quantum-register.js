@@ -2,6 +2,7 @@
 
 const util = require('util');
 const snippets = require('../../snippets');
+const shell = require('../../python').PythonShell;
 
 module.exports = function(RED) {
   function QuantumRegisterNode(config) {
@@ -13,7 +14,7 @@ module.exports = function(RED) {
     const output = new Array(this.outputs);
     const node = this;
 
-    this.on('input', function(msg, send, done) {
+    this.on('input', async function(msg, send, done) {
       // Throw a connection error if:
       // - The user did not initialise the quantum circuit using the 'Quantum Circuit' node
       // - The user did not select the 'Registers & Bits' option in the 'Quantum Circuit' node
@@ -26,17 +27,13 @@ module.exports = function(RED) {
         throw new Error('Register nodes must be connected to the outputs of the "Quantum Circuit" node.');
       } else if (msg.topic !== 'Quantum Circuit') {
         throw new Error('Register nodes must be connected to nodes from the quantum library only');
-      } else {
-        // If no connection errors
-        // Appending Qiskit script to the 'script' global variable
-        let qiskitScript = util.format(snippets.QUANTUM_REGISTER,
+      } else { // TODO: Remove redundant else
+        // Add arguments to quantum register code
+        let registerScript = util.format(snippets.QUANTUM_REGISTER,
             msg.payload.register,
             node.outputs + ',' +
-            (node.name || ('R' + msg.payload.register.toString())),
+            (node.name || ('"r' + msg.payload.register.toString() + '"')),
         );
-
-        let oldScript = globalContext.get('script');
-        globalContext.set('script', oldScript + qiskitScript);
 
         // Completing the 'structure' global array
         const structure = globalContext.get('quantumCircuit.structure');
@@ -58,16 +55,16 @@ module.exports = function(RED) {
 
         // If they are all set: initialise the quantum circuit
         if (count == structure.length) {
-          // Generating the corresponding Qiskit script
-          qiskitScript = util.format(snippets.QUANTUM_CIRCUIT, '%s,'.repeat(count));
+          // Add arguments to quantum circuit code
+          let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, '%s,'.repeat(count));
 
           structure.map((register) => {
-            qiskitScript = util.format(qiskitScript, register.registerVar);
+            circuitScript = util.format(circuitScript, register.registerVar);
           });
 
-          // Appending the code to the 'script' global variable
-          oldScript = globalContext.get('script');
-          globalContext.set('script', oldScript + qiskitScript);
+          await shell.execute(circuitScript, (err) => {
+            if (err) node.error(err);
+          });
         }
         // Creating an array of messages to be sent
         // Each message represents a different qubit
@@ -80,6 +77,10 @@ module.exports = function(RED) {
             },
           };
         };
+
+        await shell.execute(registerScript, (err) => {
+          if (err) node.error(err);
+        });
 
         // Sending one qubit object per node output
         send(output);
