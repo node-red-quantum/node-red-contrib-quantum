@@ -7,14 +7,14 @@ const shell = require('../../python').PythonShell;
 
 module.exports = function(RED) {
   let classicalRegister = null;
-  
+
   function ClassicalRegisterNode(config) {
     // Creating node with properties and context
-    classicalRegister = this;
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.classicalBits = parseInt(config.classicalBits);
     const flowContext = this.context().flow;
+    classicalRegister = this;
     const node = this;
     this.registerVar = 'cr' + node.id.replace('.', '_');
 
@@ -23,21 +23,24 @@ module.exports = function(RED) {
       // - The user did not initialise the quantum circuit using the 'Quantum Circuit' node
       // - The user did not select the 'Registers & Bits' option in the 'Quantum Circuit' node
       // - The user connects the node incorrectly
-      if (typeof(flowContext.get('quantumCircuit')) == 'undefined') {
+      if (msg.topic !== 'Quantum Circuit') {
+        throw new Error(
+            'Register nodes must be connected to nodes from the quantum library only',
+        );
+      } else if (
+        typeof(msg.payload.register) === 'number' &&
+        typeof(flowContext.get('quantumCircuit')) === 'undefined'
+      ) {
         throw new Error(
             'Quantum circuits must be initialised using the "Quantum Circuit" node.',
         );
-      } else if (msg.payload.register === 'no registers' && msg.topic === 'Quantum Circuit') {
+      } else if (typeof(msg.payload.register) === 'undefined') {
         throw new Error(
-            'Select "Registers & Bits" in the "Quantum Circuit" node properties to use registers.',
+            'Select "Registers & Qubits" in the "Quantum Circuit" node properties to use registers.',
         );
-      } else if (typeof(msg.payload.register) !== 'number' && msg.topic === 'Quantum Circuit') {
+      } else if (typeof(msg.payload.register) !== 'number') {
         throw new Error(
             'Register nodes must be connected to the outputs of the "Quantum Circuit" node.',
-        );
-      } else if (msg.topic !== 'Quantum Circuit') {
-        throw new Error(
-            'Register nodes must be connected to nodes from the quantum library only',
         );
       } else {
         // If no connection errors
@@ -56,14 +59,12 @@ module.exports = function(RED) {
         flowContext.set('script', oldScript + qiskitScript);
 
         // Completing the 'structure' global array
-        const structure = flowContext.get('quantumCircuit.structure');
+        const structure = flowContext.get('quantumCircuit');
         structure[msg.payload.register] = {
           registerType: 'classical',
-          registerName: (node.name.toLowerCase() || ('r' + msg.payload.register.toString())),
           registerVar: 'cr' + node.id.replace('.', '_'),
-          bits: node.classicalBits,
         };
-        flowContext.set('quantumCircuit.structure', structure);
+        flowContext.set('quantumCircuit', structure);
 
         // Counting the number of registers that were set in the 'structure' array
         let count = 0;

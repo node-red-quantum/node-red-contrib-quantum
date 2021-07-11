@@ -31,10 +31,7 @@ module.exports = function(RED) {
       if (node.structure == 'registers') {
         // Creating a temporary 'quantumCircuit' flow context array
         // This variable represents the quantum circuit structure
-        const quantumCircuit = {
-          registers: true,
-          structure: new Array(node.outputs),
-        };
+        const quantumCircuit = new Array(node.outputs);
         flowContext.set('quantumCircuit', quantumCircuit);
 
         // Creating an array of messages to be sent
@@ -57,7 +54,7 @@ module.exports = function(RED) {
             node.outputs,
             node.cbits,
         );
-        
+
         const oldScript = flowContext.get('script');
         flowContext.set('script', oldScript + qiskitScript);
         // Creating an array of messages to be sent
