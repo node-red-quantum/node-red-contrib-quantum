@@ -26,7 +26,8 @@
   "scripts": {
     "start": "node-red || npx node-red",
     "setup": "python bin/setup.py || bin/setup.py",
-    "clean": "rm -r venv/",
+    "link": "sh bin/link.sh || bin/link.sh",
+    "clean": "rm -r venv/; npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
     "lint": "eslint --fix --ignore-path .gitignore ."
   },
   "dependencies": {
