@@ -141,6 +141,8 @@ class PythonShell {
     if (this.process) {
       this.process.kill();
       this.process = null;
+      this.commandQueue = [];
+      this.script = '';
     }
   }
 
