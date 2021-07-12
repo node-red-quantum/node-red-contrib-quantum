@@ -101,12 +101,8 @@ class PythonShell {
     processQueue(this.process, this.commandQueue);
 
     return promise
-        .then((data) => {
-          return callback !== undefined ? callback(null, data.trim()) : data.trim();
-        })
-        .catch((err) => {
-          return callback !== undefined ? callback(err.trim(), null) : err.trim();
-        });
+        .then((data) => callback !== undefined ? callback(null, data.trim()) : data.trim())
+        .catch((err) => callback !== undefined ? callback(err.trim(), null) : err.trim());
   }
 
   /**
