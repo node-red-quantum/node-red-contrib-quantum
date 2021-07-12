@@ -25,12 +25,15 @@
   ],
   "scripts": {
     "start": "node-red || npx node-red",
-    "setup": "bin/setup.py",
-    "clean": "rm -r venv/",
+    "setup": "(npm run link && npm run venv) && echo \"Setup complete - run 'npm start' to open Node-RED\"",
+    "link": "sh bin/link.sh || bin/link.sh",
+    "venv": "python bin/pyvenv.py || bin/pyvenv.py",
+    "clean": "rm -r venv/; npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
     "lint": "eslint --fix --ignore-path .gitignore ."
   },
   "dependencies": {
     "app-root-path": "^3.0.0",
+    "dedent-js": "^1.0.1",
     "python-shell": "^3.0.0"
   },
   "devDependencies": {
@@ -48,7 +51,8 @@
       "classical-register": "quantum/nodes/classical-register/classical-register.js",
       "aer-simulator": "quantum/nodes/aer-simulator/aer-simulator.js",
       "toffoli-gate": "quantum/nodes/toffoli-gate/toffoli-gate.js",
-      "execute": "quantum/nodes/execute/execute.js"
+      "execute": "quantum/nodes/execute/execute.js",
+      "measurement": "quantum/nodes/measurement/measurement.js"
     }
   }
 }
