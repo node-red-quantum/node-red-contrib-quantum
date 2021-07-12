@@ -17,19 +17,12 @@ module.exports = function(RED) {
 
     this.on('input', function(msg, send, done) {
       // Throw a connection error if:
-      // - The user did not initialise the quantum circuit using the 'Quantum Circuit' node
+      // - The user connects it to a node that is not from the quantum library
       // - The user did not select the 'Registers & Bits' option in the 'Quantum Circuit' node
-      // - The user connects the node incorrectly
+      // - The user does not connect the register node to the output of the 'Quantum Circuit' node
       if (msg.topic !== 'Quantum Circuit') {
         throw new Error(
             'Register nodes must be connected to nodes from the quantum library only',
-        );
-      } else if (
-        typeof(msg.payload.register) === 'number' &&
-        typeof(flowContext.get('quantumCircuit')) === 'undefined'
-      ) {
-        throw new Error(
-            'Quantum circuits must be initialised using the "Quantum Circuit" node.',
         );
       } else if (typeof(msg.payload.register) === 'undefined') {
         throw new Error(
