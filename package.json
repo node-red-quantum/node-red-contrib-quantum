@@ -52,7 +52,8 @@
       "aer-simulator": "quantum/nodes/aer-simulator/aer-simulator.js",
       "execute": "quantum/nodes/execute/execute.js",
       "measurement": "quantum/nodes/measurement/measurement.js",
-      "barrier": "quantum/nodes/barrier/barrier.js"
+      "barrier": "quantum/nodes/barrier/barrier.js",
+      "identity": "quantum/nodes/identity/identity.js"
     }
   }
 }
