@@ -1,0 +1,41 @@
+<script type="text/javascript">
+    RED.nodes.registerType("barrier", {
+      category: "quantum",
+      color: "#C0C0C0",
+      defaults: {
+        name: { value: "" },
+        outputs: { 
+          value: "", 
+          required: true,
+          validate: function (x) {
+            x = parseInt(x);
+            if (Number.isInteger(x) && x > 0){return true} 
+            else {return false}
+          },
+        }
+      },
+      inputs: 1,
+      icon: "font-awesome/fa-ellipsis-v",
+      align: 'left',
+      paletteLabel: "barrier",
+      label: function () {
+        return this.name || "barrier";
+      },
+      outputLabels: function(index) {  
+      }
+    });
+  </script>
+  
+  <script type="text/html" data-template-name="barrier">
+    <div class="form-row">
+      <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name" />
+    </div>
+  </script>
+  
+  <script type="text/html" data-help-name="barrier">
+    <p>
+      <!-- Node documentation goes here. -->
+    </p>
+  </script>
+  
