@@ -43,7 +43,7 @@ module.exports = function(RED) {
       let registerScript = util.format(snippets.CLASSICAL_REGISTER,
           'cr' + msg.payload.register.toString(),
           node.classicalBits + ',' +
-            (node.name || ('r' + msg.payload.register.toString())),
+            (('"' + node.name + '"') || ('"r' + msg.payload.register.toString() + '"')),
       );
       await shell.execute(registerScript, (err) => {
         if (err) node.error(err);

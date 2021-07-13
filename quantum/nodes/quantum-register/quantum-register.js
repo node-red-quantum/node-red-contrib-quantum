@@ -44,7 +44,7 @@ module.exports = function(RED) {
       let registerScript = util.format(snippets.QUANTUM_REGISTER,
           'qr' + msg.payload.register.toString(),
           node.outputs + ',' +
-            (node.name || ('"r' + msg.payload.register.toString() + '"')),
+            (('"' + node.name + '"') || ('"r' + msg.payload.register.toString() + '"')),
       );
 
       // Completing the 'structure' global array
