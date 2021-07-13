@@ -37,11 +37,11 @@ module.exports = function(RED) {
             'Please inputs the same number of qubits than selected in the node properties.',
         );
       }
+
       // Store all the qubit objects received as input into the node.qubits array
-      // If all qubits have arrived, we first reorder the node.qubits array for output consistency
-      // Finally, we run the barrier script in the python shell and send the qubits as output
       node.qubits.push(msg);
 
+      // If all qubits have arrived, we first reorder the node.qubits array for output consistency
       if (node.qubits.length == node.outputs) {
         node.qubits.sort(function compare(a, b) {
           if (typeof(a.payload.register) !== 'undefined') {
@@ -59,6 +59,7 @@ module.exports = function(RED) {
           }
         });
 
+        // Generate the corresponding barrier Qiskit script
         let barrierScript = util.format(snippets.BARRIER, '%s,'.repeat(node.outputs));
         node.qubits.map((msg) => {
           if (typeof(msg.payload.register) === 'undefined') {
@@ -70,6 +71,7 @@ module.exports = function(RED) {
           }
         });
 
+        // Run the script in the python shell
         await shell.execute(barrierScript, (err) => {
           if (err) node.error(err);
         });
