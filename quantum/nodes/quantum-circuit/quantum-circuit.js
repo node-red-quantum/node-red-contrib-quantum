@@ -12,7 +12,7 @@ module.exports = function(RED) {
     this.structure = config.structure;
     this.cbits = parseInt(config.cbits);
     this.outputs = parseInt(config.outputs);
-    const globalContext = this.context().global;
+    const flowContext = this.context().flow;
     const output = new Array(this.outputs);
     const node = this;
 
@@ -26,8 +26,8 @@ module.exports = function(RED) {
       if (node.structure == 'registers') {
         // Creating a temporary 'quantumCircuit' flow context array
         // This variable represents the quantum circuit structure
-        const quantumCircuit = new Array(node.outputs);
-        globalContext.set('quantumCircuit', quantumCircuit);
+        let quantumCircuit = new Array(node.outputs);
+        flowContext.set('quantumCircuit', quantumCircuit);
 
         // Creating an array of messages to be sent
         // Each message represents a dfifferent register

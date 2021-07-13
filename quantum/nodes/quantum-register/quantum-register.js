@@ -10,7 +10,7 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.outputs = parseInt(config.outputs);
-    const globalContext = this.context().global;
+    const flowContext = this.context().flow;
     const output = new Array(this.outputs);
     const node = this;
 
@@ -38,24 +38,24 @@ module.exports = function(RED) {
         throw new Error(
             'Register nodes must be connected to the outputs of the "Quantum Circuit" node.',
         );
-      } 
+      }
 
       // Add arguments to quantum register code
       let registerScript = util.format(snippets.QUANTUM_REGISTER,
-          msg.payload.register,
+          'qr' + msg.payload.register.toString(),
           node.outputs + ',' +
             (node.name || ('"r' + msg.payload.register.toString() + '"')),
       );
 
       // Completing the 'structure' global array
-      const structure = globalContext.get('quantumCircuit');
+      let structure = flowContext.get('quantumCircuit');
       structure[msg.payload.register] = {
         registerType: 'quantum',
         registerName: (node.name || ('r' + msg.payload.register.toString())),
         registerVar: 'qr' + msg.payload.register.toString(),
         bits: node.outputs,
       };
-      globalContext.set('quantumCircuit', structure);
+      flowContext.set('quantumCircuit', structure);
 
       // Counting the number of registers that were set in the 'structure' array
       let count = 0;
@@ -77,8 +77,8 @@ module.exports = function(RED) {
         await shell.execute(circuitScript, (err) => {
           if (err) node.error(err);
         });
-        
-        globalContext.set('quantumCircuit', undefined);
+
+        flowContext.set('quantumCircuit', undefined);
       }
       // Creating an array of messages to be sent
       // Each message represents a different qubit
@@ -86,7 +86,8 @@ module.exports = function(RED) {
         output[i] = {
           topic: 'Quantum Circuit',
           payload: {
-            register: 'qr' + msg.payload.register.toString(),
+            register: (node.name || ('r' + msg.payload.register.toString())),
+            registerVar: 'qr' + msg.payload.register.toString(),
             qubit: i,
           },
         };

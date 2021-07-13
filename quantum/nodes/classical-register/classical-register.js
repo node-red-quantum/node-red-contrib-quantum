@@ -10,7 +10,7 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.classicalBits = parseInt(config.classicalBits);
-    const globalContext = this.context().global;
+    const flowContext = this.context().flow;
     const node = this;
     this.registerVar = 'cr' + node.id.replace('.', '_');
 
@@ -50,14 +50,14 @@ module.exports = function(RED) {
       });
 
       // Completing the 'structure' global array
-      const structure = globalContext.get('quantumCircuit');
+      let structure = flowContext.get('quantumCircuit');
       structure[msg.payload.register] = {
         registerType: 'classical',
         registerName: (node.name || ('r' + msg.payload.register.toString())),
         registerVar: 'cr' + msg.payload.register.toString(),
         bits: node.classicalBits,
       };
-      globalContext.set('quantumCircuit', structure);
+      flowContext.set('quantumCircuit', structure);
 
       // Counting the number of registers that were set in the 'structure' array
       let count = 0;
@@ -79,8 +79,8 @@ module.exports = function(RED) {
         await shell.execute(circuitScript, (err) => {
           if (err) node.error(err);
         });
-        
-        globalContext.set('quantumCircuit', undefined);
+
+        flowContext.set('quantumCircuit', undefined);
       }
 
       // Notify the runtime when the node is done.
