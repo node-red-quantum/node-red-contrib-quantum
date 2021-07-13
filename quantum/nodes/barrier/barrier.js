@@ -43,7 +43,21 @@ module.exports = function(RED) {
       node.qubits.push(msg);
 
       if (node.qubits.length == node.outputs) {
-        // TODO: order the 'node.qubits' array to output them correctly
+        node.qubits.sort(function compare(a, b) {
+          if (typeof(a.payload.register) !== 'undefined') {
+            const regA = parseInt(a.payload.registerVar.slice(2));
+            const regB = parseInt(b.payload.registerVar.slice(2));
+            if (regA < regB) return -1;
+            else if (regA > regB) return 1;
+            else {
+              if (a.payload.qubit < b.payload.qubit) return -1;
+              else return 1;
+            }
+          } else {
+            if (a.payload.qubit < b.payload.qubit) return -1;
+            else return 1;
+          }
+        });
 
         let barrierScript = util.format(snippets.BARRIER, '%s,'.repeat(node.outputs));
         node.qubits.map((msg) => {

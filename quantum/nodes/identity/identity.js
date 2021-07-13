@@ -26,6 +26,7 @@ module.exports = function(RED) {
         );
       }
 
+      // Simply return the msg received without any operations
       send(msg);
     });
   }
