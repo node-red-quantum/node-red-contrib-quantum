@@ -41,7 +41,7 @@ module.exports = function(RED) {
       }
       // Add arguments to classical register code
       let registerScript = util.format(snippets.CLASSICAL_REGISTER,
-          msg.payload.register,
+          'cr' + msg.payload.register.toString(),
           node.classicalBits + ',' +
             (node.name || ('r' + msg.payload.register.toString())),
       );
