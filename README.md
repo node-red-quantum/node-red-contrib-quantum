@@ -6,9 +6,7 @@ Quantum computing functionality for Node-RED.
 - Clone the repository and navigate into it:  
   `git clone https://github.com/louislefevre/node-red-contrib-quantum.git`  
   `cd node-red-contrib-quantum/`  
-- Install dependencies with NPM:  
-  `npm install`  
-- Setup virtual Python environment:  
+- Install dependencies, link the package to Node-RED, and setup the Python virtual environment:  
   `npm run setup`  
 - Open Node-RED. The following command will first try and run any global installations of Node-RED, otherwise it will run the local installation which is installed as a dependency:  
   `npm start`  

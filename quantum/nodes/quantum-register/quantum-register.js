@@ -19,15 +19,26 @@ module.exports = function(RED) {
       // - The user did not initialise the quantum circuit using the 'Quantum Circuit' node
       // - The user did not select the 'Registers & Bits' option in the 'Quantum Circuit' node
       // - The user connects the node incorrectly
-      if (typeof(globalContext.get('quantumCircuit')) == 'undefined') {
-        throw new Error('Quantum circuits must be initialised using the "Quantum Circuit" node.');
-      } else if (msg.payload.register === 'no registers' && msg.topic === 'Quantum Circuit') {
-        throw new Error('Select "Registers & Qubits" in the "Quantum Circuit" node properties to use registers.');
-      } else if (typeof(msg.payload.register) !== 'number' && msg.topic === 'Quantum Circuit') {
-        throw new Error('Register nodes must be connected to the outputs of the "Quantum Circuit" node.');
-      } else if (msg.topic !== 'Quantum Circuit') {
-        throw new Error('Register nodes must be connected to nodes from the quantum library only');
-      }
+      if (msg.topic !== 'Quantum Circuit') {
+        throw new Error(
+            'Register nodes must be connected to nodes from the quantum library only',
+        );
+      } else if (
+        typeof(msg.payload.register) === 'number' &&
+        typeof(flowContext.get('quantumCircuit')) === 'undefined'
+      ) {
+        throw new Error(
+            'Quantum circuits must be initialised using the "Quantum Circuit" node.',
+        );
+      } else if (typeof(msg.payload.register) === 'undefined') {
+        throw new Error(
+            'Select "Registers & Qubits" in the "Quantum Circuit" node properties to use registers.',
+        );
+      } else if (typeof(msg.payload.register) !== 'number') {
+        throw new Error(
+            'Register nodes must be connected to the outputs of the "Quantum Circuit" node.',
+        );
+      } 
 
       // Add arguments to quantum register code
       let registerScript = util.format(snippets.QUANTUM_REGISTER,
@@ -37,14 +48,14 @@ module.exports = function(RED) {
       );
 
       // Completing the 'structure' global array
-      const structure = globalContext.get('quantumCircuit.structure');
+      const structure = globalContext.get('quantumCircuit');
       structure[msg.payload.register] = {
         registerType: 'quantum',
-        registerName: (node.name || ('R' + msg.payload.register.toString())),
+        registerName: (node.name || ('r' + msg.payload.register.toString())),
         registerVar: 'qr' + msg.payload.register.toString(),
         bits: node.outputs,
       };
-      globalContext.set('quantumCircuit.structure', structure);
+      globalContext.set('quantumCircuit', structure);
 
       // Counting the number of registers that were set in the 'structure' array
       let count = 0;
@@ -66,6 +77,8 @@ module.exports = function(RED) {
         await shell.execute(circuitScript, (err) => {
           if (err) node.error(err);
         });
+        
+        globalContext.set('quantumCircuit', undefined);
       }
       // Creating an array of messages to be sent
       // Each message represents a different qubit
