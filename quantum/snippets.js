@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /*
  * Snippets must be constants, and constants must capitalised with underscores.
@@ -28,4 +28,5 @@ module.exports = {
   QUANTUM_CIRCUIT,
   CLASSICAL_REGISTER,
   QUANTUM_REGISTER,
+  TOFFOLI_GATE,
 };
