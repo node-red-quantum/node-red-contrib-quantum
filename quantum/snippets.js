@@ -30,10 +30,14 @@ const QUANTUM_REGISTER =
 const BARRIER =
 `qc.barrier(%s)`;
 
+const CNOT_GATE = `qc.cx(s%, s%)`;
+
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,
   CLASSICAL_REGISTER,
   QUANTUM_REGISTER,
   BARRIER,
+  CNOT_GATE,
 };
