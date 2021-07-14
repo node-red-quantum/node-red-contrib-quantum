@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "app-root-path": "^3.0.0",
+    "dedent-js": "^1.0.1",
     "python-shell": "^3.0.0"
   },
   "devDependencies": {
