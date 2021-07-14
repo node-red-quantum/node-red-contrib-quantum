@@ -1,84 +1,42 @@
 <script type="text/javascript">
   RED.nodes.registerType("toffoli-gate", {
     category: "quantum",
-    color: "#8A3FFC",
+    color: "#33B1FF",
     defaults: {
       name: { value: "" },
-        controlQubit1: {value: ""},
-        controlQubit2: {value: ""},
-        targetQubit: {value: ""},
+    },
     inputs: 3,
     outputs: 3,
     icon: "function.svg",
     paletteLabel: "toffoli gate",
     label: function () {
-      return this.name || "Toffoli";
-    },
-    oneditprepare: function () {
-      var selectedControlBit1 = this.selectedControlBit1;
-      var selectedControlBit2 = this.selectedControlBit2;
-      var selectedTargetBit = this.selectedTargetBit;
-
-      // Get request to quantum-register http admin endpoint to get
-      // register variable and number of bits
-      $.getJSON("quantum-register", function (data) {
-        let options = [];
-        let qRegVar = data.registerVar;
-        for (let i = 0; i < Number(data.bits); i++) {
-          options.push(i);
-        }
-        // dynamically adding  qubit indices to select tag
-        $("#node-input-quitindex").empty();
-        options.forEach((item) => {
-          $("#node-input-qubitindex").append($("<option></option>").attr("value", item).text(item));
-        });
-        // setting selected bit index from frontend variable
-        $("#node-input-qubitindex").val(selectedControlBit1);
-
-        // dynamically adding quantum register variables name
-        // to select tag. Now it only sets 1 quantum register
-        $("#node-input-quregindex").empty();
-        $("#node-input-quregindex").append($("<option></option>").attr("value", quregVar).text(qRegVar));
-        // setting selected resiter variable name from frontend variable
-        $("#node-input-quregindex").val(selectedControlBit1);
-      });
-    },
-    oneditsave: function () {
-      var selectControlQubit1 = document.getElementById("node-input-controlQubit1");
-      var selectControlQubit2 = document.getElementById("node-input-controlQubit2");
-      var selectTargetQubit = document.getElementById("node-input-targetQubit");
-      this.selectedControlBit1 = selectControlQubit1.value;
-      this.selectedControlBit2 = selectControlQubit2.value;
-      this.selectedTargetBit = selectTargetQubit.value;
+      return this.name || "toffoli gate";
     },
   });
 </script>
 
-<script type="text/html" data-template-name="toffoli-gate">
+<script type="text/html" data-template-name="toffoli gate">
   <div class="form-row">
-    <label for="node-input-name"><i class="fa fa-tag"></i> Toffoli Gate</label>
-    <input type="text" id="node-input-name" placeholder="Name" />
+    <label for="node-input-toffoli-gate"
+      ><i class="fa fa-tag"></i> Toffoli Gate</label
+    >
+    <!-- <input type="text" id="node-input-name" placeholder="Name" /> -->
   </div>
   <div class="form-row">
-    <label for="node-input-controlQubit1"
-      ><i class="fa fa-tag"></i>Set as a Control Qubit:</label
-    >
-    <select id="node-input-controlQubit1" placeholder="Control Qubit"></select>
-  </div>
-  <div class="form-row">
-    <label for="node-input-controlQubit1"
-      ><i class="fa fa-tag"></i>Set as a Control Qubit:</label
-    >
-    <select id="node-input-controlQubit1" placeholder="Control Qubit"></select>
-  </div>
-  <div class="form-row">
-    <label for="node-input-targetQubit"
-      ><i class="fa fa-tag"></i>Set as a Target Qubit:</label
-    >
-    <select id="node-input-targetQubit" placeholder="Target Qubit"></select>
+    <label for="target-position"
+      >Please select the position of the target qubit relative to the two
+      control qubits:
+    </label>
+    <select name="target-position" id="target-position">
+      <option value="top">Top</option>
+      <option value="middle">Middle</option>
+      <option value="bottom">Bottom</option>
+    </select>
   </div>
 </script>
 
 <script type="text/html" data-help-name="toffoli-gate">
-  <p>Add a Toffoli Gate to the circuit.</p>
+  <p>
+    <!-- Node documentation goes here. -->
+  </p>
 </script>
