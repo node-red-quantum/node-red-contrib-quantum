@@ -1,3 +1,4 @@
+
 'use strict';
 
 /*
@@ -26,9 +27,13 @@ const CLASSICAL_REGISTER =
 const QUANTUM_REGISTER =
 `qr%s = QuantumRegister(%s)`;
 
+const BARRIER =
+`qc.barrier(%s)`;
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,
   CLASSICAL_REGISTER,
   QUANTUM_REGISTER,
+  BARRIER,
 };

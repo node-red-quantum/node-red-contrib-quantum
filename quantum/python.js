@@ -39,9 +39,9 @@ function createPromise(process) {
 
     process.stderr.on('data', function(data) {
       if (data.includes('>>>')) {
-        data = data.replaceAll('>>>', '');
+        data = data.replace(/>>>/g, '');
       } if (data.includes('...')) {
-        data = data.replaceAll('...', '');
+        data = data.replace(/.../g, '');
       }
       errorData += data;
     });
