@@ -1,6 +1,10 @@
-module.exports = function(RED) {
-  'use strict';
+'use strict';
 
+const util = require('util');
+const snippets = require('../../snippets');
+const shell = require('../../python').PythonShell;
+
+module.exports = function(RED) {
   function QuantumCircuitNode(config) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
@@ -8,28 +12,22 @@ module.exports = function(RED) {
     this.structure = config.structure;
     this.cbits = parseInt(config.cbits);
     this.outputs = parseInt(config.outputs);
-    const globalContext = this.context().global;
+    const flowContext = this.context().flow;
+    const output = new Array(this.outputs);
     const node = this;
-    const output = new Array(node.outputs);
 
-    this.on('input', function(msg, send, done) {
-      // Storing import script to the 'script' global variable
-      let qiskitScript = (
-        'import numpy as np \n' +
-        'import qiskit \n' +
-        'from qiskit import * \n'
-      );
-      globalContext.set('script', qiskitScript);
+    this.on('input', async function(msg, send, done) {
+      await shell.restart();
+      await shell.execute(snippets.IMPORTS, (err) => {
+        if (err) node.error(err);
+      });
 
       // If the user wants to use registers
       if (node.structure == 'registers') {
-        // Creating an empty 'quantumCircuit' global array
+        // Creating a temporary 'quantumCircuit' flow context array
         // This variable represents the quantum circuit structure
-        const quantumCircuit = {
-          registers: true,
-          structure: new Array(node.outputs),
-        };
-        globalContext.set('quantumCircuit', quantumCircuit);
+        let quantumCircuit = new Array(node.outputs);
+        flowContext.set('quantumCircuit', quantumCircuit);
 
         // Creating an array of messages to be sent
         // Each message represents a dfifferent register
@@ -42,25 +40,11 @@ module.exports = function(RED) {
           };
         };
       } else { // If the user does not want to use registers
-        // Creating an empty 'quantumCircuit' global array
-        // This variable represents the quantum circuit structure
-        const quantumCircuit = {
-          registers: false,
-          structure: {
-            qbits: node.outputs,
-            cbits: node.cbits,
-          },
-        };
-        globalContext.set('quantumCircuit', quantumCircuit);
-
-        // Appending Qiskit script to the 'script' global variable to initiate the quantum circuit
-        qiskitScript = (
-          '\nqc = QuantumCircuit(' +
-          node.outputs.toString() + ', ' +
-          node.cbits.toString() + ') \n'
-        );
-        const oldScript = globalContext.get('script');
-        globalContext.set('script', oldScript + qiskitScript);
+        // Add arguments to quantum circuit code
+        let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, node.outputs + ',' + node.cbits);
+        await shell.execute(circuitScript, (err) => {
+          if (err) node.error(err);
+        });
 
         // Creating an array of messages to be sent
         // Each message represents a different qubit
@@ -68,7 +52,7 @@ module.exports = function(RED) {
           output[i] = {
             topic: 'Quantum Circuit',
             payload: {
-              register: 'no registers',
+              register: undefined,
               qubit: i,
             },
           };
