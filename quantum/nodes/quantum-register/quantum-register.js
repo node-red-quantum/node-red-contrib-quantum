@@ -35,8 +35,8 @@ module.exports = function(RED) {
 
       // Add arguments to quantum register code
       let registerScript = util.format(snippets.QUANTUM_REGISTER,
-          'qr' + msg.payload.register.toString(),
-          node.outputs + ',' +
+          msg.payload.register.toString(),
+          node.outputs.toString() + ',' +
             (('"' + node.name + '"') || ('"r' + msg.payload.register.toString() + '"')),
       );
 
