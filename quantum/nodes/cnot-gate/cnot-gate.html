@@ -3,28 +3,27 @@
     category: "quantum",
     color: "#33B1FF",
     defaults: {
-      name: {value: ""},
+      name: { value: "" },
     },
     inputs: 2,
     outputs: 2,
     icon: "function.svg",
-    paletteLabel: "cnot gate",
-    label: function() {
-      return this.name || "cnot gate";
+    paletteLabel: "cnot-gate",
+    label: function () {
+      return this.name || "cnot-gate";
     },
   });
 </script>
 
-<script type="text/html" data-template-name="cnot gate">
-  <div className="form-row">
-    <label htmlFor="node-input-cnot-gate"
-    ><i className="fa fa-tag"></i> CNot Gate</label
-    >
-    <!-- <input type="text" id="node-input-name" placeholder="Name" /> -->
+<script type="text/html" data-template-name="cnot-gate">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
   </div>
-  <div className="form-row">
-    <label htmlFor="target-position"
-    >Please select the position of the target qubit relative to the control qubits:
+  <div class="form-row">
+    <label for="target-position"
+      >Please select the position of the target qubit relative to the
+      control qubits:
     </label>
     <select name="target-position" id="target-position">
       <option value="upper">Upper</option>
