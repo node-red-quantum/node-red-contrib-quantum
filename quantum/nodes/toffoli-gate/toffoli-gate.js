@@ -77,7 +77,7 @@ module.exports = function (RED) {
 
         // Generate the corresponding barrier Qiskit script
         let toffoliCode = util.format(
-          snippets.TOFFOLI,
+          snippets.TOFFOLI_GATE,
           "%s,".repeat(node.outputs)
         );
         node.qubits.map((msg) => {
