@@ -1,7 +1,6 @@
 'use strict';
 
 const util = require('util');
-const dedent = require('dedent-js');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 
@@ -14,24 +13,20 @@ module.exports = function(RED) {
     this.cbits = parseInt(config.cbits);
     this.outputs = parseInt(config.outputs);
     const flowContext = this.context().flow;
+    const output = new Array(this.outputs);
     const node = this;
-    const output = new Array(node.outputs);
 
-    this.on('input', function(msg, send, done) {
-      // Storing import script to the 'script' global variable
-      let qiskitScript = dedent(`
-        import numpy as np
-        import qiskit
-        from qiskit import *
-        \n
-      `);
-      flowContext.set('script', qiskitScript);
+    this.on('input', async function(msg, send, done) {
+      await shell.restart();
+      await shell.execute(snippets.IMPORTS, (err) => {
+        if (err) node.error(err);
+      });
 
       // If the user wants to use registers
       if (node.structure == 'registers') {
         // Creating a temporary 'quantumCircuit' flow context array
         // This variable represents the quantum circuit structure
-        const quantumCircuit = new Array(node.outputs);
+        let quantumCircuit = new Array(node.outputs);
         flowContext.set('quantumCircuit', quantumCircuit);
 
         // Creating an array of messages to be sent
@@ -45,18 +40,12 @@ module.exports = function(RED) {
           };
         };
       } else { // If the user does not want to use registers
-        // Appending Qiskit script to the 'script' global variable to initiate the quantum circuit
-        qiskitScript = dedent(`
-          qc = QuantumCircuit(%s, %s)
-          \n
-        `);
-        qiskitScript = util.format(qiskitScript,
-            node.outputs,
-            node.cbits,
-        );
+        // Add arguments to quantum circuit code
+        let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, node.outputs + ',' + node.cbits);
+        await shell.execute(circuitScript, (err) => {
+          if (err) node.error(err);
+        });
 
-        const oldScript = flowContext.get('script');
-        flowContext.set('script', oldScript + qiskitScript);
         // Creating an array of messages to be sent
         // Each message represents a different qubit
         for (let i = 0; i < node.outputs; i++) {

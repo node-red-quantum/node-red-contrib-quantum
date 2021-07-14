@@ -1,7 +1,6 @@
 'use strict';
 
 const util = require('util');
-const dedent = require('dedent-js');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 
@@ -12,10 +11,10 @@ module.exports = function(RED) {
     this.name = config.name;
     this.outputs = parseInt(config.outputs);
     const flowContext = this.context().flow;
+    const output = new Array(this.outputs);
     const node = this;
-    const output = new Array(node.outputs);
 
-    this.on('input', function(msg, send, done) {
+    this.on('input', async function(msg, send, done) {
       // Throw a connection error if:
       // - The user connects it to a node that is not from the quantum library
       // - The user did not select the 'Registers & Bits' option in the 'Quantum Circuit' node
@@ -32,78 +31,67 @@ module.exports = function(RED) {
         throw new Error(
             'Register nodes must be connected to the outputs of the "Quantum Circuit" node.',
         );
-      } else {
-        // If no connection errors
-        // Appending Qiskit script to the 'script' global variable
-        let qiskitScript = dedent(`
-          qr%s = QuantumRegister(%s, %s)
+      }
 
-        `);
-        qiskitScript = util.format(qiskitScript,
-            msg.payload.register,
-            node.outputs,
-            (node.name.toLowerCase() || ('r' + msg.payload.register.toString())),
-        );
+      // Add arguments to quantum register code
+      let registerScript = util.format(snippets.QUANTUM_REGISTER,
+          'qr' + msg.payload.register.toString(),
+          node.outputs + ',' +
+            (('"' + node.name + '"') || ('"r' + msg.payload.register.toString() + '"')),
+      );
 
-        let oldScript = flowContext.get('script');
-        flowContext.set('script', oldScript + qiskitScript);
+      // Completing the 'structure' global array
+      let structure = flowContext.get('quantumCircuit');
+      structure[msg.payload.register] = {
+        registerType: 'quantum',
+        registerName: (node.name || ('r' + msg.payload.register.toString())),
+        registerVar: 'qr' + msg.payload.register.toString(),
+        bits: node.outputs,
+      };
+      flowContext.set('quantumCircuit', structure);
 
-        // Completing the 'structure' global array
-        const structure = flowContext.get('quantumCircuit');
-        structure[msg.payload.register] = {
-          registerType: 'quantum',
-          registerVar: 'qr' + msg.payload.register.toString(),
-        };
-        flowContext.set('quantumCircuit', structure);
+      // Counting the number of registers that were set in the 'structure' array
+      let count = 0;
+      structure.map((x) => {
+        if (typeof(x) !== 'undefined') {
+          count += 1;
+        }
+      });
 
-        // Counting the number of registers that were set in the 'structure' array
-        let count = 0;
-        structure.map((x) => {
-          if (typeof(x) !== 'undefined') {
-            count += 1;
-          }
+      // If they are all set: initialise the quantum circuit
+      if (count == structure.length) {
+        // Add arguments to quantum circuit code
+        let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, '%s,'.repeat(count));
+
+        structure.map((register) => {
+          circuitScript = util.format(circuitScript, register.registerVar);
         });
 
-        // If they are all set: initialise the quantum circuit
-        if (count == structure.length) {
-          // Generating the corresponding Qiskit script
-          qiskitScript = dedent(`
-             
-            qc = QuantumCircuit(
-          `);
+        await shell.execute(circuitScript, (err) => {
+          if (err) node.error(err);
+        });
 
-          structure.map((register) => {
-            qiskitScript += '%s, ';
-            qiskitScript = util.format(qiskitScript, register.registerVar);
-          });
-
-          qiskitScript = qiskitScript.substring(0, qiskitScript.length - 2);
-          qiskitScript += dedent(`
-            ) 
-            \n
-          `);
-
-          // Appending the code to the 'script' global variable
-          oldScript = flowContext.get('script');
-          flowContext.set('script', oldScript + qiskitScript);
-          flowContext.set('quantumCircuit', null);
-        }
-        // Creating an array of messages to be sent
-        // Each message represents a different qubit
-        for (let i = 0; i < node.outputs; i++) {
-          output[i] = {
-            topic: 'Quantum Circuit',
-            payload: {
-              register: (node.name.toLowerCase() || ('r' + msg.payload.register.toString())),
-              registerVar: 'qr' + msg.payload.register.toString(),
-              qubit: i,
-            },
-          };
-        };
-
-        // Sending one qubit object per node output
-        send(output);
+        flowContext.set('quantumCircuit', undefined);
       }
+      // Creating an array of messages to be sent
+      // Each message represents a different qubit
+      for (let i = 0; i < node.outputs; i++) {
+        output[i] = {
+          topic: 'Quantum Circuit',
+          payload: {
+            register: (node.name || ('r' + msg.payload.register.toString())),
+            registerVar: 'qr' + msg.payload.register.toString(),
+            qubit: i,
+          },
+        };
+      };
+
+      await shell.execute(registerScript, (err) => {
+        if (err) node.error(err);
+      });
+
+      // Sending one qubit object per node output
+      send(output);
     });
   }
 

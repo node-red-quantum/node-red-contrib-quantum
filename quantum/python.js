@@ -1,3 +1,5 @@
+'use strict';
+
 const path = require('path');
 const appRoot = require('app-root-path').path;
 const dedent = require('dedent-js');
@@ -7,17 +9,13 @@ const pythonPath = path.resolve(appRoot, 'venv/bin/python');
 const childProcess = require('child_process');
 
 
-function processQueue(process, commandQueue) {
-  if (commandQueue.length > 0 && commandQueue[0].pending) {
-    commandQueue[0].pending = false;
-    process.stdin.write(commandQueue[0].command);
-  }
-};
-
-function createPromise(process, commandQueue) {
+function createPromise(process) {
   return new Promise((resolve, reject) => {
     process.stdout.removeAllListeners();
     process.stderr.removeAllListeners();
+
+    let outputData = '';
+    let errorData = '';
 
     process.stdout.on('data', function(data) {
       let done = false;
@@ -27,18 +25,15 @@ function createPromise(process, commandQueue) {
       } if (data.match(/#CommandEnd#/)) {
         data = data.replace(/#CommandEnd#/, '');
         done = true;
-      } if (commandQueue.length > 0) {
-        commandQueue[0].data += data;
       }
+      outputData += data;
 
       if (done) {
-        cmd = commandQueue.shift();
-        if (cmd.errorData.trim()) {
-          reject(cmd.errorData);
+        if (errorData.trim()) {
+          reject(errorData);
         } else {
-          resolve(cmd.data);
+          resolve(outputData);
         }
-        processQueue(process, commandQueue);
       }
     });
 
@@ -47,10 +42,8 @@ function createPromise(process, commandQueue) {
         data = data.replaceAll('>>>', '');
       } if (data.includes('...')) {
         data = data.replaceAll('...', '');
-      } if (commandQueue.length > 0) {
-        commandQueue[0].errorData += data;
       }
-      processQueue(process, commandQueue);
+      errorData += data;
     });
   });
 }
@@ -64,7 +57,7 @@ class PythonShell {
   */
   constructor(path) {
     this.path = path ? path : pythonPath;
-    this.commandQueue = [];
+    this.script = '';
   }
 
   /**
@@ -90,19 +83,15 @@ class PythonShell {
     }
 
     command = command ? dedent(command) : '';
+    this.script += '\n' + command + '\n';
     command = '\nprint("#CommandStart#")\n' + command + '\nprint("#CommandEnd#")\n';
 
-    const promise = createPromise(this.process, this.commandQueue);
-    this.commandQueue.push({'command': command, 'data': '', 'errorData': '', 'pending': true});
-    processQueue(this.process, this.commandQueue);
+    const promise = createPromise(this.process);
+    this.process.stdin.write(command);
 
     return promise
-        .then((data) => {
-          return callback !== undefined ? callback(null, data.trim()) : data.trim();
-        })
-        .catch((err) => {
-          return callback !== undefined ? callback(err.trim(), null) : err.trim();
-        });
+        .then((data) => callback !== undefined ? callback(null, data.trim()) : data.trim())
+        .catch((err) => callback !== undefined ? callback(err.trim(), null) : err.trim());
   }
 
   /**
@@ -137,6 +126,7 @@ class PythonShell {
     if (this.process) {
       this.process.kill();
       this.process = null;
+      this.script = '';
     }
   }
 
