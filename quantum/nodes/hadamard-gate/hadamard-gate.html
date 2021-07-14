@@ -3,20 +3,20 @@
       category: "quantum",
       color: "#FA4D56",
       defaults: {
-        name: { value: "H" },
+        name: { value: "" },
       },
       inputs: 1,
       outputs: 1,
       icon: "font-awesome/fa-header",
       align: 'right',
-      paletteLabel: "H",
+      paletteLabel: "hadamard",
       label: function () {
-        return this.name || "H";
+        return this.name || "hadamard";
       },
       inputLabels: function(index) {
           return "qubit " + index;
       },
-      outputLabels: "H",
+      outputLabels: "hadamard",
       });
   </script>
   
