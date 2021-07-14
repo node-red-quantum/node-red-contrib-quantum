@@ -17,7 +17,7 @@ module.exports = function (RED) {
       // - The user connects it to a node that is not from the quantum library
       // - The user does not input a qubit object in the node
       // - The user chooses to use registers but does not initiate them
-      // - The user inputs more qubits than selected in the node properties
+      // - The user does not input 3 qubits.
       if (msg.topic !== 'Quantum Circuit') {
         throw new Error(
             'The Toffoli Gate must be connected to nodes from the quantum library only.',
@@ -31,7 +31,7 @@ module.exports = function (RED) {
         throw new Error(
             'If "Registers & Bits" was selected in the "Quantum Circuit" node, please make use of register nodes.',
         );
-      } else if (node.qubits.length >= 3) {
+      } else if (node.qubits.length !== 3) {
         throw new Error(
             'The Toffoli Gate requires exactly 3 input qubits to be used.',
         );
