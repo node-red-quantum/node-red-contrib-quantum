@@ -12,7 +12,7 @@ module.exports = function(RED) {
     this.qubits = [];
     const node = this;
 
-    node.on('input', async function(msg, send, done, target, control) {
+    node.on('input', async function(msg, send, done, targetQubit, controlQubit) {
       // Throw a connection error if:
       // - The user connects it to a node that is not from the quantum library
       // - The user does not input a qubit object in the node
@@ -59,11 +59,11 @@ module.exports = function(RED) {
         });
 
         if (targetPosition === 'upper') {
-          target = node.qubits[0];
-          control = node.qubits[1];
+          targetQubit = node.qubits[0];
+          controlQubit = node.qubits[1];
         } else {
-          target = node.qubits[1];
-          control = node.qubits[0];
+          targetQubit = node.qubits[1];
+          controlQubit = node.qubits[0];
         }
 
         // Generate the corresponding cnot Qiskit script
@@ -71,11 +71,11 @@ module.exports = function(RED) {
         node.qubits.map((msg) => {
           if (typeof (msg.payload.register) === 'undefined') {
             cnotScript = util.format(cnotScript,
-                control.toString(), target.toString());
+                controlQubit.toString(), targetQubit.toString());
           } else {
             cnotScript = util.format(cnotScript,
-                control.registerVar + '[' + control.toString() + ']',
-                target.registerVar + '[' + target.toString() + ']');
+                controlQubit.registerVar + '[' + controlQubit.toString() + ']',
+                targetQubit.registerVar + '[' + targetQubit.toString() + ']');
           }
         });
 
