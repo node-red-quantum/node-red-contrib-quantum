@@ -1,4 +1,5 @@
 'use strict';
+
 const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
