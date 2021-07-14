@@ -5,7 +5,7 @@ const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 
 module.exports = function(RED) {
-  function HadamardGate(config) {
+  function HadamardGateNode(config) {
     RED.nodes.createNode(this, config);
     const node = this;
 
@@ -33,6 +33,6 @@ module.exports = function(RED) {
     })
   }
 
-  RED.nodes.registerType('hadamard-gate', HadamardGate);
+  RED.nodes.registerType('hadamard-gate', HadamardGateNode);
 };
   
