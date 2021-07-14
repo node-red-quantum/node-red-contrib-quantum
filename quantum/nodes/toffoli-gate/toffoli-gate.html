@@ -4,6 +4,7 @@
     color: "#33B1FF",
     defaults: {
       name: { value: "" },
+      targetPosition: { value: "", required: true },
     },
     inputs: 1,
     outputs: 3,
@@ -11,6 +12,37 @@
     paletteLabel: "toffoli gate",
     label: function () {
       return this.name || "toffoli gate";
+    },
+
+    oneditprepare: function () {
+      if (document.getElementById("target-position").value == "top") {
+        $(".target-position-top").addClass("selected");
+      } else if (document.getElementById("target-position").value == "middle") {
+        $(".target-position-middle").addClass("selected");
+      } else {
+        $(".target-position-bottom").addClass("selected");
+      }
+
+      $(".target-position-top").on("click", function () {
+        $(".target-position-middle").removeClass("selected");
+        $(".target-position-bottom").removeClass("selected");
+        $(this).addClass("selected");
+        document.getElementById("target-position").value = "top";
+      });
+
+      $(".target-position-middle").on("click", function () {
+        $(".target-position-top").removeClass("selected");
+        $(".target-position-bottom").removeClass("selected");
+        $(this).addClass("selected");
+        document.getElementById("target-position").value = "middle";
+      });
+
+      $(".target-position-bottom").on("click", function () {
+        $(".target-position-top").removeClass("selected");
+        $(".target-position-middle").removeClass("selected");
+        $(this).addClass("selected");
+        document.getElementById("target-position").value = "bottom";
+      });
     },
   });
 </script>
@@ -23,15 +55,27 @@
     <!-- <input type="text" id="node-input-name" placeholder="Name" /> -->
   </div>
   <div class="form-row">
-    <label for="target-position"
+    <label for="target-position-toggle"
       >Please select the relative position of the target qubit:
     </label>
-    <select name="target-position" id="target-position">
-      <option value="top">Top</option>
-      <option value="middle">Middle</option>
-      <option value="bottom">Bottom</option>
-    </select>
+    <span class="target-position-toggle">
+      <button type="button" class="red-ui-button toggle target-position-top">
+        Top
+      </button>
+      <button type="button" class="red-ui-button toggle target-position-middle">
+        Middle
+      </button>
+      <button type="button" class="red-ui-button toggle target-position-bottom">
+        Bottom
+      </button>
+    </span>
   </div>
+
+  <!-- Do not delete -->
+  <div hidden>
+    <input type="text" id="target-position" />
+  </div>
+  <!------------------->
 </script>
 
 <script type="text/html" data-help-name="toffoli-gate">
