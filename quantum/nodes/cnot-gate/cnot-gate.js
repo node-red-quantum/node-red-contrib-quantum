@@ -5,12 +5,11 @@ const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 
 module.exports = function(RED) {
-  const targetPosition = document.getElementById('target-position').value;
-
   function CNotGateNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.qubits = [];
+    this.targetPosition = config.targetPosition;
     const node = this;
 
     node.on('input', async function(msg, send, done, targetQubit, controlQubit) {
@@ -68,15 +67,19 @@ module.exports = function(RED) {
         }
 
         // Generate the corresponding cnot-gate Qiskit script
-        let cnotScript = util.format(snippets.CNOT_GATE, '%s,'.repeat(node.outputs));
         node.qubits.map((msg) => {
-          if (typeof (msg.payload.register) === 'undefined') {
-            cnotScript = util.format(cnotScript,
-                controlQubit.toString(), targetQubit.toString());
+          if (typeof msg.payload.register === 'undefined') {
+            let cnotScript = util.format(
+                snippets.CNOT_GATE,
+                controlQubit.qubit.toString(),
+                targetQubit.qubit.toString(),
+            );
           } else {
-            cnotScript = util.format(cnotScript,
-                controlQubit.registerVar + '[' + controlQubit.toString() + ']',
-                targetQubit.registerVar + '[' + targetQubit.toString() + ']');
+            let cnotScript = util.format(
+                snippets.CNOT_GATE,
+                controlQubit.registerVar + '[' + controlQubit.qubit.toString() + ']',
+                targetQubit.registerVar + '[' + targetQubit.qubit.toString() + ']',
+            );
           }
         });
 
