@@ -67,21 +67,19 @@ module.exports = function(RED) {
         }
 
         // Generate the corresponding cnot-gate Qiskit script
-        node.qubits.map((msg) => {
-          if (typeof msg.payload.register === 'undefined') {
-            let cnotScript = util.format(
-                snippets.CNOT_GATE,
-                controlQubit.qubit.toString(),
-                targetQubit.qubit.toString(),
-            );
-          } else {
-            let cnotScript = util.format(
-                snippets.CNOT_GATE,
-                controlQubit.registerVar + '[' + controlQubit.qubit.toString() + ']',
-                targetQubit.registerVar + '[' + targetQubit.qubit.toString() + ']',
-            );
-          }
-        });
+        if (typeof msg.payload.register === 'undefined') {
+          let cnotScript = util.format(
+              snippets.CNOT_GATE,
+              controlQubit.qubit.toString(),
+              targetQubit.qubit.toString(),
+          );
+        } else {
+          let cnotScript = util.format(
+              snippets.CNOT_GATE,
+              controlQubit.registerVar + '[' + controlQubit.qubit.toString() + ']',
+              targetQubit.registerVar + '[' + targetQubit.qubit.toString() + ']',
+          );
+        }
 
         // Run the script in the python shell
         await shell.execute(cnotScript, (err) => {

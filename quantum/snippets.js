@@ -30,7 +30,8 @@ const QUANTUM_REGISTER =
 const BARRIER =
 `qc.barrier(%s)`;
 
-const CNOT_GATE = `qc.cx(s%, s%)`;
+const CNOT_GATE =
+`qc.cx(%s, %s)`;
 
 const HADAMARD_GATE =
 `qc.h(%s)`;
