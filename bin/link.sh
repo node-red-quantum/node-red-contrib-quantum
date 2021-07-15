@@ -25,7 +25,7 @@ else
 fi
 
 # Check if Node-RED user directory exists. If no, create it.
-if [ ! -d "$red_path" ]; then
+if [[ ! -d "$red_path" ]]; then
   echo "Creating Node RED user directory at $red_path"
   mkdir "$red_path"
 else
