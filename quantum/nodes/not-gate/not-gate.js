@@ -64,8 +64,6 @@ module.exports = function(RED) {
         });
       }
 
-      let notScript = "\nqc = x("+ document.getElementByID("control-qubit-1").value +")";
-
       // Run the script in the python shell
       await shell.execute(notScript, (err) => {
         if (err) node.error(err);
