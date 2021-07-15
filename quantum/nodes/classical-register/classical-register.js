@@ -12,7 +12,6 @@ module.exports = function(RED) {
     this.classicalBits = parseInt(config.classicalBits);
     const flowContext = this.context().flow;
     const node = this;
-    this.registerVar = 'cr' + node.id.replace('.', '_');
 
     this.on('input', async function(msg, send, done) {
       // Throw a connection error if:
@@ -34,13 +33,13 @@ module.exports = function(RED) {
       }
 
       // Setting node.name to "r0","r1"... if the user did not input a name
-      if (node.name == '') {
-        node.name = 'r' + msg.payload.register.toString();
-      }
+      // if (node.name == '') {
+      //   node.name = 'r' + msg.payload.register.toString();
+      // }
 
       // Add arguments to classical register code
       let registerScript = util.format(snippets.CLASSICAL_REGISTER,
-          msg.payload.register.toString(),
+          node.name,
           node.classicalBits.toString() + ', "' + node.name + '"',
       );
       await shell.execute(registerScript, (err) => {
@@ -51,7 +50,7 @@ module.exports = function(RED) {
       let register = {
         registerType: 'classical',
         registerName: node.name,
-        registerVar: 'cr' + msg.payload.register.toString(),
+        registerVar: 'cr' + node.name,
         bits: node.classicalBits,
       };
       flowContext.set('quantumCircuit[' + msg.payload.register.toString() + ']', register);

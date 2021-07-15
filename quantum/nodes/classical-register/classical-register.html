@@ -3,7 +3,20 @@
     category: "quantum",
     color: "#C0C0C0",
     defaults: {
-      name: { value: "" },
+      name: { 
+        value: "", 
+        required: true,
+        validate: function (x) {
+          x = x.toString();
+          x = x.trim();
+          //
+          // TODO: Check that name is valid (no '.', special characters etc.)
+          // TODO: Check that name isn't taken in http admin classical register array 
+          // 
+          if (false) {return false}
+          else {return true}
+        }
+      },
       classicalBits: { 
         value: "", 
         required: true ,
