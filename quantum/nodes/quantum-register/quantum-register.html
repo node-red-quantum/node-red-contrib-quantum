@@ -1,17 +1,30 @@
 <script type="text/javascript">
   RED.nodes.registerType("quantum-register", {
     category: "quantum",
-    color: "#8A3FFC",
+    color: "#C0C0C0",
     defaults: {
       name: { value: "" },
-      outputs: { value: "", required: true },
+      outputs: { 
+        value: "", 
+        required: true,
+        validate: function (x) {
+          x = parseInt(x);
+          if (Number.isInteger(x) && x > 0){return true} 
+          else {return false}
+        }
+      },
     },
     inputs: 1,
-    icon: "function.svg",
+    icon: "font-awesome/fa-certificate",
+    align: 'right',
     paletteLabel: "quantum register",
     label: function () {
       return this.name || "quantum register";
     },
+    inputLabels: "quantum circuit node",
+    outputLabels: function(index) {
+        return "Qubit " + index;
+    }
   });
 </script>
 

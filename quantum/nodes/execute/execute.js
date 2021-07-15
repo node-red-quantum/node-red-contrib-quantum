@@ -1,7 +1,7 @@
 module.exports = function(RED) {
   'use strict';
 
-  const shell = require('../../python-shell');
+  const shell = require('../../python');
 
   function ExecuteNode(config) {
     RED.nodes.createNode(this, config);

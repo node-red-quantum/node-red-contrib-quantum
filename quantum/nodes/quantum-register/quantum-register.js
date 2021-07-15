@@ -1,60 +1,90 @@
-module.exports = function(RED) {
-  'use strict';
+'use strict';
 
+const util = require('util');
+const snippets = require('../../snippets');
+const shell = require('../../python').PythonShell;
+
+module.exports = function(RED) {
   function QuantumRegisterNode(config) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
     this.name = config.name;
-    this.outputs = config.outputs;
-    const globalContext = this.context().global;
+    this.outputs = parseInt(config.outputs);
+    const flowContext = this.context().flow;
+    const output = new Array(this.outputs);
     const node = this;
-    const output = new Array(node.outputs);
 
-    this.on('input', function(msg, send, done) {
-      // Appending Qiskit script to the 'script' global variable
-      let qiskitScript = (
-        '\nqr' + msg.payload.register.toString() +
-        ' = QuantumRegister(' + node.outputs.toString() +
-        ', \'' + (node.name || ('R' + msg.payload.register.toString())) + '\')'
+    this.on('input', async function(msg, send, done) {
+      // Throw a connection error if:
+      // - The user connects it to a node that is not from the quantum library
+      // - The user did not select the 'Registers & Bits' option in the 'Quantum Circuit' node
+      // - The user does not connect the register node to the output of the 'Quantum Circuit' node
+      if (msg.topic !== 'Quantum Circuit') {
+        throw new Error(
+            'Register nodes must be connected to nodes from the quantum library only',
+        );
+      } else if (typeof(msg.payload.register) === 'undefined') {
+        throw new Error(
+            'Select "Registers & Qubits" in the "Quantum Circuit" node properties to use registers.',
+        );
+      } else if (typeof(msg.payload.register) !== 'number') {
+        throw new Error(
+            'Register nodes must be connected to the outputs of the "Quantum Circuit" node.',
+        );
+      }
+
+      // Setting node.name to "r0","r1"... if the user did not input a name
+      if (node.name == '') {
+        node.name = 'r' + msg.payload.register.toString();
+      }
+
+      // Add arguments to quantum register code
+      let registerScript = util.format(snippets.QUANTUM_REGISTER,
+          msg.payload.register.toString(),
+          node.outputs.toString() + ', "' + node.name + '"',
       );
-      let oldScript = globalContext.get('script');
-      globalContext.set('script', oldScript + qiskitScript);
+      await shell.execute(registerScript, (err) => {
+        if (err) node.error(err);
+      });
 
-      // Completing the 'structure' global array
-      const structure = globalContext.get('quantumCircuit.structure');
-      structure[msg.payload.register] = {
+      // Completing the 'quantumCircuit' flow context array
+      let register = {
         registerType: 'quantum',
-        registerName: (node.name || ('R' + msg.payload.register.toString())),
+        registerName: node.name,
         registerVar: 'qr' + msg.payload.register.toString(),
         bits: node.outputs,
       };
-      globalContext.set('quantumCircuit.structure', structure);
+      flowContext.set('quantumCircuit[' + msg.payload.register.toString() + ']', register);
 
-      // Counting the number of registers that were set in the 'structure' array
-      let count = 0;
-      structure.map((x) => {
-        if (typeof(x) !== 'undefined') {
-          count += 1;
-        }
-      });
+      // If the quantum circuit has not yet been initialised by another register
+      if (typeof(flowContext.get('quantumCircuit')) !== undefined) {
+        // Counting the number of registers that were set in the 'quantumCircuit' array
+        let structure = flowContext.get('quantumCircuit');
 
-      // If they are all set: initialise the quantum circuit
-      if (count == structure.length) {
-        // Generating the corresponding Qiskit script
-        qiskitScript = '\n \nqc = QuantumCircuit(';
-        structure.map((register) => {
-          if (register.registerType === 'quantum') {
-            qiskitScript += ('qr' + structure.indexOf(register) + ',');
-          } else {
-            qiskitScript += ('cr' + structure.indexOf(register) + ',');
+        let count = 0;
+        structure.map((x) => {
+          if (typeof(x) !== 'undefined') {
+            count += 1;
           }
         });
-        qiskitScript = qiskitScript.substring(0, qiskitScript.length - 1);
-        qiskitScript += ') \n';
 
-        // Appending the code to the 'script' global variable
-        oldScript = globalContext.get('script');
-        globalContext.set('script', oldScript + qiskitScript);
+        // If all set & the quantum circuit has not yet been initialised by another register:
+        // Initialise the quantum circuit
+        if (count == structure.length && typeof(flowContext.get('quantumCircuit')) !== undefined) {
+          // Delete the 'quantumCircuit' flow context variable, not used anymore
+          flowContext.set('quantumCircuit', undefined);
+
+          // Add arguments to quantum circuit code
+          let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, '%s,'.repeat(count));
+
+          structure.map((register) => {
+            circuitScript = util.format(circuitScript, register.registerVar);
+          });
+
+          await shell.execute(circuitScript, (err) => {
+            if (err) node.error(err);
+          });
+        }
       }
 
       // Creating an array of messages to be sent
@@ -63,11 +93,12 @@ module.exports = function(RED) {
         output[i] = {
           topic: 'Quantum Circuit',
           payload: {
-            register: 'qr' + msg.payload.register.toString(),
+            register: node.name,
+            registerVar: 'qr' + msg.payload.register.toString(),
             qubit: i,
           },
         };
-      };
+      }
 
       // Sending one qubit object per node output
       send(output);

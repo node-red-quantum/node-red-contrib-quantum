@@ -1,59 +1,90 @@
-module.exports = function(RED) {
-  'use strict';
+'use strict';
 
+const util = require('util');
+const snippets = require('../../snippets');
+const shell = require('../../python').PythonShell;
+
+module.exports = function(RED) {
   function ClassicalRegisterNode(config) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
     this.name = config.name;
-    this.classicalBits = config.classicalBits;
-    const globalContext = this.context().global;
+    this.classicalBits = parseInt(config.classicalBits);
+    const flowContext = this.context().flow;
     const node = this;
+    this.registerVar = 'cr' + node.id.replace('.', '_');
 
-    this.on('input', function(msg, send, done) {
-      // Appending Qiskit script to the 'script' global variable
-      let qiskitScript = (
-        '\ncr' + msg.payload.register.toString() +
-        ' = ClassicalRegister(' + node.classicalBits.toString() +
-        ', \'' + (node.name || ('R' + msg.payload.register.toString())) + '\')'
+    this.on('input', async function(msg, send, done) {
+      // Throw a connection error if:
+      // - The user connects it to a node that is not from the quantum library
+      // - The user did not select the 'Registers & Bits' option in the 'Quantum Circuit' node
+      // - The user does not connect the register node to the output of the 'Quantum Circuit' node
+      if (msg.topic !== 'Quantum Circuit') {
+        throw new Error(
+            'Register nodes must be connected to nodes from the quantum library only',
+        );
+      } else if (typeof(msg.payload.register) === 'undefined') {
+        throw new Error(
+            'Select "Registers & Qubits" in the "Quantum Circuit" node properties to use registers.',
+        );
+      } else if (typeof(msg.payload.register) !== 'number') {
+        throw new Error(
+            'Register nodes must be connected to the outputs of the "Quantum Circuit" node.',
+        );
+      }
+
+      // Setting node.name to "r0","r1"... if the user did not input a name
+      if (node.name == '') {
+        node.name = 'r' + msg.payload.register.toString();
+      }
+
+      // Add arguments to classical register code
+      let registerScript = util.format(snippets.CLASSICAL_REGISTER,
+          msg.payload.register.toString(),
+          node.classicalBits.toString() + ', "' + node.name + '"',
       );
-      let oldScript = globalContext.get('script');
-      globalContext.set('script', oldScript + qiskitScript);
-
-      // Completing the 'structure' global array
-      const structure = globalContext.get('quantumCircuit.structure');
-      structure[msg.payload.register] = {
-        registerType: 'classical',
-        registerName: (node.name || ('R' + msg.payload.register.toString())),
-        registerVar: 'cr' + msg.payload.register.toString(),
-        bits: parseInt(node.classicalBits),
-      };
-      globalContext.set('quantumCircuit.structure', structure);
-
-      // Counting the number of registers that were set in the 'structure' array
-      let count = 0;
-      structure.map((x) => {
-        if (typeof(x) !== 'undefined') {
-          count += 1;
-        }
+      await shell.execute(registerScript, (err) => {
+        if (err) node.error(err);
       });
 
-      // If they are all set: initialise the quantum circuit
-      if (count == structure.length) {
-        // Generating the corresponding Qiskit script
-        qiskitScript = '\n \nqc = QuantumCircuit(';
-        structure.map((register) => {
-          if (register.registerType === 'quantum') {
-            qiskitScript += ('qr' + structure.indexOf(register) + ',');
-          } else {
-            qiskitScript += ('cr' + structure.indexOf(register) + ',');
+      // Completing the 'quantumCircuit' flow context array
+      let register = {
+        registerType: 'classical',
+        registerName: node.name,
+        registerVar: 'cr' + msg.payload.register.toString(),
+        bits: node.classicalBits,
+      };
+      flowContext.set('quantumCircuit[' + msg.payload.register.toString() + ']', register);
+
+      // If the quantum circuit has not yet been initialised by another register
+      if (typeof(flowContext.get('quantumCircuit')) !== undefined) {
+        // Counting the number of registers that were set in the 'quantumCircuit' array
+        let structure = flowContext.get('quantumCircuit');
+
+        let count = 0;
+        structure.map((x) => {
+          if (typeof(x) !== 'undefined') {
+            count += 1;
           }
         });
-        qiskitScript = qiskitScript.substring(0, qiskitScript.length - 1);
-        qiskitScript += ') \n';
 
-        // Appending the code to the 'script' global variable
-        oldScript = globalContext.get('script');
-        globalContext.set('script', oldScript + qiskitScript);
+        // If all set & the quantum circuit has not yet been initialised by another register:
+        // Initialise the quantum circuit
+        if (count == structure.length && typeof(flowContext.get('quantumCircuit')) !== undefined) {
+          // Delete the 'quantumCircuit' flow context variable, not used anymore
+          flowContext.set('quantumCircuit', undefined);
+
+          // Add arguments to quantum circuit code
+          let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, '%s,'.repeat(count));
+
+          structure.map((register) => {
+            circuitScript = util.format(circuitScript, register.registerVar);
+          });
+
+          await shell.execute(circuitScript, (err) => {
+            if (err) node.error(err);
+          });
+        }
       }
 
       // Notify the runtime when the node is done.
@@ -62,6 +93,20 @@ module.exports = function(RED) {
       }
     });
   }
+  // Defining post request handler for this node to save its config values
+  // to frontend variable
+  RED.httpAdmin.post('/classical-register', RED.auth.needsPermission('classical-register.read'), function(req, res) {
+    classicalRegister.classicalBits = req.body.cbits;
+    res.json({success: true});
+  });
 
+  // Defining get request handler for other nodes to get latest data on
+  // number of classical bits and variable name;
+  RED.httpAdmin.get('/classical-register', RED.auth.needsPermission('classical-register.read'), function(req, res) {
+    res.json({
+      bits: classicalRegister.classicalBits,
+      registerVar: classicalRegister.registerVar,
+    });
+  });
   RED.nodes.registerType('classical-register', ClassicalRegisterNode);
 };
