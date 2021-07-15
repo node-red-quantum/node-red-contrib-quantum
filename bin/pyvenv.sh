@@ -49,7 +49,7 @@ fi
 # Install Qiskit within the virtual environment using pip.
 if [[ -x "$pip_path" ]]; then
   echo "Installing Qiskit..."
-  if "$pip_path" install qiskit; then
+  if "$pip_path" install --quiet qiskit; then
     echo "Successfully installed Qiskit"
   else
     echo "Error: failed to install Qiskit"
