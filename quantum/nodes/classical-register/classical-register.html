@@ -3,24 +3,24 @@
     category: "quantum",
     color: "#C0C0C0",
     defaults: {
-      name: { 
-        value: "", 
+      name: {
+        value: "",
         required: true,
         validate: function (x) {
           x = x.trim().toLowerCase().replace(' ', '_');
           //
-          // TODO: Check that name isn't taken in http admin classical register array 
-          // 
+          // TODO: Check that name isn't taken in http admin classical register array
+          //
           if (!x.match(/^[0-9a-z_]+$/)) return false
           else return true
         }
       },
-      classicalBits: { 
-        value: "", 
+      classicalBits: {
+        value: "",
         required: true ,
         validate: function (x) {
           x = parseInt(x);
-          if (Number.isInteger(x) && x > 0){return true} 
+          if (Number.isInteger(x) && x > 0){return true}
           else {return false}
         }
       },
@@ -38,8 +38,25 @@
     oneditsave: function() {
       var element = document.getElementById("node-input-classicalBits");
       this.classicalBits = element.value;
-      $.post('classical-register', {cbits: this.classicalBits}, p => p);
-    }
+
+      var nameInput = document.getElementById('node-input-name');
+      let regName = nameInput.value.trim().toLowerCase().replace(' ', '_');
+      let regVarName = 'cr_' + regName;
+      $.post('quantum-circuit/update-register',
+              {
+                nodeid: this.id,
+                regName: regName,
+                regVarName: regVarName,
+                bits: this.classicalBits
+              }, p => p
+      );
+    },
+
+    oneditdelete: function() {
+      $.post('quantum-circuit/delete-register',
+              {nodeid: this.id}, p => p
+      );
+    },
   });
 </script>
 
