@@ -1,7 +1,7 @@
 module.exports = function(RED) {
   'use strict';
 
-  function NotGate(config){
+  function NotGateNode(config){
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.outputs = config.outputs;
