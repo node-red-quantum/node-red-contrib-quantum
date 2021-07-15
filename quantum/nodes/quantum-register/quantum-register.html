@@ -3,7 +3,14 @@
     category: "quantum",
     color: "#C0C0C0",
     defaults: {
-      name: { value: "" },
+      name: { 
+        value: "",
+        validate: function (x) {
+          x = x.trim().toLowerCase().replace(' ', '_');
+          if (!x.match(/^[0-9a-z_]+$/)) return false
+          else return true
+        }
+      },
       outputs: { 
         value: "", 
         required: true,

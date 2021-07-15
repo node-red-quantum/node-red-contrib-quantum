@@ -7,14 +7,12 @@
         value: "", 
         required: true,
         validate: function (x) {
-          x = x.toString();
-          x = x.trim();
+          x = x.trim().toLowerCase().replace(' ', '_');
           //
-          // TODO: Check that name is valid (no '.', special characters etc.)
           // TODO: Check that name isn't taken in http admin classical register array 
           // 
-          if (false) {return false}
-          else {return true}
+          if (!x.match(/^[0-9a-z_]+$/)) return false
+          else return true
         }
       },
       classicalBits: { 
