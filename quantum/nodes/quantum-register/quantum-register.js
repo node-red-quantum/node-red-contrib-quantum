@@ -39,7 +39,9 @@ module.exports = function(RED) {
           node.outputs.toString() + ',' +
             (('"' + node.name + '"') || ('"r' + msg.payload.register.toString() + '"')),
       );
-
+      await shell.execute(registerScript, (err) => {
+        if (err) node.error(err);
+      });
       // Completing the 'structure' global array
       let structure = flowContext.get('quantumCircuit');
       structure[msg.payload.register] = {
@@ -61,12 +63,13 @@ module.exports = function(RED) {
       // If they are all set: initialise the quantum circuit
       if (count == structure.length) {
         // Add arguments to quantum circuit code
-        let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, '%s,'.repeat(count));
 
+        let params = '';
         structure.map((register) => {
-          circuitScript = util.format(circuitScript, register.registerVar);
+          params += register.registerVar + ',';
         });
-
+        let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, params);
+        console.log('circuit script = ',circuitScript);
         await shell.execute(circuitScript, (err) => {
           if (err) node.error(err);
         });
@@ -86,11 +89,6 @@ module.exports = function(RED) {
           },
         };
       }
-
-      await shell.execute(registerScript, (err) => {
-        if (err) node.error(err);
-      });
-
       // Sending one qubit object per node output
       send(output);
     });
