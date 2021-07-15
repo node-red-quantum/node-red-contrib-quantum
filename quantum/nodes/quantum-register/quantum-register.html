@@ -6,9 +6,12 @@
       name: { 
         value: "",
         validate: function (x) {
-          x = x.trim().toLowerCase().replace(' ', '_');
-          if (!x.match(/^[0-9a-z_]+$/)) return false
-          else return true
+          if (x == "") return true
+          else {
+            x = x.trim().toLowerCase().replace(' ', '_');
+            if (!x.match(/^[0-9a-z_]+$/)) return false
+            else return true
+          }
         }
       },
       outputs: { 
