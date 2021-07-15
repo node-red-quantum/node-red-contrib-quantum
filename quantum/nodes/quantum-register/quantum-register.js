@@ -86,6 +86,7 @@ module.exports = function(RED) {
           });
         }
       }
+
       // Creating an array of messages to be sent
       // Each message represents a different qubit
       for (let i = 0; i < node.outputs; i++) {
@@ -97,7 +98,7 @@ module.exports = function(RED) {
             qubit: i,
           },
         };
-      };
+      }
 
       // Sending one qubit object per node output
       send(output);
