@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # This script sets up a Node-RED user directory and installs the package.
-# Note that this is designed to be run in Linux environments and has not
-# been fully tested.
+# Note that this is designed to be run in POSIX-compatible environments
+# which use Bash and has not been fully tested.
 
 
 # Check if NPM is installed. If no, exit unsuccessfully.
