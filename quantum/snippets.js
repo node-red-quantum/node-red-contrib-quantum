@@ -32,6 +32,8 @@ const BARRIER =
 
 const CNOT_GATE = `qc.cx(s%, s%)`;
 
+const HADAMARD_GATE =
+`qc.h(%s)`;
 
 module.exports = {
   IMPORTS,
@@ -40,4 +42,5 @@ module.exports = {
   QUANTUM_REGISTER,
   BARRIER,
   CNOT_GATE,
+  HADAMARD_GATE,
 };

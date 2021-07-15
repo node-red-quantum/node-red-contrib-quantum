@@ -55,7 +55,7 @@ module.exports = function(RED) {
       // Counting the number of registers that were set in the 'structure' array
       let count = 0;
       structure.map((x) => {
-        if (typeof(x) !== 'undefined') {
+        if (typeof (x) !== 'undefined') {
           count += 1;
         }
       });

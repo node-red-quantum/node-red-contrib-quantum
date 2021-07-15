@@ -53,7 +53,7 @@ module.exports = function(RED) {
       // Counting the number of registers that were set in the 'structure' array
       let count = 0;
       structure.map((x) => {
-        if (typeof(x) !== 'undefined') {
+        if (typeof (x) !== 'undefined') {
           count += 1;
         }
       });
@@ -73,6 +73,7 @@ module.exports = function(RED) {
 
         flowContext.set('quantumCircuit', undefined);
       }
+
       // Creating an array of messages to be sent
       // Each message represents a different qubit
       for (let i = 0; i < node.outputs; i++) {
@@ -84,7 +85,7 @@ module.exports = function(RED) {
             qubit: i,
           },
         };
-      };
+      }
 
       await shell.execute(registerScript, (err) => {
         if (err) node.error(err);
