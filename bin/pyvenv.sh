@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # This script sets up a Python virtual environment and installs Qiskit.
-# Note that this is designed to be run in Linux environments and has not
-# been fully tested.
+# Note that this is designed to be run in POSIX-compatible environments
+# and has not been fully tested.
 
 # Check if python is installed. If no, exit unsuccessfully.
 if ! command -v python &>/dev/null; then
@@ -19,8 +19,16 @@ else
   echo "Using virtual environment at $venv"
 fi
 
+# Check OS for paths.
+if [[ "$OSTYPE" == "mysys" ]] || [[ "$OSTYPE" == "cygwin"]]; then
+  python=$venv/Scripts/python.exe
+  pip=$venv/Scripts/pip.exe
+else
+  python=$venv/bin/python
+  pip=$venv/bin/pip
+fi
+
 # Check if Qiskit package is installed. If yes, exit successfully.
-python=$venv/bin/python
 if [ -x $python ]; then
   if $python -c "import qiskit" &>/dev/null; then
     echo "Qiskit is installed"
@@ -32,7 +40,6 @@ else
 fi
 
 # Install Qiskit within the virtual environment using pip.
-pip=$venv/bin/pip
 if [ -x $pip ]; then
   echo "Installing Qiskit in virtual environment"
   $pip install qiskit
