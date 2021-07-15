@@ -5,8 +5,8 @@
 # which use Bash and has not been fully tested.
 
 # Check if python is installed. If no, exit unsuccessfully.
-if ! command -v python &>/dev/null; then
-  echo "Error: failed to find Python in PATH"
+if ! command -v python3 &>/dev/null; then
+  echo "Error: failed to find Python 3 in PATH"
   exit 1
 fi
 
@@ -14,7 +14,7 @@ fi
 venv="$PWD/venv"
 if [[ ! -d "$venv" ]] || [[ -z "$venv" ]]; then
   echo "Creating virtual environment at $venv..."
-  if python -m venv "$venv"; then
+  if python3 -m venv "$venv"; then
     echo "Successfully created virtual environment"
   else
     echo "Error: failed to create virtual environment"
