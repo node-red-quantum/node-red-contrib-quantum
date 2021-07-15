@@ -9,6 +9,7 @@ module.exports = function(RED) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
     this.name = config.name.trim().toLowerCase().replace(' ', '_');
+    this.classicalBits = config.classicalBits;
     const flowContext = this.context().flow;
     const node = this;
 

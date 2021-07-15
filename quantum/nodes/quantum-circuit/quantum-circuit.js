@@ -5,10 +5,12 @@ const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 
 module.exports = function(RED) {
+  let quantumCircuitNode;
   let classicalRegisters = [];
   function QuantumCircuitNode(config) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
+    quantumCircuitNode = this;
     this.name = config.name;
     this.structure = config.structure;
     this.cbits = parseInt(config.cbits);
@@ -64,6 +66,12 @@ module.exports = function(RED) {
       send(output);
     });
   }
+  RED.httpAdmin.get('/quantum-circuit/structure', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
+    res.json({
+      success: true,
+      structure: quantumCircuitNode.structure
+    });
+  });
 
   RED.httpAdmin.get('/quantum-circuit/registers', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
     res.json({

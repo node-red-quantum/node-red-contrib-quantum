@@ -8,7 +8,6 @@ module.exports = function(RED) {
     this.selectedCreg = config.selectedCreg;
     const globalContext = this.context().global;
     const node = this;
-
     this.on('input', function(msg, send, done) {
       let oldScript = globalContext.get('script');
       let qiskitScript = `\nqc.measure(${msg.payload.register}[${msg.payload.qubit}], `;
