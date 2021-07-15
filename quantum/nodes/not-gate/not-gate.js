@@ -27,5 +27,5 @@ module.exports = function(RED) {
       send(output);
     })
   }
-  RED.nodes.registerType('not-gate', NodeTemplateNode);
+  RED.nodes.registerType('not-gate', NotGateNode);
 };
