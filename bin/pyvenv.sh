@@ -7,7 +7,7 @@
 # Check if python is installed. If no, exit unsuccessfully.
 if ! command -v python &>/dev/null; then
   echo "Error: failed to find Python in PATH"
-  exit 127
+  exit 1
 fi
 
 # Check if virtual environment exists. If no, create it.
@@ -36,7 +36,7 @@ if [ -x $python ]; then
   fi
 else
   echo "Error: failed to execute $python"
-  exit 126
+  exit 1
 fi
 
 # Install Qiskit within the virtual environment using pip.
@@ -45,5 +45,5 @@ if [ -x $pip ]; then
   $pip install qiskit
 else
   echo "Error: failed to execute $pip"
-  exit 126
+  exit 1
 fi
