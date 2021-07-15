@@ -13,8 +13,13 @@ fi
 # Check if virtual environment exists. If no, create it.
 venv="$PWD/venv"
 if [[ ! -d "$venv" ]] || [[ -z "$venv" ]]; then
-  echo "Creating virtual environment at $venv"
-  python -m venv "$venv"
+  echo "Creating virtual environment at $venv..."
+  if python -m venv "$venv"; then
+    echo "Successfully created virtual environment"
+  else
+    echo "Error: failed to create virtual environment"
+    exit 1
+  fi
 else
   echo "Using virtual environment at $venv"
 fi
@@ -41,8 +46,13 @@ fi
 
 # Install Qiskit within the virtual environment using pip.
 if [[ -x "$pip" ]]; then
-  echo "Installing Qiskit in virtual environment"
-  "$pip" install qiskit
+  echo "Installing Qiskit..."
+  if "$pip" install qiskit; then
+    echo "Successfully installed Qiskit"
+  else
+    echo "Error: failed to install Qiskit"
+    exit 1
+  fi
 else
   echo "Error: failed to execute $pip"
   exit 1
