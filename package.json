@@ -25,10 +25,10 @@
   ],
   "scripts": {
     "start": "node-red || npx node-red",
-    "setup": "(npm run link && npm run venv) && echo \"Setup complete - run 'npm start' to open Node-RED\"",
-    "link": "sh bin/link.sh || bin/link.sh",
-    "venv": "python bin/pyvenv.py || bin/pyvenv.py",
-    "clean": "rm -r venv/; npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
+    "setup": "(npm run link && npm run venv) && echo Setup complete - run 'npm start' to open Node-RED",
+    "link": "bash bin/link.sh || bin/link.sh",
+    "venv": "bash bin/pyvenv.sh || bin/pyvenv.sh",
+    "clean": "rm -r venv/ & npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
     "lint": "eslint --fix --ignore-path .gitignore ."
   },
   "dependencies": {
