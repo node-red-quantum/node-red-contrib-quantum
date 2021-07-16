@@ -12,7 +12,7 @@ module.exports = function(RED) {
     this.targetPosition = config.targetPosition;
     const node = this;
 
-    node.on('input', async function(msg, send, done, targetQubit, controlQubit) {
+    node.on('input', async function(msg, send, done) {
       // Throw a connection error if:
       // - The user connects it to a node that is not from the quantum library
       // - The user does not input a qubit object in the node
@@ -59,11 +59,11 @@ module.exports = function(RED) {
         });
 
         if (targetPosition === 'upper') {
-          targetQubit = node.qubits[0];
-          controlQubit = node.qubits[1];
+          let targetQubit = node.qubits[0];
+          let controlQubit = node.qubits[1];
         } else {
-          targetQubit = node.qubits[1];
-          controlQubit = node.qubits[0];
+          let targetQubit = node.qubits[1];
+          let controlQubit = node.qubits[0];
         }
 
         // Generate the corresponding cnot-gate Qiskit script
