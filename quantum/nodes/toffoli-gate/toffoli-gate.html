@@ -11,39 +11,44 @@
     icon: "function.svg",
     paletteLabel: "toffoli gate",
     label: function () {
-      return this.name || "toffoli gate";
+      return this.name || "Toffoli Gate";
     },
 
-    oneditprepare: function () {
-      if (document.getElementById("target-position").value == "top") {
-        $(".target-position-top").addClass("selected");
-      } else if (document.getElementById("target-position").value == "middle") {
-        $(".target-position-middle").addClass("selected");
-      } else {
-        $(".target-position-bottom").addClass("selected");
-      }
+    // oneditprepare: function () {
+    //var x = document.getElementsByName("targetPosition").value;
+    //  var x = document.querySelector(
+    //    'input[name="targetPosition"]:checked'
+    //  ).value;
+    //  document.getElementById("node-input-targetPosition").value = x;
 
-      $(".target-position-top").on("click", function () {
-        $(".target-position-middle").removeClass("selected");
-        $(".target-position-bottom").removeClass("selected");
-        $(this).addClass("selected");
-        document.getElementById("target-position").value = "top";
-      });
+    //$("input[type='radio'][name='targetPosition']:checked").val();
 
-      $(".target-position-middle").on("click", function () {
-        $(".target-position-top").removeClass("selected");
-        $(".target-position-bottom").removeClass("selected");
-        $(this).addClass("selected");
-        document.getElementById("target-position").value = "middle";
-      });
-
-      $(".target-position-bottom").on("click", function () {
-        $(".target-position-top").removeClass("selected");
-        $(".target-position-middle").removeClass("selected");
-        $(this).addClass("selected");
-        document.getElementById("target-position").value = "bottom";
-      });
-    },
+    //      if (document.getElementById("target-position").value == "top") {
+    //        $(".target-position-top").addClass("selected");
+    //      } else if (document.getElementById("target-position").value == "middle") {
+    //        $(".target-position-middle").addClass("selected");
+    //      } else {
+    //        $(".target-position-bottom").addClass("selected");
+    //      }
+    //      $(".target-position-top").on("click", function () {
+    //        $(".target-position-middle").removeClass("selected");
+    //        $(".target-position-bottom").removeClass("selected");
+    //        $(this).addClass("selected");
+    //        document.getElementById("target-position").value = "top";
+    //      });
+    //      $(".target-position-middle").on("click", function () {
+    //        $(".target-position-top").removeClass("selected");
+    //        $(".target-position-bottom").removeClass("selected");
+    //        $(this).addClass("selected");
+    //        document.getElementById("target-position").value = "middle";
+    //      });
+    //      $(".target-position-bottom").on("click", function () {
+    //        $(".target-position-top").removeClass("selected");
+    //        $(".target-position-middle").removeClass("selected");
+    //        $(this).addClass("selected");
+    //        document.getElementById("target-position").value = "bottom";
+    //      });
+    //},
   });
 </script>
 
@@ -52,9 +57,57 @@
     <label for="node-input-toffoli-gate"
       ><i class="fa fa-tag"></i> Toffoli Gate</label
     >
-    <!-- <input type="text" id="node-input-name" placeholder="Name" /> -->
+    <input type="text" id="node-input-name" placeholder="Name" />
   </div>
-  <div class="form-row">
+
+  <p>Please select the relative position of the target qubit:</p>
+
+  <label
+    >Select the relative position of the target qubit:
+    <input
+      id="node-input-targetPosition"
+      list="targetPosition"
+      name="targetQubit"
+  /></label>
+  <datalist id="targetPosition">
+    <option value="Top"></option>
+    <option value="Middle"></option>
+    <option value="Bottom"></option>
+  </datalist>
+
+  <!-- <div class="form-row">
+    <div class="row">
+      <input
+        type="radio"
+        id="target-position-top"
+        name="targetPosition"
+        value="top"
+      />
+      <label for="target-position-top">Top</label>
+    </div>
+
+    <div class="row">
+      <input
+        type="radio"
+        id="target-position-middle"
+        name="targetPosition"
+        value="middle"
+      />
+      <label for="target-position-middle">Middle</label>
+    </div>
+
+    <div class="row">
+      <input
+        type="radio"
+        id="target-position-bottom"
+        name="targetPosition"
+        value="bottom"
+      />
+      <label for="target-position-bottom">Bottom</label>
+    </div>
+  </div> -->
+
+  <!-- <div class="form-row">
     <label for="target-position-toggle"
       >Please select the relative position of the target qubit:
     </label>
@@ -69,11 +122,11 @@
         Bottom
       </button>
     </span>
-  </div>
+  </div> -->
 
   <!-- Do not delete -->
   <div hidden>
-    <input type="text" id="target-position" />
+    <input type="text" id="node-input-targetPosition" />
   </div>
   <!------------------->
 </script>

@@ -11,7 +11,7 @@ module.exports = function (RED) {
     this.targetPosition = config.targetPosition;
     const node = this;
 
-    node.on("input", async function (msg, send, done) {
+    this.on("input", async function (msg, send, done) {
       // Throw a connection error if:
       // - The user connects it to a node that is not from the quantum library
       // - The user does not input a qubit object in the node
@@ -74,7 +74,7 @@ module.exports = function (RED) {
           let control2 = node.qubits[1];
         }
 
-        // Generate the corresponding barrier Qiskit script
+        // Generate the corresponding Toffoli Gate Qiskit script
         node.qubits.map((msg) => {
           if (typeof msg.payload.register === "undefined") {
             let toffoliCode = util.format(
