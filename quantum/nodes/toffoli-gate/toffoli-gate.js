@@ -13,10 +13,9 @@ module.exports = function (RED) {
 
     this.on("input", async function (msg, send, done) {
       // Throw a connection error if:
-      // - The user connects it to a node that is not from the quantum library
-      // - The user does not input a qubit object in the node
-      // - The user chooses to use registers but does not initiate them
-      // - The user does not input 3 qubits.
+      // - The user connects it to a node that is not from the quantum library.
+      // - The user does not input a qubit object in the node.
+      // - The user chooses to use registers but does not initiate them.
       if (msg.topic !== "Quantum Circuit") {
         throw new Error(
           "The Toffoli Gate must be connected to nodes from the quantum library only."
@@ -32,10 +31,6 @@ module.exports = function (RED) {
       } else if (typeof msg.payload.qubit === "undefined") {
         throw new Error(
           'If "Registers & Bits" was selected in the "Quantum Circuit" node, please make use of register nodes.'
-        );
-      } else if (node.qubits.length !== 3) {
-        throw new Error(
-          "The Toffoli Gate requires exactly 3 input qubits to be used."
         );
       }
 
@@ -60,45 +55,65 @@ module.exports = function (RED) {
           }
         });
 
-        if (targetPosition == "top") {
-          let target = node.qubits[0];
-          let control1 = node.qubits[1];
-          let control2 = node.qubits[2];
-        } else if (targetPosition == "middle") {
-          let target = node.qubits[1];
-          let control1 = node.qubits[0];
-          let control2 = node.qubits[2];
+        //Initialise qubit variables for script.
+        let control1 = node.qubits[0];
+        let control2 = node.qubits[0];
+        let target = node.qubits[0];
+
+        //Determine which node is the target based on position.
+        if (node.targetPosition == "Top") {
+          target = node.qubits[0];
+          control1 = node.qubits[1];
+          control2 = node.qubits[2];
+        } else if (node.targetPosition == "Middle") {
+          target = node.qubits[1];
+          control1 = node.qubits[0];
+          control2 = node.qubits[2];
         } else {
-          let target = node.qubits[2];
-          let control1 = node.qubits[0];
-          let control2 = node.qubits[1];
+          target = node.qubits[2];
+          control1 = node.qubits[0];
+          control2 = node.qubits[1];
         }
 
         // Generate the corresponding Toffoli Gate Qiskit script
+        let toffoliCode = "";
         node.qubits.map((msg) => {
+          //Use qubits only if there are no registers.
           if (typeof msg.payload.register === "undefined") {
-            let toffoliCode = util.format(
+            toffoliCode = util.format(
               snippets.TOFFOLI_GATE,
-              control1.qubit.toString(),
-              control2.qubit.toString(),
-              target.qubit.toString()
+              control1.payload.qubit.toString(),
+              control2.payload.qubit.toString(),
+              target.payload.qubit.toString()
             );
           } else {
-            let toffoliCode = util.format(
+            //Use registers if there are quantum registers.
+            toffoliCode = util.format(
               snippets.TOFFOLI_GATE,
-              control1.registerVar + "[" + control1.qubit.toString() + "]",
-              control2.registerVar + "[" + control2.qubit.toString() + "]",
-              target.registerVar + "[" + target.qubit.toString() + "]"
+              control1.payload.registerVar +
+                "[" +
+                control1.payload.qubit.toString() +
+                "]",
+              control2.payload.registerVar +
+                "[" +
+                control2.payload.qubit.toString() +
+                "]",
+              target.payload.registerVar +
+                "[" +
+                target.payload.qubit.toString() +
+                "]"
             );
           }
         });
+
+        console.log(toffoliCode);
 
         // Run the script in the python shell
         await shell.execute(toffoliCode, (err) => {
           if (err) node.error(err);
         });
 
-        // Sending one qubit object per node output
+        //Sending one qubit object per node output
         send(node.qubits);
       }
     });

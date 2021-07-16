@@ -21,7 +21,7 @@ const CLASSICAL_REGISTER = `cr%s = ClassicalRegister(%s)`;
 
 const QUANTUM_REGISTER = `qr%s = QuantumRegister(%s)`;
 
-const TOFFOLI_GATE = `qc.cxx(s%, s%, s%)`;
+const TOFFOLI_GATE = `qc.toffoli(%s, %s, %s)`;
 
 const BARRIER = `qc.barrier(%s)`;
 
