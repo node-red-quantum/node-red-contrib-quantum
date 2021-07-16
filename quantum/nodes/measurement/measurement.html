@@ -18,35 +18,56 @@
     oneditprepare: function () {
       var selectedRadio = this.selectedRadio;
       $.getJSON('quantum-circuit/structure', function (data) {
-          let structure = data.structure;
-          if (structure === 'registers') {
-            const parentDiv = $("#reg-form");
-            $.getJSON("quantum-circuit/registers", function (data) {
-              let registers = data.classicalRegisters;
-              registers.forEach((register) => {
-                let inputId = 'node-input-classreg-' + register.regName;
-                let myNewRow = $('<div class="form-row" />');
-                parentDiv.append(myNewRow);
+        let structure = data.structure;
+        const parentDiv = $("#reg-form");
+        if (structure === 'registers') {
+          $.getJSON("quantum-circuit/registers", function (data) {
+            let registers = data.classicalRegisters;
+            registers.forEach((register) => {
+              let inputId = 'node-input-classreg-' + register.regName;
+              let myNewRow = $('<div class="form-row" />');
+              parentDiv.append(myNewRow);
 
-                const bitArray = []
-                for (let i = 0; i < Number(register.bits); i++) {
-                  bitArray.push(i);
+              const bitArray = []
+              for (let i = 0; i < Number(register.bits); i++) {
+                bitArray.push(i);
+              }
+              let registerHeading = $(`<span>Classical register: ${register.regName}</span><br/>`);
+              myNewRow.append(registerHeading);
+              bitArray.forEach((bit) => {
+                let subInputId = inputId + '-b' + bit;
+                let myNewLabel = $(`<label for="${subInputId}"><i class="fa fa-circle"></i> Bit ${bit}</label>`);
+                let myNewInput = $(`<input type="radio" name="bit" class="classreg-element" id="${subInputId}" value="${subInputId}" data-varname="${register.regVarName}" data-bit="${bit}"/>`);
+                myNewRow.append(myNewLabel);
+                myNewRow.append(myNewInput);
+                if (subInputId === selectedRadio) {
+                  $("#" + subInputId).prop("checked", true)
                 }
-                let registerHeading = $(`<span>Classical register: ${register.regName}</span><br/>`);
-                myNewRow.append(registerHeading);
-                bitArray.forEach((bit) => {
-                  let subInputId = inputId + '-b' + bit;
-                  let myNewLabel = $(`<label for="${subInputId}"><i class="fa fa-circle"></i> Bit ${bit}</label>`);
-                  let myNewInput = $(`<input type="radio" name="bit" class="classreg-element" id="${subInputId}" value="${subInputId}" data-varname="${register.regVarName}" data-bit="${bit}"/>`);
-                  myNewRow.append(myNewLabel);
-                  myNewRow.append(myNewInput);
-                  if (subInputId === selectedRadio) {
-                    $("#" + subInputId).prop("checked", true)
-                  }
-                });
               });
             });
-          }
+          });
+        }
+        else {
+          $.getJSON("quantum-circuit/bits", function (data) {
+            let myNewRow = $('<div class="form-row" />');
+            parentDiv.append(myNewRow);
+            const bitArray = []
+            for (let i = 0; i < Number(data.bits); i++) {
+              bitArray.push(i);
+            }
+
+            bitArray.forEach((bit) => {
+              let InputId = 'node-input-cbit-' + bit;
+              let myNewLabel = $(`<label for="${InputId}"><i class="fa fa-circle"></i> Bit ${bit}</label>`);
+              let myNewInput = $(`<input type="radio" name="bit" class="classreg-element" id="${InputId}" value="${InputId}" data-bit="${bit}"/>`);
+              myNewRow.append(myNewLabel);
+              myNewRow.append(myNewInput);
+              if (InputId === selectedRadio) {
+                $("#" + InputId).prop("checked", true)
+              }
+            });
+          });
+        }
       });
     },
     oneditsave: function () {

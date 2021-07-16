@@ -10,7 +10,12 @@ module.exports = function(RED) {
     this.on('input', function(msg, send, done) {
       let oldScript = globalContext.get('script');
       let qiskitScript = `\nqc.measure(${msg.payload.register}[${msg.payload.qubit}], `;
-      qiskitScript += `${node.selectedRegVarName}[${node.selectedBit}])\n`;
+      if (!node.selectedRegVarName) {
+        qiskitScript += `${node.selectedRegVarName}[${node.selectedBit}])\n`;
+      }
+      else {
+        qiskitScript += `${node.selectedBit})\n`;
+      }
       oldScript = globalContext.get('script');
       globalContext.set('script', oldScript + qiskitScript);
       node.send(msg);

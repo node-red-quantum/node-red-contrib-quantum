@@ -66,13 +66,8 @@ module.exports = function(RED) {
       send(output);
     });
   }
-  RED.httpAdmin.get('/quantum-circuit/structure', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
-    res.json({
-      success: true,
-      structure: quantumCircuitNode.structure
-    });
-  });
 
+  // Http handlers for accessing and updating classical register information
   RED.httpAdmin.get('/quantum-circuit/registers', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
     res.json({
       success: true,
@@ -112,6 +107,32 @@ module.exports = function(RED) {
     }
     res.json({
       success: false,
+    });
+  });
+
+  // Http handlers for accessing and updating Quantum Circuit informaiton
+  RED.httpAdmin.get('/quantum-circuit/structure', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
+    res.json({
+      success: true,
+      structure: quantumCircuitNode.structure
+    });
+  });
+
+  RED.httpAdmin.get('/quantum-circuit/bits', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
+    res.json({
+      success: true,
+      bits: quantumCircuitNode.cbits
+    });
+  });
+
+  RED.httpAdmin.post('/quantum-circuit/update-circuit', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
+    quantumCircuitNode.structure = req.body.structure;
+    quantumCircuitNode.outputs = req.body.outputs;
+    quantumCircuitNode.cbits = req.body.cbits;
+
+    res.json({
+      success: true,
+      quantumCircuitNode: quantumCircuitNode
     });
   });
 
