@@ -1,17 +1,23 @@
 <script type="text/javascript">
   RED.nodes.registerType("not-gate", {
     category: "quantum",
-    color: "#33B1FF",
+    color: "#FA4D56",
     defaults: {
       name: { value: "" },
     },
     inputs: 1,
     outputs: 1,
-    icon: "function.svg",
+    //icon: "function.svg",
     paletteLabel: "not",
+    icon: "font-awesome/fa-close",
+    align: 'right',
     label: function () {
       return this.name || "not";
     },
+    inputLabels: function(index) {
+      return "qubit " + index;
+    },
+    outputLabels: "not",
   });
 </script>
 
@@ -25,5 +31,6 @@
 <script type="text/html" data-help-name="not-gate">
   <p>
     <!-- Node documentation goes here. -->
+    This is the implementation of Not Gate Node.
   </p>
 </script>
