@@ -4,8 +4,9 @@
     color: "#33b1ff",
     defaults: {
       name: { value: "" },
-      selectedCbit: { value: "" },
-      selectedCreg: { value: "" },
+      selectedBit: { value: "" },
+      selectedRegVarName: { value: "" },
+      selectedRadio: {value: ""},
     },
     inputs: 1,
     outputs: 1,
@@ -15,38 +16,76 @@
       return this.name || "measurement";
     },
     oneditprepare: function () {
-      var selectedCbit = this.selectedCbit;
-      var selectedCreg = this.selectedCreg;
+      var selectedRadio = this.selectedRadio;
+      $.getJSON('quantum-circuit/structure', function (data) {
+        let structure = data.structure;
+        const parentDiv = $("#reg-form");
+        if (structure === 'registers') {
+          $.getJSON("quantum-circuit/registers", function (data) {
+            let registers = data.classicalRegisters;
+            registers.forEach((register) => {
+              let inputId = 'node-input-classreg-' + register.regName;
+              let myNewRow = $('<div class="form-row" />');
+              parentDiv.append(myNewRow);
 
-      // Get request to classical-register http admin endpoint to get
-      // register variable and number of bits
-      $.getJSON("classical-register", function (data) {
-        let options = [];
-        let cregVar = data.registerVar;
-        for (let i = 0; i < Number(data.bits); i++) {
-          options.push(i);
+              const bitArray = []
+              for (let i = 0; i < Number(register.bits); i++) {
+                bitArray.push(i);
+              }
+
+              let registerHeading = $(`<span>Classical register: ${register.regName.replace(/_/g, ' ')}</span><br/>`);
+              myNewRow.append(registerHeading);
+              bitArray.forEach((bit) => {
+                let subInputId = inputId + '-b' + bit;
+                let myNewLabel = $(`<label for="${subInputId}"><i class="fa fa-circle"></i> Bit ${bit}</label>`);
+                let myNewInput = $(`<input type="radio" name="bit" class="classreg-element" id="${subInputId}" value="${subInputId}" data-varname="${register.regVarName}" data-bit="${bit}"/>`);
+                myNewRow.append(myNewLabel);
+                myNewRow.append(myNewInput);
+                if (subInputId === selectedRadio) {
+                  $("#" + subInputId).prop("checked", true)
+                }
+              });
+            });
+          });
         }
-        // dynamically adding classical bit indices to select tag
-        $("#node-input-cbitindex").empty();
-        options.forEach((item) => {
-          $("#node-input-cbitindex").append($("<option></option>").attr("value", item).text(item));
-        });
-        // setting selected bit index from frontend variable
-        $("#node-input-cbitindex").val(selectedCbit);
+        else {
+          $.getJSON("quantum-circuit/bits", function (data) {
+            let myNewRow = $('<div class="form-row" />');
+            parentDiv.append(myNewRow);
+            const bitArray = []
+            for (let i = 0; i < Number(data.bits); i++) {
+              bitArray.push(i);
+            }
 
-        // dynamically adding classical register variables name
-        // to select tag. Now it only sets 1 classical register
-        $("#node-input-cregindex").empty();
-        $("#node-input-cregindex").append($("<option></option>").attr("value", cregVar).text(cregVar));
-        // setting selected resiter variable name from frontend variable
-        $("#node-input-cregindex").val(selectedCreg);
+            bitArray.forEach((bit) => {
+              let InputId = 'node-input-cbit-' + bit;
+              let myNewLabel = $(`<label for="${InputId}"><i class="fa fa-circle"></i> Bit ${bit}</label>`);
+              let myNewInput = $(`<input type="radio" name="bit" class="classreg-element" id="${InputId}" value="${InputId}" data-bit="${bit}"/>`);
+              myNewRow.append(myNewLabel);
+              myNewRow.append(myNewInput);
+              if (InputId === selectedRadio) {
+                $("#" + InputId).prop("checked", true)
+              }
+            });
+          });
+        }
       });
     },
     oneditsave: function () {
-      var selectBitIndex = document.getElementById("node-input-cbitindex");
-      var selectRegIndex = document.getElementById("node-input-cregindex");
-      this.selectedCbit = selectBitIndex.value;
-      this.selectedCreg = selectRegIndex.value;
+      var classregElements = $(".classreg-element");
+      var selectedRadio, selectedRegVarName, selectedBit;
+
+      classregElements.each( function(index,el) {
+        var checked = $(el).is(":checked");
+        if (checked === true) {
+          selectedRadio = el.id;
+          selectedRegVarName = $(el).data('varname');
+          selectedBit = $(el).data('bit');
+        }
+      });
+      this.selectedRadio = selectedRadio;
+      this.selectedRegVarName = selectedRegVarName;
+      this.selectedBit = selectedBit;
     },
   });
 </script>
@@ -56,18 +95,12 @@
     <label for="node-input-name"><i class="fa fa-tag"></i> Measurement Node</label>
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
-  <div class="form-row">
-    <label for="node-input-cregindex"><i class="fa fa-tag"></i>Save to classical register #</label>
-    <select id="node-input-cregindex" placeholder="Classical Register Index"></select>
-  </div>
-  <div class="form-row">
-    <label for="node-input-cbitindex"><i class="fa fa-tag"></i>Save to classical bit #</label>
-    <select id="node-input-cbitindex" placeholder="Classical Bit Index"></select>
+  <div id="reg-form">
   </div>
 </script>
 
 <script type="text/html" data-help-name="measurement">
   <p>
-    Node for quantum measurements
+    Quantum measurement node
   </p>
 </script>

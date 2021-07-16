@@ -5,21 +5,21 @@
     defaults: {
       name: { value: "" },
       structure: { value: "", required: true },
-      cbits: { 
-        value: "", 
-        required: true, 
-        validate: function (x) {
-          x = parseInt(x);
-          if (Number.isInteger(x) && x > 0){return true} 
-          else {return false}
-        }
-      },
-      outputs: { 
-        value: "", 
+      cbits: {
+        value: "",
         required: true,
         validate: function (x) {
           x = parseInt(x);
-          if (Number.isInteger(x) && x > 0){return true} 
+          if (Number.isInteger(x) && x > 0){return true}
+          else {return false}
+        }
+      },
+      outputs: {
+        value: "",
+        required: true,
+        validate: function (x) {
+          x = parseInt(x);
+          if (Number.isInteger(x) && x > 0){return true}
           else {return false}
         },
       }
@@ -70,6 +70,19 @@
         document.getElementById("node-input-cbits").value = 1; // Required node property
       });
     },
+    oneditsave: function() {
+      this.cbits = document.getElementById("node-input-cbits").value;
+      this.outputs = document.getElementById("node-input-outputs").value;
+      this.structure = document.getElementById('node-input-structure').value;
+      $.post('quantum-circuit/update-circuit',
+              {
+                cbits: this.cbits,
+                outputs: this.outputs,
+                structure: this.structure,
+              }, p => p
+      );
+    }
+
   });
 </script>
 
