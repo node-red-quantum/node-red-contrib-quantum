@@ -35,40 +35,45 @@ module.exports = function(RED) {
         );
 
       } else if (
-        typeof msg.payload,qubit === 'undefined'
+        typeof msg.payload.qubit === 'undefined'
 
       ){
-        'If "Registers & Bits" was selected in the "Quantum Circuit" node, please make use of register nodes.'
 
+        throw new Error(
+          'If "Registers & Bits" was selected in the "Quantum Circuit" node, please make use of register nodes.'
+
+        );
+        
       }
 
       node.qubits.push(msg)
 
+      let notScript = "";
       //Create corresponding not-gate Qiskit Script
       if (node.qubits.length === 1){
         let target = node.qubits[0];
+        
+        if (typeof target.register === 'undefined'){
+          notScript = util.format(
+            snippets.NOT_GATE,
+            target.payload.qubit
 
-        node.qubits.map((msg) => {
-          if (typeof msg.payload.register === 'undefined'){
-            let notScript = util.format(
-              snippets.NOT_GATE,
-              target.qubit.toString()
+          );
 
-            );
-
-          } else {
-            let notScript = util.format(snippets.NOT_GATE,
-              target.registerVar + '['+target.qubit.toString+']'
-            );
-            
-          }
-        });
+        } else {
+          notScript = util.format(snippets.NOT_GATE,
+            target.payload.registerVar + '['+target.payload.qubit+']'
+          );
+          
+        }
       }
 
       // Run the script in the python shell
+
       await shell.execute(notScript, (err) => {
         if (err) node.error(err);
       });
+      console.log(notScript);
 
       send(node.qubits);
     })
