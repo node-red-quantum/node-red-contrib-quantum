@@ -1,0 +1,33 @@
+<script type="text/javascript">
+    RED.nodes.registerType("identity", {
+      category: "quantum",
+      color: "#C7E9C0",
+      defaults: {
+        name: { value: "" },
+      },
+      outputs: 1,
+      inputs: 1,
+      icon: "font-awesome/fa-chevron-right",
+      align: 'left',
+      paletteLabel: "identity",
+      label: function () {
+        return this.name || "identity";
+      },
+      inputLabels: "Qubit",
+      outputLabels: "Qubit",
+    });
+  </script>
+  
+  <script type="text/html" data-template-name="identity">
+    <div class="form-row">
+      <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name" />
+    </div>
+  </script>
+  
+  <script type="text/html" data-help-name="identity">
+    <p>
+      <!-- Node documentation goes here. -->
+    </p>
+  </script>
+  

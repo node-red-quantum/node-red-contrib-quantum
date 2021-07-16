@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /*
  * Snippets must be constants, and constants must capitalised with underscores.
@@ -23,10 +23,16 @@ const QUANTUM_REGISTER = `qr%s = QuantumRegister(%s)`;
 
 const TOFFOLI_GATE = `qc.cxx(s%, s%, s%)`;
 
+const BARRIER = `qc.barrier(%s)`;
+
+const HADAMARD_GATE = `qc.h(%s)`;
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,
   CLASSICAL_REGISTER,
   QUANTUM_REGISTER,
   TOFFOLI_GATE,
+  BARRIER,
+  HADAMARD_GATE,
 };
