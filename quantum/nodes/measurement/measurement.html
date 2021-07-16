@@ -32,7 +32,8 @@
               for (let i = 0; i < Number(register.bits); i++) {
                 bitArray.push(i);
               }
-              let registerHeading = $(`<span>Classical register: ${register.regName}</span><br/>`);
+
+              let registerHeading = $(`<span>Classical register: ${register.regName.replace(/_/g, ' ')}</span><br/>`);
               myNewRow.append(registerHeading);
               bitArray.forEach((bit) => {
                 let subInputId = inputId + '-b' + bit;
