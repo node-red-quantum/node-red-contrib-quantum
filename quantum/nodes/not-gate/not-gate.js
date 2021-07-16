@@ -10,10 +10,9 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.qubits = [];
-    this.targetPosition = config.targetPosition;
     const node = this;
 
-    node.on("input", (msg, send, done) => {
+    node.on("input", async function (msg, send, done) {
       //Thorw error if:
       // - The user connects it to a node that is not from the quantum library
       // - The user does not input a qubit object in the node
@@ -45,21 +44,23 @@ module.exports = function(RED) {
 
       node.qubits.push(msg)
 
-      //
-      if (node.qubits.length == 1){
+      //Create corresponding not-gate Qiskit Script
+      if (node.qubits.length === 1){
         let target = node.qubits[0];
+
         node.qubits.map((msg) => {
           if (typeof msg.payload.register === 'undefined'){
-            snippets = util.format(
+            let notScript = util.format(
               snippets.NOT_GATE,
               target.qubit.toString()
 
             );
 
           } else {
-            snippets.NOT_GATE,
-            target.registerVar + '['+target.qubit.toString+']';
-
+            let notScript = util.format(snippets.NOT_GATE,
+              target.registerVar + '['+target.qubit.toString+']'
+            );
+            
           }
         });
       }
