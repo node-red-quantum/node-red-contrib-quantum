@@ -106,8 +106,6 @@ module.exports = function (RED) {
           }
         });
 
-        console.log(toffoliCode);
-
         // Run the script in the python shell
         await shell.execute(toffoliCode, (err) => {
           if (err) node.error(err);
