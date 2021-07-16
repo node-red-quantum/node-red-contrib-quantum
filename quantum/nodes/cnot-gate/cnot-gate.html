@@ -6,7 +6,7 @@
       name: {value: ""},
       targetPosition: {value: "", required: true},
     },
-    inputs: 2,
+    inputs: 1,
     outputs: 2,
     icon: "function.svg",
     paletteLabel: "cnot gate",
@@ -37,23 +37,15 @@
 </script>
 
 <script type="text/html" data-template-name="cnot-gate">
-  <div className="form-row">
-    <label htmlFor="node-input-cnot-gate"
-    ><i className="fa fa-tag"></i> CNot Gate</label
-    >
-    <!-- <input type="text" id="node-input-name" placeholder="Name" /> -->
+  <div class="form-row">
+    <label for="node-input-name"><i className="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
   </div>
-  <div className="form-row">
-    <label htmlFor="target-position-toggle"
-    >Please select the relative position of the target qubit:
-    </label>
-    <span className="target-position-toggle">
-      <button type="button" className="red-ui-button toggle target-position-upper">
-        Upper
-      </button>
-      <button type="button" className="red-ui-button toggle target-position-lower">
-        Lower
-      </button>
+  <div class="form-row">
+    <label for="target-position-toggle">Please select the target qubit position:</label>
+    <span class="target-position-toggle">
+      <button type="button" class="red-ui-button toggle target-position-upper">Upper</button>
+      <button type="button" class="red-ui-button toggle target-position-lower">Lower</button>
     </span>
   </div>
 
