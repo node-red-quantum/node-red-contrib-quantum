@@ -30,8 +30,10 @@ module.exports = function(RED) {
           node.error(err, msg);
         }
       });
-
-      node.send(msg);
+      send(msg);
+      if (done) {
+        done();
+      }
     });
   }
 
