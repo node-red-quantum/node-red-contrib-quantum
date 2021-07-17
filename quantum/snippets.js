@@ -36,6 +36,11 @@ const HADAMARD_GATE =
 const MEASUREMENT =
   `qc.measure(%s)`;
 
+const SIMULATOR = `simulator = Aer.get_backend('qasm_simulator')
+result = execute(qc, backend = simulator, shots = %s).result()
+counts = result.get_counts()
+print(counts)`
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,
@@ -43,5 +48,6 @@ module.exports = {
   QUANTUM_REGISTER,
   BARRIER,
   HADAMARD_GATE,
-  MEASUREMENT
+  MEASUREMENT,
+  SIMULATOR
 };
