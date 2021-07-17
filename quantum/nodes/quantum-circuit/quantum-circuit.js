@@ -5,7 +5,7 @@ const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 
 module.exports = function(RED) {
-  let quantumCircuitNode;
+  let quantumCircuitNode = {};
   let classicalRegisters = [];
   function QuantumCircuitNode(config) {
     // Creating node with properties and context
