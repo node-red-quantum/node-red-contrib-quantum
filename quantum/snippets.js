@@ -23,6 +23,8 @@ const QUANTUM_REGISTER = `qr%s = QuantumRegister(%s)`;
 
 const TOFFOLI_GATE = `qc.toffoli(%s, %s, %s)`;
 
+const CNOT_GATE = `qc.cx(%s, %s)`;
+
 const BARRIER = `qc.barrier(%s)`;
 
 const HADAMARD_GATE = `qc.h(%s)`;
@@ -33,6 +35,7 @@ module.exports = {
   CLASSICAL_REGISTER,
   QUANTUM_REGISTER,
   TOFFOLI_GATE,
+  CNOT_GATE,
   BARRIER,
   HADAMARD_GATE,
 };
