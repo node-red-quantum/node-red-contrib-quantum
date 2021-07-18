@@ -6,54 +6,32 @@
       name: {value: ""},
       targetPosition: {value: "", required: true},
     },
-    inputs: 1,
+    inputs: 2,
     outputs: 2,
     icon: "function.svg",
     paletteLabel: "cnot gate",
     label: function () {
       return this.name || "cnot gate";
     },
-
-    oneditprepare: function () {
-      if (document.getElementById("target-position").value == "upper") {
-        $(".target-position-upper").addClass("selected");
-      } else {
-        $(".target-position-lower").addClass("selected");
-      }
-
-      $(".target-position-upper").on("click", function () {
-        $(".target-position-lower").removeClass("selected");
-        $(this).addClass("selected");
-        document.getElementById("target-position").value = "upper";
-      });
-
-      $(".target-position-lower").on("click", function () {
-        $(".target-position-upper").removeClass("selected");
-        $(this).addClass("selected");
-        document.getElementById("target-position").value = "lower";
-      });
-    },
   });
 </script>
 
 <script type="text/html" data-template-name="cnot-gate">
   <div class="form-row">
-    <label for="node-input-name"><i className="fa fa-tag"></i> Name</label>
-    <input type="text" id="node-input-name" placeholder="Name" />
-  </div>
-  <div class="form-row">
-    <label for="target-position-toggle">Please select the target qubit position:</label>
-    <span class="target-position-toggle">
-      <button type="button" class="red-ui-button toggle target-position-upper">Upper</button>
-      <button type="button" class="red-ui-button toggle target-position-lower">Lower</button>
-    </span>
+    <label for="node-input-cnot-gate"
+      ><i class="fa fa-tag"></i> CNot Gate</label
+    >
   </div>
 
-  <!-- Do not delete -->
-  <div hidden>
-    <input type="text" id="target-position"/>
+  <div class="form-row">
+    <label for="node-input-targetPosition"
+      >Select the relative position of the target qubit:</label
+    >
+    <select name="targetPosition" id="node-input-targetPosition">
+      <option value="Upper">Upper</option>
+      <option value="Lower">Lower</option>
+    </select>
   </div>
-  <!------------------->
 </script>
 
 <script type="text/html" data-help-name="cnot-gate">
