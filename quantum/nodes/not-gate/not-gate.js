@@ -73,7 +73,7 @@ module.exports = function(RED) {
       await shell.execute(notScript, (err) => {
         if (err) node.error(err);
       });
-      console.log(notScript);
+      
 
       send(node.qubits);
     })
