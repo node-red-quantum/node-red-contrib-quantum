@@ -9,6 +9,7 @@ module.exports = function(RED) {
   function NotGateNode(config){
     RED.nodes.createNode(this, config);
     this.name = config.name;
+
     const node = this;
 
     this.on("input", async function (msg, send, done) {
@@ -49,7 +50,7 @@ module.exports = function(RED) {
       let notScript = "";
       let target = msg;
 
-      if (typeof target.register === 'undefined'){
+      if (typeof target.payload.register === 'undefined'){
         notScript = util.format(
           snippets.NOT_GATE,
           target.payload.qubit
