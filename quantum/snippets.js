@@ -33,6 +33,9 @@ const BARRIER =
 const HADAMARD_GATE =
 `qc.h(%s)`;
 
+const MEASUREMENT =
+  `qc.measure(%s)`;
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,
@@ -40,4 +43,5 @@ module.exports = {
   QUANTUM_REGISTER,
   BARRIER,
   HADAMARD_GATE,
+  MEASUREMENT
 };

@@ -1,5 +1,16 @@
+'use strict';
+
+const util = require('util');
+const snippets = require('../../snippets');
+const shell = require('../../python').PythonShell;
+const {errors} = require('../../errors');
+
 module.exports = function(RED) {
-  'use strict';
+  const validateInput = (node, msg) => {
+    if (msg.topic !== 'Quantum Circuit') {
+      node.error(errors.NOT_QUANTUM_CIRCUIT, msg);
+    }
+  }
   function MeasurementNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
@@ -7,18 +18,22 @@ module.exports = function(RED) {
     this.selectedRegVarName = config.selectedRegVarName;
     const globalContext = this.context().global;
     const node = this;
-    this.on('input', function(msg, send, done) {
-      let oldScript = globalContext.get('script');
-      let qiskitScript = `\nqc.measure(${msg.payload.register}[${msg.payload.qubit}], `;
-      if (!node.selectedRegVarName) {
-        qiskitScript += `${node.selectedRegVarName}[${node.selectedBit}])\n`;
+    this.on('input', async function(msg, send, done) {
+      validateInput(node, msg);
+      const params = (!node.selectedRegVarName) ? `${msg.payload.qubit}, ${node.selectedBit}`:
+        `${msg.payload.registerVar}[${msg.payload.qubit}], ` +
+        `${node.selectedRegVarName}[${node.selectedBit}]`;
+
+      const measureScript = util.format(snippets.MEASUREMENT, params);
+      await shell.execute(measureScript, (err) => {
+        if (err) {
+          node.error(err, msg);
+        }
+      });
+      send(msg);
+      if (done) {
+        done();
       }
-      else {
-        qiskitScript += `${node.selectedBit})\n`;
-      }
-      oldScript = globalContext.get('script');
-      globalContext.set('script', oldScript + qiskitScript);
-      node.send(msg);
     });
   }
 
