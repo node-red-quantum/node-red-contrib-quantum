@@ -8,7 +8,7 @@ module.exports = function(RED) {
   function ClassicalRegisterNode(config) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
-    this.name = config.name.trim().toLowerCase().replace(' ', '_');
+    this.name = config.name.trim().toLowerCase().replace(/ /g, '_');
     this.classicalBits = config.classicalBits;
     const flowContext = this.context().flow;
     const node = this;
