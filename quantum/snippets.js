@@ -30,10 +30,10 @@ const QUANTUM_REGISTER =
 const BARRIER =
 `qc.barrier(%s)`;
 
-const HADAMARD_GATE = 
+const HADAMARD_GATE =
 `qc.h(%s)`;
 
-const NOT_GATE = 
+const NOT_GATE =
 `qc.x(%s)`;
 
 module.exports = {
@@ -43,5 +43,5 @@ module.exports = {
   QUANTUM_REGISTER,
   BARRIER,
   HADAMARD_GATE,
-  NOT_GATE
+  NOT_GATE,
 };

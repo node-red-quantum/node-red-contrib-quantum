@@ -22,7 +22,7 @@ module.exports = function(RED) {
         text: qrConfig.register ? `Register ${qrConfig.register} / Qubit ${qrConfig.qubit}` :
           `Qubit ${qrConfig.qubit}`,
       });
-      let shellScript = util.format(snippets.HADAMARD_GATE, qrConfig.register ? 
+      let shellScript = util.format(snippets.HADAMARD_GATE, qrConfig.register ?
         `${qrConfig.register}[${qrConfig.qubit}]` :
         `${qrConfig.qubit}`);
       await shell.execute(shellScript, (err) => {
@@ -30,9 +30,8 @@ module.exports = function(RED) {
       });
       // pass the quantum register config to the output
       send(msg);
-    })
+    });
   }
 
   RED.nodes.registerType('hadamard-gate', HadamardGateNode);
 };
-  
