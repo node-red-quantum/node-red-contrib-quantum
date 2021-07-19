@@ -27,6 +27,8 @@ const BARRIER = `qc.barrier(%s)`;
 
 const HADAMARD_GATE = `qc.h(%s)`;
 
+const PRINT_DIAGRAM = `print(qc)`;
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,
@@ -35,4 +37,5 @@ module.exports = {
   TOFFOLI_GATE,
   BARRIER,
   HADAMARD_GATE,
+  PRINT_DIAGRAM,
 };

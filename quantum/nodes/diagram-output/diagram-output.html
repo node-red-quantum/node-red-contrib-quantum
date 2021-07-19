@@ -1,0 +1,29 @@
+<script type="text/javascript">
+  RED.nodes.registerType("diagram-output", {
+    category: "quantum",
+    color: "#33B1FF",
+    defaults: {
+      name: { value: "" },
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "function.svg",
+    paletteLabel: "diagram output",
+    label: function () {
+      return this.name || "diagram output";
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="diagram-output">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+</script>
+
+<script type="text/html" data-help-name="diagram-output">
+  <p>
+    <!-- Node documentation goes here. -->
+  </p>
+</script>

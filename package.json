@@ -54,7 +54,8 @@
       "measurement": "quantum/nodes/measurement/measurement.js",
       "barrier": "quantum/nodes/barrier/barrier.js",
       "identity": "quantum/nodes/identity/identity.js",
-      "hadamard-gate": "quantum/nodes/hadamard-gate/hadamard-gate.js"
+      "hadamard-gate": "quantum/nodes/hadamard-gate/hadamard-gate.js",
+      "diagram-output": "quantum/nodes/diagram-output/diagram-output.js"
     }
   }
 }
