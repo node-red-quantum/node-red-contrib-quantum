@@ -1,14 +1,14 @@
 <script type="text/javascript">
   RED.nodes.registerType("cnot-gate", {
     category: "quantum",
-    color: "#33B1FF",
+    color: "#FA4D56",
     defaults: {
       name: {value: ""},
       targetPosition: {value: "", required: true},
     },
     inputs: 2,
     outputs: 2,
-    icon: "function.svg",
+    icon: "font-awesome/fa-ellipsis-v",
     paletteLabel: "cnot gate",
     label: function () {
       return this.name || "cnot gate";
