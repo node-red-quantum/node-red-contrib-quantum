@@ -49,10 +49,8 @@ module.exports = function(RED) {
 
       // Completing the 'quantumCircuit' flow context array
       let register = {
-        registerType: 'quantum',
         registerName: node.name,
         registerVar: 'qr' + msg.payload.register.toString(),
-        bits: node.outputs,
       };
       flowContext.set('quantumCircuit[' + msg.payload.register.toString() + ']', register);
 
@@ -87,21 +85,16 @@ module.exports = function(RED) {
         }
       }
 
-      let structure = msg.payload.structure;
-      structure[msg.payload.register] = {
-        register: 'qr' + msg.payload.register.toString(),
-        qubits: node.outputs,
-      };
-
       // Creating an array of messages to be sent
       // Each message represents a different qubit
       for (let i = 0; i < node.outputs; i++) {
         output[i] = {
           topic: 'Quantum Circuit',
           payload: {
-            structure: structure,
+            structure: msg.payload.structure,
             register: node.name,
             registerVar: 'qr' + msg.payload.register.toString(),
+            totalQubits: node.outputs,
             qubit: i,
           },
         };

@@ -10,7 +10,8 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.structure = config.structure;
-    this.cbits = parseInt(config.cbits);
+    this.qbitsreg = parseInt(config.qbitsreg);
+    this.cbitsreg = parseInt(config.cbitsreg);
     this.outputs = parseInt(config.outputs);
     const flowContext = this.context().flow;
     const output = new Array(this.outputs);
@@ -35,14 +36,17 @@ module.exports = function(RED) {
           output[i] = {
             topic: 'Quantum Circuit',
             payload: {
-              structure: new Array(node.outputs),
+              structure: {
+                creg: node.cbitsreg,
+                qreg: node.qbitsreg,
+              },
               register: i,
             },
           };
         };
       } else { // If the user does not want to use registers
         // Add arguments to quantum circuit code
-        let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, node.outputs + ',' + node.cbits);
+        let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, node.qbitsreg + ',' + node.cbitsreg);
         await shell.execute(circuitScript, (err) => {
           if (err) node.error(err);
         });
@@ -54,8 +58,8 @@ module.exports = function(RED) {
             topic: 'Quantum Circuit',
             payload: {
               structure: {
-                qubits: node.outputs,
-                cbits: node.cbits,
+                qubits: node.qbitsreg,
+                cbits: node.cbitsreg,
               },
               register: undefined,
               qubit: i,

@@ -49,10 +49,8 @@ module.exports = function(RED) {
 
       // Completing the 'quantumCircuit' flow context array
       let register = {
-        registerType: 'classical',
         registerName: node.name,
         registerVar: 'cr' + msg.payload.register.toString(),
-        bits: node.classicalBits,
       };
       flowContext.set('quantumCircuit[' + msg.payload.register.toString() + ']', register);
 
