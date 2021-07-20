@@ -7,17 +7,42 @@
         value: "",
         required: true,
         validate: function (x) {
-          x = x.trim().toLowerCase().replace(' ', '_');
-          //
-          // TODO: Check that name isn't taken in http admin classical register array
-          //
-          if (!x.match(/^[0-9a-z_]+$/)) return false
-          else return true
+          // Input validation for node name
+          x = x.trim().toLowerCase();
+          if (!x.match(/^[0-9 a-z]+$/)) return false
+          else { 
+            // let regName = x.replace(/ /g, '_');
+            // let regId = this.id;
+            // var available = true;
+
+            // $.getJSON('quantum-circuit/structure', function (data) {
+            //   let structure = data.structure;
+            //   if (structure === 'registers') {
+            //     $.getJSON("quantum-circuit/registers", function (data) {
+            //       let registers = data.classicalRegisters;
+            //       registers.map((register) => {
+            //         if (register.nodeid.valueOf() != regId.valueOf() && regName.valueOf() == register.regName.valueOf()) {
+            //           available = false;
+            //         }
+            //       });
+            //     });
+            //   }
+            // });
+            // if (available == false) {
+            //   console.log('FALSE')
+            //   return false
+            // } else {
+            //   console.log('TRUE')
+            //   return true
+            // }
+
+            return true
+          }
         }
       },
       classicalBits: {
         value: "",
-        required: true ,
+        required: true,
         validate: function (x) {
           x = parseInt(x);
           if (Number.isInteger(x) && x > 0){return true}
@@ -36,25 +61,25 @@
     inputLabels: "quantum circuit node",
 
     oneditsave: function() {
-      var element = document.getElementById("node-input-classicalBits");
-      this.classicalBits = element.value;
-
-      var nameInput = document.getElementById('node-input-name');
-      let regName = nameInput.value.trim().toLowerCase().replace(' ', '_');
+      let cbits = document.getElementById("node-input-classicalBits").value;
+      let nameInput = document.getElementById('node-input-name').value;
+      let regName = nameInput.trim().toLowerCase().replace(/ /g, '_');
       let regVarName = 'cr_' + regName;
+      let regId = this.id;
+
       $.post('quantum-circuit/update-register',
-              {
-                nodeid: this.id,
-                regName: regName,
-                regVarName: regVarName,
-                bits: this.classicalBits
-              }, p => p
+          {
+            nodeid: regId,
+            regName: regName,
+            regVarName: regVarName,
+            bits: cbits,
+          }, p => p
       );
     },
 
     oneditdelete: function() {
       $.post('quantum-circuit/delete-register',
-              {nodeid: this.id}, p => p
+          {nodeid: this.id}, p => p
       );
     },
   });
