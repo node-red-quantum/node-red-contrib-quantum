@@ -1,9 +1,9 @@
-"use strict";
-const util = require("util");
-const snippets = require("../../snippets");
-const shell = require("../../python").PythonShell;
+'use strict';
+const util = require('util');
+const snippets = require('../../snippets');
+const shell = require('../../python').PythonShell;
 
-module.exports = function (RED) {
+module.exports = function(RED) {
   function ToffoliGateNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
@@ -11,26 +11,26 @@ module.exports = function (RED) {
     this.targetPosition = config.targetPosition;
     const node = this;
 
-    this.on("input", async function (msg, send, done) {
+    this.on('input', async function(msg, send, done) {
       // Throw a connection error if:
       // - The user connects it to a node that is not from the quantum library.
       // - The user does not input a qubit object in the node.
       // - The user chooses to use registers but does not initiate them.
-      if (msg.topic !== "Quantum Circuit") {
+      if (msg.topic !== 'Quantum Circuit') {
         throw new Error(
-          "The Toffoli Gate must be connected to nodes from the quantum library only."
+            'The Toffoli Gate must be connected to nodes from the quantum library only.',
         );
       } else if (
-        typeof msg.payload.register === "undefined" &&
-        typeof msg.payload.qubit === "undefined"
+        typeof msg.payload.register === 'undefined' &&
+        typeof msg.payload.qubit === 'undefined'
       ) {
         throw new Error(
-          "The Toffoli Gate nodes must receive qubits objects as inputs.\n" +
-            'Please use "Quantum Circuit" & "Quantum Register" nodes to generate qubits objects.'
+            'The Toffoli Gate nodes must receive qubits objects as inputs.\n' +
+            'Please use "Quantum Circuit" & "Quantum Register" nodes to generate qubits objects.',
         );
-      } else if (typeof msg.payload.qubit === "undefined") {
+      } else if (typeof msg.payload.qubit === 'undefined') {
         throw new Error(
-          'If "Registers & Bits" was selected in the "Quantum Circuit" node, please make use of register nodes.'
+            'If "Registers & Bits" was selected in the "Quantum Circuit" node, please make use of register nodes.',
         );
       }
 
@@ -40,7 +40,7 @@ module.exports = function (RED) {
       // If all qubits have arrived, we first reorder the node.qubits array for output consistency
       if (node.qubits.length == 3) {
         node.qubits.sort(function compare(a, b) {
-          if (typeof a.payload.register !== "undefined") {
+          if (typeof a.payload.register !== 'undefined') {
             const regA = parseInt(a.payload.registerVar.slice(2));
             const regB = parseInt(b.payload.registerVar.slice(2));
             if (regA < regB) return -1;
@@ -55,17 +55,17 @@ module.exports = function (RED) {
           }
         });
 
-        //Initialise qubit variables for script.
+        // Initialise qubit variables for script.
         let control1 = node.qubits[0];
         let control2 = node.qubits[0];
         let target = node.qubits[0];
 
-        //Determine which node is the target based on position.
-        if (node.targetPosition == "Top") {
+        // Determine which node is the target based on position.
+        if (node.targetPosition == 'Top') {
           target = node.qubits[0];
           control1 = node.qubits[1];
           control2 = node.qubits[2];
-        } else if (node.targetPosition == "Middle") {
+        } else if (node.targetPosition == 'Middle') {
           target = node.qubits[1];
           control1 = node.qubits[0];
           control2 = node.qubits[2];
@@ -76,32 +76,32 @@ module.exports = function (RED) {
         }
 
         // Generate the corresponding Toffoli Gate Qiskit script
-        let toffoliCode = "";
+        let toffoliCode = '';
         node.qubits.map((msg) => {
-          //Use qubits only if there are no registers.
-          if (typeof msg.payload.register === "undefined") {
+          // Use qubits only if there are no registers.
+          if (typeof msg.payload.register === 'undefined') {
             toffoliCode = util.format(
-              snippets.TOFFOLI_GATE,
-              control1.payload.qubit.toString(),
-              control2.payload.qubit.toString(),
-              target.payload.qubit.toString()
+                snippets.TOFFOLI_GATE,
+                control1.payload.qubit.toString(),
+                control2.payload.qubit.toString(),
+                target.payload.qubit.toString(),
             );
           } else {
-            //Use registers if there are quantum registers.
+            // Use registers if there are quantum registers.
             toffoliCode = util.format(
-              snippets.TOFFOLI_GATE,
-              control1.payload.registerVar +
-                "[" +
+                snippets.TOFFOLI_GATE,
+                control1.payload.registerVar +
+                '[' +
                 control1.payload.qubit.toString() +
-                "]",
-              control2.payload.registerVar +
-                "[" +
+                ']',
+                control2.payload.registerVar +
+                '[' +
                 control2.payload.qubit.toString() +
-                "]",
-              target.payload.registerVar +
-                "[" +
+                ']',
+                target.payload.registerVar +
+                '[' +
                 target.payload.qubit.toString() +
-                "]"
+                ']',
             );
           }
         });
@@ -111,11 +111,11 @@ module.exports = function (RED) {
           if (err) node.error(err);
         });
 
-        //Sending one qubit object per node output
+        // Sending one qubit object per node output
         send(node.qubits);
       }
     });
   }
 
-  RED.nodes.registerType("toffoli-gate", ToffoliGateNode);
+  RED.nodes.registerType('toffoli-gate', ToffoliGateNode);
 };
