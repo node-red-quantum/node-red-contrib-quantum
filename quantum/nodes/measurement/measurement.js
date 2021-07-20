@@ -13,9 +13,11 @@ module.exports = function(RED) {
   }
   function MeasurementNode(config) {
     RED.nodes.createNode(this, config);
+    console.log('measurement node created');
     this.name = config.name;
     this.selectedBit = config.selectedBit;
     this.selectedRegVarName = config.selectedRegVarName;
+    this.classicalRegistersOrBits =  "";
     const globalContext = this.context().global;
     const node = this;
     this.on('input', async function(msg, send, done) {
