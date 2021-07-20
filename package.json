@@ -25,10 +25,10 @@
   ],
   "scripts": {
     "start": "node-red || npx node-red",
-    "setup": "(npm run link && npm run venv) && echo \"Setup complete - run 'npm start' to open Node-RED\"",
-    "link": "sh bin/link.sh || bin/link.sh",
-    "venv": "python bin/pyvenv.py || bin/pyvenv.py",
-    "clean": "rm -r venv/; npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
+    "setup": "(npm run link && npm run venv) && echo Setup complete - run 'npm start' to open Node-RED",
+    "link": "bash bin/link.sh || bin/link.sh",
+    "venv": "bash bin/pyvenv.sh || bin/pyvenv.sh",
+    "clean": "rm -r venv/ & npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
     "lint": "eslint --fix --ignore-path .gitignore ."
   },
   "dependencies": {
@@ -49,11 +49,14 @@
       "quantum-circuit": "quantum/nodes/quantum-circuit/quantum-circuit.js",
       "quantum-register": "quantum/nodes/quantum-register/quantum-register.js",
       "classical-register": "quantum/nodes/classical-register/classical-register.js",
+      "toffoli-gate": "quantum/nodes/toffoli-gate/toffoli-gate.js",
       "execute": "quantum/nodes/execute/execute.js",
+      "not-gate": "quantum/nodes/not-gate/not-gate.js",
       "measurement": "quantum/nodes/measurement/measurement.js",
       "barrier": "quantum/nodes/barrier/barrier.js",
       "identity": "quantum/nodes/identity/identity.js",
       "simulator": "quantum/nodes/simulator/simulator.js",
+      "cnot-gate": "quantum/nodes/cnot-gate/cnot-gate.js",
       "hadamard-gate": "quantum/nodes/hadamard-gate/hadamard-gate.js"
     }
   }
