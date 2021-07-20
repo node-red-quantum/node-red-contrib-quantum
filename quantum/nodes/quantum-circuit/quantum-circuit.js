@@ -69,10 +69,11 @@ module.exports = function(RED) {
   RED.httpAdmin.get('/quantum-circuit/registers', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
     res.json({
       success: true,
-      classicalRegisters: classicalRegisters
+      classicalRegisters: classicalRegisters,
     });
   });
 
+  // eslint-disable-next-line max-len
   RED.httpAdmin.post('/quantum-circuit/update-register', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
     let found = classicalRegisters.find((register) => register.nodeid === req.body.nodeid);
     if (found) {
@@ -88,13 +89,14 @@ module.exports = function(RED) {
       nodeid: req.body.nodeid,
       regName: req.body.regName,
       regVarName: req.body.regVarName,
-      bits: req.body.bits
+      bits: req.body.bits,
     });
     res.json({
       success: true,
     });
   });
 
+  // eslint-disable-next-line max-len
   RED.httpAdmin.post('/quantum-circuit/delete-register', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
     let index = classicalRegisters.findIndex((register) => register.nodeid === req.body.nodeid);
     if (index !== -1) {
@@ -112,17 +114,18 @@ module.exports = function(RED) {
   RED.httpAdmin.get('/quantum-circuit/structure', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
     res.json({
       success: true,
-      structure: quantumCircuitNode.structure
+      structure: quantumCircuitNode.structure,
     });
   });
 
   RED.httpAdmin.get('/quantum-circuit/bits', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
     res.json({
       success: true,
-      bits: quantumCircuitNode.cbits
+      bits: quantumCircuitNode.cbits,
     });
   });
 
+  // eslint-disable-next-line max-len
   RED.httpAdmin.post('/quantum-circuit/update-circuit', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
     quantumCircuitNode.structure = req.body.structure;
     quantumCircuitNode.outputs = req.body.outputs;
@@ -130,7 +133,7 @@ module.exports = function(RED) {
 
     res.json({
       success: true,
-      quantumCircuitNode: quantumCircuitNode
+      quantumCircuitNode: quantumCircuitNode,
     });
   });
 

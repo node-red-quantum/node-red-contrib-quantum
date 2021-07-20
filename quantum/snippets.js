@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /*
  * Snippets must be constants, and constants must capitalised with underscores.
@@ -12,26 +12,26 @@
 
 // Probably shouldn't use wildcard import here for efficiency but whatever will
 // worry about it later.
-const IMPORTS = 
+const IMPORTS =
 `import numpy as np
  from qiskit import *`;
 
-const QUANTUM_CIRCUIT = 
+const QUANTUM_CIRCUIT =
 `qc = QuantumCircuit(%s)`;
 
-const CLASSICAL_REGISTER = 
+const CLASSICAL_REGISTER =
 `cr%s = ClassicalRegister(%s)`;
 
-const QUANTUM_REGISTER = 
+const QUANTUM_REGISTER =
 `qr%s = QuantumRegister(%s)`;
 
-const TOFFOLI_GATE = 
+const TOFFOLI_GATE =
 `qc.toffoli(%s, %s, %s)`;
 
-const CNOT_GATE = 
+const CNOT_GATE =
 `qc.cx(%s, %s)`;
 
-const BARRIER = 
+const BARRIER =
 `qc.barrier(%s)`;
 
 const HADAMARD_GATE =
@@ -43,7 +43,7 @@ const MEASUREMENT =
 const SIMULATOR = `simulator = Aer.get_backend('qasm_simulator')
 result = execute(qc, backend = simulator, shots = %s).result()
 counts = result.get_counts()
-print(counts)`
+print(counts)`;
 
 const NOT_GATE =
 `qc.x(%s)`;
