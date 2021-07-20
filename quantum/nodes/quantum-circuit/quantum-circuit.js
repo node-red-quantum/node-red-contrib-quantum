@@ -35,6 +35,7 @@ module.exports = function(RED) {
           output[i] = {
             topic: 'Quantum Circuit',
             payload: {
+              structure: new Array(node.outputs),
               register: i,
             },
           };
@@ -52,6 +53,10 @@ module.exports = function(RED) {
           output[i] = {
             topic: 'Quantum Circuit',
             payload: {
+              structure: {
+                qubits: node.outputs,
+                cbits: node.cbits,
+              },
               register: undefined,
               qubit: i,
             },

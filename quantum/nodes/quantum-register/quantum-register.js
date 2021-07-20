@@ -87,12 +87,19 @@ module.exports = function(RED) {
         }
       }
 
+      let structure = msg.payload.structure;
+      structure[msg.payload.register] = {
+        register: 'qr' + msg.payload.register.toString(),
+        qubits: node.outputs,
+      };
+
       // Creating an array of messages to be sent
       // Each message represents a different qubit
       for (let i = 0; i < node.outputs; i++) {
         output[i] = {
           topic: 'Quantum Circuit',
           payload: {
+            structure: structure,
             register: node.name,
             registerVar: 'qr' + msg.payload.register.toString(),
             qubit: i,
