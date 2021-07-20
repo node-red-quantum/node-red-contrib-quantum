@@ -52,7 +52,6 @@ module.exports = function(RED) {
         registerType: 'quantum',
         registerName: node.name,
         registerVar: 'qr' + msg.payload.register.toString(),
-        bits: node.outputs,
       };
       flowContext.set('quantumCircuit[' + msg.payload.register.toString() + ']', register);
 
@@ -62,15 +61,26 @@ module.exports = function(RED) {
         let structure = flowContext.get('quantumCircuit');
 
         let count = 0;
+        let qreg = 0;
+        let creg = 0;
         structure.map((x) => {
           if (typeof(x) !== 'undefined') {
             count += 1;
+            if (x.registerType === 'quantum') qreg += 1;
+            else creg += 1;
           }
         });
 
+        // If the user specified a register structure in the 'Quantum Circuit' node that
+        // does not match the visual structure built using the register nodes, throw an error
+        if (qreg > msg.payload.structure.qreg || creg > msg.payload.structure.creg) {
+          throw new Error(
+              'Please enter the correct number of quantum & classical registers in the "Quantum Circuit" node.',
+          );
+
         // If all set & the quantum circuit has not yet been initialised by another register:
         // Initialise the quantum circuit
-        if (count == structure.length && typeof(flowContext.get('quantumCircuit')) !== undefined) {
+        } else if (count == structure.length && typeof(flowContext.get('quantumCircuit')) !== undefined) {
           // Delete the 'quantumCircuit' flow context variable, not used anymore
           flowContext.set('quantumCircuit', undefined);
 
@@ -93,8 +103,10 @@ module.exports = function(RED) {
         output[i] = {
           topic: 'Quantum Circuit',
           payload: {
+            structure: msg.payload.structure,
             register: node.name,
             registerVar: 'qr' + msg.payload.register.toString(),
+            totalQubits: node.outputs,
             qubit: i,
           },
         };

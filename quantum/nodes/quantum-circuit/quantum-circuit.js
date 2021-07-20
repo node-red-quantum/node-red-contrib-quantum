@@ -13,7 +13,8 @@ module.exports = function(RED) {
     quantumCircuitNode = this;
     this.name = config.name;
     this.structure = config.structure;
-    this.cbits = parseInt(config.cbits);
+    this.qbitsreg = parseInt(config.qbitsreg);
+    this.cbitsreg = parseInt(config.cbitsreg);
     this.outputs = parseInt(config.outputs);
     const flowContext = this.context().flow;
     const output = new Array(this.outputs);
@@ -38,13 +39,17 @@ module.exports = function(RED) {
           output[i] = {
             topic: 'Quantum Circuit',
             payload: {
+              structure: {
+                creg: node.cbitsreg,
+                qreg: node.qbitsreg,
+              },
               register: i,
             },
           };
         };
       } else { // If the user does not want to use registers
         // Add arguments to quantum circuit code
-        let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, node.outputs + ',' + node.cbits);
+        let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, node.qbitsreg + ',' + node.cbitsreg);
         await shell.execute(circuitScript, (err) => {
           if (err) node.error(err);
         });
@@ -55,6 +60,10 @@ module.exports = function(RED) {
           output[i] = {
             topic: 'Quantum Circuit',
             payload: {
+              structure: {
+                qubits: node.qbitsreg,
+                cbits: node.cbitsreg,
+              },
               register: undefined,
               qubit: i,
             },
@@ -121,14 +130,15 @@ module.exports = function(RED) {
   RED.httpAdmin.get('/quantum-circuit/bits', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
     res.json({
       success: true,
-      bits: quantumCircuitNode.cbits
+      bits: quantumCircuitNode.cbitsreg
     });
   });
 
   RED.httpAdmin.post('/quantum-circuit/update-circuit', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
     quantumCircuitNode.structure = req.body.structure;
     quantumCircuitNode.outputs = req.body.outputs;
-    quantumCircuitNode.cbits = req.body.cbits;
+    quantumCircuitNode.cbitsreg = req.body.cbitsreg;
+    quantumCircuitNode.qbitsreg = req.body.qbitsreg;
 
     res.json({
       success: true,

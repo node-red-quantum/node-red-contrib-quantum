@@ -1,0 +1,42 @@
+<script type="text/javascript">
+  RED.nodes.registerType("toffoli-gate", {
+    category: "quantum",
+    color: "#FA4D56",
+    defaults: {
+      name: { value: "" },
+      targetPosition: { value: "", required: true },
+    },
+    inputs: 3,
+    outputs: 3,
+    icon: "font-awesome/fa-ellipsis-v",
+    paletteLabel: "toffoli gate",
+    label: function () {
+      return this.name || "Toffoli Gate";
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="toffoli-gate">
+  <div class="form-row">
+    <label for="node-input-toffoli-gate"
+      ><i class="fa fa-tag"></i> Toffoli Gate</label
+    >
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-targetPosition"
+      >Select the relative position of the target qubit:</label
+    >
+    <select name="targetPosition" id="node-input-targetPosition">
+      <option value="Top">Top</option>
+      <option value="Middle">Middle</option>
+      <option value="Bottom">Bottom</option>
+    </select>
+  </div>
+</script>
+
+<script type="text/html" data-help-name="toffoli-gate">
+  <p>
+    <!-- Node documentation goes here. -->
+  </p>
+</script>
