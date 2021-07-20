@@ -5,23 +5,26 @@
     defaults: {
       name: { value: "" },
       structure: { value: "", required: true },
-      cbits: {
-        value: "",
-        required: true,
+      qbitsreg:{
+        value: "", 
+        required: true, 
         validate: function (x) {
           x = parseInt(x);
           if (Number.isInteger(x) && x > 0){return true}
           else {return false}
         }
       },
-      outputs: {
-        value: "",
-        required: true,
+      cbitsreg: { 
+        value: "", 
+        required: true, 
         validate: function (x) {
           x = parseInt(x);
           if (Number.isInteger(x) && x > 0){return true}
           else {return false}
-        },
+        }
+      },
+      outputs: { 
+        value: "",
       }
     },
     inputs: 1,
@@ -42,47 +45,48 @@
     oneditprepare: function () {
       if (document.getElementById("node-input-structure").value == "qubits") {
         $(".circuit-structure-qubits").addClass("selected");
-        $(".cbits").show();
-        document.getElementById("number-outputs").innerHTML = "Number of qubits";
+        document.getElementById("number-qbitsreg").innerHTML = "Number of qubits";
+        document.getElementById("number-cbitsreg").innerHTML = "Number of classical bits";
       } else {
         document.getElementById("node-input-structure").value = "registers";
         $(".circuit-structure-registers").addClass("selected");
-        $(".cbits").hide();
-        document.getElementById("number-outputs").innerHTML = "Number of registers";
-        document.getElementById("node-input-cbits").value = 1; // Required node property
+        document.getElementById("number-qbitsreg").innerHTML = "Number of quantum registers";
+        document.getElementById("number-cbitsreg").innerHTML = "Number of classical registers";
       }
 
       $(".circuit-structure-qubits").on("click", function () {
         $(".circuit-structure-registers").removeClass("selected");
         $(this).addClass("selected");
-        $(".cbits").show();
-        document.getElementById("number-outputs").innerHTML = "Number of qubits";
+        document.getElementById("number-qbitsreg").innerHTML = "Number of qubits";
+        document.getElementById("number-cbitsreg").innerHTML = "Number of classical bits";
         document.getElementById("node-input-structure").value = "qubits";
-        document.getElementById("node-input-cbits").value = "";
       });
 
       $(".circuit-structure-registers").on("click", function () {
         $(".circuit-structure-qubits").removeClass("selected");
         $(this).addClass("selected");
-        $(".cbits").hide();
-        document.getElementById("number-outputs").innerHTML = "Number of registers";
+        document.getElementById("number-qbitsreg").innerHTML = "Number of quantum registers";
+        document.getElementById("number-cbitsreg").innerHTML = "Number of classical registers";
         document.getElementById("node-input-structure").value = "registers";
-        document.getElementById("node-input-cbits").value = 1; // Required node property
       });
     },
-    oneditsave: function() {
-      this.cbits = document.getElementById("node-input-cbits").value;
-      this.outputs = document.getElementById("node-input-outputs").value;
-      this.structure = document.getElementById('node-input-structure').value;
+
+    oneditsave: function () {
+      if (document.getElementById("node-input-structure").value == "qubits") {
+        this.outputs = (parseInt(document.getElementById("node-input-qbitsreg").value) || 1);
+      } else {
+        this.outputs = ((parseInt(document.getElementById("node-input-qbitsreg").value) +
+          parseInt(document.getElementById("node-input-cbitsreg").value)) || 1);
+      }
+
       $.post('quantum-circuit/update-circuit',
               {
-                cbits: this.cbits,
+                cbits: this.cbitsreg,
                 outputs: this.outputs,
                 structure: this.structure,
               }, p => p
       );
-    }
-
+    },
   });
 </script>
 
@@ -100,12 +104,12 @@
     </span>
   </div>
   <div class="form-row">
-    <label for="node-input-number-registers" id="number-outputs"><i class="fa"></i> </label>
-    <input type="number" min="1" id="node-input-outputs" />
+    <label for="node-input-qbitsreg" id="number-qbitsreg"><i class="fa"></i> </label>
+    <input type="number" min="1" id="node-input-qbitsreg"/>
   </div>
-  <div class="form-row cbits">
-    <label for="node-input-number-cbits"><i class="fa"></i>Number of classical bits</label>
-    <input type="number" min="1" id="node-input-cbits" />
+  <div class="form-row">
+    <label for="node-input-cbitsreg" id="number-cbitsreg"><i class="fa"></i> </label>
+    <input type="number" min="1" id="node-input-cbitsreg"/>
   </div>
   <!-- Do not delete -->
   <div hidden>
