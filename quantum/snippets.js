@@ -39,7 +39,7 @@ const HADAMARD_GATE =
 
 const MEASUREMENT =
   `qc.measure(%s)`;
-  
+
 const NOT_GATE =
 `qc.x(%s)`;
 

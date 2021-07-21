@@ -80,7 +80,7 @@ module.exports = function(RED) {
   RED.httpAdmin.get('/quantum-circuit/registers', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
     res.json({
       success: true,
-      classicalRegisters: classicalRegisters
+      classicalRegisters: classicalRegisters,
     });
   });
 
@@ -99,7 +99,7 @@ module.exports = function(RED) {
       nodeid: req.body.nodeid,
       regName: req.body.regName,
       regVarName: req.body.regVarName,
-      bits: req.body.bits
+      bits: req.body.bits,
     });
     res.json({
       success: true,
@@ -123,14 +123,14 @@ module.exports = function(RED) {
   RED.httpAdmin.get('/quantum-circuit/structure', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
     res.json({
       success: true,
-      structure: quantumCircuitNode.structure
+      structure: quantumCircuitNode.structure,
     });
   });
 
   RED.httpAdmin.get('/quantum-circuit/bits', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
     res.json({
       success: true,
-      bits: quantumCircuitNode.cbitsreg
+      bits: quantumCircuitNode.cbitsreg,
     });
   });
 
@@ -142,7 +142,7 @@ module.exports = function(RED) {
 
     res.json({
       success: true,
-      quantumCircuitNode: quantumCircuitNode
+      quantumCircuitNode: quantumCircuitNode,
     });
   });
 

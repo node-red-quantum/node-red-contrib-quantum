@@ -10,14 +10,14 @@ module.exports = function(RED) {
     if (msg.topic !== 'Quantum Circuit') {
       node.error(errors.NOT_QUANTUM_CIRCUIT, msg);
     }
-  }
+  };
   function MeasurementNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.selectedBit = config.selectedBit;
     this.selectedRegVarName = config.selectedRegVarName;
-    this.classicalRegistersOrBits =  "";
-    const globalContext = this.context().global;
+    this.classicalRegistersOrBits = '';
+
     const node = this;
     this.on('input', async function(msg, send, done) {
       validateInput(node, msg);
