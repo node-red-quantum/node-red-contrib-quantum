@@ -37,6 +37,7 @@
             if (registers.length === 0){
               $("#node-input-classicalRegistersOrBits").val("");
             }
+            let regCnt = 0;
             registers.forEach((register) => {
               let inputId = 'node-input-classreg-' + register.regName;
               let myNewRow = $('<div class="form-row" />');
@@ -55,13 +56,14 @@
                 let myNewInput = $(`<input type="radio" name="bit" class="classreg-element" id="${subInputId}" value="${subInputId}" data-varname="${register.regVarName}" data-bit="${bit}"/>`);
                 myNewRow.append(myNewLabel);
                 myNewRow.append(myNewInput);
-                if (bit === 0) {
+                if (regCnt === 0 && bit === 0) {
                   $("#" + subInputId).prop("checked", true)
                   $("#node-input-classicalRegistersOrBits").val("1");
                 }
                 if (subInputId === selectedRadio) {
                   $("#" + subInputId).prop("checked", true)
                 }
+                regCnt += 1;
               });
             });
           });
@@ -119,7 +121,7 @@
     <label for="node-input-name"><i class="fa fa-tag"></i> Measurement Node</label>
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
-  <div class="form-row">
+  <div class="form-row" hidden>
     <label for="node-input-classicalRegistersOrBits"><i class="fa fa-check"></i>Are classical registers/bits set?</label>
     <input type="text" id="node-input-classicalRegistersOrBits" disabled/>
   </div>
