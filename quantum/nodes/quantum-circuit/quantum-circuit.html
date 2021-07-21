@@ -6,24 +6,24 @@
       name: { value: "" },
       structure: { value: "", required: true },
       qbitsreg:{
-        value: "", 
-        required: true, 
+        value: "",
+        required: true,
         validate: function (x) {
           x = parseInt(x);
           if (Number.isInteger(x) && x > 0){return true}
           else {return false}
         }
       },
-      cbitsreg: { 
-        value: "", 
-        required: true, 
+      cbitsreg: {
+        value: "",
+        required: true,
         validate: function (x) {
           x = parseInt(x);
           if (Number.isInteger(x) && x >= 0){return true}
           else {return false}
         }
       },
-      outputs: { 
+      outputs: {
         value: "",
       }
     },
