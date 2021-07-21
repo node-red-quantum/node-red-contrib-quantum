@@ -16,6 +16,8 @@ module.exports = function(RED) {
     this.name = config.name;
     this.selectedBit = config.selectedBit;
     this.selectedRegVarName = config.selectedRegVarName;
+    this.classicalRegistersOrBits = '';
+
     const node = this;
     this.on('input', async function(msg, send, done) {
       validateInput(node, msg);

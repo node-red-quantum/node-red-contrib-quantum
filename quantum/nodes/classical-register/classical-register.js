@@ -8,7 +8,7 @@ module.exports = function(RED) {
   function ClassicalRegisterNode(config) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
-    this.name = config.name.trim().toLowerCase().replace(' ', '_');
+    this.name = config.name.trim().toLowerCase().replace(/ /g, '_');
     this.classicalBits = config.classicalBits;
     const flowContext = this.context().flow;
     const node = this;
@@ -46,7 +46,6 @@ module.exports = function(RED) {
         registerType: 'classical',
         registerName: node.name,
         registerVar: 'cr_' + node.name,
-        bits: node.classicalBits,
       };
       flowContext.set('quantumCircuit[' + msg.payload.register.toString() + ']', register);
 

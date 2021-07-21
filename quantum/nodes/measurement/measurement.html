@@ -4,9 +4,19 @@
     color: "#33b1ff",
     defaults: {
       name: { value: "" },
-      selectedBit: { value: "" },
+      selectedBit: { value: ""},
       selectedRegVarName: { value: "" },
       selectedRadio: {value: ""},
+      classicalRegistersOrBits: {
+        value: "",
+        required: true,
+        validate: function(val) {
+          if ( val === "") {
+            return false;
+          }
+          return true;
+        }
+      },
     },
     inputs: 1,
     outputs: 1,
@@ -23,6 +33,11 @@
         if (structure === 'registers') {
           $.getJSON("quantum-circuit/registers", function (data) {
             let registers = data.classicalRegisters;
+            let hasRegistersOrBits = "";
+            if (registers.length === 0){
+              $("#node-input-classicalRegistersOrBits").val("");
+            }
+            let regCnt = 0;
             registers.forEach((register) => {
               let inputId = 'node-input-classreg-' + register.regName;
               let myNewRow = $('<div class="form-row" />');
@@ -41,9 +56,14 @@
                 let myNewInput = $(`<input type="radio" name="bit" class="classreg-element" id="${subInputId}" value="${subInputId}" data-varname="${register.regVarName}" data-bit="${bit}"/>`);
                 myNewRow.append(myNewLabel);
                 myNewRow.append(myNewInput);
+                if (regCnt === 0 && bit === 0) {
+                  $("#" + subInputId).prop("checked", true)
+                  $("#node-input-classicalRegistersOrBits").val("1");
+                }
                 if (subInputId === selectedRadio) {
                   $("#" + subInputId).prop("checked", true)
                 }
+                regCnt += 1;
               });
             });
           });
@@ -56,15 +76,21 @@
             for (let i = 0; i < Number(data.bits); i++) {
               bitArray.push(i);
             }
-
+            if (bitArray.length === 0){
+              $("#node-input-classicalRegistersOrBits").val("");
+            }
             bitArray.forEach((bit) => {
               let InputId = 'node-input-cbit-' + bit;
               let myNewLabel = $(`<label for="${InputId}"><i class="fa fa-circle"></i> Bit ${bit}</label>`);
               let myNewInput = $(`<input type="radio" name="bit" class="classreg-element" id="${InputId}" value="${InputId}" data-bit="${bit}"/>`);
               myNewRow.append(myNewLabel);
               myNewRow.append(myNewInput);
+              if (bit === 0) {
+                $("#" + InputId).prop("checked", true);
+                $("#node-input-classicalRegistersOrBits").val("1");
+              }
               if (InputId === selectedRadio) {
-                $("#" + InputId).prop("checked", true)
+                $("#" + InputId).prop("checked", true);
               }
             });
           });
@@ -94,6 +120,10 @@
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Measurement Node</label>
     <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+  <div class="form-row" hidden>
+    <label for="node-input-classicalRegistersOrBits"><i class="fa fa-check"></i>Are classical registers/bits set?</label>
+    <input type="text" id="node-input-classicalRegistersOrBits" disabled/>
   </div>
   <div id="reg-form">
   </div>

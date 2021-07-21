@@ -82,7 +82,6 @@ module.exports = function(RED) {
     });
   });
 
-  // eslint-disable-next-line max-len
   RED.httpAdmin.post('/quantum-circuit/update-register', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
     let found = classicalRegisters.find((register) => register.nodeid === req.body.nodeid);
     if (found) {
@@ -105,7 +104,6 @@ module.exports = function(RED) {
     });
   });
 
-  // eslint-disable-next-line max-len
   RED.httpAdmin.post('/quantum-circuit/delete-register', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
     let index = classicalRegisters.findIndex((register) => register.nodeid === req.body.nodeid);
     if (index !== -1) {
@@ -130,15 +128,15 @@ module.exports = function(RED) {
   RED.httpAdmin.get('/quantum-circuit/bits', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
     res.json({
       success: true,
-      bits: quantumCircuitNode.cbits,
+      bits: quantumCircuitNode.cbitsreg,
     });
   });
 
-  // eslint-disable-next-line max-len
   RED.httpAdmin.post('/quantum-circuit/update-circuit', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
     quantumCircuitNode.structure = req.body.structure;
     quantumCircuitNode.outputs = req.body.outputs;
-    quantumCircuitNode.cbits = req.body.cbits;
+    quantumCircuitNode.cbitsreg = req.body.cbitsreg;
+    quantumCircuitNode.qbitsreg = req.body.qbitsreg;
 
     res.json({
       success: true,
