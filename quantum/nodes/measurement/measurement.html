@@ -70,14 +70,12 @@
         }
         else {
           $.getJSON("quantum-circuit/bits", function (data) {
-            console.log('response from bits/:', data);
             let myNewRow = $('<div class="form-row" />');
             parentDiv.append(myNewRow);
             const bitArray = []
             for (let i = 0; i < Number(data.bits); i++) {
               bitArray.push(i);
             }
-            console.log('birarray', bitArray);
             if (bitArray.length === 0){
               $("#node-input-classicalRegistersOrBits").val("");
             }
@@ -87,7 +85,6 @@
               let myNewInput = $(`<input type="radio" name="bit" class="classreg-element" id="${InputId}" value="${InputId}" data-bit="${bit}"/>`);
               myNewRow.append(myNewLabel);
               myNewRow.append(myNewInput);
-              console.log('appended mynewrow', myNewRow);
               if (bit === 0) {
                 $("#" + InputId).prop("checked", true);
                 $("#node-input-classicalRegistersOrBits").val("1");
