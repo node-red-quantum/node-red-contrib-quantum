@@ -10,7 +10,7 @@
         required: true, 
         validate: function (x) {
           x = parseInt(x);
-          if (Number.isInteger(x) && x > 0){return true} 
+          if (Number.isInteger(x) && x > 0){return true}
           else {return false}
         }
       },
@@ -19,7 +19,7 @@
         required: true, 
         validate: function (x) {
           x = parseInt(x);
-          if (Number.isInteger(x) && x > 0){return true} 
+          if (Number.isInteger(x) && x >= 0){return true}
           else {return false}
         }
       },
@@ -78,6 +78,14 @@
         this.outputs = ((parseInt(document.getElementById("node-input-qbitsreg").value) +
           parseInt(document.getElementById("node-input-cbitsreg").value)) || 1);
       }
+
+      $.post('quantum-circuit/update-circuit',
+              {
+                cbits: this.cbitsreg,
+                outputs: this.outputs,
+                structure: this.structure,
+              }, p => p
+      );
     },
   });
 </script>
@@ -101,7 +109,7 @@
   </div>
   <div class="form-row">
     <label for="node-input-cbitsreg" id="number-cbitsreg"><i class="fa"></i> </label>
-    <input type="number" min="1" id="node-input-cbitsreg"/>
+    <input type="number" min="0" id="node-input-cbitsreg"/>
   </div>
   <!-- Do not delete -->
   <div hidden>
