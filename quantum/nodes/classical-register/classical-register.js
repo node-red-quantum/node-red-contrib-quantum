@@ -31,10 +31,10 @@ module.exports = function(RED) {
             'Register nodes must be connected to the outputs of the "Quantum Circuit" node.',
         );
       }
-      let regname = node.name.trim().toLowerCase().replace(/ /g, '_')
+
       // Add arguments to classical register code
       let registerScript = util.format(snippets.CLASSICAL_REGISTER,
-          '_' + regname,
+          '_' + node.name,
           node.classicalBits.toString() + ', "' + node.name + '"',
       );
       await shell.execute(registerScript, (err) => {
@@ -45,7 +45,7 @@ module.exports = function(RED) {
       let register = {
         registerType: 'classical',
         registerName: node.name,
-        registerVar: regname,
+        registerVar: 'cr_' + node.name,
       };
       flowContext.set('quantumCircuit[' + msg.payload.register.toString() + ']', register);
 
