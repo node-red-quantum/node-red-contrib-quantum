@@ -3,7 +3,7 @@
 const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
-const {errors} = require('../../errors');
+const errors = require('../../errors');
 
 const validateInput = (node, msg) => {
   if (msg.topic !== 'Quantum Circuit') {
