@@ -38,9 +38,10 @@ const HADAMARD_GATE =
 `qc.h(%s)`;
 
 const MEASUREMENT =
-  `qc.measure(%s)`;
+`qc.measure(%s)`;
 
-const SIMULATOR = `simulator = Aer.get_backend('qasm_simulator')
+const SIMULATOR =
+`simulator = Aer.get_backend('qasm_simulator')
 result = execute(qc, backend = simulator, shots = %s).result()
 counts = result.get_counts()
 print(counts)`;
