@@ -7,36 +7,43 @@
         value: "",
         required: true,
         validate: function (x) {
+          // Deleting the error message, if any
+          if (document.getElementById("error-message")){
+            document.getElementById("error-message").innerHTML = '';
+          }
           // Input validation for node name
           x = x.trim().toLowerCase();
           if (!x.match(/^[0-9 a-z]+$/)) return false
+
+          // Input validation for node name availability 
           else { 
-            // let regName = x.replace(/ /g, '_');
-            // let regId = this.id;
-            // var available = true;
+            let regName = x.replace(/ /g, '_');
+            let regId = this.id;
+            let available = true;
 
-            // $.getJSON('quantum-circuit/structure', function (data) {
-            //   let structure = data.structure;
-            //   if (structure === 'registers') {
-            //     $.getJSON("quantum-circuit/registers", function (data) {
-            //       let registers = data.classicalRegisters;
-            //       registers.map((register) => {
-            //         if (register.nodeid.valueOf() != regId.valueOf() && regName.valueOf() == register.regName.valueOf()) {
-            //           available = false;
-            //         }
-            //       });
-            //     });
-            //   }
-            // });
-            // if (available == false) {
-            //   console.log('FALSE')
-            //   return false
-            // } else {
-            //   console.log('TRUE')
-            //   return true
-            // }
+            if (typeof (this.classicalRegisters) === 'undefined') {
+              if (document.getElementById("error-message")){
+                document.getElementById("error-message").innerHTML = (
+                    'Please select the "Registers & Bits" option <br> in the "Quantum Circuit" node to use registers'
+                );
+              }
+              available = false;
+            } else {
+              if (this.classicalRegisters.length !== 0){
+                this.classicalRegisters.forEach((register) => {
+                  if (register.regName == regName && regId != register.nodeid) {
+                    if (document.getElementById("error-message")){
+                      document.getElementById("error-message").innerHTML = (
+                          'Classical register name already in use <br> please enter another name.'
+                      );
+                    }
+                    available = false;
+                  } 
+                });
+              }      
+            }
 
-            return true
+            return available;
           }
         }
       },
@@ -49,6 +56,9 @@
           else {return false}
         }
       },
+      classicalRegisters: {
+        value: ""
+      },
     },
     inputs: 1,
     outputs: 0,
@@ -59,6 +69,19 @@
       return this.name || "classical register";
     },
     inputLabels: "quantum circuit node",
+
+    oneditprepare: async function () {
+      let data = await $.getJSON('quantum-circuit/structure');
+      if (data.success) {
+        let structure = data.structure;
+        if (structure === 'registers') {
+          let data = await $.getJSON("quantum-circuit/registers");
+          this.classicalRegisters = data.classicalRegisters;
+        } else {
+          this.classicalRegisters = undefined;
+        }
+      }
+    },
 
     oneditsave: function() {
       let cbits = document.getElementById("node-input-classicalBits").value;
@@ -89,6 +112,9 @@
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+  <div class="form-row">
+    <p id="error-message" style="color: red"></p>
   </div>
   <div class="form-row">
     <label for="node-input-number-bits"><i class="fa fa-tag"></i> Number of bits</label>
