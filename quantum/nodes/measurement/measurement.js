@@ -17,21 +17,22 @@ module.exports = function(RED) {
     this.selectedBit = config.selectedBit;
     this.selectedRegVarName = config.selectedRegVarName;
     this.classicalRegistersOrBits = '';
-
     const node = this;
+
     this.on('input', async function(msg, send, done) {
+      let script = '';
       validateInput(node, msg);
       const params = (!node.selectedRegVarName) ? `${msg.payload.qubit}, ${node.selectedBit}`:
         `${msg.payload.registerVar}[${msg.payload.qubit}], ` +
         `${node.selectedRegVarName}[${node.selectedBit}]`;
 
-      const measureScript = util.format(snippets.MEASUREMENT, params);
-      await shell.execute(measureScript, (err) => {
-        if (err) {
-          node.error(err, msg);
-        }
+      script += util.format(snippets.MEASUREMENT, params);
+
+      await shell.execute(script, (err) => {
+        if (err) node.error(err);
+        else send(msg);
       });
-      send(msg);
+
       if (done) {
         done();
       }

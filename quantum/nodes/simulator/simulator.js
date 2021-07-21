@@ -20,6 +20,7 @@ module.exports = function(RED) {
     const node = this;
 
     this.on('input', async function(msg, send, done) {
+      let script = '';
       validateInput(node, msg);
       let qubitsArrived = true;
 
@@ -72,10 +73,11 @@ module.exports = function(RED) {
       // If all qubits have arrives, generate the simulator script and run it
       if (qubitsArrived) {
         const params = node.shots;
-        const simulatorScript = util.format(snippets.SIMULATOR, params);
-        await shell.execute(simulatorScript, (err, data) => {
+        script += util.format(snippets.SIMULATOR, params);
+        await shell.execute(script, (err, data) => {
+          node.error(shell.script);
           if (err) {
-            node.error(err, msg);
+            node.error(err);
           } else {
             msg.payload = data;
             send(msg);
