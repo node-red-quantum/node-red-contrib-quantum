@@ -25,14 +25,12 @@ module.exports = function(RED) {
       await shell.execute(snippets.IMPORTS, (err) => {
         if (err) node.error(err);
       });
-
+      // Creating a temporary 'quantumCircuitArray' flow context array
+      // This variable represents the quantum circuit structure
+      let quantumCircuitArray = new Array(node.outputs);
+      flowContext.set('quantumCircuit', quantumCircuitArray);
       // If the user wants to use registers
       if (node.structure == 'registers') {
-        // Creating a temporary 'quantumCircuit' flow context array
-        // This variable represents the quantum circuit structure
-        let quantumCircuit = new Array(node.outputs);
-        flowContext.set('quantumCircuit', quantumCircuit);
-
         // Creating an array of messages to be sent
         // Each message represents a dfifferent register
         for (let i = 0; i < node.outputs; i++) {

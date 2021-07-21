@@ -8,8 +8,8 @@
         validate: function (x) {
           if (x == "") return true
           else {
-            x = x.trim().toLowerCase().replace(/ /g, '_'); 
-            if (!x.match(/^[0-9a-z_]+$/)) return false
+            x = x.trim().toLowerCase(); 
+            if (!x.match(/^[0-9 a-z]+$/)) return false
             else return true
           }
         }
