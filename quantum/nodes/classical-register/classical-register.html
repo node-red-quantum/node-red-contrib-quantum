@@ -3,15 +3,61 @@
     category: "quantum",
     color: "#C0C0C0",
     defaults: {
-      name: { value: "" },
-      classicalBits: { 
-        value: "", 
-        required: true ,
+      name: {
+        value: "",
+        required: true,
+        validate: function (x) {
+          // Deleting the error message, if any
+          if (document.getElementById("error-message")){
+            document.getElementById("error-message").innerHTML = '';
+          }
+          // Input validation for node name
+          x = x.trim().toLowerCase();
+          if (!x.match(/^[0-9 a-z]+$/)) return false
+
+          // Input validation for node name availability 
+          else { 
+            let regName = x.replace(/ /g, '_');
+            let regId = this.id;
+            let available = true;
+
+            if (typeof (this.classicalRegisters) === 'undefined') {
+              if (document.getElementById("error-message")){
+                document.getElementById("error-message").innerHTML = (
+                    'Please select the "Registers & Bits" option <br> in the "Quantum Circuit" node to use registers'
+                );
+              }
+              available = false;
+            } else {
+              if (this.classicalRegisters.length !== 0){
+                this.classicalRegisters.forEach((register) => {
+                  if (register.regName == regName && regId != register.nodeid) {
+                    if (document.getElementById("error-message")){
+                      document.getElementById("error-message").innerHTML = (
+                          'Classical register name already in use <br> please enter another name.'
+                      );
+                    }
+                    available = false;
+                  } 
+                });
+              }      
+            }
+
+            return available;
+          }
+        }
+      },
+      classicalBits: {
+        value: "",
+        required: true,
         validate: function (x) {
           x = parseInt(x);
-          if (Number.isInteger(x) && x > 0){return true} 
+          if (Number.isInteger(x) && x > 0){return true}
           else {return false}
         }
+      },
+      classicalRegisters: {
+        value: ""
       },
     },
     inputs: 1,
@@ -24,11 +70,41 @@
     },
     inputLabels: "quantum circuit node",
 
+    oneditprepare: async function () {
+      let data = await $.getJSON('quantum-circuit/structure');
+      if (data.success) {
+        let structure = data.structure;
+        if (structure === 'registers') {
+          let data = await $.getJSON("quantum-circuit/registers");
+          this.classicalRegisters = data.classicalRegisters;
+        } else {
+          this.classicalRegisters = undefined;
+        }
+      }
+    },
+
     oneditsave: function() {
-      var element = document.getElementById("node-input-classicalBits");
-      this.classicalBits = element.value;
-      $.post('classical-register', {cbits: this.classicalBits}, p => p);
-    }
+      let cbits = document.getElementById("node-input-classicalBits").value;
+      let nameInput = document.getElementById('node-input-name').value;
+      let regName = nameInput.trim().toLowerCase().replace(/ /g, '_');
+      let regVarName = 'cr_' + regName;
+      let regId = this.id;
+
+      $.post('quantum-circuit/update-register',
+          {
+            nodeid: regId,
+            regName: regName,
+            regVarName: regVarName,
+            bits: cbits,
+          }, p => p
+      );
+    },
+
+    oneditdelete: function() {
+      $.post('quantum-circuit/delete-register',
+          {nodeid: this.id}, p => p
+      );
+    },
   });
 </script>
 
@@ -38,6 +114,9 @@
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
   <div class="form-row">
+    <p id="error-message" style="color: red"></p>
+  </div>
+  <div class="form-row">
     <label for="node-input-number-bits"><i class="fa fa-tag"></i> Number of bits</label>
     <input type="number" min="1" id="node-input-classicalBits" />
   </div>
@@ -45,8 +124,6 @@
 
 <script type="text/html" data-help-name="classical-register">
   <p>
-    Implement a classical register.
-    <br />
-    Create a new generic register.
+    Classical register node
   </p>
 </script>

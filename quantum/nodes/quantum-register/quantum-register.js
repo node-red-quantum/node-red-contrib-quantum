@@ -8,7 +8,7 @@ module.exports = function(RED) {
   function QuantumRegisterNode(config) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
-    this.name = config.name;
+    this.name = config.name.trim().toLowerCase().replace(/ /g, '_');
     this.outputs = parseInt(config.outputs);
     const flowContext = this.context().flow;
     const output = new Array(this.outputs);
