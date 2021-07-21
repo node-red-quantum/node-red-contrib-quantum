@@ -1,11 +1,13 @@
 'use strict';
 
+const os = require('os');
 const path = require('path');
 const appRoot = require('app-root-path').path;
 const dedent = require('dedent-js');
 const fileSystem = require('fs');
 const pythonScript = require('python-shell').PythonShell;
-const pythonPath = path.resolve(appRoot, 'venv/bin/python');
+const pythonExecutable = os.platform() === 'win32' ? 'venv/Scripts/python.exe' : 'venv/bin/python';
+const pythonPath = path.resolve(appRoot, pythonExecutable);
 const childProcess = require('child_process');
 
 
