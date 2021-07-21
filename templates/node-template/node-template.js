@@ -3,7 +3,7 @@ module.exports = function(RED) {
 
   function NodeTemplateNode(config) {
     RED.nodes.createNode(this, config);
-    // const node = this;
+    const node = this;
   }
 
   RED.nodes.registerType('node-template', NodeTemplateNode);
