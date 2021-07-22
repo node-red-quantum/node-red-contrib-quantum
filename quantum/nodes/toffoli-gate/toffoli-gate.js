@@ -12,6 +12,7 @@ module.exports = function(RED) {
     const node = this;
 
     this.on('input', async function(msg, send, done) {
+      let script = '';
       // Throw a connection error if:
       // - The user connects it to a node that is not from the quantum library.
       // - The user does not input a qubit object in the node.
@@ -76,11 +77,10 @@ module.exports = function(RED) {
         }
 
         // Generate the corresponding Toffoli Gate Qiskit script
-        let toffoliCode = '';
         node.qubits.map((msg) => {
           // Use qubits only if there are no registers.
           if (typeof msg.payload.register === 'undefined') {
-            toffoliCode = util.format(
+            script += util.format(
                 snippets.TOFFOLI_GATE,
                 control1.payload.qubit.toString(),
                 control2.payload.qubit.toString(),
@@ -88,7 +88,7 @@ module.exports = function(RED) {
             );
           } else {
             // Use registers if there are quantum registers.
-            toffoliCode = util.format(
+            script += util.format(
                 snippets.TOFFOLI_GATE,
                 control1.payload.registerVar +
                 '[' +
@@ -106,13 +106,12 @@ module.exports = function(RED) {
           }
         });
 
-        // Run the script in the python shell
-        await shell.execute(toffoliCode, (err) => {
+        // Run the script in the python shell, and if no error occurs
+        // then send one qubit object per node output
+        await shell.execute(script, (err) => {
           if (err) node.error(err);
+          else send(node.qubits);
         });
-
-        // Sending one qubit object per node output
-        send(node.qubits);
       }
     });
   }

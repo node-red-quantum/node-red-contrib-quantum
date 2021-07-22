@@ -33,10 +33,6 @@ module.exports = function(RED) {
         if (err) node.error(err);
         else send(msg);
       });
-
-      if (done) {
-        done();
-      }
     });
   }
 
