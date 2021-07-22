@@ -72,14 +72,17 @@ module.exports = function(RED) {
 
       // If all qubits have arrives, generate the simulator script and run it
       if (qubitsArrived) {
+        node.qubits = [];
+        node.qreg = '';
+
         const params = node.shots;
         script += util.format(snippets.SIMULATOR, params);
         await shell.execute(script, (err, data) => {
-          node.error(shell.script);
+          // node.error(shell.script);
           if (err) {
             node.error(err);
           } else {
-            msg.payload = data;
+            msg.payload = JSON.parse(data.replace(/'/g, '"'));
             send(msg);
           }
         });
