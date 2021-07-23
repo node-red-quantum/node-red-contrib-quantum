@@ -119,12 +119,12 @@ module.exports = function(RED) {
         if (err) {
           node.error(err);
         }
-        else {
-          // wait for quantum circuit to be initialised
-          await circuitReady();
-          send(output);
-        }
+        // else {
+        // }
       });
+      // wait for quantum circuit to be initialised
+      await circuitReady();
+      send(output);
     });
   }
 

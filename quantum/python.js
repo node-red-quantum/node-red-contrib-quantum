@@ -81,7 +81,6 @@ class PythonShell {
    * @throws {Error} Throws an Error if the Python process has not been started.
   */
   async execute(command, callback) {
-    console.log(`Executing command ${command}`);
     await mutex.runExclusive(async () => {
       if (!this.process) {
         throw new Error('Python process has not been started - call start() before executing commands.');

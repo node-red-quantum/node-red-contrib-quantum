@@ -14,7 +14,6 @@ module.exports = function(RED) {
     const node = this;
 
     this.on('input', async function(msg, send, done) {
-      let script = '';
       // Throw a connection error if:
       // - The user connects it to a node that is not from the quantum library
       // - The user did not select the 'Registers & Bits' option in the 'Quantum Circuit' node
@@ -34,10 +33,16 @@ module.exports = function(RED) {
       }
 
       // Add arguments to classical register code
-      script += util.format(snippets.CLASSICAL_REGISTER,
+      let crscript = util.format(snippets.CLASSICAL_REGISTER,
           '_' + node.name,
           node.classicalBits.toString() + ', "' + node.name + '"',
       );
+
+      await shell.execute(crscript, async (err) => {
+        if (err) {
+          node.error(err);
+        }
+      });
 
       // Completing the 'quantumCircuit' flow context array
       let register = {
@@ -80,8 +85,6 @@ module.exports = function(RED) {
           // Delete the 'quantumCircuit' flow context variable, not used anymore
           flowContext.set('quantumCircuit', undefined);
 
-          quantumCircuitConfig[node.name] = register;
-
           // Add arguments to quantum circuit code
           let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, '%s,'.repeat(count));
 
@@ -89,22 +92,15 @@ module.exports = function(RED) {
             circuitScript = util.format(circuitScript, register.registerVar);
           });
 
-          script += circuitScript;
+          await shell.execute(circuitScript, async (err) => {
+            if (err) node.error(err);
+          });
         }
       }
 
-      // Run the script in the python shell, and if no error occurs
-      // then notify the runtime when the node is done.
-      await shell.execute(script, (err) => {
-        if (err) {
-          node.error(err);
-        }
-        else {
-          // wait for quantum circuit to be initialised
-          await circuitReady();
-          done();
-        }
-      });
+      // update quantum circuit config
+      quantumCircuitConfig[node.name] = register;
+      done();
     });
   }
 
