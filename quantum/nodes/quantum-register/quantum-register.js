@@ -15,6 +15,7 @@ module.exports = function(RED) {
     const node = this;
 
     this.on('input', async function(msg, send, done) {
+      let script = '';
       // Throw a connection error if:
       // - The user connects it to a node that is not from the quantum library
       // - The user did not select the 'Registers & Bits' option in the 'Quantum Circuit' node
@@ -39,13 +40,10 @@ module.exports = function(RED) {
       }
 
       // Add arguments to quantum register code
-      let registerScript = util.format(snippets.QUANTUM_REGISTER,
+      script += util.format(snippets.QUANTUM_REGISTER,
           msg.payload.register.toString(),
           node.outputs.toString() + ', "' + node.name + '"',
       );
-      await shell.execute(registerScript, (err) => {
-        if (err) node.error(err);
-      });
 
       // Completing the 'quantumCircuit' flow context array
       let register = {
@@ -91,9 +89,7 @@ module.exports = function(RED) {
             circuitScript = util.format(circuitScript, register.registerVar);
           });
 
-          await shell.execute(circuitScript, (err) => {
-            if (err) node.error(err);
-          });
+          script += circuitScript;
         }
       }
 
@@ -112,8 +108,12 @@ module.exports = function(RED) {
         };
       }
 
-      // Sending one qubit object per node output
-      send(output);
+      // Run the script in the python shell, and if no error occurs
+      // then send one qubit object per node output
+      await shell.execute(script, (err) => {
+        if (err) node.error(err);
+        else send(output);
+      });
     });
   }
 
