@@ -110,7 +110,12 @@ module.exports = function(RED) {
         // then send one qubit object per node output
         await shell.execute(script, (err) => {
           if (err) node.error(err);
-          else send(node.qubits);
+          else {
+            send(node.qubits);
+
+            // Emptying the runtime variable upon output
+            node.qubits = [];
+          }
         });
       }
     });
