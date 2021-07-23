@@ -56,6 +56,11 @@ module.exports = function(RED) {
       };
       flowContext.set('quantumCircuit[' + msg.payload.register.toString() + ']', register);
 
+      // get quantum circuit config and circuit ready event from flow context
+      let quantumCircuitConfig = flowContext.get('quantumCircuitConfig');
+      let circuitReady = flowContext.get('isCircuitReady');
+      quantumCircuitConfig[node.name] = register;
+
       // If the quantum circuit has not yet been initialised by another register
       if (typeof(flowContext.get('quantumCircuit')) !== undefined) {
         // Counting the number of registers that were set in the 'quantumCircuit' array
@@ -100,6 +105,8 @@ module.exports = function(RED) {
         };
       }
 
+      // wait for quantum circuit to be initialised
+      await circuitReady();
       // Sending one qubit object per node output
       send(output);
     });
