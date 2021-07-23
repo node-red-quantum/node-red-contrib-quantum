@@ -23,7 +23,7 @@ module.exports = function(RED) {
           `Qubit ${qrConfig.qubit}`,
       });
       let shellScript = util.format(snippets.HADAMARD_GATE, qrConfig.register ? 
-        `${qrConfig.register}[${qrConfig.qubit}]` :
+        `q${qrConfig.register}[${qrConfig.qubit}]` :
         `${qrConfig.qubit}`);
       await shell.execute(shellScript, (err) => {
         if (err) node.error(err);
