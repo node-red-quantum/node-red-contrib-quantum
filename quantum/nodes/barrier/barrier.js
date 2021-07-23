@@ -14,6 +14,7 @@ module.exports = function(RED) {
     const node = this;
 
     this.on('input', async function(msg, send, done) {
+      let script = '';
       // Throw a connection error if:
       // - The user connects it to a node that is not from the quantum library
       // - The user does not input a qubit object in the node
@@ -60,24 +61,21 @@ module.exports = function(RED) {
         });
 
         // Generate the corresponding barrier Qiskit script
-        let barrierScript = util.format(snippets.BARRIER, '%s,'.repeat(node.outputs));
+        script += util.format(snippets.BARRIER, '%s,'.repeat(node.outputs));
         node.qubits.map((msg) => {
           if (typeof(msg.payload.register) === 'undefined') {
-            barrierScript = util.format(barrierScript,
-                msg.payload.qubit.toString());
+            script += util.format(script, msg.payload.qubit.toString());
           } else {
-            barrierScript = util.format(barrierScript,
-                msg.payload.registerVar + '[' + msg.payload.qubit.toString() + ']');
+            script += util.format(script, msg.payload.registerVar + '[' + msg.payload.qubit.toString() + ']');
           }
         });
 
-        // Run the script in the python shell
-        await shell.execute(barrierScript, (err) => {
+        // Run the script in the python shell, and if no error occurs
+        // then send one qubit object per node output
+        await shell.execute(script, (err) => {
           if (err) node.error(err);
+          else send(node.qubits);
         });
-
-        // Sending one qubit object per node output
-        send(node.qubits);
       }
     });
   }

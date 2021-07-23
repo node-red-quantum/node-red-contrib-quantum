@@ -8,13 +8,14 @@ module.exports = function(RED) {
   function QuantumRegisterNode(config) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
-    this.name = config.name;
+    this.name = config.name.trim().toLowerCase().replace(/ /g, '_');
     this.outputs = parseInt(config.outputs);
     const flowContext = this.context().flow;
     const output = new Array(this.outputs);
     const node = this;
 
     this.on('input', async function(msg, send, done) {
+      let script = '';
       // Throw a connection error if:
       // - The user connects it to a node that is not from the quantum library
       // - The user did not select the 'Registers & Bits' option in the 'Quantum Circuit' node
@@ -39,20 +40,16 @@ module.exports = function(RED) {
       }
 
       // Add arguments to quantum register code
-      let registerScript = util.format(snippets.QUANTUM_REGISTER,
+      script += util.format(snippets.QUANTUM_REGISTER,
           msg.payload.register.toString(),
           node.outputs.toString() + ', "' + node.name + '"',
       );
-      await shell.execute(registerScript, (err) => {
-        if (err) node.error(err);
-      });
 
       // Completing the 'quantumCircuit' flow context array
       let register = {
         registerType: 'quantum',
         registerName: node.name,
         registerVar: 'qr' + msg.payload.register.toString(),
-        bits: node.outputs,
       };
       flowContext.set('quantumCircuit[' + msg.payload.register.toString() + ']', register);
 
@@ -67,15 +64,26 @@ module.exports = function(RED) {
         let structure = flowContext.get('quantumCircuit');
 
         let count = 0;
+        let qreg = 0;
+        let creg = 0;
         structure.map((x) => {
           if (typeof(x) !== 'undefined') {
             count += 1;
+            if (x.registerType === 'quantum') qreg += 1;
+            else creg += 1;
           }
         });
 
+        // If the user specified a register structure in the 'Quantum Circuit' node that
+        // does not match the visual structure built using the register nodes, throw an error
+        if (qreg > msg.payload.structure.qreg || creg > msg.payload.structure.creg) {
+          throw new Error(
+              'Please enter the correct number of quantum & classical registers in the "Quantum Circuit" node.',
+          );
+
         // If all set & the quantum circuit has not yet been initialised by another register:
         // Initialise the quantum circuit
-        if (count == structure.length && typeof(flowContext.get('quantumCircuit')) !== undefined) {
+        } else if (count == structure.length && typeof(flowContext.get('quantumCircuit')) !== undefined) {
           // Delete the 'quantumCircuit' flow context variable, not used anymore
           flowContext.set('quantumCircuit', undefined);
 
@@ -86,9 +94,7 @@ module.exports = function(RED) {
             circuitScript = util.format(circuitScript, register.registerVar);
           });
 
-          await shell.execute(circuitScript, (err) => {
-            if (err) node.error(err);
-          });
+          script += circuitScript;
         }
       }
 
@@ -98,17 +104,27 @@ module.exports = function(RED) {
         output[i] = {
           topic: 'Quantum Circuit',
           payload: {
+            structure: msg.payload.structure,
             register: node.name,
             registerVar: 'qr' + msg.payload.register.toString(),
+            totalQubits: node.outputs,
             qubit: i,
           },
         };
       }
 
-      // wait for quantum circuit to be initialised
-      await circuitReady();
-      // Sending one qubit object per node output
-      send(output);
+      // Run the script in the python shell, and if no error occurs
+      // then send one qubit object per node output
+      await shell.execute(script, (err) => {
+        if (err) {
+          node.error(err);
+        }
+        else {
+          // wait for quantum circuit to be initialised
+          await circuitReady();
+          send(output);
+        }
+      });
     });
   }
 

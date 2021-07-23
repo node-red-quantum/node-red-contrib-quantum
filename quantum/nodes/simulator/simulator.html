@@ -1,0 +1,34 @@
+<script type="text/javascript">
+  RED.nodes.registerType("simulator", {
+    category: "quantum",
+    color: "#C0C0C0",
+    defaults: {
+      name: { value: "" },
+      shots: {value:0, validate:RED.validators.number()},
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-microchip",
+    paletteLabel: "simulator",
+    label: function () {
+      return this.name || "simulator";
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="simulator">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-shots"><i class="fa fa-tag"></i> Shots</label>
+    <input type="text" id="node-input-shots" placeholder="Name" />
+  </div>
+</script>
+
+<script type="text/html" data-help-name="">
+  <p>
+    Node for quantum program simulations.
+  </p>
+</script>

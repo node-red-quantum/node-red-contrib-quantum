@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /*
  * Snippets must be constants, and constants must capitalised with underscores.
@@ -12,20 +12,53 @@
 
 // Probably shouldn't use wildcard import here for efficiency but whatever will
 // worry about it later.
-const IMPORTS = `import numpy as np
- from qiskit import *`;
+const IMPORTS =
+`import numpy as np
+ from qiskit import *
+ `;
 
-const QUANTUM_CIRCUIT = `qc = QuantumCircuit(%s)`;
+const QUANTUM_CIRCUIT =
+`qc = QuantumCircuit(%s)
+`;
 
-const CLASSICAL_REGISTER = `cr%s = ClassicalRegister(%s)`;
+const CLASSICAL_REGISTER =
+`cr%s = ClassicalRegister(%s)
+`;
 
-const QUANTUM_REGISTER = `qr%s = QuantumRegister(%s)`;
+const QUANTUM_REGISTER =
+`qr%s = QuantumRegister(%s)
+`;
 
-const TOFFOLI_GATE = `qc.toffoli(%s, %s, %s)`;
+const TOFFOLI_GATE =
+`qc.toffoli(%s, %s, %s)
+`;
 
-const BARRIER = `qc.barrier(%s)`;
+const CNOT_GATE =
+`qc.cx(%s, %s)
+`;
 
-const HADAMARD_GATE = `qc.h(%s)`;
+const BARRIER =
+`qc.barrier(%s)
+`;
+
+const HADAMARD_GATE =
+`qc.h(%s)
+`;
+
+const MEASUREMENT =
+`qc.measure(%s)
+`;
+
+const SIMULATOR =
+`simulator = Aer.get_backend('qasm_simulator')
+result = execute(qc, backend = simulator, shots = %s).result()
+counts = result.get_counts()
+print(counts)
+`;
+
+const NOT_GATE =
+`qc.x(%s)
+`;
 
 const PRINT_DIAGRAM = `print(qc)`;
 
@@ -35,7 +68,11 @@ module.exports = {
   CLASSICAL_REGISTER,
   QUANTUM_REGISTER,
   TOFFOLI_GATE,
+  CNOT_GATE,
   BARRIER,
   HADAMARD_GATE,
   PRINT_DIAGRAM,
+  MEASUREMENT,
+  SIMULATOR,
+  NOT_GATE,
 };

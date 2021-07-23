@@ -8,13 +8,13 @@ module.exports = function(RED) {
   function ClassicalRegisterNode(config) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
-    this.name = config.name;
-    this.classicalBits = parseInt(config.classicalBits);
+    this.name = config.name.trim().toLowerCase().replace(/ /g, '_');
+    this.classicalBits = config.classicalBits;
     const flowContext = this.context().flow;
     const node = this;
-    this.registerVar = 'cr' + node.id.replace('.', '_');
 
     this.on('input', async function(msg, send, done) {
+      let script = '';
       // Throw a connection error if:
       // - The user connects it to a node that is not from the quantum library
       // - The user did not select the 'Registers & Bits' option in the 'Quantum Circuit' node
@@ -33,26 +33,17 @@ module.exports = function(RED) {
         );
       }
 
-      // Setting node.name to "r0","r1"... if the user did not input a name
-      if (node.name == '') {
-        node.name = 'r' + msg.payload.register.toString();
-      }
-
       // Add arguments to classical register code
-      let registerScript = util.format(snippets.CLASSICAL_REGISTER,
-          msg.payload.register.toString(),
+      script += util.format(snippets.CLASSICAL_REGISTER,
+          '_' + node.name,
           node.classicalBits.toString() + ', "' + node.name + '"',
       );
-      await shell.execute(registerScript, (err) => {
-        if (err) node.error(err);
-      });
 
       // Completing the 'quantumCircuit' flow context array
       let register = {
         registerType: 'classical',
         registerName: node.name,
-        registerVar: 'cr' + msg.payload.register.toString(),
-        bits: node.classicalBits,
+        registerVar: 'cr_' + node.name,
       };
       flowContext.set('quantumCircuit[' + msg.payload.register.toString() + ']', register);
 
@@ -66,15 +57,26 @@ module.exports = function(RED) {
         let structure = flowContext.get('quantumCircuit');
 
         let count = 0;
+        let qreg = 0;
+        let creg = 0;
         structure.map((x) => {
           if (typeof(x) !== 'undefined') {
             count += 1;
+            if (x.registerType === 'quantum') qreg += 1;
+            else creg += 1;
           }
         });
 
+        // If the user specified a register structure in the 'Quantum Circuit' node that
+        // does not match the visual structure built using the register nodes, throw an error
+        if (qreg > msg.payload.structure.qreg || creg > msg.payload.structure.creg) {
+          throw new Error(
+              'Please enter the correct number of quantum & classical registers in the "Quantum Circuit" node.',
+          );
+
         // If all set & the quantum circuit has not yet been initialised by another register:
         // Initialise the quantum circuit
-        if (count == structure.length && typeof(flowContext.get('quantumCircuit')) !== undefined) {
+        } else if (count == structure.length && typeof(flowContext.get('quantumCircuit')) !== undefined) {
           // Delete the 'quantumCircuit' flow context variable, not used anymore
           flowContext.set('quantumCircuit', undefined);
 
@@ -87,34 +89,24 @@ module.exports = function(RED) {
             circuitScript = util.format(circuitScript, register.registerVar);
           });
 
-          await shell.execute(circuitScript, (err) => {
-            if (err) node.error(err);
-          });
+          script += circuitScript;
         }
       }
 
-      // wait for quantum circuit to be initialised
-      await circuitReady();
-      // Notify the runtime when the node is done.
-      if (done) {
-        done();
-      }
+      // Run the script in the python shell, and if no error occurs
+      // then notify the runtime when the node is done.
+      await shell.execute(script, (err) => {
+        if (err) {
+          node.error(err);
+        }
+        else {
+          // wait for quantum circuit to be initialised
+          await circuitReady();
+          done();
+        }
+      });
     });
   }
-  // Defining post request handler for this node to save its config values
-  // to frontend variable
-  RED.httpAdmin.post('/classical-register', RED.auth.needsPermission('classical-register.read'), function(req, res) {
-    classicalRegister.classicalBits = req.body.cbits;
-    res.json({success: true});
-  });
 
-  // Defining get request handler for other nodes to get latest data on
-  // number of classical bits and variable name;
-  RED.httpAdmin.get('/classical-register', RED.auth.needsPermission('classical-register.read'), function(req, res) {
-    res.json({
-      bits: classicalRegister.classicalBits,
-      registerVar: classicalRegister.registerVar,
-    });
-  });
   RED.nodes.registerType('classical-register', ClassicalRegisterNode);
 };

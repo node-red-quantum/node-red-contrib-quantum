@@ -1,11 +1,13 @@
 'use strict';
 
+const os = require('os');
 const path = require('path');
 const appRoot = require('app-root-path').path;
 const dedent = require('dedent-js');
 const fileSystem = require('fs');
 const pythonScript = require('python-shell').PythonShell;
-const pythonPath = path.resolve(appRoot, 'venv/bin/python');
+const pythonExecutable = os.platform() === 'win32' ? 'venv/Scripts/python.exe' : 'venv/bin/python';
+const pythonPath = path.resolve(appRoot, pythonExecutable);
 const childProcess = require('child_process');
 const Mutex = require('async-mutex').Mutex;
 const mutex = new Mutex();
@@ -13,9 +15,6 @@ const mutex = new Mutex();
 
 function createPromise(process) {
   return new Promise((resolve, reject) => {
-    process.stdout.removeAllListeners();
-    process.stderr.removeAllListeners();
-
     let outputData = '';
     let errorData = '';
 
@@ -31,6 +30,8 @@ function createPromise(process) {
       outputData += data;
 
       if (done) {
+        process.stdout.removeAllListeners();
+        process.stderr.removeAllListeners();
         if (errorData.trim()) {
           reject(errorData);
         } else {
@@ -117,6 +118,8 @@ class PythonShell {
       this.process = childProcess.spawn(this.path, ['-u', '-i']);
       this.process.stdout.setEncoding('utf8');
       this.process.stderr.setEncoding('utf8');
+      this.process.stdout.setMaxListeners(1);
+      this.process.stderr.setMaxListeners(1);
       return this.execute();
     }
   }
@@ -129,6 +132,7 @@ class PythonShell {
   */
   stop() {
     if (this.process) {
+      this.process.stdin.end();
       this.process.kill();
       this.process = null;
       this.script = '';

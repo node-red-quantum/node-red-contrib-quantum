@@ -4,7 +4,7 @@ const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 
 module.exports = function(RED) {
-  function ToffoliGateNode(config) {
+  function CNotGateNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.qubits = [];
@@ -19,14 +19,14 @@ module.exports = function(RED) {
       // - The user chooses to use registers but does not initiate them.
       if (msg.topic !== 'Quantum Circuit') {
         throw new Error(
-            'The Toffoli Gate must be connected to nodes from the quantum library only.',
+            'The CNot Gate must be connected to nodes from the quantum library only.',
         );
       } else if (
         typeof msg.payload.register === 'undefined' &&
         typeof msg.payload.qubit === 'undefined'
       ) {
         throw new Error(
-            'The Toffoli Gate nodes must receive qubits objects as inputs.\n' +
+            'The CNot Gate nodes must receive qubits objects as inputs.\n' +
             'Please use "Quantum Circuit" & "Quantum Register" nodes to generate qubits objects.',
         );
       } else if (typeof msg.payload.qubit === 'undefined') {
@@ -39,7 +39,7 @@ module.exports = function(RED) {
       node.qubits.push(msg);
 
       // If all qubits have arrived, we first reorder the node.qubits array for output consistency
-      if (node.qubits.length == 3) {
+      if (node.qubits.length == 2) {
         node.qubits.sort(function compare(a, b) {
           if (typeof a.payload.register !== 'undefined') {
             const regA = parseInt(a.payload.registerVar.slice(2));
@@ -57,51 +57,34 @@ module.exports = function(RED) {
         });
 
         // Initialise qubit variables for script.
-        let control1 = node.qubits[0];
-        let control2 = node.qubits[0];
-        let target = node.qubits[0];
+        let controlQubit = node.qubits[0];
+        let targetQubit = node.qubits[0];
 
         // Determine which node is the target based on position.
-        if (node.targetPosition == 'Top') {
-          target = node.qubits[0];
-          control1 = node.qubits[1];
-          control2 = node.qubits[2];
-        } else if (node.targetPosition == 'Middle') {
-          target = node.qubits[1];
-          control1 = node.qubits[0];
-          control2 = node.qubits[2];
+        if (node.targetPosition == 'Upper') {
+          targetQubit = node.qubits[0];
+          controlQubit = node.qubits[1];
         } else {
-          target = node.qubits[2];
-          control1 = node.qubits[0];
-          control2 = node.qubits[1];
+          targetQubit = node.qubits[1];
+          controlQubit = node.qubits[0];
         }
 
-        // Generate the corresponding Toffoli Gate Qiskit script
+        // Generate the corresponding CNot Gate Qiskit script
         node.qubits.map((msg) => {
           // Use qubits only if there are no registers.
           if (typeof msg.payload.register === 'undefined') {
-            script += util.format(
-                snippets.TOFFOLI_GATE,
-                control1.payload.qubit.toString(),
-                control2.payload.qubit.toString(),
-                target.payload.qubit.toString(),
+            script += util.format(snippets.CNOT_GATE,
+                controlQubit.payload.qubit.toString(),
+                targetQubit.payload.qubit.toString(),
             );
           } else {
             // Use registers if there are quantum registers.
             script += util.format(
-                snippets.TOFFOLI_GATE,
-                control1.payload.registerVar +
-                '[' +
-                control1.payload.qubit.toString() +
-                ']',
-                control2.payload.registerVar +
-                '[' +
-                control2.payload.qubit.toString() +
-                ']',
-                target.payload.registerVar +
-                '[' +
-                target.payload.qubit.toString() +
-                ']',
+                snippets.CNOT_GATE,
+                controlQubit.payload.registerVar + '[' +
+                controlQubit.payload.qubit.toString() + ']',
+                targetQubit.payload.registerVar + '[' +
+                targetQubit.payload.qubit.toString() + ']',
             );
           }
         });
@@ -116,5 +99,5 @@ module.exports = function(RED) {
     });
   }
 
-  RED.nodes.registerType('toffoli-gate', ToffoliGateNode);
+  RED.nodes.registerType('cnot-gate', CNotGateNode);
 };

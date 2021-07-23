@@ -52,11 +52,14 @@
       "classical-register": "quantum/nodes/classical-register/classical-register.js",
       "toffoli-gate": "quantum/nodes/toffoli-gate/toffoli-gate.js",
       "execute": "quantum/nodes/execute/execute.js",
+      "not-gate": "quantum/nodes/not-gate/not-gate.js",
       "measurement": "quantum/nodes/measurement/measurement.js",
       "barrier": "quantum/nodes/barrier/barrier.js",
       "identity": "quantum/nodes/identity/identity.js",
-      "hadamard-gate": "quantum/nodes/hadamard-gate/hadamard-gate.js",
-      "diagram-output": "quantum/nodes/diagram-output/diagram-output.js"
+      "diagram-output": "quantum/nodes/diagram-output/diagram-output.js",
+      "simulator": "quantum/nodes/simulator/simulator.js",
+      "cnot-gate": "quantum/nodes/cnot-gate/cnot-gate.js",
+      "hadamard-gate": "quantum/nodes/hadamard-gate/hadamard-gate.js"
     }
   }
 }
