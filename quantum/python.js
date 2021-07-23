@@ -7,6 +7,8 @@ const fileSystem = require('fs');
 const pythonScript = require('python-shell').PythonShell;
 const pythonPath = path.resolve(appRoot, 'venv/bin/python');
 const childProcess = require('child_process');
+const Mutex = require('async-mutex').Mutex;
+const mutex = new Mutex();
 
 
 function createPromise(process) {
@@ -78,20 +80,23 @@ class PythonShell {
    * @throws {Error} Throws an Error if the Python process has not been started.
   */
   async execute(command, callback) {
-    if (!this.process) {
-      throw new Error('Python process has not been started - call start() before executing commands.');
-    }
-
-    command = command ? dedent(command) : '';
-    this.script += '\n' + command + '\n';
-    command = '\nprint("#CommandStart#")\n' + command + '\nprint("#CommandEnd#")\n';
-
-    const promise = createPromise(this.process);
-    this.process.stdin.write(command);
-
-    return promise
-        .then((data) => callback !== undefined ? callback(null, data.trim()) : data.trim())
-        .catch((err) => callback !== undefined ? callback(err.trim(), null) : err.trim());
+    console.log(`Executing command ${command}`);
+    await mutex.runExclusive(async () => {
+      if (!this.process) {
+        throw new Error('Python process has not been started - call start() before executing commands.');
+      }
+  
+      command = command ? dedent(command) : '';
+      this.script += '\n' + command + '\n';
+      command = '\nprint("#CommandStart#")\n' + command + '\nprint("#CommandEnd#")\n';
+  
+      const promise = createPromise(this.process);
+      this.process.stdin.write(command);
+  
+      return promise
+          .then((data) => callback !== undefined ? callback(null, data.trim()) : data.trim())
+          .catch((err) => callback !== undefined ? callback(err.trim(), null) : err.trim());
+    })
   }
 
   /**
