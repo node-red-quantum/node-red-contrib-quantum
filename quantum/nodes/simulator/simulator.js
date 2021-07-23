@@ -39,7 +39,7 @@ module.exports = function(RED) {
       } else {// If the quantum circuit has registers
         // Keep track of qubits that have arrived and the remaining ones
         if (node.qubits.length == 0) node.qreg = {};
-        else if (Object.keys(node.qreg).includes(msg.payload.registerVar)) {
+        if (Object.keys(node.qreg).includes(msg.payload.registerVar)) {
           node.qreg[msg.payload.registerVar].count += 1;
         } else {
           node.qreg[msg.payload.registerVar] = {
