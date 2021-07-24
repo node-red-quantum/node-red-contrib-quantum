@@ -60,7 +60,9 @@ const NOT_GATE =
 `qc.x(%s)
 `;
 
-const PRINT_DIAGRAM = `print(qc)`;
+const PRINT_DIAGRAM = 
+`print(qc)
+`;
 
 module.exports = {
   IMPORTS,

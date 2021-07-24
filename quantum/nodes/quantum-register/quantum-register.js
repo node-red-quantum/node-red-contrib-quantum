@@ -116,11 +116,7 @@ module.exports = function(RED) {
       // Run the script in the python shell, and if no error occurs
       // then send one qubit object per node output
       await shell.execute(script, (err) => {
-        if (err) {
-          node.error(err);
-        }
-        // else {
-        // }
+        if (err) node.error(err);
       });
       // wait for quantum circuit to be initialised
       await circuitReady();
