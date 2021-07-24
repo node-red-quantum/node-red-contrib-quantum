@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function(RED) {
-  function IdentityNode(config) {
+  function QubitNode(config) {
     // Creating node with properties
     RED.nodes.createNode(this, config);
     this.name = config.name;
@@ -14,11 +14,11 @@ module.exports = function(RED) {
       // - The user chooses to use registers but does not initiate them
       if (msg.topic !== 'Quantum Circuit') {
         throw new Error(
-            'Identity gates must be connected to nodes from the quantum library only.',
+            'Qubit nodes must be connected to nodes from the quantum library only.',
         );
       } else if (typeof(msg.payload.register) === 'undefined' && typeof(msg.payload.qubit) === 'undefined') {
         throw new Error(
-            'Identity gates must receive qubits objects as inputs.\n' +
+            'Qubit nodes must receive qubits objects as inputs.\n' +
             'Please use "Quantum Circuit" & "Quantum Register" nodes to generate qubits objects.',
         );
       } else if (typeof(msg.payload.qubit) === 'undefined') {
@@ -47,5 +47,5 @@ module.exports = function(RED) {
     });
   }
 
-  RED.nodes.registerType('identity', IdentityNode);
+  RED.nodes.registerType('qubit', QubitNode);
 };

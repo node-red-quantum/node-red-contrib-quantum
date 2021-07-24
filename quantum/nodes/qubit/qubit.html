@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType("identity", {
+    RED.nodes.registerType("qubit", {
       category: "quantum",
       color: "#C7E9C0",
       defaults: {
@@ -9,23 +9,23 @@
       inputs: 1,
       icon: "font-awesome/fa-chevron-right",
       align: 'left',
-      paletteLabel: "identity",
+      paletteLabel: "qubit",
       label: function () {
-        return this.name || "identity";
+        return this.name || "qubit";
       },
       inputLabels: "Qubit",
       outputLabels: "Qubit",
     });
   </script>
   
-  <script type="text/html" data-template-name="identity">
+  <script type="text/html" data-template-name="qubit">
     <div class="form-row">
       <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
       <input type="text" id="node-input-name" placeholder="Name" />
     </div>
   </script>
   
-  <script type="text/html" data-help-name="identity">
+  <script type="text/html" data-help-name="qubit">
     <p>
       <!-- Node documentation goes here. -->
     </p>
