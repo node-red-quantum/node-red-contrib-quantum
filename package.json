@@ -57,7 +57,8 @@
       "qubit": "quantum/nodes/qubit/qubit.js",
       "simulator": "quantum/nodes/simulator/simulator.js",
       "cnot-gate": "quantum/nodes/cnot-gate/cnot-gate.js",
-      "hadamard-gate": "quantum/nodes/hadamard-gate/hadamard-gate.js"
+      "hadamard-gate": "quantum/nodes/hadamard-gate/hadamard-gate.js",
+      "identity": "quantum/nodes/identity/identity.js"
     }
   }
 }
