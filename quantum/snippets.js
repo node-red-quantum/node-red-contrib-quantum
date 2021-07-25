@@ -14,40 +14,51 @@
 // worry about it later.
 const IMPORTS =
 `import numpy as np
- from qiskit import *`;
+ from qiskit import *
+ `;
 
 const QUANTUM_CIRCUIT =
-`qc = QuantumCircuit(%s)`;
+`qc = QuantumCircuit(%s)
+`;
 
 const CLASSICAL_REGISTER =
-`cr%s = ClassicalRegister(%s)`;
+`cr%s = ClassicalRegister(%s)
+`;
 
 const QUANTUM_REGISTER =
-`qr%s = QuantumRegister(%s)`;
+`qr%s = QuantumRegister(%s)
+`;
 
 const TOFFOLI_GATE =
-`qc.toffoli(%s, %s, %s)`;
+`qc.toffoli(%s, %s, %s)
+`;
 
 const CNOT_GATE =
-`qc.cx(%s, %s)`;
+`qc.cx(%s, %s)
+`;
 
 const BARRIER =
-`qc.barrier(%s)`;
+`qc.barrier(%s)
+`;
 
 const HADAMARD_GATE =
-`qc.h(%s)`;
+`qc.h(%s)
+`;
 
 const MEASUREMENT =
-`qc.measure(%s)`;
+`qc.measure(%s)
+`;
 
 const SIMULATOR =
 `simulator = Aer.get_backend('qasm_simulator')
 result = execute(qc, backend = simulator, shots = %s).result()
 counts = result.get_counts()
-print(counts)`;
+print(counts)
+`;
 
 const NOT_GATE =
-`qc.x(%s)`;
+`qc.x(%s)
+`;
 
 module.exports = {
   IMPORTS,

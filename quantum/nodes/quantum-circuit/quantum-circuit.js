@@ -21,10 +21,8 @@ module.exports = function(RED) {
     const node = this;
 
     this.on('input', async function(msg, send, done) {
-      await shell.restart();
-      await shell.execute(snippets.IMPORTS, (err) => {
-        if (err) node.error(err);
-      });
+      let script = '';
+      script += snippets.IMPORTS;
       // Creating a temporary 'quantumCircuitArray' flow context array
       // This variable represents the quantum circuit structure
       let quantumCircuitArray = new Array(node.outputs);
@@ -47,10 +45,7 @@ module.exports = function(RED) {
         };
       } else { // If the user does not want to use registers
         // Add arguments to quantum circuit code
-        let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, node.qbitsreg + ',' + node.cbitsreg);
-        await shell.execute(circuitScript, (err) => {
-          if (err) node.error(err);
-        });
+        script += util.format(snippets.QUANTUM_CIRCUIT, node.qbitsreg + ',' + node.cbitsreg);
 
         // Creating an array of messages to be sent
         // Each message represents a different qubit
@@ -70,7 +65,11 @@ module.exports = function(RED) {
       }
 
       // Sending one register object per node output
-      send(output);
+      await shell.restart();
+      await shell.execute(script, (err) => {
+        if (err) node.error(err);
+        else send(output);
+      });
     });
   }
 

@@ -11,6 +11,7 @@ module.exports = function(RED) {
     const node = this;
 
     this.on('input', async function(msg, send, done) {
+      let script = '';
       // Thorw error if:
       // - The user connects it to a node that is not from the quantum library
       // - The user does not input a qubit object in the node
@@ -35,27 +36,18 @@ module.exports = function(RED) {
         );
       }
 
-      let notScript = '';
-      let target = msg;
-
-      if (typeof target.payload.register === 'undefined') {
-        notScript = util.format(
-            snippets.NOT_GATE,
-            target.payload.qubit,
-
-        );
+      if (typeof msg.payload.register === 'undefined') {
+        script += util.format(snippets.NOT_GATE, msg.payload.qubit);
       } else {
-        notScript = util.format(snippets.NOT_GATE,
-            target.payload.registerVar + '['+target.payload.qubit+']',
-        );
+        script += util.format(snippets.NOT_GATE, `msg.payload.registerVar + '[' + msg.payload.qubit + ']'`);
       }
 
-      // Run the script in the python shell
-      await shell.execute(notScript, (err) => {
+      // Run the script in the python shell, and if no error occurs
+      // then send msg object to the next node
+      await shell.execute(script, (err) => {
         if (err) node.error(err);
+        else send(msg);
       });
-
-      send(msg);
     });
   }
   RED.nodes.registerType('not-gate', NotGateNode);
