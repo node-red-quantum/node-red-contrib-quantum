@@ -60,7 +60,8 @@
       "hadamard-gate": "quantum/nodes/hadamard-gate/hadamard-gate.js",
       "reset": "quantum/nodes/reset/reset.js",
       "phase-gate": "quantum/nodes/phase-gate/phase-gate.js",
-      "rotation-gate": "quantum/nodes/rotation-gate/rotation-gate.js"
+      "rotation-gate": "quantum/nodes/rotation-gate/rotation-gate.js",
+      "u-gate": "quantum/nodes/u-gate/u-gate.js"
     }
   }
 }

@@ -5,10 +5,12 @@ const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 
 module.exports = function(RED) {
-  function PhaseGateNode(config) {
+  function UGateNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
-    this.phase = config.phase;
+    this.theta = config.theta;
+    this.phi = config.phi;
+    this.lambda = config.lambda;
     const node = this;
 
     this.on('input', async function(msg, send, done) {
@@ -19,14 +21,14 @@ module.exports = function(RED) {
       // - the user chooses to use registers but does not initiate them
       if (msg.topic !== 'Quantum Circuit') {
         throw new Error(
-            'The Phase gate node must be connected to nodes from the quantum library only.',
+            'The U gate node must be connected to nodes from the quantum library only.',
         );
       } else if (
         typeof msg.payload.register === 'undefined' &&
         typeof msg.payload.qubit === 'undefined'
       ) {
         throw new Error(
-            'The Phase gate node must be receive qubits objects as inputs.\n' +
+            'The U gate node must be receive qubits objects as inputs.\n' +
             'Please use "Quantum Circut" and "Quantum Register" node to generate qubits objects.',
         );
       } else if (
@@ -38,10 +40,17 @@ module.exports = function(RED) {
       }
 
       if (typeof msg.payload.register === 'undefined') {
-        script += util.format(snippets.PHASE_GATE, node.phase + '*pi', msg.payload.qubit);
+        script += util.format(snippets.U_GATE,
+            node.theta + '*pi',
+            node.phi + '*pi',
+            node.lambda + '*pi',
+            msg.payload.qubit,
+        );
       } else {
-        script += util.format(snippets.PHASE_GATE,
-            node.phase + '*pi',
+        script += util.format(snippets.U_GATE,
+            node.theta + '*pi',
+            node.phi + '*pi',
+            node.lambda + '*pi',
             `msg.payload.registerVar + '[' + msg.payload.qubit + ']'`,
         );
       }
@@ -56,11 +65,15 @@ module.exports = function(RED) {
           node.status({
             fill: 'grey',
             shape: 'dot',
-            text: 'Phase: \xa0' + node.phase.toString() + '\u03C0',
+            text: (
+              node.theta.toString() + '\u03C0,' +
+              node.phi.toString() + '\u03C0,' +
+              node.lambda.toString() + '\u03C0'
+            ),
           });
         };
       });
     });
   }
-  RED.nodes.registerType('phase-gate', PhaseGateNode);
+  RED.nodes.registerType('u-gate', UGateNode);
 };
