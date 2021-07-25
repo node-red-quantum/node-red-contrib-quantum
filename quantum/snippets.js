@@ -60,6 +60,10 @@ const NOT_GATE =
 `qc.x(%s)
 `;
 
+const RESET =
+`qc.reset(%s)
+`;
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,
@@ -72,4 +76,5 @@ module.exports = {
   MEASUREMENT,
   SIMULATOR,
   NOT_GATE,
+  RESET,
 };
