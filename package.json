@@ -58,7 +58,8 @@
       "simulator": "quantum/nodes/simulator/simulator.js",
       "cnot-gate": "quantum/nodes/cnot-gate/cnot-gate.js",
       "hadamard-gate": "quantum/nodes/hadamard-gate/hadamard-gate.js",
-      "reset": "quantum/nodes/reset/reset.js"
+      "reset": "quantum/nodes/reset/reset.js",
+      "phase-gate": "quantum/nodes/phase-gate/phase-gate.js"
     }
   }
 }
