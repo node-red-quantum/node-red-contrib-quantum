@@ -68,6 +68,10 @@ const PHASE_GATE =
 `qc.p(%s, %s)
 `;
 
+const ROTATION_GATE =
+`qc.r%s(%s, %s)
+`;
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,
@@ -82,4 +86,5 @@ module.exports = {
   NOT_GATE,
   RESET,
   PHASE_GATE,
+  ROTATION_GATE,
 };
