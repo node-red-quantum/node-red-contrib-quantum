@@ -56,7 +56,15 @@ module.exports = function(RED) {
       // then send msg object to the next node
       await shell.execute(script, (err) => {
         if (err) node.error(err);
-        else send(msg);
+        else {
+          send(msg);
+
+          node.status({
+            fill: 'grey',
+            shape: 'dot',
+            text: node.axis.toUpperCase() + ' axis: \xa0' + node.angle.toString() + '\u03C0',
+          });
+        };
       });
     });
   }

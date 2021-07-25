@@ -49,7 +49,15 @@ module.exports = function(RED) {
       // then send msg object to the next node
       await shell.execute(script, (err) => {
         if (err) node.error(err);
-        else send(msg);
+        else {
+          send(msg);
+
+          node.status({
+            fill: 'grey',
+            shape: 'dot',
+            text: 'Phase: \xa0' + node.phase.toString() + '\u03C0',
+          });
+        };
       });
     });
   }
