@@ -60,6 +60,10 @@ const NOT_GATE =
 `qc.x(%s)
 `;
 
+const CIRCUIT_DRAW =
+`qc.draw(%s)
+`;
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,
@@ -72,4 +76,5 @@ module.exports = {
   MEASUREMENT,
   SIMULATOR,
   NOT_GATE,
+  CIRCUIT_DRAW,
 };
