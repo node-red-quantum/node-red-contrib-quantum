@@ -25,7 +25,7 @@ module.exports = function(RED) {
         typeof msg.payload.qubit === 'undefined'
       ) {
         throw new Error(
-            'The Node Gate node must be receive qubits objects as inputs.\n' +
+            'The Not Gate node must be receive qubits objects as inputs.\n' +
             'Please use "Quantum Circut" and "Quantum Register" node to generate qubits objects.',
         );
       } else if (
