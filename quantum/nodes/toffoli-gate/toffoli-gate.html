@@ -13,6 +13,12 @@
     label: function () {
       return this.name || "TOFFOLI";
     },
+    inputLabels: "Qubits",
+    outputLabels: function(index) {  
+      if (index == 0) return "Top qubit";
+      else if (index == 1) return "Middle qubit";
+      else return "Bottom qubit";
+    }
   });
 </script>
 

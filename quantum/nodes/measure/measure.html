@@ -25,6 +25,9 @@
     label: function () {
       return this.name || "measure";
     },
+    inputLabels: "Qubit",
+    outputLabels: "Qubit",
+
     oneditprepare: function () {
       var selectedRadio = this.selectedRadio;
       $.getJSON('quantum-circuit/structure', function (data) {

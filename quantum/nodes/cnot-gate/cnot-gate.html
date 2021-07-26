@@ -13,6 +13,11 @@
     label: function () {
       return this.name || "CNOT";
     },
+    inputLabels: "Qubits",
+    outputLabels: function(index) {  
+      if (index == 0) return "Top qubit";
+      else return "Bottom qubit";
+    }
   });
 </script>
 
