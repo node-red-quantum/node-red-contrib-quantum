@@ -66,8 +66,8 @@ module.exports = function(RED) {
             fill: 'grey',
             shape: 'dot',
             text: (
-              node.theta.toString() + '\u03C0,' +
-              node.phi.toString() + '\u03C0,' +
+              node.theta.toString() + '\u03C0, ' +
+              node.phi.toString() + '\u03C0, ' +
               node.lambda.toString() + '\u03C0'
             ),
           });

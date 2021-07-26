@@ -23,10 +23,10 @@
       oneditprepare: function () {
 
         document.getElementById("node-input-phase").onchange = function () {
-          document.getElementById("phase-label").innerHTML = "Phase shift &emsp;" + document.getElementById("node-input-phase").value.toString() + " &#960;";
+          document.getElementById("phase-label").innerHTML = "Phase shift \xa0 \xa0" + document.getElementById("node-input-phase").value.toString() + " \u03C0";
         }
 
-        document.getElementById("phase-label").innerHTML = "Phase shift &emsp;" + this.phase.toString() + " &#960;";
+        document.getElementById("phase-label").innerHTML = "Phase shift \xa0 \xa0" + this.phase.toString() + " \u03C0";
         document.getElementById("node-input-phase").value = this.phase;
       },
     });
