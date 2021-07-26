@@ -49,7 +49,6 @@ module.exports = function(RED) {
 
       // get quantum circuit config and circuit ready event from flow context
       let quantumCircuitConfig = flowContext.get('quantumCircuitConfig');
-      let circuitReady = flowContext.get('isCircuitReady');
 
       // If the quantum circuit has not yet been initialised by another register
       if (typeof(flowContext.get('quantumCircuit')) !== undefined) {
