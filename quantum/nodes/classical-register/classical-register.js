@@ -34,16 +34,10 @@ module.exports = function(RED) {
       }
 
       // Add arguments to classical register code
-      let crscript = util.format(snippets.CLASSICAL_REGISTER,
+      script += util.format(snippets.CLASSICAL_REGISTER,
           '_' + node.name,
           node.classicalBits.toString() + ', "' + node.name + '"',
       );
-
-      await shell.execute(crscript, async (err) => {
-        if (err) {
-          node.error(err);
-        }
-      });
 
       // Completing the 'quantumCircuit' flow context array
       let register = {
@@ -93,15 +87,19 @@ module.exports = function(RED) {
             circuitScript = util.format(circuitScript, register.registerVar);
           });
 
-          await shell.execute(circuitScript, async (err) => {
-            if (err) node.error(err);
-          });
+          script += circuitScript;
         }
       }
 
       // update quantum circuit config
       quantumCircuitConfig[node.name] = register;
-      done();
+
+      // Run the script in the python shell, and if no error occurs
+      // then notify the runtime when the node is done.
+      await shell.execute(script, (err) => {
+        if (err) node.error(err);
+        else done();
+      });
     });
   }
 
