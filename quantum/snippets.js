@@ -76,6 +76,10 @@ const U_GATE =
 `qc.u(%s, %s, %s, %s)
 `;
 
+const IDENTITY =
+`qc.id(%s)
+`;
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,
@@ -92,4 +96,5 @@ module.exports = {
   PHASE_GATE,
   ROTATION_GATE,
   U_GATE,
+  IDENTITY,
 };

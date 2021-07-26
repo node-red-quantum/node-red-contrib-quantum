@@ -54,14 +54,15 @@
       "not-gate": "quantum/nodes/not-gate/not-gate.js",
       "measurement": "quantum/nodes/measurement/measurement.js",
       "barrier": "quantum/nodes/barrier/barrier.js",
-      "identity": "quantum/nodes/identity/identity.js",
+      "qubit": "quantum/nodes/qubit/qubit.js",
       "simulator": "quantum/nodes/simulator/simulator.js",
       "cnot-gate": "quantum/nodes/cnot-gate/cnot-gate.js",
       "hadamard-gate": "quantum/nodes/hadamard-gate/hadamard-gate.js",
       "reset": "quantum/nodes/reset/reset.js",
       "phase-gate": "quantum/nodes/phase-gate/phase-gate.js",
       "rotation-gate": "quantum/nodes/rotation-gate/rotation-gate.js",
-      "u-gate": "quantum/nodes/u-gate/u-gate.js"
+      "u-gate": "quantum/nodes/u-gate/u-gate.js",
+      "identity": "quantum/nodes/identity/identity.js"
     }
   }
 }
