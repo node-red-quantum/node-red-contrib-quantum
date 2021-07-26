@@ -56,7 +56,6 @@
       "measurement": "quantum/nodes/measurement/measurement.js",
       "barrier": "quantum/nodes/barrier/barrier.js",
       "identity": "quantum/nodes/identity/identity.js",
-      "diagram-output": "quantum/nodes/diagram-output/diagram-output.js",
       "simulator": "quantum/nodes/simulator/simulator.js",
       "cnot-gate": "quantum/nodes/cnot-gate/cnot-gate.js",
       "hadamard-gate": "quantum/nodes/hadamard-gate/hadamard-gate.js"
