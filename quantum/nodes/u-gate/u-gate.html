@@ -31,19 +31,19 @@
       oneditprepare: function () {
 
         document.getElementById("node-input-theta").onchange = function () {
-          document.getElementById("theta-label").innerHTML = "\u03B8 Theta \xa0 \xa0" + document.getElementById("node-input-theta").value.toString() + " \u03C0";
+          document.getElementById("theta-label").innerHTML = "\u03B8 Theta \xa0 \xa0" + document.getElementById("node-input-theta").value.toString().replace(/'/g, "&#39;") + " \u03C0";
         }
         document.getElementById("theta-label").innerHTML = "\u03B8 Theta \xa0 \xa0" + this.theta.toString() + " \u03C0";
         document.getElementById("node-input-theta").value = this.theta;
 
         document.getElementById("node-input-phi").onchange = function () {
-          document.getElementById("phi-label").innerHTML = "\u03C6 Phi \xa0 \xa0" + document.getElementById("node-input-phi").value.toString() + " \u03C0";
+          document.getElementById("phi-label").innerHTML = "\u03C6 Phi \xa0 \xa0" + document.getElementById("node-input-phi").value.toString().replace(/'/g, "&#39;") + " \u03C0";
         }
         document.getElementById("phi-label").innerHTML = "\u03C6 Phi \xa0 \xa0" + this.phi.toString() + " \u03C0";
         document.getElementById("node-input-phi").value = this.phi;
 
         document.getElementById("node-input-lambda").onchange = function () {
-          document.getElementById("lambda-label").innerHTML = "\u03BB Lambda \xa0 \xa0" + document.getElementById("node-input-lambda").value.toString() + " \u03C0";
+          document.getElementById("lambda-label").innerHTML = "\u03BB Lambda \xa0 \xa0" + document.getElementById("node-input-lambda").value.toString().replace(/'/g, "&#39;") + " \u03C0";
         }
         document.getElementById("lambda-label").innerHTML = "\u03BB Lambda \xa0 \xa0" + this.lambda.toString() + " \u03C0";
         document.getElementById("node-input-lambda").value = this.lambda;

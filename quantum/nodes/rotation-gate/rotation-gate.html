@@ -52,7 +52,7 @@
         });
 
         document.getElementById("node-input-angle").onchange = function () {
-          document.getElementById("angle-label").innerHTML = "Rotation angle \xa0 \xa0" + document.getElementById("node-input-angle").value.toString() + " \u03C0";
+          document.getElementById("angle-label").innerHTML = "Rotation angle \xa0 \xa0" + document.getElementById("node-input-angle").value.toString().replace(/'/g, "&#39;") + " \u03C0";
         }
         document.getElementById("angle-label").innerHTML = "Rotation angle \xa0 \xa0" + this.angle.toString() + " \u03C0";
         document.getElementById("node-input-angle").value = this.angle;
