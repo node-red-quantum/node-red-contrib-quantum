@@ -1,7 +1,7 @@
 <script type="text/javascript">
   RED.nodes.registerType("identity-gate", {
     category: "quantum",
-    color: "#FA4D56",
+    color: "#e85d04",
     defaults: {
       name: { value: "" },
     },
@@ -11,7 +11,7 @@
     icon: "font-awesome/fa-i-cursor",
     align: 'right',
     label: function () {
-      return this.name || "identity gate";
+      return this.name || "identity";
     },
     inputLabels: "Qubit",
     outputLabels: "Qubit",

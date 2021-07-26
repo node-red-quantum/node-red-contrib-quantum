@@ -1,7 +1,7 @@
 <script type="text/javascript">
     RED.nodes.registerType("phase-gate", {
       category: "quantum",
-      color: "#FA4D56",
+      color: "#e85d04",
       defaults: {
         name: { value: "" },
         phase: { 
@@ -15,7 +15,7 @@
       icon: "font-awesome/fa-paragraph",
       align: 'right',
       label: function () {
-        return this.name || "phase gate";
+        return this.name || "phase";
       },
       inputLabels: "Qubit",
       outputLabels: "Qubit",

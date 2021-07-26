@@ -12,7 +12,7 @@ const validateInput = (node, msg) => {
 };
 
 module.exports = function(RED) {
-  function MeasurementNode(config) {
+  function MeasureNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.selectedBit = config.selectedBit;
@@ -27,14 +27,25 @@ module.exports = function(RED) {
         `${msg.payload.registerVar}[${msg.payload.qubit}], ` +
         `${node.selectedRegVarName}[${node.selectedBit}]`;
 
-      script += util.format(snippets.MEASUREMENT, params);
+      script += util.format(snippets.MEASURE, params);
 
       await shell.execute(script, (err) => {
         if (err) node.error(err);
-        else send(msg);
+        else {
+          send(msg);
+
+          const status = (!node.selectedRegVarName) ? `Result: cbit ${node.selectedBit}`:
+          `Result: register ${node.selectedRegVarName} / cbit ${node.selectedBit}`;
+
+          node.status({
+            fill: 'grey',
+            shape: 'dot',
+            text: status,
+          });
+        };
       });
     });
   }
 
-  RED.nodes.registerType('measurement', MeasurementNode);
+  RED.nodes.registerType('measure', MeasureNode);
 };

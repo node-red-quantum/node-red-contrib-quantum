@@ -45,7 +45,7 @@ const HADAMARD_GATE =
 `qc.h(%s)
 `;
 
-const MEASUREMENT =
+const MEASURE =
 `qc.measure(%s)
 `;
 
@@ -93,7 +93,7 @@ module.exports = {
   CNOT_GATE,
   BARRIER,
   HADAMARD_GATE,
-  MEASUREMENT,
+  MEASURE,
   SIMULATOR,
   NOT_GATE,
   RESET,

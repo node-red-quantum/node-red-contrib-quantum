@@ -1,7 +1,7 @@
 <script type="text/javascript">
-  RED.nodes.registerType("measurement", {
+  RED.nodes.registerType("measure", {
     category: "quantum",
-    color: "#33b1ff",
+    color: "#C0C0C0",
     defaults: {
       name: { value: "" },
       selectedBit: { value: ""},
@@ -21,9 +21,9 @@
     inputs: 1,
     outputs: 1,
     icon: "font-awesome/fa-tachometer",
-    paletteLabel: "measurement",
+    paletteLabel: "measure",
     label: function () {
-      return this.name || "measurement";
+      return this.name || "measure";
     },
     oneditprepare: function () {
       var selectedRadio = this.selectedRadio;
@@ -116,9 +116,9 @@
   });
 </script>
 
-<script type="text/html" data-template-name="measurement">
+<script type="text/html" data-template-name="measure">
   <div class="form-row">
-    <label for="node-input-name"><i class="fa fa-tag"></i> Measurement Node</label>
+    <label for="node-input-name"><i class="fa fa-tag"></i> Measure Node</label>
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
   <div class="form-row" hidden>
@@ -129,8 +129,8 @@
   </div>
 </script>
 
-<script type="text/html" data-help-name="measurement">
+<script type="text/html" data-help-name="measure">
   <p>
-    Quantum measurement node
+    Quantum measure node
   </p>
 </script>

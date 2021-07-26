@@ -64,9 +64,9 @@ module.exports = function(RED) {
         script += util.format(snippets.BARRIER, '%s,'.repeat(node.outputs));
         node.qubits.map((msg) => {
           if (typeof(msg.payload.register) === 'undefined') {
-            script += util.format(script, msg.payload.qubit.toString());
+            script = util.format(script, msg.payload.qubit.toString());
           } else {
-            script += util.format(script, msg.payload.registerVar + '[' + msg.payload.qubit.toString() + ']');
+            script = util.format(script, msg.payload.registerVar + '[' + msg.payload.qubit.toString() + ']');
           }
         });
 

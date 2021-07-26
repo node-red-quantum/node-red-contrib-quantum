@@ -86,6 +86,12 @@ module.exports = function(RED) {
                 control2.payload.qubit.toString(),
                 target.payload.qubit.toString(),
             );
+
+            node.status({
+              fill: 'grey',
+              shape: 'dot',
+              text: 'Target: qubit ' + target.payload.qubit.toString(),
+            });
           } else {
             // Use registers if there are quantum registers.
             script += util.format(
@@ -103,6 +109,12 @@ module.exports = function(RED) {
                 target.payload.qubit.toString() +
                 ']',
             );
+
+            node.status({
+              fill: 'grey',
+              shape: 'dot',
+              text: 'Target: register ' + target.payload.register + ' / qubit ' + target.payload.qubit.toString(),
+            });
           }
         });
 
