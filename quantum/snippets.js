@@ -80,7 +80,7 @@ const IDENTITY =
 `qc.id(%s)
 `;
 
-const SWAP_GATE =
+const SWAP =
 `qc.swap(%s, %s)
 `;
 
@@ -101,5 +101,5 @@ module.exports = {
   ROTATION_GATE,
   U_GATE,
   IDENTITY,
-  SWAP_GATE,
+  SWAP,
 };

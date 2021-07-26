@@ -1,28 +1,28 @@
 <script type="text/javascript">
-  RED.nodes.registerType("swap-gate", {
+  RED.nodes.registerType("swap", {
     category: "quantum",
-    color: "#FA4D56",
+    color: "#C7E9C0",
     defaults: {
       name: {value: ""},
     },
     inputs: 2,
     outputs: 2,
     icon: "font-awesome/fa-random",
-    paletteLabel: "swap gate",
+    paletteLabel: "swap",
     label: function () {
-      return this.name || "swap gate";
+      return this.name || "swap";
     },
   });
 </script>
 
-<script type="text/html" data-template-name="swap-gate">
+<script type="text/html" data-template-name="swap">
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
 </script>
 
-<script type="text/html" data-help-name="swap-gate">
+<script type="text/html" data-help-name="swap">
   <p>
     <!-- Node documentation goes here. -->
   </p>

@@ -4,7 +4,7 @@ const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 
 module.exports = function(RED) {
-  function SwapGateNode(config) {
+  function SwapNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.qubits = [];
@@ -18,14 +18,14 @@ module.exports = function(RED) {
       // - The user chooses to use registers but does not initiate them.
       if (msg.topic !== 'Quantum Circuit') {
         throw new Error(
-            'The SWAP Gate must be connected to nodes from the quantum library only.',
+            'The SWAP node must be connected to nodes from the quantum library only.',
         );
       } else if (
         typeof msg.payload.register === 'undefined' &&
         typeof msg.payload.qubit === 'undefined'
       ) {
         throw new Error(
-            'The SWAP Gate nodes must receive qubits objects as inputs.\n' +
+            'The SWAP node must receive qubits objects as inputs.\n' +
             'Please use "Quantum Circuit" & "Quantum Register" nodes to generate qubits objects.',
         );
       } else if (typeof msg.payload.qubit === 'undefined') {
@@ -57,13 +57,13 @@ module.exports = function(RED) {
 
         // If the circuit does not include registers.
         if (typeof msg.payload.register === 'undefined') {
-          script += util.format(snippets.SWAP_GATE,
+          script += util.format(snippets.SWAP,
               node.qubits[0].payload.qubit.toString(),
               node.qubits[1].payload.qubit.toString(),
           );
         } else { // Use registers if there are quantum registers.
           script += util.format(
-              snippets.SWAP_GATE,
+              snippets.SWAP,
               node.qubits[0].payload.registerVar + '[' +
               node.qubits[0].payload.qubit.toString() + ']',
               node.qubits[1].payload.registerVar + '[' +
@@ -86,5 +86,5 @@ module.exports = function(RED) {
     });
   }
 
-  RED.nodes.registerType('swap-gate', SwapGateNode);
+  RED.nodes.registerType('swap', SwapNode);
 };

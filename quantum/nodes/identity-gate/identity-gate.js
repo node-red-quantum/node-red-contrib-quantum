@@ -5,7 +5,7 @@ const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 
 module.exports = function(RED) {
-  function IdentityNode(config) {
+  function IdentityGateNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
     const node = this;
@@ -50,5 +50,5 @@ module.exports = function(RED) {
       });
     });
   }
-  RED.nodes.registerType('identity', IdentityNode);
+  RED.nodes.registerType('identity-gate', IdentityGateNode);
 };
