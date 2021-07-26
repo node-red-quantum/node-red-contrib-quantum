@@ -13,9 +13,9 @@
 // Probably shouldn't use wildcard import here for efficiency but whatever will
 // worry about it later.
 const IMPORTS =
-`import numpy as np
- from qiskit import *
- `;
+`from math import pi
+from qiskit import *
+`;
 
 const QUANTUM_CIRCUIT =
 `qc = QuantumCircuit(%s)
@@ -60,6 +60,22 @@ const NOT_GATE =
 `qc.x(%s)
 `;
 
+const RESET =
+`qc.reset(%s)
+`;
+
+const PHASE_GATE =
+`qc.p(%s, %s)
+`;
+
+const ROTATION_GATE =
+`qc.r%s(%s, %s)
+`;
+
+const U_GATE =
+`qc.u(%s, %s, %s, %s)
+`;
+
 const IDENTITY =
 `qc.id(%s)
 `;
@@ -76,5 +92,9 @@ module.exports = {
   MEASUREMENT,
   SIMULATOR,
   NOT_GATE,
+  RESET,
+  PHASE_GATE,
+  ROTATION_GATE,
+  U_GATE,
   IDENTITY,
 };
