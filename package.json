@@ -28,6 +28,7 @@
     "setup": "(npm run link && npm run venv) && echo Setup complete - run 'npm start' to open Node-RED",
     "link": "bash bin/link.sh || bin/link.sh",
     "venv": "bash bin/pyvenv.sh || bin/pyvenv.sh",
+    "test": "mocha",
     "clean": "rm -r venv/ & npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
     "lint": "eslint --fix --ignore-path .gitignore ."
   },
@@ -38,8 +39,10 @@
     "python-shell": "^3.0.0"
   },
   "devDependencies": {
+    "chai": "^4.3.4",
     "eslint": "^7.29.0",
     "eslint-config-google": "^0.14.0",
+    "mocha": "^9.0.3",
     "node-red": "^1.3.5"
   },
   "engines": {
