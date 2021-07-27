@@ -39,7 +39,7 @@ module.exports = function(RED) {
       if (typeof msg.payload.register === 'undefined') {
         script += util.format(snippets.IDENTITY, msg.payload.qubit);
       } else {
-        script += util.format(snippets.IDENTITY, `msg.payload.registerVar + '[' + msg.payload.qubit + ']'`);
+        script += util.format(snippets.IDENTITY, `${msg.payload.registerVar}[${msg.payload.qubit}]`);
       }
 
       // Run the script in the python shell, and if no error occurs
