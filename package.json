@@ -58,7 +58,7 @@
       "simulator": "quantum/nodes/simulator/simulator.js",
       "cnot-gate": "quantum/nodes/cnot-gate/cnot-gate.js",
       "hadamard-gate": "quantum/nodes/hadamard-gate/hadamard-gate.js",
-      "ibm-quantum-system": "quantum/nodes/ibm-quantum-system.js"
+      "ibm-quantum-system": "quantum/nodes/ibm-quantum-system/ibm-quantum-system.js"
     }
   }
 }
