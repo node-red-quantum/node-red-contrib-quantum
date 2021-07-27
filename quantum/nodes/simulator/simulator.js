@@ -5,12 +5,6 @@ const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
 
-const validateInput = (node, msg) => {
-  if (msg.topic !== 'Quantum Circuit') {
-    node.error(errors.NOT_QUANTUM_CIRCUIT, msg);
-  }
-};
-
 module.exports = function(RED) {
   function SimulatorNode(config) {
     RED.nodes.createNode(this, config);
@@ -21,8 +15,11 @@ module.exports = function(RED) {
 
     this.on('input', async function(msg, send, done) {
       let script = '';
-      validateInput(node, msg);
       let qubitsArrived = true;
+
+      // Validate the node input msg: check for qubit object.
+      // Throw corresponding errors if required.
+      errors.validateQubitInput(node, msg);
 
       // If the quantum circuit does not have registers
       if (typeof(msg.payload.register) === 'undefined') {

@@ -5,12 +5,6 @@ const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
 
-const validateInput = (node, msg) => {
-  if (msg.topic !== 'Quantum Circuit') {
-    node.error(errors.NOT_QUANTUM_CIRCUIT, msg);
-  }
-};
-
 module.exports = function(RED) {
   function MeasureNode(config) {
     RED.nodes.createNode(this, config);
@@ -22,7 +16,11 @@ module.exports = function(RED) {
 
     this.on('input', async function(msg, send, done) {
       let script = '';
-      validateInput(node, msg);
+
+      // Validate the node input msg: check for qubit object.
+      // Throw corresponding errors if required.
+      errors.validateQubitInput(node, msg);
+
       const params = (!node.selectedRegVarName) ? `${msg.payload.qubit}, ${node.selectedBit}`:
         `${msg.payload.registerVar}[${msg.payload.qubit}], ` +
         `${node.selectedRegVarName}[${node.selectedBit}]`;

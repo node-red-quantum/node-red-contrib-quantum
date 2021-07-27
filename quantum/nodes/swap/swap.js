@@ -2,6 +2,7 @@
 const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
+const errors = require('../../errors');
 
 module.exports = function(RED) {
   function SwapNode(config) {
@@ -12,27 +13,10 @@ module.exports = function(RED) {
 
     this.on('input', async function(msg, send, done) {
       let script = '';
-      // Throw a connection error if:
-      // - The user connects it to a node that is not from the quantum library.
-      // - The user does not input a qubit object in the node.
-      // - The user chooses to use registers but does not initiate them.
-      if (msg.topic !== 'Quantum Circuit') {
-        throw new Error(
-            'The SWAP node must be connected to nodes from the quantum library only.',
-        );
-      } else if (
-        typeof msg.payload.register === 'undefined' &&
-        typeof msg.payload.qubit === 'undefined'
-      ) {
-        throw new Error(
-            'The SWAP node must receive qubits objects as inputs.\n' +
-            'Please use "Quantum Circuit" & "Quantum Register" nodes to generate qubits objects.',
-        );
-      } else if (typeof msg.payload.qubit === 'undefined') {
-        throw new Error(
-            'If "Registers & Bits" was selected in the "Quantum Circuit" node, please make use of register nodes.',
-        );
-      }
+
+      // Validate the node input msg: check for qubit object.
+      // Throw corresponding errors if required.
+      errors.validateQubitInput(node, msg);
 
       // Store all the qubit objects received as input into the node.qubits array
       node.qubits.push(msg);

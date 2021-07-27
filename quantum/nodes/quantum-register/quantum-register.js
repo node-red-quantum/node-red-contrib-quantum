@@ -3,6 +3,7 @@
 const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
+const errors = require('../../errors');
 
 module.exports = function(RED) {
   function QuantumRegisterNode(config) {
@@ -16,23 +17,10 @@ module.exports = function(RED) {
 
     this.on('input', async function(msg, send, done) {
       let script = '';
-      // Throw a connection error if:
-      // - The user connects it to a node that is not from the quantum library
-      // - The user did not select the 'Registers & Bits' option in the 'Quantum Circuit' node
-      // - The user does not connect the register node to the output of the 'Quantum Circuit' node
-      if (msg.topic !== 'Quantum Circuit') {
-        throw new Error(
-            'Register nodes must be connected to nodes from the quantum library only',
-        );
-      } else if (typeof(msg.payload.register) === 'undefined') {
-        throw new Error(
-            'Select "Registers & Qubits" in the "Quantum Circuit" node properties to use registers.',
-        );
-      } else if (typeof(msg.payload.register) !== 'number') {
-        throw new Error(
-            'Register nodes must be connected to the outputs of the "Quantum Circuit" node.',
-        );
-      }
+
+      // Validate the node input msg: check for register object.
+      // Throw corresponding errors if required.
+      errors.validateRegisterInput(node, msg);
 
       // Setting node.name to "r0","r1"... if the user did not input a name
       if (node.name == '') {

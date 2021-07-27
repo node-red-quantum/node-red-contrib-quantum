@@ -10,41 +10,42 @@
  * the values at runtime.
  */
 
-function validateQubitInput(msg) {
+function validateQubitInput(node, msg) {
   let keys = Object.keys(msg.payload);
 
   if (msg.topic !== 'Quantum Circuit') {
-    throw new Error(
+    node.error(
         'This node must be connected to nodes from the "Node-RED Quantum" library only.',
     );
   } else if (keys.includes('register') && typeof msg.payload.register === 'number') {
-    throw new Error(
+    node.error(
         'If "Registers & Bits" was selected in the "Quantum Circuit" node properties, ' +
         'please connect "Quantum Register" & "Classical Register" nodes to the "Quantum Circuit" node outputs.',
     );
   } else if (!keys.includes('register') || !keys.includes('qubit') || !keys.includes('structure')) {
-    throw new Error(
+    node.error(
         'This node must receive qubits objects as inputs.\n' +
         'To generate qubits objects, please make use of the "Quantum Circuit" node.',
     );
   }
 };
 
-function validateRegisterInput(msg) {
+function validateRegisterInput(node, msg) {
   let keys = Object.keys(msg.payload);
 
   if (msg.topic !== 'Quantum Circuit') {
-    throw new Error(
+    node.error(
         'This node must be connected to nodes from the "Node-RED Quantum" library only.',
     );
   } else if (keys.includes('register') && typeof msg.payload.register === 'undefined') {
-    throw new Error(
+    node.error(
         'To use "Quantum Register" & "Classical Register" nodes, ' +
         'please select "Registers & Bits" in the "Quantum Circuit" node properties.',
     );
   } else if ((keys.includes('register') && typeof msg.payload.register !== 'number') || keys.includes('qubit')) {
-    throw new Error(
-        'This node must be connected to the outputs of the "Quantum Circuit" node.',
+    node.error(
+        'This node must receive register objects as inputs.\n' +
+        'Please connect it to the outputs of the "Quantum Circuit" node.',
     );
   }
 };

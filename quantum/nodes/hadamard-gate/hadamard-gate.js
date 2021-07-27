@@ -3,6 +3,7 @@
 const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
+const errors = require('../../errors');
 
 module.exports = function(RED) {
   function HadamardGateNode(config) {
@@ -11,12 +12,12 @@ module.exports = function(RED) {
 
     node.on('input', async (msg, send, done) => {
       let script = '';
-      let qrConfig = msg.payload;
-      let keys = Object.keys(qrConfig);
-      if (!keys.includes('register') || !keys.includes('qubit')) {
-        throw new Error('Invalid Input');
-      }
 
+      // Validate the node input msg: check for qubit object.
+      // Throw corresponding errors if required.
+      errors.validateQubitInput(node, msg);
+
+      let qrConfig = msg.payload;
       script += util.format(snippets.HADAMARD_GATE,
         qrConfig.register ? `${qrConfig.register}[${qrConfig.qubit}]` : `${qrConfig.qubit}`);
 
