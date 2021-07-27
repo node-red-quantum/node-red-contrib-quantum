@@ -5,9 +5,12 @@ const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 
 module.exports = function(RED) {
-  function IdentityNode(config) {
+  function UGateNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
+    this.theta = config.theta;
+    this.phi = config.phi;
+    this.lambda = config.lambda;
     const node = this;
 
     this.on('input', async function(msg, send, done) {
@@ -18,14 +21,14 @@ module.exports = function(RED) {
       // - the user chooses to use registers but does not initiate them
       if (msg.topic !== 'Quantum Circuit') {
         throw new Error(
-            'The Identity gate node must be connected to nodes from the quantum library only.',
+            'The U gate node must be connected to nodes from the quantum library only.',
         );
       } else if (
         typeof msg.payload.register === 'undefined' &&
         typeof msg.payload.qubit === 'undefined'
       ) {
         throw new Error(
-            'The Identity gate node must be receive qubits objects as inputs.\n' +
+            'The U gate node must be receive qubits objects as inputs.\n' +
             'Please use "Quantum Circut" and "Quantum Register" node to generate qubits objects.',
         );
       } else if (
@@ -37,18 +40,40 @@ module.exports = function(RED) {
       }
 
       if (typeof msg.payload.register === 'undefined') {
-        script += util.format(snippets.IDENTITY, msg.payload.qubit);
+        script += util.format(snippets.U_GATE,
+            node.theta + '*pi',
+            node.phi + '*pi',
+            node.lambda + '*pi',
+            msg.payload.qubit,
+        );
       } else {
-        script += util.format(snippets.IDENTITY, `msg.payload.registerVar + '[' + msg.payload.qubit + ']'`);
+        script += util.format(snippets.U_GATE,
+            node.theta + '*pi',
+            node.phi + '*pi',
+            node.lambda + '*pi',
+            `msg.payload.registerVar + '[' + msg.payload.qubit + ']'`,
+        );
       }
 
       // Run the script in the python shell, and if no error occurs
       // then send msg object to the next node
       await shell.execute(script, (err) => {
         if (err) node.error(err);
-        else send(msg);
+        else {
+          send(msg);
+
+          node.status({
+            fill: 'grey',
+            shape: 'dot',
+            text: (
+              node.theta.toString() + '\u03C0, ' +
+              node.phi.toString() + '\u03C0, ' +
+              node.lambda.toString() + '\u03C0'
+            ),
+          });
+        };
       });
     });
   }
-  RED.nodes.registerType('identity', IdentityNode);
+  RED.nodes.registerType('u-gate', UGateNode);
 };
