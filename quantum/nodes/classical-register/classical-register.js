@@ -34,10 +34,14 @@ module.exports = function(RED) {
       }
 
       // Add arguments to classical register code
-      script += util.format(snippets.CLASSICAL_REGISTER,
+      let crscript = util.format(snippets.CLASSICAL_REGISTER,
           '_' + node.name,
           node.classicalBits.toString() + ', "' + node.name + '"',
       );
+
+      await shell.execute(crscript, (err) => {
+        if (err) node.error(err);
+      });
 
       // Completing the 'quantumCircuit' flow context array
       let register = {
