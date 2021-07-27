@@ -5,7 +5,7 @@ const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 
 module.exports = function(RED) {
-  function UGateNode(config) {
+  function UnitaryGateNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.theta = config.theta;
@@ -21,14 +21,14 @@ module.exports = function(RED) {
       // - the user chooses to use registers but does not initiate them
       if (msg.topic !== 'Quantum Circuit') {
         throw new Error(
-            'The U gate node must be connected to nodes from the quantum library only.',
+            'The Unitary gate node must be connected to nodes from the quantum library only.',
         );
       } else if (
         typeof msg.payload.register === 'undefined' &&
         typeof msg.payload.qubit === 'undefined'
       ) {
         throw new Error(
-            'The U gate node must be receive qubits objects as inputs.\n' +
+            'The Unitary gate node must be receive qubits objects as inputs.\n' +
             'Please use "Quantum Circut" and "Quantum Register" node to generate qubits objects.',
         );
       } else if (
@@ -40,14 +40,14 @@ module.exports = function(RED) {
       }
 
       if (typeof msg.payload.register === 'undefined') {
-        script += util.format(snippets.U_GATE,
+        script += util.format(snippets.UNITARY_GATE,
             node.theta + '*pi',
             node.phi + '*pi',
             node.lambda + '*pi',
             msg.payload.qubit,
         );
       } else {
-        script += util.format(snippets.U_GATE,
+        script += util.format(snippets.UNITARY_GATE,
             node.theta + '*pi',
             node.phi + '*pi',
             node.lambda + '*pi',
@@ -75,5 +75,5 @@ module.exports = function(RED) {
       });
     });
   }
-  RED.nodes.registerType('u-gate', UGateNode);
+  RED.nodes.registerType('unitary-gate', UnitaryGateNode);
 };

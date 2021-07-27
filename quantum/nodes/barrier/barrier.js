@@ -61,7 +61,7 @@ module.exports = function(RED) {
         });
 
         // Generate the corresponding barrier Qiskit script
-        script += util.format(snippets.BARRIER, '%s,'.repeat(node.outputs));
+        script += util.format(snippets.BARRIER, '%s, '.repeat(node.outputs));
         node.qubits.map((msg) => {
           if (typeof(msg.payload.register) === 'undefined') {
             script = util.format(script, msg.payload.qubit.toString());

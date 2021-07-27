@@ -72,7 +72,7 @@ const ROTATION_GATE =
 `qc.r%s(%s, %s)
 `;
 
-const U_GATE =
+const UNITARY_GATE =
 `qc.u(%s, %s, %s, %s)
 `;
 
@@ -99,7 +99,7 @@ module.exports = {
   RESET,
   PHASE_GATE,
   ROTATION_GATE,
-  U_GATE,
   IDENTITY,
   SWAP,
+  UNITARY_GATE,
 };

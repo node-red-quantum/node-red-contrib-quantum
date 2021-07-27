@@ -57,7 +57,7 @@
       "not-gate": "quantum/nodes/not-gate/not-gate.js",
       "rotation-gate": "quantum/nodes/rotation-gate/rotation-gate.js",
       "phase-gate": "quantum/nodes/phase-gate/phase-gate.js",
-      "u-gate": "quantum/nodes/u-gate/u-gate.js",
+      "unitary-gate": "quantum/nodes/unitary-gate/unitary-gate.js",
       "hadamard-gate": "quantum/nodes/hadamard-gate/hadamard-gate.js",
       "cnot-gate": "quantum/nodes/cnot-gate/cnot-gate.js",
       "toffoli-gate": "quantum/nodes/toffoli-gate/toffoli-gate.js",
