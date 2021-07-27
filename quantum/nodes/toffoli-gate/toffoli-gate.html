@@ -6,13 +6,19 @@
       name: { value: "" },
       targetPosition: { value: "", required: true },
     },
-    inputs: 3,
+    inputs: 1,
     outputs: 3,
-    icon: "font-awesome/fa-ellipsis-v",
+    icon: "font-awesome/fa-close",
     paletteLabel: "toffoli gate",
     label: function () {
-      return this.name || "Toffoli Gate";
+      return this.name || "TOFFOLI";
     },
+    inputLabels: "Qubits",
+    outputLabels: function(index) {  
+      if (index == 0) return "Top qubit";
+      else if (index == 1) return "Middle qubit";
+      else return "Bottom qubit";
+    }
   });
 </script>
 

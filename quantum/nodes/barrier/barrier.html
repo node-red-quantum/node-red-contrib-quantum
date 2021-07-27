@@ -1,7 +1,7 @@
 <script type="text/javascript">
     RED.nodes.registerType("barrier", {
       category: "quantum",
-      color: "#C7E9C0",
+      color: "#33B1FF",
       defaults: {
         name: { value: "" },
         outputs: { 
@@ -25,7 +25,7 @@
       outputLabels: function(index) {  
         if (index == 0) return "Top qubit";
         else if (index == this.outputs-1) return "Bottom qubit";
-        else return "Qubit in visual order";
+        else return "Qubit";
       }
     });
   </script>

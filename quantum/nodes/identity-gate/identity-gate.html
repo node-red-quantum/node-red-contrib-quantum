@@ -1,5 +1,5 @@
 <script type="text/javascript">
-  RED.nodes.registerType("not-gate", {
+  RED.nodes.registerType("identity-gate", {
     category: "quantum",
     color: "#8A3FFC",
     defaults: {
@@ -7,27 +7,26 @@
     },
     inputs: 1,
     outputs: 1,
-    paletteLabel: "not gate",
-    icon: "font-awesome/fa-close",
+    paletteLabel: "identity gate",
+    icon: "font-awesome/fa-i-cursor",
     align: 'right',
     label: function () {
-      return this.name || "NOT";
+      return this.name || "identity";
     },
     inputLabels: "Qubit",
     outputLabels: "Qubit",
   });
 </script>
 
-<script type="text/html" data-template-name="not-gate">
+<script type="text/html" data-template-name="identity-gate">
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
 </script>
 
-<script type="text/html" data-help-name="not-gate">
+<script type="text/html" data-help-name="identity-gate">
   <p>
     <!-- Node documentation goes here. -->
-    This is the implementation of Not Gate Node.
   </p>
 </script>

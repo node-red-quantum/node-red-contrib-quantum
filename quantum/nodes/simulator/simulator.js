@@ -72,6 +72,7 @@ module.exports = function(RED) {
 
       // If all qubits have arrives, generate the simulator script and run it
       if (qubitsArrived) {
+        // Emptying the runtime variables upon output
         node.qubits = [];
         node.qreg = '';
 

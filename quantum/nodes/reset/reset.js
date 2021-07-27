@@ -5,7 +5,7 @@ const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 
 module.exports = function(RED) {
-  function NotGateNode(config) {
+  function ResetNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
     const node = this;
@@ -18,14 +18,14 @@ module.exports = function(RED) {
       // - the user chooses to use registers but does not initiate them
       if (msg.topic !== 'Quantum Circuit') {
         throw new Error(
-            'The Not Gate node must be connected to nodes from the quantum library only.',
+            'The Reset gate node must be connected to nodes from the quantum library only.',
         );
       } else if (
         typeof msg.payload.register === 'undefined' &&
         typeof msg.payload.qubit === 'undefined'
       ) {
         throw new Error(
-            'The Not Gate node must be receive qubits objects as inputs.\n' +
+            'The Reset gate node must be receive qubits objects as inputs.\n' +
             'Please use "Quantum Circut" and "Quantum Register" node to generate qubits objects.',
         );
       } else if (
@@ -37,9 +37,9 @@ module.exports = function(RED) {
       }
 
       if (typeof msg.payload.register === 'undefined') {
-        script += util.format(snippets.NOT_GATE, msg.payload.qubit);
+        script += util.format(snippets.RESET, msg.payload.qubit);
       } else {
-        script += util.format(snippets.NOT_GATE, `msg.payload.registerVar + '[' + msg.payload.qubit + ']'`);
+        script += util.format(snippets.RESET, `msg.payload.registerVar + '[' + msg.payload.qubit + ']'`);
       }
 
       // Run the script in the python shell, and if no error occurs
@@ -50,5 +50,5 @@ module.exports = function(RED) {
       });
     });
   }
-  RED.nodes.registerType('not-gate', NotGateNode);
+  RED.nodes.registerType('reset', ResetNode);
 };

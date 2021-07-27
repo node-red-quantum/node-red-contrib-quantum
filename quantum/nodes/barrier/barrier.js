@@ -61,12 +61,12 @@ module.exports = function(RED) {
         });
 
         // Generate the corresponding barrier Qiskit script
-        script += util.format(snippets.BARRIER, '%s,'.repeat(node.outputs));
+        script += util.format(snippets.BARRIER, '%s, '.repeat(node.outputs));
         node.qubits.map((msg) => {
           if (typeof(msg.payload.register) === 'undefined') {
-            script += util.format(script, msg.payload.qubit.toString());
+            script = util.format(script, msg.payload.qubit.toString());
           } else {
-            script += util.format(script, msg.payload.registerVar + '[' + msg.payload.qubit.toString() + ']');
+            script = util.format(script, msg.payload.registerVar + '[' + msg.payload.qubit.toString() + ']');
           }
         });
 
@@ -74,7 +74,12 @@ module.exports = function(RED) {
         // then send one qubit object per node output
         await shell.execute(script, (err) => {
           if (err) node.error(err);
-          else send(node.qubits);
+          else {
+            send(node.qubits);
+
+            // Emptying the runtime variable upon output
+            node.qubits = [];
+          }
         });
       }
     });
