@@ -1,7 +1,7 @@
 <script type="text/javascript">
     RED.nodes.registerType("hadamard-gate", {
       category: "quantum",
-      color: "#FA4D56",
+      color: "#9F1853",
       defaults: {
         name: { value: "" },
       },
@@ -9,14 +9,12 @@
       outputs: 1,
       icon: "font-awesome/fa-header",
       align: 'right',
-      paletteLabel: "hadamard",
+      paletteLabel: "hadamard gate",
       label: function () {
         return this.name || "hadamard";
       },
-      inputLabels: function(index) {
-          return "qubit " + index;
-      },
-      outputLabels: "hadamard",
+      inputLabels: "Qubit",
+      outputLabels: "Qubit",
       });
   </script>
   

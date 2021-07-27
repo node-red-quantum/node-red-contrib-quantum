@@ -1,7 +1,7 @@
 <script type="text/javascript">
-    RED.nodes.registerType("u-gate", {
+    RED.nodes.registerType("unitary-gate", {
       category: "quantum",
-      color: "#FA4D56",
+      color: "#8A3FFC",
       defaults: {
         name: { value: "" },
         theta: { 
@@ -19,11 +19,11 @@
       },
       inputs: 1,
       outputs: 1,
-      paletteLabel: "U gate",
+      paletteLabel: "unitary gate",
       icon: "font-awesome/fa-underline",
       align: 'right',
       label: function () {
-        return this.name || "U gate";
+        return this.name || "unitary";
       },
       inputLabels: "Qubit",
       outputLabels: "Qubit",
@@ -51,7 +51,7 @@
     });
   </script>
   
-  <script type="text/html" data-template-name="u-gate">
+  <script type="text/html" data-template-name="unitary-gate">
     <div class="form-row">
       <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
       <input type="text" id="node-input-name" placeholder="Name" />
@@ -73,7 +73,7 @@
     </div>
   </script>
   
-  <script type="text/html" data-help-name="u-gate">
+  <script type="text/html" data-help-name="unitary-gate">
     <p>
       <!-- Node documentation goes here. -->
     </p>
