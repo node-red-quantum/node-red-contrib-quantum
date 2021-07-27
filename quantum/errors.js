@@ -42,14 +42,9 @@ function validateRegisterInput(msg) {
         'To use "Quantum Register" & "Classical Register" nodes, ' +
         'please select "Registers & Bits" in the "Quantum Circuit" node properties.',
     );
-  } else if ( (keys.includes('register') && typeof msg.payload.register !== 'number') || keys.includes('qubit')) {
+  } else if ((keys.includes('register') && typeof msg.payload.register !== 'number') || keys.includes('qubit')) {
     throw new Error(
-        
-      
-      'This node must receive qubits objects as inputs.\n' +
-        'To generate qubits objects, please make use of the "Quantum Circuit" node.',
-
-        
+        'This node must be connected to the outputs of the "Quantum Circuit" node.',
     );
   }
 };
