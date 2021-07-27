@@ -18,7 +18,6 @@ module.exports = function(RED) {
     this.qubits = [];
     this.qreg = '';
     const node = this;
-
     this.on('input', async function(msg, send, done) {
       let script = '';
       validateInput(node, msg);
@@ -55,7 +54,7 @@ module.exports = function(RED) {
               // eslint-disable-next-line max-len
               'Only qubits of quantum registers from the same quantum circuit should be connected to the simulator node.',
           );
-        } else {
+        } else if (Object.keys(node.qreg).length == msg.payload.structure.qreg) {
           Object.keys(node.qreg).map((key) => {
             // If the simulator node has inputs from more qubits than there are in a register
             if (node.qreg[key].count > node.qreg[key].total) {
@@ -67,6 +66,8 @@ module.exports = function(RED) {
               qubitsArrived = false;
             }
           });
+        } else {
+          qubitsArrived = false;
         }
       }
 
@@ -75,7 +76,6 @@ module.exports = function(RED) {
         // Emptying the runtime variables upon output
         node.qubits = [];
         node.qreg = '';
-
         const params = node.shots;
         script += util.format(snippets.SIMULATOR, params);
         await shell.execute(script, (err, data) => {
