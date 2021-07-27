@@ -123,6 +123,7 @@ module.exports = function(RED) {
       // clear flow context variable
       flowContext.set('quantumCircuitConfig', undefined);
       flowContext.set('isCircuitReady', undefined);
+      flowContext.set('quantumCircuitReadyEvent', undefined);
       send(output);
     });
   }
