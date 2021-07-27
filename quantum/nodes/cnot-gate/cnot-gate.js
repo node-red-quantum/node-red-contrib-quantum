@@ -70,39 +70,37 @@ module.exports = function(RED) {
         }
 
         // Generate the corresponding CNot Gate Qiskit script
-        node.qubits.map((msg) => {
-          // Use qubits only if there are no registers.
-          if (typeof msg.payload.register === 'undefined') {
-            script += util.format(snippets.CNOT_GATE,
-                controlQubit.payload.qubit.toString(),
-                targetQubit.payload.qubit.toString(),
-            );
+        // Use qubits only if there are no registers.
+        if (typeof msg.payload.register === 'undefined') {
+          script += util.format(snippets.CNOT_GATE,
+              controlQubit.payload.qubit.toString(),
+              targetQubit.payload.qubit.toString(),
+          );
 
-            node.status({
-              fill: 'grey',
-              shape: 'dot',
-              text: 'Target: qubit ' + targetQubit.payload.qubit.toString(),
-            });
-          } else {
-            // Use registers if there are quantum registers.
-            script += util.format(
-                snippets.CNOT_GATE,
-                controlQubit.payload.registerVar + '[' +
-                controlQubit.payload.qubit.toString() + ']',
-                targetQubit.payload.registerVar + '[' +
-                targetQubit.payload.qubit.toString() + ']',
-            );
+          node.status({
+            fill: 'grey',
+            shape: 'dot',
+            text: 'Target: qubit ' + targetQubit.payload.qubit.toString(),
+          });
+        } else {
+          // Use registers if there are quantum registers.
+          script += util.format(
+              snippets.CNOT_GATE,
+              controlQubit.payload.registerVar + '[' +
+              controlQubit.payload.qubit.toString() + ']',
+              targetQubit.payload.registerVar + '[' +
+              targetQubit.payload.qubit.toString() + ']',
+          );
 
-            node.status({
-              fill: 'grey',
-              shape: 'dot',
-              text: (
-                'Target: register ' + targetQubit.payload.register +
-                ' / qubit ' + targetQubit.payload.qubit.toString()
-              ),
-            });
-          }
-        });
+          node.status({
+            fill: 'grey',
+            shape: 'dot',
+            text: (
+              'Target: register ' + targetQubit.payload.register +
+              ' / qubit ' + targetQubit.payload.qubit.toString()
+            ),
+          });
+        }
 
         // Run the script in the python shell, and if no error occurs
         // then send one qubit object per node output

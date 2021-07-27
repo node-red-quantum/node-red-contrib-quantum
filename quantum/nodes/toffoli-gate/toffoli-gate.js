@@ -77,46 +77,44 @@ module.exports = function(RED) {
         }
 
         // Generate the corresponding Toffoli Gate Qiskit script
-        node.qubits.map((msg) => {
-          // Use qubits only if there are no registers.
-          if (typeof msg.payload.register === 'undefined') {
-            script += util.format(
-                snippets.TOFFOLI_GATE,
-                control1.payload.qubit.toString(),
-                control2.payload.qubit.toString(),
-                target.payload.qubit.toString(),
-            );
+        // Use qubits only if there are no registers.
+        if (typeof msg.payload.register === 'undefined') {
+          script += util.format(
+              snippets.TOFFOLI_GATE,
+              control1.payload.qubit.toString(),
+              control2.payload.qubit.toString(),
+              target.payload.qubit.toString(),
+          );
 
-            node.status({
-              fill: 'grey',
-              shape: 'dot',
-              text: 'Target: qubit ' + target.payload.qubit.toString(),
-            });
-          } else {
-            // Use registers if there are quantum registers.
-            script += util.format(
-                snippets.TOFFOLI_GATE,
-                control1.payload.registerVar +
-                '[' +
-                control1.payload.qubit.toString() +
-                ']',
-                control2.payload.registerVar +
-                '[' +
-                control2.payload.qubit.toString() +
-                ']',
-                target.payload.registerVar +
-                '[' +
-                target.payload.qubit.toString() +
-                ']',
-            );
+          node.status({
+            fill: 'grey',
+            shape: 'dot',
+            text: 'Target: qubit ' + target.payload.qubit.toString(),
+          });
+        } else {
+          // Use registers if there are quantum registers.
+          script += util.format(
+              snippets.TOFFOLI_GATE,
+              control1.payload.registerVar +
+              '[' +
+              control1.payload.qubit.toString() +
+              ']',
+              control2.payload.registerVar +
+              '[' +
+              control2.payload.qubit.toString() +
+              ']',
+              target.payload.registerVar +
+              '[' +
+              target.payload.qubit.toString() +
+              ']',
+          );
 
-            node.status({
-              fill: 'grey',
-              shape: 'dot',
-              text: 'Target: register ' + target.payload.register + ' / qubit ' + target.payload.qubit.toString(),
-            });
-          }
-        });
+          node.status({
+            fill: 'grey',
+            shape: 'dot',
+            text: 'Target: register ' + target.payload.register + ' / qubit ' + target.payload.qubit.toString(),
+          });
+        }
 
         // Run the script in the python shell, and if no error occurs
         // then send one qubit object per node output
