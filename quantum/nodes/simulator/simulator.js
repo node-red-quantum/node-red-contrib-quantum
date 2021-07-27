@@ -50,7 +50,7 @@ module.exports = function(RED) {
         // Storing information about which qubits were received
         if (Object.keys(node.qreg).includes(msg.payload.registerVar)) {
           node.qreg[msg.payload.registerVar].count += 1;
-        } else if (!Object.keys(node.qreg).includes(msg.payload.registerVar)) {
+        } else {
           node.qreg[msg.payload.registerVar] = {
             total: msg.payload.totalQubits,
             count: 1,
