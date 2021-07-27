@@ -44,6 +44,13 @@ function createPromise(process) {
       } if (data.includes('...')) {
         data = data.replace(/.../g, '');
       }
+
+      // When the input is a code block, the result will sometimes (seemingly non-deterministicly)
+      // be a single period. This is a workaround to prevent it being added to the output.
+      if (data.trim() === '.') {
+        data = '';
+      }
+
       errorData += data;
     });
   });
