@@ -49,20 +49,21 @@
       "quantum-circuit": "quantum/nodes/quantum-circuit/quantum-circuit.js",
       "quantum-register": "quantum/nodes/quantum-register/quantum-register.js",
       "classical-register": "quantum/nodes/classical-register/classical-register.js",
-      "toffoli-gate": "quantum/nodes/toffoli-gate/toffoli-gate.js",
-      "execute": "quantum/nodes/execute/execute.js",
-      "not-gate": "quantum/nodes/not-gate/not-gate.js",
-      "measurement": "quantum/nodes/measurement/measurement.js",
-      "barrier": "quantum/nodes/barrier/barrier.js",
       "qubit": "quantum/nodes/qubit/qubit.js",
-      "simulator": "quantum/nodes/simulator/simulator.js",
-      "cnot-gate": "quantum/nodes/cnot-gate/cnot-gate.js",
-      "hadamard-gate": "quantum/nodes/hadamard-gate/hadamard-gate.js",
       "reset": "quantum/nodes/reset/reset.js",
-      "phase-gate": "quantum/nodes/phase-gate/phase-gate.js",
+      "barrier": "quantum/nodes/barrier/barrier.js",
+      "swap": "quantum/nodes/swap/swap.js",
+      "identity-gate": "quantum/nodes/identity-gate/identity-gate.js",
+      "not-gate": "quantum/nodes/not-gate/not-gate.js",
       "rotation-gate": "quantum/nodes/rotation-gate/rotation-gate.js",
-      "u-gate": "quantum/nodes/u-gate/u-gate.js",
-      "identity": "quantum/nodes/identity/identity.js"
+      "phase-gate": "quantum/nodes/phase-gate/phase-gate.js",
+      "unitary-gate": "quantum/nodes/unitary-gate/unitary-gate.js",
+      "hadamard-gate": "quantum/nodes/hadamard-gate/hadamard-gate.js",
+      "cnot-gate": "quantum/nodes/cnot-gate/cnot-gate.js",
+      "toffoli-gate": "quantum/nodes/toffoli-gate/toffoli-gate.js",
+      "measure": "quantum/nodes/measure/measure.js",
+      "execute": "quantum/nodes/execute/execute.js",
+      "simulator": "quantum/nodes/simulator/simulator.js"
     }
   }
 }

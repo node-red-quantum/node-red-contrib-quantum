@@ -16,13 +16,7 @@ module.exports = function(RED) {
       if (!keys.includes('register') || !keys.includes('qubit')) {
         throw new Error('Invalid Input');
       }
-      // show the status of the node
-      node.status({
-        fill: 'grey',
-        shape: 'dot',
-        text: qrConfig.register ? `Register ${qrConfig.register} / Qubit ${qrConfig.qubit}` :
-          `Qubit ${qrConfig.qubit}`,
-      });
+
       script += util.format(snippets.HADAMARD_GATE,
         qrConfig.register ? `${qrConfig.register}[${qrConfig.qubit}]` : `${qrConfig.qubit}`);
 

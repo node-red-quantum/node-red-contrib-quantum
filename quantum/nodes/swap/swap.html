@@ -1,0 +1,34 @@
+<script type="text/javascript">
+  RED.nodes.registerType("swap", {
+    category: "quantum",
+    color: "#33B1FF",
+    defaults: {
+      name: {value: ""},
+    },
+    inputs: 1,
+    outputs: 2,
+    icon: "font-awesome/fa-random",
+    paletteLabel: "swap",
+    label: function () {
+      return this.name || "swap";
+    },
+    inputLabels: "Qubits",
+    outputLabels: function(index) {  
+      if (index == 0) return "Top qubit";
+      else return "Bottom qubit";
+    }
+  });
+</script>
+
+<script type="text/html" data-template-name="swap">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+</script>
+
+<script type="text/html" data-help-name="swap">
+  <p>
+    <!-- Node documentation goes here. -->
+  </p>
+</script>

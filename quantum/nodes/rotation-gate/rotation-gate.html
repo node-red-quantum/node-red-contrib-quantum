@@ -1,10 +1,13 @@
 <script type="text/javascript">
     RED.nodes.registerType("rotation-gate", {
       category: "quantum",
-      color: "#FA4D56",
+      color: "#8A3FFC",
       defaults: {
         name: { value: "" },
-        axis: { value: "" },
+        axis: { 
+          value: "",
+          required: true,
+        },
         angle: { 
           value: 0,
           required: true,
@@ -16,7 +19,7 @@
       icon: "font-awesome/fa-undo",
       align: 'right',
       label: function () {
-        return this.name || "rotation gate";
+        return this.name || "rotation";
       },
       inputLabels: "Qubit",
       outputLabels: "Qubit",
@@ -30,6 +33,7 @@
         } else {
           document.getElementById("node-input-axis").value = "x";
           $(".x-rotation").addClass("selected");
+          this.axis = "x";
         }
 
         $(".x-rotation").on("click", function () {

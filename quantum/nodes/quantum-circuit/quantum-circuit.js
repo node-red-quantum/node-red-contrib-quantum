@@ -45,7 +45,7 @@ module.exports = function(RED) {
         };
       } else { // If the user does not want to use registers
         // Add arguments to quantum circuit code
-        script += util.format(snippets.QUANTUM_CIRCUIT, node.qbitsreg + ',' + node.cbitsreg);
+        script += util.format(snippets.QUANTUM_CIRCUIT, node.qbitsreg + ', ' + node.cbitsreg);
 
         // Creating an array of messages to be sent
         // Each message represents a different qubit

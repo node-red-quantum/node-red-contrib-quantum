@@ -45,7 +45,7 @@ const HADAMARD_GATE =
 `qc.h(%s)
 `;
 
-const MEASUREMENT =
+const MEASURE =
 `qc.measure(%s)
 `;
 
@@ -72,12 +72,16 @@ const ROTATION_GATE =
 `qc.r%s(%s, %s)
 `;
 
-const U_GATE =
+const UNITARY_GATE =
 `qc.u(%s, %s, %s, %s)
 `;
 
 const IDENTITY =
 `qc.id(%s)
+`;
+
+const SWAP =
+`qc.swap(%s, %s)
 `;
 
 module.exports = {
@@ -89,12 +93,13 @@ module.exports = {
   CNOT_GATE,
   BARRIER,
   HADAMARD_GATE,
-  MEASUREMENT,
+  MEASURE,
   SIMULATOR,
   NOT_GATE,
   RESET,
   PHASE_GATE,
   ROTATION_GATE,
-  U_GATE,
   IDENTITY,
+  SWAP,
+  UNITARY_GATE,
 };

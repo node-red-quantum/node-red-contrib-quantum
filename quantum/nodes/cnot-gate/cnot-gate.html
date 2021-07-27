@@ -6,13 +6,18 @@
       name: {value: ""},
       targetPosition: {value: "", required: true},
     },
-    inputs: 2,
+    inputs: 1,
     outputs: 2,
-    icon: "font-awesome/fa-ellipsis-v",
+    icon: "font-awesome/fa-close",
     paletteLabel: "cnot gate",
     label: function () {
-      return this.name || "cnot gate";
+      return this.name || "CNOT";
     },
+    inputLabels: "Qubits",
+    outputLabels: function(index) {  
+      if (index == 0) return "Top qubit";
+      else return "Bottom qubit";
+    }
   });
 </script>
 
