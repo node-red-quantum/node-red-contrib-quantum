@@ -5,6 +5,8 @@
     defaults: {
       name: { value: "" },
       api_token: { value: "", required: true },
+      preferred_provider: { value: "" },
+      preferred_backend: { value: "" },
     },
     inputs: 1,
     outputs: 1,
@@ -27,6 +29,28 @@
       >IBM Quantum API Token:
     </label>
     <input type="text" id="node-input-api_token" placeholder="API Token" />
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-preferred_provider" id="user-provider"
+      >Quantum Provider:
+    </label>
+    <input
+      type="text"
+      id="node-input-preferred_provider"
+      placeholder="Default"
+    />
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-preferred_backend" id="user-backend"
+      >Quantum Backend:
+    </label>
+    <input
+      type="text"
+      id="node-input-preferred_backend"
+      placeholder="Default"
+    />
   </div>
 </script>
 
