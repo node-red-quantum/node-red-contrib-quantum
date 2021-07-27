@@ -120,6 +120,9 @@ module.exports = function(RED) {
       });
       // wait for quantum circuit to be initialised
       await circuitReady();
+      // clear flow context variable
+      flowContext.set('quantumCircuitConfig', undefined);
+      flowContext.set('isCircuitReady', undefined);
       send(output);
     });
   }
