@@ -60,9 +60,7 @@ module.exports = function(RED) {
         // If the user specified a register structure in the 'Quantum Circuit' node that
         // does not match the visual structure built using the register nodes, throw an error
         if (qreg > msg.payload.structure.qreg || creg > msg.payload.structure.creg) {
-          throw new Error(
-              'Please enter the correct number of quantum & classical registers in the "Quantum Circuit" node.',
-          );
+          node.error(errors.INVALID_REGISTER_NUMBER);
 
         // If all set & the quantum circuit has not yet been initialised by another register:
         // Initialise the quantum circuit

@@ -50,7 +50,22 @@ function validateRegisterInput(node, msg) {
   }
 };
 
+function validateQubitsFromSameCircuit(node, qubits) {
+  let circuitId = qubits[0].payload.structure.quantumCircuitId;
+  let valid = qubits.every((obj) => obj.payload.structure.quantumCircuitId === circuitId);
+  if (!valid) node.error('Only qubits from the same quantum circuit should be connected to this node.');
+};
+
+const INVALID_REGISTER_NUMBER =
+'Please input the correct number of quantum & classical registers in the "Quantum Circuit" node properties.';
+
+const QUBITS_FROM_DIFFERENT_CIRCUITS =
+'Only qubits from the same quantum circuit should be connected to this node.';
+
 module.exports = {
   validateQubitInput,
   validateRegisterInput,
+  validateQubitsFromSameCircuit,
+  INVALID_REGISTER_NUMBER,
+  QUBITS_FROM_DIFFERENT_CIRCUITS,
 };

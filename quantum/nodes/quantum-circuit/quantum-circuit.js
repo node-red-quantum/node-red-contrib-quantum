@@ -7,6 +7,7 @@ const shell = require('../../python').PythonShell;
 module.exports = function(RED) {
   let quantumCircuitNode = {};
   let classicalRegisters = [];
+
   function QuantumCircuitNode(config) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
@@ -36,6 +37,7 @@ module.exports = function(RED) {
             topic: 'Quantum Circuit',
             payload: {
               structure: {
+                quantumCircuitId: node.id,
                 creg: node.cbitsreg,
                 qreg: node.qbitsreg,
               },
@@ -54,6 +56,7 @@ module.exports = function(RED) {
             topic: 'Quantum Circuit',
             payload: {
               structure: {
+                quantumCircuitId: node.id,
                 qubits: node.qbitsreg,
                 cbits: node.cbitsreg,
               },

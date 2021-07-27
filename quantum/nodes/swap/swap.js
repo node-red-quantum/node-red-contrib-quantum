@@ -23,6 +23,9 @@ module.exports = function(RED) {
 
       // If all qubits have arrived, we first reorder the node.qubits array for output consistency
       if (node.qubits.length == 2) {
+        // Checking that all qubits received as input are from the same quantum circuit
+        errors.validateQubitsFromSameCircuit(node, node.qubits);
+
         node.qubits.sort(function compare(a, b) {
           if (typeof a.payload.register !== 'undefined') {
             const regA = parseInt(a.payload.registerVar.slice(2));
