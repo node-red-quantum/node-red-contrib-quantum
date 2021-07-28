@@ -6,7 +6,7 @@ module.exports = function(RED) {
   function ScriptNode(config) {
     RED.nodes.createNode(this, config);
 
-    this.on('input', async function(msg, send, done) {
+    this.on('input', function(msg, send, done) {
       msg.payload = shell.script.trim();
       send(msg);
       done();
