@@ -20,3 +20,34 @@ Quantum computing functionality for Node-RED.
 - For the node to appear in Node-RED, it needs to be added to [*package.json*](package.json). Navigate to the file and locate the "node-red" key, and under "nodes" add the name of your new node and the path of its JavaScript file from root (e.g.`"node-template": "quantum/nodes/node-template/node-template.js"`).  
 - Before committing any JavaScript code, run the linting command:  
   `npm run lint`  
+
+### Writing Unit Tests
+- Unit tests are written using the [Mocha](https://mochajs.org/) testing framework, whilst utilising [Chai.js](https://www.chaijs.com/) for assertions.
+- Test suites for nodes should be in a single file with the format *\<node-name\>.test.js*. For example, the Quantum Circuit node would have a test suite named *quantum-circuit.test.js*.
+- All test suites should be placed in the [*test*](test/) directory.
+- Unit tests should be grouped using the `describe()` function provided by Mocha:
+  - When testing a class, unit test groups should be nested, with the enclosed groups containing tests for each individual method/property.
+  - When testing functions not within a class, unit tests should be enclosed within a single test group.
+- Test groups and their unit tests should be labelled as follows:
+  - Top-level groups should be labelled according to the class/function being tested.
+  - Instance methods/properties within a class should be prefixed with a hash symbol (**#**).
+  - Static methods/properties within a class should be prefixed with a period (**.**).
+  - Unit test labels should start with a lowercase letter and succinctly describe what is being tested.
+```node
+// Testing a class
+describe('MyClass', () => {
+  describe('#instanceMethod', () => {
+    it('test one', () => {...});
+  });
+
+  describe('.staticMethod', () => {
+    it('test two', () => {...});
+  });
+});
+
+// Testing a function
+describe('MyFunction', () => {
+  it('test three', () => {...});
+  it('test four', () => {...});
+});
+```
