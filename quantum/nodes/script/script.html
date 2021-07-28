@@ -1,0 +1,29 @@
+<script type="text/javascript">
+  RED.nodes.registerType("script", {
+    category: "quantum",
+    color: "#A8A8A8",
+    defaults: {
+      name: { value: "" },
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "function.svg",
+    paletteLabel: "script",
+    label: function () {
+      return this.name || "script";
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="script">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+</script>
+
+<script type="text/html" data-help-name="script">
+  <p>
+    Return the Python script at the time of execution.
+  </p>
+</script>
