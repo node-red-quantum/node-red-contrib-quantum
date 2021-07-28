@@ -10,8 +10,12 @@ module.exports = function(RED) {
     const node = this;
 
     node.on('input', async (msg, send, done) => {
+      let shellScript = '';
+      // Add error control logic
+      shellScript += snippets.IMPORTS;
       console.log(`circuit-output: ${msg}`);
-      let shellScript = snippets.CIRCUIT_DRAW;
+      const params = '/Users/happysky/.node-red/static/circuit_img.png';
+      shellScript += util.format(snippets.CIRCUIT_DRAW, params);
       await shell.execute(shellScript, (err, data) => {
         if (err) node.error(err);
         // print the diagram to debug console

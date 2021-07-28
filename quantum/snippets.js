@@ -15,6 +15,7 @@
 const IMPORTS =
 `import numpy as np
  from qiskit import *
+ from qiskit.tools.visualization import circuit_drawer
  `;
 
 const QUANTUM_CIRCUIT =
@@ -61,7 +62,7 @@ const NOT_GATE =
 `;
 
 const CIRCUIT_DRAW =
-`qc.draw(%s)
+`circuit_drawer(qc,filename = %s)
 `;
 
 module.exports = {

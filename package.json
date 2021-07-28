@@ -56,6 +56,7 @@
       "barrier": "quantum/nodes/barrier/barrier.js",
       "identity": "quantum/nodes/identity/identity.js",
       "simulator": "quantum/nodes/simulator/simulator.js",
+      "circuit-output": "quantum/nodes/circuit-output/circuit-output.js",
       "cnot-gate": "quantum/nodes/cnot-gate/cnot-gate.js",
       "hadamard-gate": "quantum/nodes/hadamard-gate/hadamard-gate.js"
     }
