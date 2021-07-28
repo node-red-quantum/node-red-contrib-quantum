@@ -65,7 +65,6 @@
       "cnot-gate": "quantum/nodes/cnot-gate/cnot-gate.js",
       "toffoli-gate": "quantum/nodes/toffoli-gate/toffoli-gate.js",
       "measure": "quantum/nodes/measure/measure.js",
-      "execute": "quantum/nodes/execute/execute.js",
       "script": "quantum/nodes/script/script.js",
       "simulator": "quantum/nodes/simulator/simulator.js"
     }
