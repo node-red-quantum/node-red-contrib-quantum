@@ -79,7 +79,6 @@ module.exports = function(RED) {
         const params = node.shots;
         script += util.format(snippets.SIMULATOR, params);
         await shell.execute(script, (err, data) => {
-          node.error(shell.script);
           if (err) {
             node.error(err);
           } else {
