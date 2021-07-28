@@ -18,8 +18,13 @@ module.exports = function(RED) {
       let qubitsArrived = true;
 
       // Validate the node input msg: check for qubit object.
-      // Throw corresponding errors if required.
-      errors.validateQubitInput(node, msg);
+      // Return corresponding errors or null if no errors.
+      // Stop the node execution upon an error
+      let error = errors.validateQubitInput(msg);
+      if (error) {
+        done(error);
+        return;
+      }
 
       // If the quantum circuit does not have registers
       if (typeof(msg.payload.register) === 'undefined') {
@@ -44,7 +49,7 @@ module.exports = function(RED) {
           Object.keys(node.qreg).includes(msg.payload.registerVar) &&
           node.qreg[msg.payload.registerVar].count == node.qreg[msg.payload.registerVar].total
         )) {
-          node.error(errors.QUBITS_FROM_DIFFERENT_CIRCUITS);
+          done(new Error(errors.QUBITS_FROM_DIFFERENT_CIRCUITS));
         }
 
         // Storing information about which qubits were received
@@ -71,7 +76,11 @@ module.exports = function(RED) {
       // generate the simulator script and run it
       if (qubitsArrived) {
         // Checking that all qubits received as input are from the same quantum circuit
-        errors.validateQubitsFromSameCircuit(node, node.qubits);
+        let error = errors.validateQubitsFromSameCircuit(node.qubits);
+        if (error) {
+          done(error);
+          return;
+        }
 
         // Emptying the runtime variables upon output
         node.qubits = [];
@@ -80,19 +89,13 @@ module.exports = function(RED) {
         const params = node.shots;
         script += util.format(snippets.SIMULATOR, params);
         await shell.execute(script, (err, data) => {
-          // Temporary
-          node.error(shell.script);
-          //
-          if (err) {
-            node.error(err);
-          } else {
+          if (err) done(err);
+          else {
             msg.payload = JSON.parse(data.replace(/'/g, '"'));
             send(msg);
+            done();
           }
         });
-        if (done) {
-          done();
-        }
       }
     });
   }

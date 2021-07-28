@@ -16,8 +16,13 @@ module.exports = function(RED) {
       let script = '';
 
       // Validate the node input msg: check for qubit object.
-      // Throw corresponding errors if required.
-      errors.validateQubitInput(node, msg);
+      // Return corresponding errors or null if no errors.
+      // Stop the node execution upon an error
+      let error = errors.validateQubitInput(msg);
+      if (error) {
+        done(error);
+        return;
+      }
 
       // Store all the qubit objects received as input into the node.qubits array
       node.qubits.push(msg);
@@ -25,7 +30,11 @@ module.exports = function(RED) {
       // If all qubits have arrived, we first reorder the node.qubits array for output consistency
       if (node.qubits.length == 2) {
         // Checking that all qubits received as input are from the same quantum circuit
-        errors.validateQubitsFromSameCircuit(node, node.qubits);
+        let error = errors.validateQubitsFromSameCircuit(node.qubits);
+        if (error) {
+          done(error);
+          return;
+        }
 
         node.qubits.sort(function compare(a, b) {
           if (typeof a.payload.register !== 'undefined') {
@@ -92,12 +101,11 @@ module.exports = function(RED) {
         // Run the script in the python shell, and if no error occurs
         // then send one qubit object per node output
         await shell.execute(script, (err) => {
-          if (err) node.error(err);
+          if (err) done(err);
           else {
             send(node.qubits);
-
-            // Emptying the runtime variable upon output
-            node.qubits = [];
+            node.qubits = []; // Emptying the runtime variable upon output
+            done();
           }
         });
       }

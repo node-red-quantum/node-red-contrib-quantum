@@ -19,8 +19,13 @@ module.exports = function(RED) {
       let script = '';
 
       // Validate the node input msg: check for register object.
-      // Throw corresponding errors if required.
-      errors.validateRegisterInput(node, msg);
+      // Return corresponding errors or null if no errors.
+      // Stop the node execution upon an error
+      let error = errors.validateRegisterInput(msg);
+      if (error) {
+        done(error);
+        return;
+      }
 
       // Setting node.name to "r0","r1"... if the user did not input a name
       if (node.name == '') {
@@ -43,28 +48,19 @@ module.exports = function(RED) {
 
       // If the quantum circuit has not yet been initialised by another register
       if (typeof(flowContext.get('quantumCircuit')) !== undefined) {
-        // Counting the number of registers that were set in the 'quantumCircuit' array
         let structure = flowContext.get('quantumCircuit');
 
-        let count = 0;
-        let qreg = 0;
-        let creg = 0;
-        structure.map((x) => {
-          if (typeof(x) !== 'undefined') {
-            count += 1;
-            if (x.registerType === 'quantum') qreg += 1;
-            else creg += 1;
-          }
-        });
+        // Validating the registers' structure according to the user input in 'Quantum Circuit'
+        // And counting how many registers were initialised so far.
+        let [error, count] = errors.validateRegisterStrucutre(structure, msg.payload.structure);
+        if (error) {
+          done(error);
+          return;
+        }
 
-        // If the user specified a register structure in the 'Quantum Circuit' node that
-        // does not match the visual structure built using the register nodes, throw an error
-        if (qreg > msg.payload.structure.qreg || creg > msg.payload.structure.creg) {
-          node.error(errors.INVALID_REGISTER_NUMBER);
-
-        // If all set & the quantum circuit has not yet been initialised by another register:
+        // If all register initialised & the circuit has not been initialised by another register:
         // Initialise the quantum circuit
-        } else if (count == structure.length && typeof(flowContext.get('quantumCircuit')) !== undefined) {
+        if (count == structure.length && typeof(flowContext.get('quantumCircuit')) !== undefined) {
           // Delete the 'quantumCircuit' flow context variable, not used anymore
           flowContext.set('quantumCircuit', undefined);
 
@@ -97,8 +93,11 @@ module.exports = function(RED) {
       // Run the script in the python shell, and if no error occurs
       // then send one qubit object per node output
       await shell.execute(script, (err) => {
-        if (err) node.error(err);
-        else send(output);
+        if (err) done(err);
+        else {
+          send(output);
+          done();
+        }
       });
     });
   }

@@ -18,8 +18,13 @@ module.exports = function(RED) {
       let script = '';
 
       // Validate the node input msg: check for qubit object.
-      // Throw corresponding errors if required.
-      errors.validateQubitInput(node, msg);
+      // Return corresponding errors or null if no errors.
+      // Stop the node execution upon an error
+      let error = errors.validateQubitInput(msg);
+      if (error) {
+        done(error);
+        return;
+      }
 
       const params = (!node.selectedRegVarName) ? `${msg.payload.qubit}, ${node.selectedBit}`:
         `${msg.payload.registerVar}[${msg.payload.qubit}], ` +
@@ -28,18 +33,19 @@ module.exports = function(RED) {
       script += util.format(snippets.MEASURE, params);
 
       await shell.execute(script, (err) => {
-        if (err) node.error(err);
+        if (err) done(err);
         else {
           send(msg);
 
           const status = (!node.selectedRegVarName) ? `Result: cbit ${node.selectedBit}`:
           `Result: register ${node.selectedRegVarName} / cbit ${node.selectedBit}`;
-
           node.status({
             fill: 'grey',
             shape: 'dot',
             text: status,
           });
+
+          done();
         };
       });
     });

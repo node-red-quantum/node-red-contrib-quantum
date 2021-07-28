@@ -10,51 +10,24 @@
  * the values at runtime.
  */
 
-function validateQubitInput(node, msg) {
-  let keys = Object.keys(msg.payload);
+const NOT_QUANTUM_NODE =
+'This node must be connected to nodes from the "Node-RED Quantum" library only.';
 
-  if (msg.topic !== 'Quantum Circuit') {
-    node.error(
-        'This node must be connected to nodes from the "Node-RED Quantum" library only.',
-    );
-  } else if (keys.includes('register') && typeof msg.payload.register === 'number') {
-    node.error(
-        'If "Registers & Bits" was selected in the "Quantum Circuit" node properties, ' +
-        'please connect "Quantum Register" & "Classical Register" nodes to the "Quantum Circuit" node outputs.',
-    );
-  } else if (!keys.includes('register') || !keys.includes('qubit') || !keys.includes('structure')) {
-    node.error(
-        'This node must receive qubits objects as inputs.\n' +
-        'To generate qubits objects, please make use of the "Quantum Circuit" node.',
-    );
-  }
-};
+const USE_REGISTER_NODES =
+'If "Registers & Bits" was selected in the "Quantum Circuit" node properties, ' +
+'please connect "Quantum Register" & "Classical Register" nodes to the "Quantum Circuit" node outputs.';
 
-function validateRegisterInput(node, msg) {
-  let keys = Object.keys(msg.payload);
+const SELECT_REGISTER_AND_BITS =
+'To use "Quantum Register" & "Classical Register" nodes, ' +
+'please select "Registers & Bits" in the "Quantum Circuit" node properties.';
 
-  if (msg.topic !== 'Quantum Circuit') {
-    node.error(
-        'This node must be connected to nodes from the "Node-RED Quantum" library only.',
-    );
-  } else if (keys.includes('register') && typeof msg.payload.register === 'undefined') {
-    node.error(
-        'To use "Quantum Register" & "Classical Register" nodes, ' +
-        'please select "Registers & Bits" in the "Quantum Circuit" node properties.',
-    );
-  } else if ((keys.includes('register') && typeof msg.payload.register !== 'number') || keys.includes('qubit')) {
-    node.error(
-        'This node must receive register objects as inputs.\n' +
-        'Please connect it to the outputs of the "Quantum Circuit" node.',
-    );
-  }
-};
+const NOT_QUBIT_OBJECT =
+'This node must receive qubits objects as inputs.\n' +
+'To generate qubits objects, please make use of the "Quantum Circuit" node.';
 
-function validateQubitsFromSameCircuit(node, qubits) {
-  let circuitId = qubits[0].payload.structure.quantumCircuitId;
-  let valid = qubits.every((obj) => obj.payload.structure.quantumCircuitId === circuitId);
-  if (!valid) node.error('Only qubits from the same quantum circuit should be connected to this node.');
-};
+const NOT_REGISTER_OBJECT =
+'This node must receive register objects as inputs.\n' +
+'Please connect it to the outputs of the "Quantum Circuit" node.';
 
 const INVALID_REGISTER_NUMBER =
 'Please input the correct number of quantum & classical registers in the "Quantum Circuit" node properties.';
@@ -62,10 +35,66 @@ const INVALID_REGISTER_NUMBER =
 const QUBITS_FROM_DIFFERENT_CIRCUITS =
 'Only qubits from the same quantum circuit should be connected to this node.';
 
+function validateQubitInput(msg) {
+  let keys = Object.keys(msg.payload);
+
+  if (msg.topic !== 'Quantum Circuit') {
+    return new Error(NOT_QUANTUM_NODE);
+  } else if (keys.includes('register') && typeof msg.payload.register === 'number') {
+    return new Error(USE_REGISTER_NODES);
+  } else if (!keys.includes('register') || !keys.includes('qubit') || !keys.includes('structure')) {
+    return new Error(NOT_QUBIT_OBJECT);
+  } else return null;
+};
+
+function validateRegisterInput(msg) {
+  let keys = Object.keys(msg.payload);
+
+  if (msg.topic !== 'Quantum Circuit') {
+    return new Error(NOT_QUANTUM_NODE);
+  } else if (keys.includes('register') && typeof msg.payload.register === 'undefined') {
+    return new Error(SELECT_REGISTER_AND_BITS);
+  } else if ((keys.includes('register') && typeof msg.payload.register !== 'number') || keys.includes('qubit')) {
+    return new Error(NOT_REGISTER_OBJECT);
+  } else return null;
+};
+
+function validateQubitsFromSameCircuit(qubits) {
+  let circuitId = qubits[0].payload.structure.quantumCircuitId;
+  let valid = qubits.every((obj) => obj.payload.structure.quantumCircuitId === circuitId);
+  if (!valid) return new Error(QUBITS_FROM_DIFFERENT_CIRCUITS);
+  else return null;
+};
+
+function validateRegisterStrucutre(structureInitialised, strucutreExpected) {
+  let count = 0;
+  let qreg = 0;
+  let creg = 0;
+  structureInitialised.map((x) => {
+    if (typeof x !== 'undefined') {
+      count += 1;
+      if (x.registerType === 'quantum') qreg += 1;
+      else creg += 1;
+    }
+  });
+
+  if (qreg > strucutreExpected.qreg || creg > strucutreExpected.creg) {
+    return new Error(INVALID_REGISTER_NUMBER), count;
+  } else {
+    return [null, count];
+  }
+};
+
 module.exports = {
+  NOT_QUANTUM_NODE,
+  USE_REGISTER_NODES,
+  SELECT_REGISTER_AND_BITS,
+  NOT_QUBIT_OBJECT,
+  NOT_REGISTER_OBJECT,
+  INVALID_REGISTER_NUMBER,
+  QUBITS_FROM_DIFFERENT_CIRCUITS,
   validateQubitInput,
   validateRegisterInput,
   validateQubitsFromSameCircuit,
-  INVALID_REGISTER_NUMBER,
-  QUBITS_FROM_DIFFERENT_CIRCUITS,
+  validateRegisterStrucutre,
 };

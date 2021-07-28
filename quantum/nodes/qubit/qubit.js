@@ -11,8 +11,13 @@ module.exports = function(RED) {
 
     this.on('input', function(msg, send, done) {
       // Validate the node input msg: check for qubit object.
-      // Throw corresponding errors if required.
-      errors.validateQubitInput(node, msg);
+      // Return corresponding errors or null if no errors.
+      // Stop the node execution upon an error
+      let error = errors.validateQubitInput(msg);
+      if (error) {
+        done(error);
+        return;
+      }
 
       // Using node status to inform the user of which qubit is being transmitted
       if (typeof(msg.payload.register) === 'undefined') {
@@ -31,6 +36,7 @@ module.exports = function(RED) {
 
       // Simply return the msg received without any operations
       send(msg);
+      done();
     });
   }
 

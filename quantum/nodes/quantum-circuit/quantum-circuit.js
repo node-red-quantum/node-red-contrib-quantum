@@ -70,8 +70,11 @@ module.exports = function(RED) {
       // Sending one register object per node output
       await shell.restart();
       await shell.execute(script, (err) => {
-        if (err) node.error(err);
-        else send(output);
+        if (err) done(err);
+        else {
+          send(output);
+          done();
+        }
       });
     });
   }

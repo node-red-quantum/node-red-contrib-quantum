@@ -14,8 +14,13 @@ module.exports = function(RED) {
       let script = '';
 
       // Validate the node input msg: check for qubit object.
-      // Throw corresponding errors if required.
-      errors.validateQubitInput(node, msg);
+      // Return corresponding errors or null if no errors.
+      // Stop the node execution upon an error
+      let error = errors.validateQubitInput(msg);
+      if (error) {
+        done(error);
+        return;
+      }
 
       let qrConfig = msg.payload;
       script += util.format(snippets.HADAMARD_GATE,
@@ -23,8 +28,11 @@ module.exports = function(RED) {
 
       // execute the script and pass the quantum register config to the output if no errors occurred
       await shell.execute(script, (err) => {
-        if (err) node.error(err);
-        else send(msg);
+        if (err) done(err);
+        else {
+          send(msg);
+          done();
+        }
       });
     });
   }
