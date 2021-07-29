@@ -92,36 +92,21 @@ class PythonShell {
       throw new Error('Python process has not been started - call start() before executing commands.');
     }
 
-    let shouldReturn = false;
-    let data;
+    let promise;
     await mutex.runExclusive(async () => {
-
       command = command ? dedent(command) : '';
       this.script += '\n' + command + '\n';
       command = '\nprint("#CommandStart#")\n' + command + '\nprint("#CommandEnd#")\n';
 
-      this.process.stdin.write(command);
+      promise = createPromise(this.process)
+          .then((data) => callback !== undefined ? callback(null, data.trim()) : data.trim())
+          .catch((err) => callback !== undefined ? callback(err.trim(), null) : err.trim());
 
-      try {
-        data = await createPromise(this.process);
-        if (callback !== undefined) {
-          callback(null, data.trim());
-        } else {
-          shouldReturn = true;
-        }
-      } catch (err) {
-        if (callback !== undefined) {
-          callback(err.trim(), null);
-        } else {
-          // update return value to error message
-          data = err;
-          shouldReturn = true;
-        }
-      }
-      
+      this.process.stdin.write(command);
+      promise = await promise;
     });
 
-    if (shouldReturn) return data.trim();
+    return promise;
   }
 
   /**
