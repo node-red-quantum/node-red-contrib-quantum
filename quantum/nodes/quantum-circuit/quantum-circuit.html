@@ -33,7 +33,7 @@
         value: "",
       },
     },
-    inputs: 1,
+    inputs: 0,
     icon: "font-awesome/fa-play-circle",
     align: "left",
     paletteLabel: "quantum circuit",
@@ -46,6 +46,28 @@
       } else {
         return "Register r" + index;
       }
+    },
+    button: {
+      enabled: function () {
+        return !this.changed;
+      },
+      onclick: function () {
+        if (this.changed) {
+          RED.notify(RED._("notification.warning", { message: RED._("notification.warnings.undeployedChanges") }), 
+          "warning");
+        } else {
+          $.ajax({
+            url: `quantum-circuit/${this.id}`,
+            type: "POST",
+            success: function (resp) {
+              RED.notify("Deploying quantum circuit", "success");
+            },
+            error: function (resp) {
+              RED.notify("Failed to deploy quantum circuit", "error");
+            },
+          });
+        }
+      },
     },
 
     oneditprepare: function () {

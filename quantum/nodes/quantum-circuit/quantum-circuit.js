@@ -149,5 +149,16 @@ module.exports = function(RED) {
     });
   });
 
+  RED.httpAdmin.post('/quantum-circuit/:id', RED.auth.needsPermission('circuit.write'), function(req, res) {
+    let node = RED.nodes.getNode(req.params.id);
+
+    if (node == null) {
+      res.sendStatus(404);
+    } else {
+      node.receive();
+      res.sendStatus(200);
+    }
+  });
+
   RED.nodes.registerType('quantum-circuit', QuantumCircuitNode);
 };
