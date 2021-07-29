@@ -1,5 +1,7 @@
 'use strict';
 
+const errors = require('../../errors');
+
 module.exports = function(RED) {
   function QubitNode(config) {
     // Creating node with properties
@@ -8,23 +10,13 @@ module.exports = function(RED) {
     const node = this;
 
     this.on('input', function(msg, send, done) {
-      // Throw a connection error if:
-      // - The user connects it to a node that is not from the quantum library
-      // - The user does not input a qubit object in the node
-      // - The user chooses to use registers but does not initiate them
-      if (msg.topic !== 'Quantum Circuit') {
-        throw new Error(
-            'Qubit nodes must be connected to nodes from the quantum library only.',
-        );
-      } else if (typeof(msg.payload.register) === 'undefined' && typeof(msg.payload.qubit) === 'undefined') {
-        throw new Error(
-            'Qubit nodes must receive qubits objects as inputs.\n' +
-            'Please use "Quantum Circuit" & "Quantum Register" nodes to generate qubits objects.',
-        );
-      } else if (typeof(msg.payload.qubit) === 'undefined') {
-        throw new Error(
-            'If "Registers & Bits" was selected in the "Quantum Circuit" node, please make use of register nodes.',
-        );
+      // Validate the node input msg: check for qubit object.
+      // Return corresponding errors or null if no errors.
+      // Stop the node execution upon an error
+      let error = errors.validateQubitInput(msg);
+      if (error) {
+        done(error);
+        return;
       }
 
       // Using node status to inform the user of which qubit is being transmitted
@@ -44,6 +36,7 @@ module.exports = function(RED) {
 
       // Simply return the msg received without any operations
       send(msg);
+      done();
     });
   }
 

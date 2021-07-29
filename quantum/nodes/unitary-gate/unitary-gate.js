@@ -3,6 +3,7 @@
 const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
+const errors = require('../../errors');
 
 module.exports = function(RED) {
   function UnitaryGateNode(config) {
@@ -15,28 +16,14 @@ module.exports = function(RED) {
 
     this.on('input', async function(msg, send, done) {
       let script = '';
-      // Thorw error if:
-      // - The user connects it to a node that is not from the quantum library
-      // - The user does not input a qubit object in the node
-      // - the user chooses to use registers but does not initiate them
-      if (msg.topic !== 'Quantum Circuit') {
-        throw new Error(
-            'The Unitary gate node must be connected to nodes from the quantum library only.',
-        );
-      } else if (
-        typeof msg.payload.register === 'undefined' &&
-        typeof msg.payload.qubit === 'undefined'
-      ) {
-        throw new Error(
-            'The Unitary gate node must be receive qubits objects as inputs.\n' +
-            'Please use "Quantum Circut" and "Quantum Register" node to generate qubits objects.',
-        );
-      } else if (
-        typeof msg.payload.qubit === 'undefined'
-      ) {
-        throw new Error(
-            'If "Registers & Bits" was selected in the "Quantum Circuit" node, please make use of register nodes.',
-        );
+
+      // Validate the node input msg: check for qubit object.
+      // Return corresponding errors or null if no errors.
+      // Stop the node execution upon an error
+      let error = errors.validateQubitInput(msg);
+      if (error) {
+        done(error);
+        return;
       }
 
       if (typeof msg.payload.register === 'undefined') {
@@ -58,10 +45,9 @@ module.exports = function(RED) {
       // Run the script in the python shell, and if no error occurs
       // then send msg object to the next node
       await shell.execute(script, (err) => {
-        if (err) node.error(err);
+        if (err) done(err);
         else {
           send(msg);
-
           node.status({
             fill: 'grey',
             shape: 'dot',
@@ -71,6 +57,7 @@ module.exports = function(RED) {
               node.lambda.toString() + '\u03C0'
             ),
           });
+          done();
         };
       });
     });

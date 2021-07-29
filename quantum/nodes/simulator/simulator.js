@@ -5,12 +5,6 @@ const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
 
-const validateInput = (node, msg) => {
-  if (msg.topic !== 'Quantum Circuit') {
-    node.error(errors.NOT_QUANTUM_CIRCUIT, msg);
-  }
-};
-
 module.exports = function(RED) {
   function SimulatorNode(config) {
     RED.nodes.createNode(this, config);
@@ -21,25 +15,45 @@ module.exports = function(RED) {
 
     this.on('input', async function(msg, send, done) {
       let script = '';
-      validateInput(node, msg);
       let qubitsArrived = true;
+
+      // Validate the node input msg: check for qubit object.
+      // Return corresponding errors or null if no errors.
+      // Stop the node execution upon an error
+      let error = errors.validateQubitInput(msg);
+      if (error) {
+        done(error);
+        return;
+      }
 
       // If the quantum circuit does not have registers
       if (typeof(msg.payload.register) === 'undefined') {
         node.qreg = undefined;
         node.qubits.push(msg);
 
-        // If the simulator node has more inputs than qubits in the circuit
-        if (node.qubits.length > msg.payload.structure.qubits) {
-          throw new Error(
-              'Only qubits from a single quantum circuit should be connected to the simulator node.',
-          );
         // If not all qubits have arrived
-        } else if (node.qubits.length < msg.payload.structure.qubits) qubitsArrived = false;
-      } else {// If the quantum circuit has registers
+        if (node.qubits.length < msg.payload.structure.qubits) {
+          qubitsArrived = false;
+        }
+      } else {
+        // If the quantum circuit has registers
         // Keep track of qubits that have arrived and the remaining ones
         if (node.qubits.length == 0) node.qreg = {};
-        else if (Object.keys(node.qreg).includes(msg.payload.registerVar)) {
+
+        // Throw an error if too many qubits are received by the simulator node
+        // because the user connected qubits from different quantum circuits
+        if ((
+          !Object.keys(node.qreg).includes(msg.payload.registerVar) &&
+          Object.keys(node.qreg).length == msg.payload.structure.qreg
+        ) || (
+          Object.keys(node.qreg).includes(msg.payload.registerVar) &&
+          node.qreg[msg.payload.registerVar].count == node.qreg[msg.payload.registerVar].total
+        )) {
+          done(new Error(errors.QUBITS_FROM_DIFFERENT_CIRCUITS));
+        }
+
+        // Storing information about which qubits were received
+        if (Object.keys(node.qreg).includes(msg.payload.registerVar)) {
           node.qreg[msg.payload.registerVar].count += 1;
         } else {
           node.qreg[msg.payload.registerVar] = {
@@ -47,31 +61,27 @@ module.exports = function(RED) {
             count: 1,
           };
         }
+
         node.qubits.push(msg);
 
-        // If the simulator node has inputs from more q-registers than there are in the circuit
-        if (Object.keys(node.qreg).length > msg.payload.structure.qreg) {
-          throw new Error(
-              // eslint-disable-next-line max-len
-              'Only qubits of quantum registers from the same quantum circuit should be connected to the simulator node.',
-          );
-        } else {
-          Object.keys(node.qreg).map((key) => {
-            // If the simulator node has inputs from more qubits than there are in a register
-            if (node.qreg[key].count > node.qreg[key].total) {
-              throw new Error(
-                  'Only qubits from a single quantum circuit should be connected to the simulator node.',
-              );
-              // If not all qubits have arrived
-            } else if (node.qreg[key].count < node.qreg[key].total) {
-              qubitsArrived = false;
-            }
-          });
-        }
+        // Checking whether all qubits have arrived or not
+        Object.keys(node.qreg).map((key) => {
+          if (node.qreg[key].count < node.qreg[key].total) {
+            qubitsArrived = false;
+          }
+        });
       }
 
-      // If all qubits have arrives, generate the simulator script and run it
+      // If all qubits have arrived,
+      // generate the simulator script and run it
       if (qubitsArrived) {
+        // Checking that all qubits received as input are from the same quantum circuit
+        let error = errors.validateQubitsFromSameCircuit(node.qubits);
+        if (error) {
+          done(error);
+          return;
+        }
+
         // Emptying the runtime variables upon output
         node.qubits = [];
         node.qreg = '';
@@ -79,17 +89,13 @@ module.exports = function(RED) {
         const params = node.shots;
         script += util.format(snippets.SIMULATOR, params);
         await shell.execute(script, (err, data) => {
-          node.error(shell.script);
-          if (err) {
-            node.error(err);
-          } else {
+          if (err) done(err);
+          else {
             msg.payload = JSON.parse(data.replace(/'/g, '"'));
             send(msg);
+            done();
           }
         });
-        if (done) {
-          done();
-        }
       }
     });
   }
