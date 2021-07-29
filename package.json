@@ -28,6 +28,7 @@
     "setup": "(npm run link && npm run venv) && echo Setup complete - run 'npm start' to open Node-RED",
     "link": "bash bin/link.sh || bin/link.sh",
     "venv": "bash bin/pyvenv.sh || bin/pyvenv.sh",
+    "test": "mocha",
     "clean": "rm -r venv/ & npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
     "lint": "eslint --fix --ignore-path .gitignore ."
   },
@@ -37,8 +38,10 @@
     "python-shell": "^3.0.0"
   },
   "devDependencies": {
+    "chai": "^4.3.4",
     "eslint": "^7.29.0",
     "eslint-config-google": "^0.14.0",
+    "mocha": "^9.0.3",
     "node-red": "^1.3.5"
   },
   "engines": {
@@ -49,15 +52,21 @@
       "quantum-circuit": "quantum/nodes/quantum-circuit/quantum-circuit.js",
       "quantum-register": "quantum/nodes/quantum-register/quantum-register.js",
       "classical-register": "quantum/nodes/classical-register/classical-register.js",
-      "toffoli-gate": "quantum/nodes/toffoli-gate/toffoli-gate.js",
-      "execute": "quantum/nodes/execute/execute.js",
-      "not-gate": "quantum/nodes/not-gate/not-gate.js",
-      "measurement": "quantum/nodes/measurement/measurement.js",
+      "qubit": "quantum/nodes/qubit/qubit.js",
+      "reset": "quantum/nodes/reset/reset.js",
       "barrier": "quantum/nodes/barrier/barrier.js",
-      "identity": "quantum/nodes/identity/identity.js",
-      "simulator": "quantum/nodes/simulator/simulator.js",
-      "cnot-gate": "quantum/nodes/cnot-gate/cnot-gate.js",
+      "swap": "quantum/nodes/swap/swap.js",
+      "identity-gate": "quantum/nodes/identity-gate/identity-gate.js",
+      "not-gate": "quantum/nodes/not-gate/not-gate.js",
+      "rotation-gate": "quantum/nodes/rotation-gate/rotation-gate.js",
+      "phase-gate": "quantum/nodes/phase-gate/phase-gate.js",
+      "unitary-gate": "quantum/nodes/unitary-gate/unitary-gate.js",
       "hadamard-gate": "quantum/nodes/hadamard-gate/hadamard-gate.js",
+      "cnot-gate": "quantum/nodes/cnot-gate/cnot-gate.js",
+      "toffoli-gate": "quantum/nodes/toffoli-gate/toffoli-gate.js",
+      "measure": "quantum/nodes/measure/measure.js",
+      "execute": "quantum/nodes/execute/execute.js",
+      "simulator": "quantum/nodes/simulator/simulator.js",
       "ibm-quantum-system": "quantum/nodes/ibm-quantum-system/ibm-quantum-system.js"
     }
   }

@@ -2,6 +2,7 @@
 const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
+const errors = require('../../errors');
 
 module.exports = function(RED) {
   function CNotGateNode(config) {
@@ -12,26 +13,15 @@ module.exports = function(RED) {
     const node = this;
 
     this.on('input', async function(msg, send, done) {
-      // Throw a connection error if:
-      // - The user connects it to a node that is not from the quantum library.
-      // - The user does not input a qubit object in the node.
-      // - The user chooses to use registers but does not initiate them.
-      if (msg.topic !== 'Quantum Circuit') {
-        throw new Error(
-            'The CNot Gate must be connected to nodes from the quantum library only.',
-        );
-      } else if (
-        typeof msg.payload.register === 'undefined' &&
-        typeof msg.payload.qubit === 'undefined'
-      ) {
-        throw new Error(
-            'The CNot Gate nodes must receive qubits objects as inputs.\n' +
-            'Please use "Quantum Circuit" & "Quantum Register" nodes to generate qubits objects.',
-        );
-      } else if (typeof msg.payload.qubit === 'undefined') {
-        throw new Error(
-            'If "Registers & Bits" was selected in the "Quantum Circuit" node, please make use of register nodes.',
-        );
+      let script = '';
+
+      // Validate the node input msg: check for qubit object.
+      // Return corresponding errors or null if no errors.
+      // Stop the node execution upon an error
+      let error = errors.validateQubitInput(msg);
+      if (error) {
+        done(error);
+        return;
       }
 
       // Store all the qubit objects received as input into the node.qubits array
@@ -39,6 +29,13 @@ module.exports = function(RED) {
 
       // If all qubits have arrived, we first reorder the node.qubits array for output consistency
       if (node.qubits.length == 2) {
+        // Checking that all qubits received as input are from the same quantum circuit
+        let error = errors.validateQubitsFromSameCircuit(node.qubits);
+        if (error) {
+          done(error);
+          return;
+        }
+
         node.qubits.sort(function compare(a, b) {
           if (typeof a.payload.register !== 'undefined') {
             const regA = parseInt(a.payload.registerVar.slice(2));
@@ -69,34 +66,48 @@ module.exports = function(RED) {
         }
 
         // Generate the corresponding CNot Gate Qiskit script
-        let cnotScript = '';
-        node.qubits.map((msg) => {
-          // Use qubits only if there are no registers.
-          if (typeof msg.payload.register === 'undefined') {
-            cnotScript = util.format(
-                snippets.CNOT_GATE,
-                controlQubit.payload.qubit.toString(),
-                targetQubit.payload.qubit.toString(),
-            );
-          } else {
-            // Use registers if there are quantum registers.
-            cnotScript = util.format(
-                snippets.CNOT_GATE,
-                controlQubit.payload.registerVar + '[' +
-                controlQubit.payload.qubit.toString() + ']',
-                targetQubit.payload.registerVar + '[' +
-                targetQubit.payload.qubit.toString() + ']',
-            );
+        // Use qubits only if there are no registers.
+        if (typeof msg.payload.register === 'undefined') {
+          script += util.format(snippets.CNOT_GATE,
+              controlQubit.payload.qubit.toString(),
+              targetQubit.payload.qubit.toString(),
+          );
+
+          node.status({
+            fill: 'grey',
+            shape: 'dot',
+            text: 'Target: qubit ' + targetQubit.payload.qubit.toString(),
+          });
+        } else {
+          // Use registers if there are quantum registers.
+          script += util.format(
+              snippets.CNOT_GATE,
+              controlQubit.payload.registerVar + '[' +
+              controlQubit.payload.qubit.toString() + ']',
+              targetQubit.payload.registerVar + '[' +
+              targetQubit.payload.qubit.toString() + ']',
+          );
+
+          node.status({
+            fill: 'grey',
+            shape: 'dot',
+            text: (
+              'Target: register ' + targetQubit.payload.register +
+              ' / qubit ' + targetQubit.payload.qubit.toString()
+            ),
+          });
+        }
+
+        // Run the script in the python shell, and if no error occurs
+        // then send one qubit object per node output
+        await shell.execute(script, (err) => {
+          if (err) done(err);
+          else {
+            send(node.qubits);
+            node.qubits = []; // Emptying the runtime variable upon output
+            done();
           }
         });
-
-        // Run the script in the python shell
-        await shell.execute(cnotScript, (err) => {
-          if (err) node.error(err);
-        });
-
-        // Sending one qubit object per node output
-        send(node.qubits);
       }
     });
   }

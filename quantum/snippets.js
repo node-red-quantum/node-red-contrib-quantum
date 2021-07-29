@@ -12,42 +12,60 @@
 
 // Probably shouldn't use wildcard import here for efficiency but whatever will
 // worry about it later.
-const IMPORTS =
-`import numpy as np
- from qiskit import *`;
+const IMPORTS = `from math import pi
+from qiskit import *
+`;
 
-const QUANTUM_CIRCUIT =
-`qc = QuantumCircuit(%s)`;
+const QUANTUM_CIRCUIT = `qc = QuantumCircuit(%s)
+`;
 
-const CLASSICAL_REGISTER =
-`cr%s = ClassicalRegister(%s)`;
+const CLASSICAL_REGISTER = `cr%s = ClassicalRegister(%s)
+`;
 
-const QUANTUM_REGISTER =
-`qr%s = QuantumRegister(%s)`;
+const QUANTUM_REGISTER = `qr%s = QuantumRegister(%s)
+`;
 
-const TOFFOLI_GATE =
-`qc.toffoli(%s, %s, %s)`;
+const TOFFOLI_GATE = `qc.toffoli(%s, %s, %s)
+`;
 
-const CNOT_GATE =
-`qc.cx(%s, %s)`;
+const CNOT_GATE = `qc.cx(%s, %s)
+`;
 
-const BARRIER =
-`qc.barrier(%s)`;
+const BARRIER = `qc.barrier(%s)
+`;
 
-const HADAMARD_GATE =
-`qc.h(%s)`;
+const HADAMARD_GATE = `qc.h(%s)
+`;
 
-const MEASUREMENT =
-`qc.measure(%s)`;
+const MEASURE = `qc.measure(%s)
+`;
 
-const SIMULATOR =
-`simulator = Aer.get_backend('qasm_simulator')
+const SIMULATOR = `simulator = Aer.get_backend('qasm_simulator')
 result = execute(qc, backend = simulator, shots = %s).result()
 counts = result.get_counts()
-print(counts)`;
+print(counts)
+`;
 
-const NOT_GATE =
-`qc.x(%s)`;
+const NOT_GATE = `qc.x(%s)
+`;
+
+const RESET = `qc.reset(%s)
+`;
+
+const PHASE_GATE = `qc.p(%s, %s)
+`;
+
+const ROTATION_GATE = `qc.r%s(%s, %s)
+`;
+
+const UNITARY_GATE = `qc.u(%s, %s, %s, %s)
+`;
+
+const IDENTITY = `qc.id(%s)
+`;
+
+const SWAP = `qc.swap(%s, %s)
+`;
 
 module.exports = {
   IMPORTS,
@@ -58,7 +76,13 @@ module.exports = {
   CNOT_GATE,
   BARRIER,
   HADAMARD_GATE,
-  MEASUREMENT,
+  MEASURE,
   SIMULATOR,
   NOT_GATE,
+  RESET,
+  PHASE_GATE,
+  ROTATION_GATE,
+  IDENTITY,
+  SWAP,
+  UNITARY_GATE,
 };

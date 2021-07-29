@@ -6,9 +6,12 @@ const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
 
 module.exports = function(RED) {
-  function NotGateNode(config) {
+  function MeasureNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
+    this.selectedBit = config.selectedBit;
+    this.selectedRegVarName = config.selectedRegVarName;
+    this.classicalRegistersOrBits = '';
     const node = this;
 
     this.on('input', async function(msg, send, done) {
@@ -23,22 +26,30 @@ module.exports = function(RED) {
         return;
       }
 
-      if (typeof msg.payload.register === 'undefined') {
-        script += util.format(snippets.NOT_GATE, msg.payload.qubit);
-      } else {
-        script += util.format(snippets.NOT_GATE, `msg.payload.registerVar + '[' + msg.payload.qubit + ']'`);
-      }
+      const params = (!node.selectedRegVarName) ? `${msg.payload.qubit}, ${node.selectedBit}`:
+        `${msg.payload.registerVar}[${msg.payload.qubit}], ` +
+        `${node.selectedRegVarName}[${node.selectedBit}]`;
 
-      // Run the script in the python shell, and if no error occurs
-      // then send msg object to the next node
+      script += util.format(snippets.MEASURE, params);
+
       await shell.execute(script, (err) => {
         if (err) done(err);
         else {
           send(msg);
+
+          const status = (!node.selectedRegVarName) ? `Result: cbit ${node.selectedBit}`:
+          `Result: register ${node.selectedRegVarName} / cbit ${node.selectedBit}`;
+          node.status({
+            fill: 'grey',
+            shape: 'dot',
+            text: status,
+          });
+
           done();
-        }
+        };
       });
     });
   }
-  RED.nodes.registerType('not-gate', NotGateNode);
+
+  RED.nodes.registerType('measure', MeasureNode);
 };

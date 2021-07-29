@@ -1,19 +1,18 @@
 'use strict';
 
+const os = require('os');
 const path = require('path');
 const appRoot = require('app-root-path').path;
 const dedent = require('dedent-js');
 const fileSystem = require('fs');
 const pythonScript = require('python-shell').PythonShell;
-const pythonPath = path.resolve(appRoot, 'venv/bin/python');
+const pythonExecutable = os.platform() === 'win32' ? 'venv/Scripts/python.exe' : 'venv/bin/python';
+const pythonPath = path.resolve(appRoot, pythonExecutable);
 const childProcess = require('child_process');
 
 
 function createPromise(process) {
   return new Promise((resolve, reject) => {
-    process.stdout.removeAllListeners();
-    process.stderr.removeAllListeners();
-
     let outputData = '';
     let errorData = '';
 
@@ -29,6 +28,8 @@ function createPromise(process) {
       outputData += data;
 
       if (done) {
+        process.stdout.removeAllListeners();
+        process.stderr.removeAllListeners();
         if (errorData.trim()) {
           reject(errorData);
         } else {
@@ -43,6 +44,13 @@ function createPromise(process) {
       } if (data.includes('...')) {
         data = data.replace(/.../g, '');
       }
+
+      // When the input is a code block, the result will sometimes (seemingly non-deterministicly)
+      // be a single period. This is a workaround to prevent it being added to the output.
+      if (data.trim() === '.') {
+        data = '';
+      }
+
       errorData += data;
     });
   });
@@ -82,6 +90,15 @@ class PythonShell {
       throw new Error('Python process has not been started - call start() before executing commands.');
     }
 
+    await new Promise((resolve) => {
+      const timer = setInterval(() => {
+        if (!this.process.stdout.readableFlowing && !this.process.stderr.readableFlowing) {
+          resolve();
+          clearInterval(timer);
+        }
+      }, 250);
+    });
+
     command = command ? dedent(command) : '';
     this.script += '\n' + command + '\n';
     command = '\nprint("#CommandStart#")\n' + command + '\nprint("#CommandEnd#")\n';
@@ -112,6 +129,8 @@ class PythonShell {
       this.process = childProcess.spawn(this.path, ['-u', '-i']);
       this.process.stdout.setEncoding('utf8');
       this.process.stderr.setEncoding('utf8');
+      this.process.stdout.setMaxListeners(1);
+      this.process.stderr.setMaxListeners(1);
       return this.execute();
     }
   }
@@ -124,6 +143,7 @@ class PythonShell {
   */
   stop() {
     if (this.process) {
+      this.process.stdin.end();
       this.process.kill();
       this.process = null;
       this.script = '';

@@ -1,34 +1,34 @@
 <script type="text/javascript">
-  RED.nodes.registerType("not-gate", {
+  RED.nodes.registerType("reset", {
     category: "quantum",
-    color: "#8A3FFC",
+    color: "#33B1FF",
     defaults: {
       name: { value: "" },
     },
     inputs: 1,
     outputs: 1,
-    paletteLabel: "not gate",
-    icon: "font-awesome/fa-close",
-    align: "right",
+    paletteLabel: "reset",
+    icon: "font-awesome/fa-refresh",
+    align: "left",
     label: function () {
-      return this.name || "NOT";
+      return this.name || "reset";
     },
     inputLabels: "Qubit",
     outputLabels: "Qubit",
   });
 </script>
 
-<script type="text/html" data-template-name="not-gate">
+<script type="text/html" data-template-name="reset">
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
 </script>
 
-<script type="text/html" data-help-name="not-gate">
+<script type="text/html" data-help-name="reset">
   <p>
     <!-- Node documentation goes here. -->
-    This node switches the amplitude of the state of the input qubit. In other
-    words, it will change the state |1> to |0> and vice versa.
+    This node undos the operations which were previously performed on the input
+    qubit and restores it to its original state of |0>.
   </p>
 </script>

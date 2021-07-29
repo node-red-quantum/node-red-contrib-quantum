@@ -1,18 +1,20 @@
 <script type="text/javascript">
   RED.nodes.registerType("simulator", {
     category: "quantum",
-    color: "#33B1FF",
+    color: "#A8A8A8",
     defaults: {
       name: { value: "" },
-      shots: {value:0, validate:RED.validators.number()},
+      shots: { value: 0, validate: RED.validators.number() },
     },
     inputs: 1,
     outputs: 1,
-    icon: "function.svg",
+    icon: "font-awesome/fa-microchip",
     paletteLabel: "simulator",
     label: function () {
       return this.name || "simulator";
     },
+    inputLabels: "Qubits",
+    outputLabels: "Circuit output",
   });
 </script>
 
@@ -29,6 +31,9 @@
 
 <script type="text/html" data-help-name="">
   <p>
-    Node for quantum program simulations.
+    This node siimulates the quantum circuit and returns the output of the
+    simulation. <br />
+    The number of shots refers to the number of times the circuit is run to get
+    a probability distribution of results.
   </p>
 </script>

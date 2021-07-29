@@ -21,10 +21,8 @@ module.exports = function(RED) {
     const node = this;
 
     this.on('input', async function(msg, send, done) {
-      await shell.restart();
-      await shell.execute(snippets.IMPORTS, (err) => {
-        if (err) node.error(err);
-      });
+      let script = '';
+      script += snippets.IMPORTS;
       // Creating a temporary 'quantumCircuitArray' flow context array
       // This variable represents the quantum circuit structure
       let quantumCircuitArray = new Array(node.outputs);
@@ -38,19 +36,21 @@ module.exports = function(RED) {
             topic: 'Quantum Circuit',
             payload: {
               structure: {
+                quantumCircuitId: node.id,
                 creg: node.cbitsreg,
                 qreg: node.qbitsreg,
               },
               register: i,
             },
           };
-        };
-      } else { // If the user does not want to use registers
+        }
+      } else {
+        // If the user does not want to use registers
         // Add arguments to quantum circuit code
-        let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, node.qbitsreg + ',' + node.cbitsreg);
-        await shell.execute(circuitScript, (err) => {
-          if (err) node.error(err);
-        });
+        script += util.format(
+            snippets.QUANTUM_CIRCUIT,
+            node.qbitsreg + ', ' + node.cbitsreg,
+        );
 
         // Creating an array of messages to be sent
         // Each message represents a different qubit
@@ -59,6 +59,7 @@ module.exports = function(RED) {
             topic: 'Quantum Circuit',
             payload: {
               structure: {
+                quantumCircuitId: node.id,
                 qubits: node.qbitsreg,
                 cbits: node.cbitsreg,
               },
@@ -66,85 +67,118 @@ module.exports = function(RED) {
               qubit: i,
             },
           };
-        };
+        }
       }
 
       // Sending one register object per node output
-      send(output);
+      await shell.restart();
+      await shell.execute(script, (err) => {
+        if (err) done(err);
+        else {
+          send(output);
+          done();
+        }
+      });
     });
   }
 
   // Http handlers for accessing and updating classical register information
-  RED.httpAdmin.get('/quantum-circuit/registers', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
-    res.json({
-      success: true,
-      classicalRegisters: classicalRegisters,
-    });
-  });
+  RED.httpAdmin.get(
+      '/quantum-circuit/registers',
+      RED.auth.needsPermission('quantum-circuit.read'),
+      function(req, res) {
+        res.json({
+          success: true,
+          classicalRegisters: classicalRegisters,
+        });
+      },
+  );
 
-  // eslint-disable-next-line max-len
-  RED.httpAdmin.post('/quantum-circuit/update-register', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
-    let found = classicalRegisters.find((register) => register.nodeid === req.body.nodeid);
-    if (found) {
-      found.regName = req.body.regName;
-      found.regVarName = req.body.regVarName;
-      found.bits = req.body.bits;
-      return res.json({
-        success: true,
-      });
-    }
+  RED.httpAdmin.post(
+      '/quantum-circuit/update-register',
+      RED.auth.needsPermission('quantum-circuit.read'),
+      function(req, res) {
+        let found = classicalRegisters.find(
+            (register) => register.nodeid === req.body.nodeid,
+        );
+        if (found) {
+          found.regName = req.body.regName;
+          found.regVarName = req.body.regVarName;
+          found.bits = req.body.bits;
+          return res.json({
+            success: true,
+          });
+        }
 
-    classicalRegisters.push({
-      nodeid: req.body.nodeid,
-      regName: req.body.regName,
-      regVarName: req.body.regVarName,
-      bits: req.body.bits,
-    });
-    res.json({
-      success: true,
-    });
-  });
+        classicalRegisters.push({
+          nodeid: req.body.nodeid,
+          regName: req.body.regName,
+          regVarName: req.body.regVarName,
+          bits: req.body.bits,
+        });
+        res.json({
+          success: true,
+        });
+      },
+  );
 
-  // eslint-disable-next-line max-len
-  RED.httpAdmin.post('/quantum-circuit/delete-register', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
-    let index = classicalRegisters.findIndex((register) => register.nodeid === req.body.nodeid);
-    if (index !== -1) {
-      classicalRegisters.splice(index, 1);
-      return res.json({
-        success: true,
-      });
-    }
-    res.json({
-      success: false,
-    });
-  });
+  RED.httpAdmin.post(
+      '/quantum-circuit/delete-register',
+      RED.auth.needsPermission('quantum-circuit.read'),
+      function(req, res) {
+        let index = classicalRegisters.findIndex(
+            (register) => register.nodeid === req.body.nodeid,
+        );
+        if (index !== -1) {
+          classicalRegisters.splice(index, 1);
+          return res.json({
+            success: true,
+          });
+        }
+        res.json({
+          success: false,
+        });
+      },
+  );
 
   // Http handlers for accessing and updating Quantum Circuit informaiton
-  RED.httpAdmin.get('/quantum-circuit/structure', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
-    res.json({
-      success: true,
-      structure: quantumCircuitNode.structure,
-    });
-  });
+  RED.httpAdmin.get(
+      '/quantum-circuit/structure',
+      RED.auth.needsPermission('quantum-circuit.read'),
+      function(req, res) {
+        res.json({
+          success: true,
+          structure: quantumCircuitNode.structure,
+        });
+      },
+  );
 
-  RED.httpAdmin.get('/quantum-circuit/bits', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
-    res.json({
-      success: true,
-      bits: quantumCircuitNode.cbits,
-    });
-  });
+  RED.httpAdmin.get(
+      '/quantum-circuit/bits',
+      RED.auth.needsPermission('quantum-circuit.read'),
+      function(req, res) {
+        res.json({
+          success: true,
+          bits: quantumCircuitNode.cbitsreg,
+        });
+      },
+  );
 
-  // eslint-disable-next-line max-len
-  RED.httpAdmin.post('/quantum-circuit/update-circuit', RED.auth.needsPermission('quantum-circuit.read'), function(req, res) {
-    quantumCircuitNode.structure = req.body.structure;
-    quantumCircuitNode.outputs = req.body.outputs;
-    quantumCircuitNode.cbits = req.body.cbits;
+  RED.httpAdmin.post(
+      '/quantum-circuit/update-circuit',
+      RED.auth.needsPermission('quantum-circuit.read'),
+      function(req, res) {
+        quantumCircuitNode.structure = req.body.structure;
+        quantumCircuitNode.outputs = req.body.outputs;
+        quantumCircuitNode.cbitsreg = req.body.cbitsreg;
+        quantumCircuitNode.qbitsreg = req.body.qbitsreg;
 
-    res.json({
-      success: true,
-      quantumCircuitNode: quantumCircuitNode,
-    });
-  });
+        res.json({
+          success: true,
+          quantumCircuitNode: quantumCircuitNode,
+        });
+      },
+  );
 
   RED.nodes.registerType('quantum-circuit', QuantumCircuitNode);
 };

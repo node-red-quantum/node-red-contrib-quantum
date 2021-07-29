@@ -3,6 +3,7 @@
 const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
+const errors = require('../../errors');
 
 module.exports = function(RED) {
   function HadamardGateNode(config) {
@@ -10,26 +11,29 @@ module.exports = function(RED) {
     const node = this;
 
     node.on('input', async (msg, send, done) => {
-      let qrConfig = msg.payload;
-      let keys = Object.keys(qrConfig);
-      if (!keys.includes('register') || !keys.includes('qubit')) {
-        throw new Error('Invalid Input');
+      let script = '';
+
+      // Validate the node input msg: check for qubit object.
+      // Return corresponding errors or null if no errors.
+      // Stop the node execution upon an error
+      let error = errors.validateQubitInput(msg);
+      if (error) {
+        done(error);
+        return;
       }
-      // show the status of the node
-      node.status({
-        fill: 'grey',
-        shape: 'dot',
-        text: qrConfig.register ? `Register ${qrConfig.register} / Qubit ${qrConfig.qubit}` :
-          `Qubit ${qrConfig.qubit}`,
+
+      let qrConfig = msg.payload;
+      script += util.format(snippets.HADAMARD_GATE,
+        qrConfig.register ? `${qrConfig.register}[${qrConfig.qubit}]` : `${qrConfig.qubit}`);
+
+      // execute the script and pass the quantum register config to the output if no errors occurred
+      await shell.execute(script, (err) => {
+        if (err) done(err);
+        else {
+          send(msg);
+          done();
+        }
       });
-      let shellScript = util.format(snippets.HADAMARD_GATE, qrConfig.register ?
-        `${qrConfig.register}[${qrConfig.qubit}]` :
-        `${qrConfig.qubit}`);
-      await shell.execute(shellScript, (err) => {
-        if (err) node.error(err);
-      });
-      // pass the quantum register config to the output
-      send(msg);
     });
   }
 
