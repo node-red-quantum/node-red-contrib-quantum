@@ -15,8 +15,6 @@ module.exports = function(RED) {
     const node = this;
 
     this.on('input', async function(msg, send, done) {
-      let script = '';
-
       // Validate the node input msg: check for register object.
       // Return corresponding errors or null if no errors.
       // Stop the node execution upon an error
@@ -72,19 +70,17 @@ module.exports = function(RED) {
             circuitScript = util.format(circuitScript, register.registerVar);
           });
 
-          script += circuitScript;
+          // Run the script in the python shell, and if no error occurs
+          // then notify the runtime when the node is done.
+          await shell.execute(circuitScript, (err) => {
+            if (err) done(err);
+            else done();
+          });
         }
       }
 
       // update quantum circuit config
       quantumCircuitConfig[node.name] = register;
-
-      // Run the script in the python shell, and if no error occurs
-      // then notify the runtime when the node is done.
-      await shell.execute(script, (err) => {
-        if (err) done(err);
-        else done();
-      });
     });
   }
 
