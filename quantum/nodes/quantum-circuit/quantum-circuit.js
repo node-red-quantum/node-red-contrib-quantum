@@ -33,7 +33,6 @@ module.exports = function(RED) {
         obj[prop] = value;
         if (Object.keys(obj).length == node.outputs) {
           quantumCircuitReady.emit('circuitReady', obj);
-          console.log('[Proxy] Quantum Circuit Initialised. Resetting quantum circuit config state');
           flowContext.set('quantumCircuitConfig', new Proxy({}, quantumCircuitProxyHandler));
         }
         return true;
