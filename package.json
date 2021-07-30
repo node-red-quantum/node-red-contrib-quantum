@@ -30,7 +30,8 @@
     "venv": "bash bin/pyvenv.sh || bin/pyvenv.sh",
     "test": "mocha",
     "clean": "rm -r venv/ & npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
-    "lint": "eslint --fix --ignore-path .gitignore ."
+    "lint": "eslint --fix --ignore-path .gitignore .",
+    "start:dev": "bash bin/start-dev-container.sh"
   },
   "dependencies": {
     "app-root-path": "^3.0.0",
