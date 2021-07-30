@@ -3,8 +3,8 @@
     category: "quantum",
     color: "#FA4D56",
     defaults: {
-      name: {value: ""},
-      targetPosition: {value: "", required: true},
+      name: { value: "" },
+      targetPosition: { value: "", required: true },
     },
     inputs: 1,
     outputs: 2,
@@ -14,10 +14,10 @@
       return this.name || "CNOT";
     },
     inputLabels: "Qubits",
-    outputLabels: function(index) {  
+    outputLabels: function (index) {
       if (index == 0) return "Top qubit";
       else return "Bottom qubit";
-    }
+    },
   });
 </script>
 
@@ -41,6 +41,9 @@
 
 <script type="text/html" data-help-name="cnot-gate">
   <p>
-    <!-- Node documentation goes here. -->
+    This gate takes two qubits as input and applies a not gate to the target
+    qubit if and only if the state of the control qubit is 1. <br /><br />
+    To use this gate, connect two qubits as input and indicate whether the
+    target is the upper or lower qubit of the two inputs.
   </p>
 </script>

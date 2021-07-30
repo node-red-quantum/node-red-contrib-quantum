@@ -1,9 +1,3 @@
-/*
- * The title for describe() should contain the name of the class/function/property being tested.
- * Instance methods/properties should be prefixed with a hash symbol (#).
- * The title for it() should be lowercase and succinctly describe what is being tested.
-*/
-
 const shell = require('../quantum/python').PythonShell;
 const assert = require('chai').assert;
 const dedent = require('dedent-js');

@@ -1,49 +1,56 @@
 <script type="text/javascript">
-    RED.nodes.registerType("barrier", {
-      category: "quantum",
-      color: "#33B1FF",
-      defaults: {
-        name: { value: "" },
-        outputs: { 
-          value: "", 
-          required: true,
-          validate: function (x) {
-            x = parseInt(x);
-            if (Number.isInteger(x) && x > 0){return true} 
-            else {return false}
-          },
-        }
+  RED.nodes.registerType("barrier", {
+    category: "quantum",
+    color: "#33B1FF",
+    defaults: {
+      name: { value: "" },
+      outputs: {
+        value: "",
+        required: true,
+        validate: function (x) {
+          x = parseInt(x);
+          if (Number.isInteger(x) && x > 0) {
+            return true;
+          } else {
+            return false;
+          }
+        },
       },
-      inputs: 1,
-      icon: "font-awesome/fa-ellipsis-v",
-      align: 'left',
-      paletteLabel: "barrier",
-      label: function () {
-        return this.name || "barrier";
-      },
-      inputLabels: "Qubits",
-      outputLabels: function(index) {  
-        if (index == 0) return "Top qubit";
-        else if (index == this.outputs-1) return "Bottom qubit";
-        else return "Qubit";
-      }
-    });
-  </script>
-  
-  <script type="text/html" data-template-name="barrier">
-    <div class="form-row">
-      <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-      <input type="text" id="node-input-name" placeholder="Name" />
-    </div>
-    <div class="form-row">
-      <label for="node-input-outputs"><i class="fa"></i> Number of qubits to control</label>
-      <input type="number" min="1" id="node-input-outputs"/>
-    </div>
-  </script>
-  
-  <script type="text/html" data-help-name="barrier">
-    <p>
-      <!-- Node documentation goes here. -->
-    </p>
-  </script>
-  
+    },
+    inputs: 1,
+    icon: "font-awesome/fa-ellipsis-v",
+    align: "left",
+    paletteLabel: "barrier",
+    label: function () {
+      return this.name || "barrier";
+    },
+    inputLabels: "Qubits",
+    outputLabels: function (index) {
+      if (index == 0) return "Top qubit";
+      else if (index == this.outputs - 1) return "Bottom qubit";
+      else return "Qubit";
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="barrier">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-outputs"
+      ><i class="fa"></i> Number of qubits to control</label
+    >
+    <input type="number" min="1" id="node-input-outputs" />
+  </div>
+</script>
+
+<script type="text/html" data-help-name="barrier">
+  <p>
+    Barrier node for ensuring that all necessary qubits have arrived before they
+    are sent further along in the quantum circuit. <br /><br />
+    To utilise this node, select the number of qubits which it must wait for
+    before continuing the circuit.
+  </p>
+</script>

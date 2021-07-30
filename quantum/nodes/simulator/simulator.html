@@ -4,7 +4,7 @@
     color: "#A8A8A8",
     defaults: {
       name: { value: "" },
-      shots: {value:0, validate:RED.validators.number()},
+      shots: { value: 0, validate: RED.validators.number() },
     },
     inputs: 1,
     outputs: 1,
@@ -14,7 +14,7 @@
       return this.name || "simulator";
     },
     inputLabels: "Qubits",
-    outputLabels: "Circuit output"
+    outputLabels: "Circuit output",
   });
 </script>
 
@@ -31,6 +31,9 @@
 
 <script type="text/html" data-help-name="">
   <p>
-    Node for quantum program simulations.
+    This node siimulates the quantum circuit and return the output of the
+    simulation. <br />
+    The number of shots refers to the number of times the circuit is run to get
+    a probability distribution of results.
   </p>
 </script>

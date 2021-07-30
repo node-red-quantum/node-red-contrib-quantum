@@ -4,18 +4,18 @@
     color: "#A8A8A8",
     defaults: {
       name: { value: "" },
-      selectedBit: { value: ""},
+      selectedBit: { value: "" },
       selectedRegVarName: { value: "" },
-      selectedRadio: {value: ""},
+      selectedRadio: { value: "" },
       classicalRegistersOrBits: {
         value: "",
         required: true,
-        validate: function(val) {
-          if ( val === "") {
+        validate: function (val) {
+          if (val === "") {
             return false;
           }
           return true;
-        }
+        },
       },
     },
     inputs: 1,
@@ -30,62 +30,74 @@
 
     oneditprepare: function () {
       var selectedRadio = this.selectedRadio;
-      $.getJSON('quantum-circuit/structure', function (data) {
+      $.getJSON("quantum-circuit/structure", function (data) {
         let structure = data.structure;
         const parentDiv = $("#reg-form");
-        if (structure === 'registers') {
+        if (structure === "registers") {
           $.getJSON("quantum-circuit/registers", function (data) {
             let registers = data.classicalRegisters;
             let hasRegistersOrBits = "";
-            if (registers.length === 0){
+            if (registers.length === 0) {
               $("#node-input-classicalRegistersOrBits").val("");
             }
             let regCnt = 0;
             registers.forEach((register) => {
-              let inputId = 'node-input-classreg-' + register.regName;
+              let inputId = "node-input-classreg-" + register.regName;
               let myNewRow = $('<div class="form-row" />');
               parentDiv.append(myNewRow);
 
-              const bitArray = []
+              const bitArray = [];
               for (let i = 0; i < Number(register.bits); i++) {
                 bitArray.push(i);
               }
 
-              let registerHeading = $(`<span>Classical register: ${register.regName.replace(/_/g, ' ')}</span><br/>`);
+              let registerHeading = $(
+                `<span>Classical register: ${register.regName.replace(
+                  /_/g,
+                  " "
+                )}</span><br/>`
+              );
               myNewRow.append(registerHeading);
               bitArray.forEach((bit) => {
-                let subInputId = inputId + '-b' + bit;
-                let myNewLabel = $(`<label for="${subInputId}"><i class="fa fa-circle"></i> Bit ${bit}</label>`);
-                let myNewInput = $(`<input type="radio" name="bit" class="classreg-element" id="${subInputId}" value="${subInputId}" data-varname="${register.regVarName}" data-bit="${bit}"/>`);
+                let subInputId = inputId + "-b" + bit;
+                let myNewLabel = $(
+                  `<label for="${subInputId}"><i class="fa fa-circle"></i> Bit ${bit}</label>`
+                );
+                let myNewInput = $(
+                  `<input type="radio" name="bit" class="classreg-element" id="${subInputId}" value="${subInputId}" data-varname="${register.regVarName}" data-bit="${bit}"/>`
+                );
                 myNewRow.append(myNewLabel);
                 myNewRow.append(myNewInput);
                 if (regCnt === 0 && bit === 0) {
-                  $("#" + subInputId).prop("checked", true)
+                  $("#" + subInputId).prop("checked", true);
                   $("#node-input-classicalRegistersOrBits").val("1");
                 }
                 if (subInputId === selectedRadio) {
-                  $("#" + subInputId).prop("checked", true)
+                  $("#" + subInputId).prop("checked", true);
                 }
                 regCnt += 1;
               });
             });
           });
-        }
-        else {
+        } else {
           $.getJSON("quantum-circuit/bits", function (data) {
             let myNewRow = $('<div class="form-row" />');
             parentDiv.append(myNewRow);
-            const bitArray = []
+            const bitArray = [];
             for (let i = 0; i < Number(data.bits); i++) {
               bitArray.push(i);
             }
-            if (bitArray.length === 0){
+            if (bitArray.length === 0) {
               $("#node-input-classicalRegistersOrBits").val("");
             }
             bitArray.forEach((bit) => {
-              let InputId = 'node-input-cbit-' + bit;
-              let myNewLabel = $(`<label for="${InputId}"><i class="fa fa-circle"></i> Bit ${bit}</label>`);
-              let myNewInput = $(`<input type="radio" name="bit" class="classreg-element" id="${InputId}" value="${InputId}" data-bit="${bit}"/>`);
+              let InputId = "node-input-cbit-" + bit;
+              let myNewLabel = $(
+                `<label for="${InputId}"><i class="fa fa-circle"></i> Bit ${bit}</label>`
+              );
+              let myNewInput = $(
+                `<input type="radio" name="bit" class="classreg-element" id="${InputId}" value="${InputId}" data-bit="${bit}"/>`
+              );
               myNewRow.append(myNewLabel);
               myNewRow.append(myNewInput);
               if (bit === 0) {
@@ -104,12 +116,12 @@
       var classregElements = $(".classreg-element");
       var selectedRadio, selectedRegVarName, selectedBit;
 
-      classregElements.each( function(index,el) {
+      classregElements.each(function (index, el) {
         var checked = $(el).is(":checked");
         if (checked === true) {
           selectedRadio = el.id;
-          selectedRegVarName = $(el).data('varname');
-          selectedBit = $(el).data('bit');
+          selectedRegVarName = $(el).data("varname");
+          selectedBit = $(el).data("bit");
         }
       });
       this.selectedRadio = selectedRadio;
@@ -125,15 +137,20 @@
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
   <div class="form-row" hidden>
-    <label for="node-input-classicalRegistersOrBits"><i class="fa fa-check"></i>Are classical registers/bits set?</label>
-    <input type="text" id="node-input-classicalRegistersOrBits" disabled/>
+    <label for="node-input-classicalRegistersOrBits"
+      ><i class="fa fa-check"></i>Are classical registers/bits set?</label
+    >
+    <input type="text" id="node-input-classicalRegistersOrBits" disabled />
   </div>
-  <div id="reg-form">
-  </div>
+  <div id="reg-form"></div>
 </script>
 
 <script type="text/html" data-help-name="measure">
   <p>
-    Quantum measure node
+    This node measures the value of a qubit in order to convert the
+    superpositioned qubit to a classical bit of value 0 or 1. <br /><br />
+    To use this node you must have a classical bits initialised in the circuit
+    then you must select the classical bit to which you wish to send the result
+    of the measurement.
   </p>
 </script>

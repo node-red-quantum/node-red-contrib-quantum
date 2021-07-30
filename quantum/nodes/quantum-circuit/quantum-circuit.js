@@ -12,6 +12,7 @@ const quantumCircuitReady = new EventEmitter();
 module.exports = function(RED) {
   let quantumCircuitNode = {};
   let classicalRegisters = [];
+
   function QuantumCircuitNode(config) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
@@ -67,6 +68,7 @@ module.exports = function(RED) {
             topic: 'Quantum Circuit',
             payload: {
               structure: {
+                quantumCircuitId: node.id,
                 creg: node.cbitsreg,
                 qreg: node.qbitsreg,
               },
@@ -85,6 +87,7 @@ module.exports = function(RED) {
             topic: 'Quantum Circuit',
             payload: {
               structure: {
+                quantumCircuitId: node.id,
                 qubits: node.qbitsreg,
                 cbits: node.cbitsreg,
               },
@@ -98,8 +101,11 @@ module.exports = function(RED) {
       // Sending one register object per node output
       await shell.restart();
       await shell.execute(script, (err) => {
-        if (err) node.error(err);
-        else send(output);
+        if (err) done(err);
+        else {
+          send(output);
+          done();
+        }
       });
     });
   }

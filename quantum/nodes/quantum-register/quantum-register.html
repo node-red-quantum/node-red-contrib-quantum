@@ -3,38 +3,41 @@
     category: "quantum",
     color: "#A8A8A8",
     defaults: {
-      name: { 
+      name: {
         value: "",
         validate: function (x) {
-          if (x == "") return true
+          if (x == "") return true;
           else {
-            x = x.trim().toLowerCase(); 
-            if (!x.match(/^[0-9 a-z]+$/)) return false
-            else return true
+            x = x.trim().toLowerCase();
+            if (!x.match(/^[0-9 a-z]+$/)) return false;
+            else return true;
           }
-        }
+        },
       },
-      outputs: { 
-        value: "", 
+      outputs: {
+        value: "",
         required: true,
         validate: function (x) {
           x = parseInt(x);
-          if (Number.isInteger(x) && x > 0){return true} 
-          else {return false}
-        }
+          if (Number.isInteger(x) && x > 0) {
+            return true;
+          } else {
+            return false;
+          }
+        },
       },
     },
     inputs: 1,
     icon: "font-awesome/fa-certificate",
-    align: 'right',
+    align: "right",
     paletteLabel: "quantum register",
     label: function () {
       return this.name || "quantum register";
     },
     inputLabels: "quantum circuit node",
-    outputLabels: function(index) {
-        return "Qubit " + index;
-    }
+    outputLabels: function (index) {
+      return "Qubit " + index;
+    },
   });
 </script>
 
@@ -44,15 +47,16 @@
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
   <div class="form-row">
-    <label for="node-input-number-qubits"><i class="fa fa-tag"></i> Number of qubits</label>
+    <label for="node-input-number-qubits"
+      ><i class="fa fa-tag"></i> Number of qubits</label
+    >
     <input type="number" min="1" id="node-input-outputs" />
   </div>
 </script>
 
 <script type="text/html" data-help-name="quantum-register">
   <p>
-    Implement a quantum register.
-    <br />
-    Create a new generic register.
+    This node implements a quantum register which houses a given number of
+    qubits.
   </p>
 </script>
