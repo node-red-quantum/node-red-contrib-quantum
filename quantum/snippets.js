@@ -84,6 +84,10 @@ const SWAP =
 `qc.swap(%s, %s)
 `;
 
+const BLOCH_SPHERE =
+`pbv = plot_bloch_vector(counts)
+`;
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,
@@ -102,4 +106,5 @@ module.exports = {
   IDENTITY,
   SWAP,
   UNITARY_GATE,
+  BLOCH_SPHERE,
 };
