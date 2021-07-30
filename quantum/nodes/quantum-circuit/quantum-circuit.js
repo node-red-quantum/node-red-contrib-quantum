@@ -7,6 +7,7 @@ const shell = require('../../python').PythonShell;
 module.exports = function(RED) {
   let quantumCircuitNode = {};
   let classicalRegisters = [];
+
   function QuantumCircuitNode(config) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
@@ -36,6 +37,7 @@ module.exports = function(RED) {
             topic: 'Quantum Circuit',
             payload: {
               structure: {
+                quantumCircuitId: node.id,
                 creg: node.cbitsreg,
                 qreg: node.qbitsreg,
               },
@@ -45,7 +47,7 @@ module.exports = function(RED) {
         };
       } else { // If the user does not want to use registers
         // Add arguments to quantum circuit code
-        script += util.format(snippets.QUANTUM_CIRCUIT, node.qbitsreg + ',' + node.cbitsreg);
+        script += util.format(snippets.QUANTUM_CIRCUIT, node.qbitsreg + ', ' + node.cbitsreg);
 
         // Creating an array of messages to be sent
         // Each message represents a different qubit
@@ -54,6 +56,7 @@ module.exports = function(RED) {
             topic: 'Quantum Circuit',
             payload: {
               structure: {
+                quantumCircuitId: node.id,
                 qubits: node.qbitsreg,
                 cbits: node.cbitsreg,
               },
@@ -67,8 +70,11 @@ module.exports = function(RED) {
       // Sending one register object per node output
       await shell.restart();
       await shell.execute(script, (err) => {
-        if (err) node.error(err);
-        else send(output);
+        if (err) done(err);
+        else {
+          send(output);
+          done();
+        }
       });
     });
   }

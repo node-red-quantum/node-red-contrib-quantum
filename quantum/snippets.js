@@ -13,9 +13,9 @@
 // Probably shouldn't use wildcard import here for efficiency but whatever will
 // worry about it later.
 const IMPORTS =
-`import numpy as np
- from qiskit import *
- `;
+`from math import pi
+from qiskit import *
+`;
 
 const QUANTUM_CIRCUIT =
 `qc = QuantumCircuit(%s)
@@ -45,7 +45,7 @@ const HADAMARD_GATE =
 `qc.h(%s)
 `;
 
-const MEASUREMENT =
+const MEASURE =
 `qc.measure(%s)
 `;
 
@@ -60,9 +60,28 @@ const NOT_GATE =
 `qc.x(%s)
 `;
 
-const BLOCH_SPHERE =
-`
-pbv = plot_bloch_vector(counts)
+const RESET =
+`qc.reset(%s)
+`;
+
+const PHASE_GATE =
+`qc.p(%s, %s)
+`;
+
+const ROTATION_GATE =
+`qc.r%s(%s, %s)
+`;
+
+const UNITARY_GATE =
+`qc.u(%s, %s, %s, %s)
+`;
+
+const IDENTITY =
+`qc.id(%s)
+`;
+
+const SWAP =
+`qc.swap(%s, %s)
 `;
 
 module.exports = {
@@ -74,8 +93,13 @@ module.exports = {
   CNOT_GATE,
   BARRIER,
   HADAMARD_GATE,
-  MEASUREMENT,
+  MEASURE,
   SIMULATOR,
   NOT_GATE,
-  BLOCH_SPHERE,
+  RESET,
+  PHASE_GATE,
+  ROTATION_GATE,
+  IDENTITY,
+  SWAP,
+  UNITARY_GATE,
 };

@@ -6,9 +6,10 @@ const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
 
 module.exports = function(RED) {
-  function NotGateNode(config) {
+  function PhaseGateNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
+    this.phase = config.phase;
     const node = this;
 
     this.on('input', async function(msg, send, done) {
@@ -24,9 +25,12 @@ module.exports = function(RED) {
       }
 
       if (typeof msg.payload.register === 'undefined') {
-        script += util.format(snippets.NOT_GATE, msg.payload.qubit);
+        script += util.format(snippets.PHASE_GATE, node.phase + '*pi', msg.payload.qubit);
       } else {
-        script += util.format(snippets.NOT_GATE, `msg.payload.registerVar + '[' + msg.payload.qubit + ']'`);
+        script += util.format(snippets.PHASE_GATE,
+            node.phase + '*pi',
+            `msg.payload.registerVar + '[' + msg.payload.qubit + ']'`,
+        );
       }
 
       // Run the script in the python shell, and if no error occurs
@@ -35,10 +39,15 @@ module.exports = function(RED) {
         if (err) done(err);
         else {
           send(msg);
+          node.status({
+            fill: 'grey',
+            shape: 'dot',
+            text: 'Phase: \xa0' + node.phase.toString() + '\u03C0',
+          });
           done();
-        }
+        };
       });
     });
   }
-  RED.nodes.registerType('not-gate', NotGateNode);
+  RED.nodes.registerType('phase-gate', PhaseGateNode);
 };
