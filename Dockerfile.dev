@@ -5,8 +5,4 @@ RUN npm install -g nodemon
 
 WORKDIR /node-red-contrib-quantum
 
-COPY . .
-
 EXPOSE 1880
-
-ENTRYPOINT [ "nodemon", "--exec", "npx", "node-red", "flows_quantum.json" ]
