@@ -13,29 +13,24 @@ module.exports = function(RED){
     this.on('input', async function(msg, send, done) {
       // Throw Error if:
       // - The user connects it to a node that is not from the quantum library
-      // - The user does not input a qubit object in the node
       if (msg.topic !== 'Quantum Circuit') {
         throw new Error(
             'The Not Gate node must be connected to nodes from the quantum library only.',
         );
-      } else if (
-        typeof msg.payload.register === 'undefined' &&
-        typeof msg.payload.qubit === 'undefined'
-      ) {
-        throw new Error(
-            'The Node Gate node must be receive qubits objects as inputs.\n' +
-            'Please use "Quantum Circut" and "Quantum Register" node to generate qubits objects.',
-        );
       }
       //more codes here
-
-
+      console.log(msg)
+      console.log(`bloch-sphere: ${msg}`);
+      let script = snippets.BLOCH_SPHERE;
 
       // Run the script in the python shell
-      await shell.execute(script, (err) => {
+      await shell.execute(script, (err, data) => {
         if (err) node.error(err);
-        else send(msg);
+        node.warn(data);
+        console.log(data);
+        
       });
+      send(msg);
     });
 
   }

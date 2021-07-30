@@ -16,6 +16,7 @@ const IMPORTS =
 `from math import pi
 from qiskit import *
 from qiskit.visualization import *
+from qiskit.quantum_info import *
 `;
 
 const QUANTUM_CIRCUIT =
@@ -86,7 +87,8 @@ const SWAP =
 `;
 
 const BLOCH_SPHERE =
-`pbv = plot_bloch_vector(counts)
+`state = Statevector.from_instruction(qc)
+plot_bloch_multivector(state)
 `;
 
 module.exports = {
