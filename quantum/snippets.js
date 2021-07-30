@@ -15,6 +15,7 @@
 const IMPORTS =
 `from math import pi
 from qiskit import *
+from qiskit.visualization import *
 `;
 
 const QUANTUM_CIRCUIT =
