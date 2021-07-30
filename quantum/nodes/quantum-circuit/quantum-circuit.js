@@ -4,9 +4,13 @@ const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 
+const EventEmitter = require('events');
+const quantumCircuitReady = new EventEmitter();
+
 module.exports = function(RED) {
   let quantumCircuitNode = {};
   let classicalRegisters = [];
+
   function QuantumCircuitNode(config) {
     // Creating node with properties and context
     RED.nodes.createNode(this, config);
@@ -19,6 +23,31 @@ module.exports = function(RED) {
     const flowContext = this.context().flow;
     const output = new Array(this.outputs);
     const node = this;
+
+    flowContext.set('quantumCircuitReadyEvent', quantumCircuitReady);
+
+    const quantumCircuitProxyHandler = {
+      set: (obj, prop, value) => {
+        obj[prop] = value;
+        if (Object.keys(obj).length == node.outputs) {
+          quantumCircuitReady.emit('circuitReady', obj);
+          flowContext.set('quantumCircuitConfig', new Proxy({}, quantumCircuitProxyHandler));
+        }
+        return true;
+      },
+    };
+
+    let quantumCircuitConfig = new Proxy({}, quantumCircuitProxyHandler);
+    flowContext.set('quantumCircuitConfig', quantumCircuitConfig);
+
+    flowContext.set('isCircuitReady', () => {
+      let event = flowContext.get('quantumCircuitReadyEvent');
+      return new Promise((res, rej) => {
+        event.on('circuitReady', (circuitConfig) => {
+          res(circuitConfig);
+        });
+      });
+    });
 
     this.on('input', async function(msg, send, done) {
       let script = '';
@@ -36,6 +65,7 @@ module.exports = function(RED) {
             topic: 'Quantum Circuit',
             payload: {
               structure: {
+                quantumCircuitId: node.id,
                 creg: node.cbitsreg,
                 qreg: node.qbitsreg,
               },
@@ -54,6 +84,7 @@ module.exports = function(RED) {
             topic: 'Quantum Circuit',
             payload: {
               structure: {
+                quantumCircuitId: node.id,
                 qubits: node.qbitsreg,
                 cbits: node.cbitsreg,
               },
@@ -67,8 +98,11 @@ module.exports = function(RED) {
       // Sending one register object per node output
       await shell.restart();
       await shell.execute(script, (err) => {
-        if (err) node.error(err);
-        else send(output);
+        if (err) done(err);
+        else {
+          send(output);
+          done();
+        }
       });
     });
   }

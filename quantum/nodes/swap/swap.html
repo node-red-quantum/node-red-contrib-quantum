@@ -3,7 +3,7 @@
     category: "quantum",
     color: "#33B1FF",
     defaults: {
-      name: {value: ""},
+      name: { value: "" },
     },
     inputs: 1,
     outputs: 2,
@@ -13,10 +13,10 @@
       return this.name || "swap";
     },
     inputLabels: "Qubits",
-    outputLabels: function(index) {  
+    outputLabels: function (index) {
       if (index == 0) return "Top qubit";
       else return "Bottom qubit";
-    }
+    },
   });
 </script>
 
@@ -30,5 +30,6 @@
 <script type="text/html" data-help-name="swap">
   <p>
     <!-- Node documentation goes here. -->
+    The swap node swaps the state of the two input qubits.
   </p>
 </script>

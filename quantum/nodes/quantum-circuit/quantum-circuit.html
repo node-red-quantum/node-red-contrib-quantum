@@ -5,37 +5,43 @@
     defaults: {
       name: { value: "" },
       structure: { value: "", required: true },
-      qbitsreg:{
+      qbitsreg: {
         value: "",
         required: true,
         validate: function (x) {
           x = parseInt(x);
-          if (Number.isInteger(x) && x > 0){return true}
-          else {return false}
-        }
+          if (Number.isInteger(x) && x > 0) {
+            return true;
+          } else {
+            return false;
+          }
+        },
       },
       cbitsreg: {
         value: "",
         required: true,
         validate: function (x) {
           x = parseInt(x);
-          if (Number.isInteger(x) && x >= 0){return true}
-          else {return false}
-        }
+          if (Number.isInteger(x) && x >= 0) {
+            return true;
+          } else {
+            return false;
+          }
+        },
       },
       outputs: {
         value: "",
-      }
+      },
     },
     inputs: 1,
     icon: "font-awesome/fa-play-circle",
-    align: 'left',
+    align: "left",
     paletteLabel: "quantum circuit",
     label: function () {
       return this.name || "quantum circuit";
     },
-    outputLabels: function(index) {
-      if (this.structure === 'qubits') {
+    outputLabels: function (index) {
+      if (this.structure === "qubits") {
         return "Qubit " + index;
       } else {
         return "Register r" + index;
@@ -45,36 +51,46 @@
     oneditprepare: function () {
       if (document.getElementById("node-input-structure").value == "qubits") {
         $(".circuit-structure-qubits").addClass("selected");
-        document.getElementById("number-qbitsreg").innerHTML = "Number of qubits";
-        document.getElementById("number-cbitsreg").innerHTML = "Number of classical bits";
+        document.getElementById("number-qbitsreg").innerHTML =
+          "Number of qubits";
+        document.getElementById("number-cbitsreg").innerHTML =
+          "Number of classical bits";
       } else {
         document.getElementById("node-input-structure").value = "registers";
         $(".circuit-structure-registers").addClass("selected");
-        document.getElementById("number-qbitsreg").innerHTML = "Number of quantum registers";
-        document.getElementById("number-cbitsreg").innerHTML = "Number of classical registers";
+        document.getElementById("number-qbitsreg").innerHTML =
+          "Number of quantum registers";
+        document.getElementById("number-cbitsreg").innerHTML =
+          "Number of classical registers";
       }
 
       $(".circuit-structure-qubits").on("click", function () {
         $(".circuit-structure-registers").removeClass("selected");
         $(this).addClass("selected");
-        document.getElementById("number-qbitsreg").innerHTML = "Number of qubits";
-        document.getElementById("number-cbitsreg").innerHTML = "Number of classical bits";
+        document.getElementById("number-qbitsreg").innerHTML =
+          "Number of qubits";
+        document.getElementById("number-cbitsreg").innerHTML =
+          "Number of classical bits";
         document.getElementById("node-input-structure").value = "qubits";
       });
 
       $(".circuit-structure-registers").on("click", function () {
         $(".circuit-structure-qubits").removeClass("selected");
         $(this).addClass("selected");
-        document.getElementById("number-qbitsreg").innerHTML = "Number of quantum registers";
-        document.getElementById("number-cbitsreg").innerHTML = "Number of classical registers";
+        document.getElementById("number-qbitsreg").innerHTML =
+          "Number of quantum registers";
+        document.getElementById("number-cbitsreg").innerHTML =
+          "Number of classical registers";
         document.getElementById("node-input-structure").value = "registers";
       });
     },
 
-    oneditsave: function() {
-      this.qbitsreg = parseInt(document.getElementById("node-input-qbitsreg").value) || 1;
-      this.cbitsreg = parseInt(document.getElementById("node-input-cbitsreg").value) || 0;
-      this.structure = document.getElementById('node-input-structure').value;
+    oneditsave: function () {
+      this.qbitsreg =
+        parseInt(document.getElementById("node-input-qbitsreg").value) || 1;
+      this.cbitsreg =
+        parseInt(document.getElementById("node-input-cbitsreg").value) || 0;
+      this.structure = document.getElementById("node-input-structure").value;
 
       if (this.structure == "qubits") {
         this.outputs = this.qbitsreg;
@@ -82,13 +98,15 @@
         this.outputs = this.qbitsreg + this.cbitsreg;
       }
 
-      $.post('quantum-circuit/update-circuit',
-              {
-                cbitsreg: this.cbitsreg,
-                qbitsreg: this.qbitsreg,
-                outputs: this.outputs,
-                structure: this.structure,
-              }, p => p
+      $.post(
+        "quantum-circuit/update-circuit",
+        {
+          cbitsreg: this.cbitsreg,
+          qbitsreg: this.qbitsreg,
+          outputs: this.outputs,
+          structure: this.structure,
+        },
+        (p) => p
       );
     },
   });
@@ -103,17 +121,31 @@
   <h3>Quantum Circuit Structure</h3>
   <div class="form-row">
     <span class="circuit-structure-toggle">
-      <button type="button" class="red-ui-button toggle circuit-structure-registers">Registers & Bits</button>
-      <button type="button" class="red-ui-button toggle circuit-structure-qubits">Bits only</button>
+      <button
+        type="button"
+        class="red-ui-button toggle circuit-structure-registers"
+      >
+        Registers & Bits
+      </button>
+      <button
+        type="button"
+        class="red-ui-button toggle circuit-structure-qubits"
+      >
+        Bits only
+      </button>
     </span>
   </div>
   <div class="form-row">
-    <label for="node-input-qbitsreg" id="number-qbitsreg"><i class="fa"></i> </label>
-    <input type="number" min="1" id="node-input-qbitsreg"/>
+    <label for="node-input-qbitsreg" id="number-qbitsreg"
+      ><i class="fa"></i>
+    </label>
+    <input type="number" min="1" id="node-input-qbitsreg" />
   </div>
   <div class="form-row">
-    <label for="node-input-cbitsreg" id="number-cbitsreg"><i class="fa"></i> </label>
-    <input type="number" min="0" id="node-input-cbitsreg"/>
+    <label for="node-input-cbitsreg" id="number-cbitsreg"
+      ><i class="fa"></i>
+    </label>
+    <input type="number" min="0" id="node-input-cbitsreg" />
   </div>
   <!-- Do not delete -->
   <div hidden>
@@ -125,5 +157,21 @@
 <script type="text/html" data-help-name="quantum-circuit">
   <p>
     <!-- Node documentation goes here. -->
+    This node initialises the quantum circuit. <br /><br />
+
+    To use this node, first select whether you wish to build a circuit with only
+    bits or if you would like to include registers in the structure of your
+    quantum circuit.<br /><br />
+
+    Having done this, you must identify the number of quantum registers and
+    classical registers you wish to include in your circuit, if you chose to use
+    registers and bits, or choose the number of qubits and classical bits to
+    include if you chose to design a circuit with only bits. <br /><br />
+
+    Registers are used for grouping a number of bits of the same type together
+    for circuit structuring purposes.<br /><br />
+
+    Classical bits, either in a classical register or as individual bits, are
+    needed to store the the values of qubits once they have been measured.
   </p>
 </script>
