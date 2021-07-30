@@ -60,6 +60,11 @@ const NOT_GATE =
 `qc.x(%s)
 `;
 
+const BLOCH_SPHERE =
+`
+pbv = plot_bloch_vector(counts)
+`;
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,
@@ -72,4 +77,5 @@ module.exports = {
   MEASUREMENT,
   SIMULATOR,
   NOT_GATE,
+  BLOCH_SPHERE,
 };

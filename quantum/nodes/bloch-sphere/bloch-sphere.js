@@ -28,22 +28,22 @@ module.exports = function(RED){
         );
       }
 
-      let blochScript = '';
-      let target = msg;
+      if (typeof msg.payload.register === 'undefined') {
+        script += util.format(snippets.BLOCH_SPHERE, msg.payload.qubit);
+      } else {
+        script += util.format(snippets.BLOCH_SPHERE, `msg.payload.registerVar + '[' + msg.payload.qubit + ']'`);
+      }
 
       //more codes here
 
 
 
       // Run the script in the python shell
-      await shell.execute(notScript, (err) => {
+      await shell.execute(script, (err) => {
         if (err) node.error(err);
+        else send(msg);
       });
-
-      send(msg);
-
     });
-
 
   }
   RED.nodes.registerType('bloch-sphere', blochSphereNode);
