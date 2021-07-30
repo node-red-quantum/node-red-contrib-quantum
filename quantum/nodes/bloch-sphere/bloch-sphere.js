@@ -27,13 +27,6 @@ module.exports = function(RED){
             'Please use "Quantum Circut" and "Quantum Register" node to generate qubits objects.',
         );
       }
-
-      if (typeof msg.payload.register === 'undefined') {
-        script += util.format(snippets.BLOCH_SPHERE, msg.payload.qubit);
-      } else {
-        script += util.format(snippets.BLOCH_SPHERE, `msg.payload.registerVar + '[' + msg.payload.qubit + ']'`);
-      }
-
       //more codes here
 
 
