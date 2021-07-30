@@ -67,7 +67,7 @@
       "measure": "quantum/nodes/measure/measure.js",
       "execute": "quantum/nodes/execute/execute.js",
       "simulator": "quantum/nodes/simulator/simulator.js",
-      "bloch-sphere": "quantum/nodes/bloch-sphere./bloch-sphere.js"
+      "bloch-sphere": "quantum/nodes/bloch-sphere/bloch-sphere.js"
     }
   }
 }
