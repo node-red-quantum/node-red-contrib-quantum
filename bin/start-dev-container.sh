@@ -17,7 +17,7 @@ echo "docker installed"
 if docker container ls --all | grep -q $DEV_CONTAINER_NAME; then
     echo "Starting existing dev container"
     docker exec -it $DEV_CONTAINER_NAME bash -c \
-    "nodemon --exec node-red flows_quantum.json"
+    "npm install && nodemon --exec node-red flows_quantum.json"
 else
     echo "Development container not running"
     if ! docker volume ls | grep -q $DEV_DEPENDENCY_NODE; then
