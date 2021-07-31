@@ -5,4 +5,11 @@ RUN npm install -g nodemon
 
 WORKDIR /node-red-contrib-quantum
 
+COPY package*.json .
+
+COPY bin ./bin
+
+RUN npm install && \
+    npm run setup
+
 EXPOSE 1880
