@@ -62,7 +62,7 @@ const NOT_GATE =
 `;
 
 const CIRCUIT_DRAW =
-`circuit_drawer(qc,filename = %s)
+`circuit_drawer(qc)
 `;
 
 module.exports = {

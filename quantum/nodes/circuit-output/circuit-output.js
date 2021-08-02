@@ -13,18 +13,18 @@ module.exports = function(RED) {
       let shellScript = '';
       // Add error control logic
       shellScript += snippets.IMPORTS;
-      console.log(`circuit-output: ${msg}`);
-      const params = '/Users/happysky/.node-red/static/circuit_img.png';
-      shellScript += util.format(snippets.CIRCUIT_DRAW, params);
+      // const params = '/Users/zhiqiang/.node-red/circuit_img.png';
+      shellScript += util.format(snippets.CIRCUIT_DRAW);
       await shell.execute(shellScript, (err, data) => {
         if (err) node.error(err);
-        // print the diagram to debug console
-        node.warn(data);
-        console.log(data);
+        else {
+          // print the diagram to debug console
+          node.warn(data);
+          // pass the quantum register config to the output
+          send(msg);
+        }
       });
       shell.stop();
-      // pass the quantum register config to the output
-      send(msg);
     });
   }
 
