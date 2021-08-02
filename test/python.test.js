@@ -218,15 +218,15 @@ describe('PythonShell', function() {
 
     it('return errors on parallel invalid commands', async () => {
       let outputs = await Promise.all([
-        shell.execute('print(x)').catch((err) => err),
-        shell.execute('print(x)').catch((err) => err),
+        shell.execute('print(x)'),
+        shell.execute('print(x)'),
       ]);
       assert.deepEqual(outputs, [NAME_ERROR, NAME_ERROR]);
     });
 
     it('return errors and outputs on parallel mixed commands', async () => {
       let outputs = await Promise.all([
-        shell.execute('print(x)').catch((err) => err),
+        shell.execute('print(x)'),
         shell.execute('x = 10'),
         shell.execute('print(x)'),
       ]);
