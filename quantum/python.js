@@ -131,7 +131,9 @@ class PythonShell {
   */
   stop() {
     if (this.process) {
-      this.process.stdin.end();
+      this.process.stdin.destroy();
+      this.process.stdout.destroy();
+      this.process.stderr.destroy();
       this.process.kill();
       this.process = null;
       this.script = '';
