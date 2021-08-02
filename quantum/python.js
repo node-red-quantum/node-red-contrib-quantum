@@ -86,7 +86,9 @@ class PythonShell {
 
       command = command ? dedent(command) : '';
       this.script += '\n' + command + '\n';
-      command = '\nprint("#CommandStart#")\n' + command + '\nprint("#CommandEnd#")\n';
+      command = 'print("#CommandStart#")\n' + command + '\n';
+      command += 'from sys import stderr as stderr_buffer; stderr_buffer.flush()\n';
+      command += 'print("#CommandEnd#")\n';
 
       let promise = createPromise(this.process)
           .then((data) => callback !== undefined ? callback(null, data.trim()) : data.trim())
