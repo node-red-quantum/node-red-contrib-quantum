@@ -5,8 +5,8 @@
     defaults: {
       name: { value: "" },
       api_token: { value: "", required: true },
-      preferred_provider: { value: "" },
-      preferred_backend: { value: "" },
+      //preferred_provider: { value: "" },
+      preferred_backend: { value: "", required: true },
     },
     inputs: 1,
     outputs: 1,
@@ -32,17 +32,6 @@
   </div>
 
   <div class="form-row">
-    <label for="node-input-preferred_provider" id="user-provider"
-      >Quantum Provider:
-    </label>
-    <input
-      type="text"
-      id="node-input-preferred_provider"
-      placeholder="Default"
-    />
-  </div>
-
-  <div class="form-row">
     <label for="node-input-preferred_backend" id="user-backend"
       >Quantum Backend:
     </label>
@@ -57,5 +46,10 @@
 <script type="text/html" data-help-name="ibm-quantum-system">
   <p>
     <!-- Node documentation goes here. -->
+    This node is for running your quantum flow on an actual quantum computer via
+    IBM Quantum. <br /><br />
+    To use this node you must enter your API token for your IBM Quantum account
+    and enter the quantum backend which you would like to use to run your
+    quantum flow.
   </p>
 </script>

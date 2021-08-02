@@ -1,45 +1,123 @@
-module.exports = function(RED) {
-  'use strict';
+module.exports = function (RED) {
+  "use strict";
+
+  const util = require("util");
+  const snippets = require("../../snippets");
+  const shell = require("../../python").PythonShell;
+  const errors = require("../../errors");
 
   function IBMQuantumSystemNode(config) {
     RED.nodes.createNode(this, config);
     const node = this;
-    const apiKey = config.api_key;
-    const preferredProvider = config.preferred_provider;
+    const apiToken = config.api_token;
+    // const preferredProvider = config.preferred_provider;
     const preferredBackend = config.preferred_backend;
+    this.qubits = [];
+    this.qreg = "";
 
-    let ibmqScript = `
-       provider = IBMQ.enable_account(${apiKey})
-       backend_service = IBMQ.least_busy(provider.backends())
-       job = execute(qc, backend=backend_service)
-       job.result()`;
+    this.on("input", async function (msg, send, done) {
+      let qubitsArrived = true;
 
-    // Scripts dependent on if user wants default machines for their account or to specify another set of parameters.
-    // if (preferred_provider == "" && preferred_backend == "") {
-    //   ibmqScript = `provider = IBMQ.enable_account(${api_key})
-    //   backend_service = provider.service('backend')
-    //   job = execute(qc, backend=backend_service)
-    //   results = job.result()`;
-    // } else if (preferred_provider != "" && preferred_backend == "") {
-    //   ibmqScript = `provider = IBMQ.get_provider(${preferred_provider})
-    //   backend_service = IBMQ.least_busy(provider.backends())
-    //   job = execute(qc, backend=backend_service)
-    //   results = job.result()`;
-    // } else {
-    //   ibmqScript = `provider = IBMQ.get_provider(${preferred_provider})
-    //   backend_service = IBMQ.get_backend(${preferred_backend})
-    //   job = execute(qc, backend=backend_service)
-    //   results = job.result()`;
-    // }
+      // Validate the node input msg: check for qubit object.
+      // Return corresponding errors or null if no errors.
+      // Stop the node execution upon an error
+      let error = errors.validateQubitInput(msg);
+      if (error) {
+        done(error);
+        return;
+      }
 
-    shell.execute(ibmqScript, (err, data) => {
-      if (err) {
-        node.error(err, msg);
+      // If the quantum circuit does not have registers
+      if (typeof msg.payload.register === "undefined") {
+        node.qreg = undefined;
+        node.qubits.push(msg);
+
+        // If not all qubits have arrived
+        if (node.qubits.length < msg.payload.structure.qubits) {
+          qubitsArrived = false;
+        }
       } else {
-        msg.payload = data;
-        send(msg);
+        // If the quantum circuit has registers
+        // Keep track of qubits that have arrived and the remaining ones
+        if (node.qubits.length == 0) node.qreg = {};
+
+        // Throw an error if too many qubits are received by the quantum system node
+        // because the user connected qubits from different quantum circuits
+        if (
+          (!Object.keys(node.qreg).includes(msg.payload.registerVar) &&
+            Object.keys(node.qreg).length == msg.payload.structure.qreg) ||
+          (Object.keys(node.qreg).includes(msg.payload.registerVar) &&
+            node.qreg[msg.payload.registerVar].count ==
+              node.qreg[msg.payload.registerVar].total)
+        ) {
+          done(new Error(errors.QUBITS_FROM_DIFFERENT_CIRCUITS));
+        }
+
+        // Storing information about which qubits were received
+        if (Object.keys(node.qreg).includes(msg.payload.registerVar)) {
+          node.qreg[msg.payload.registerVar].count += 1;
+        } else {
+          node.qreg[msg.payload.registerVar] = {
+            total: msg.payload.totalQubits,
+            count: 1,
+          };
+        }
+
+        node.qubits.push(msg);
+
+        // Checking whether all qubits have arrived or not
+        Object.keys(node.qreg).map((key) => {
+          if (node.qreg[key].count < node.qreg[key].total) {
+            qubitsArrived = false;
+          }
+        });
+      }
+
+      // If all qubits have arrived,
+      // generate the quantum system script and run it
+      if (qubitsArrived) {
+        // Checking that all qubits received as input are from the same quantum circuit
+        let error = errors.validateQubitsFromSameCircuit(node.qubits);
+        if (error) {
+          done(error);
+          return;
+        }
+
+        node.status({
+          fill: "orange",
+          shape: "dot",
+          text: "Job running...",
+        });
+
+        // Emptying the runtime variables upon output
+        node.qubits = [];
+        node.qreg = "";
+
+        let ibmqScript = `
+        provider = IBMQ.enable_account('${apiToken}')
+        backend_service = provider.get_backend('${preferredBackend}')
+        job = execute(qc, backend=backend_service)
+        job.result()`;
+
+        shell.execute(ibmqScript, (err, data) => {
+          if (err) {
+            node.error(err, msg);
+          } else {
+            msg.payload = data;
+            send(msg);
+
+            done();
+
+            node.status({
+              fill: "green",
+              shape: "dot",
+              text: "Job completed!",
+            });
+          }
+        });
       }
     });
   }
-  RED.nodes.registerType('ibm-quantum-system', IBMQuantumSystemNode);
+
+  RED.nodes.registerType("ibm-quantum-system", IBMQuantumSystemNode);
 };
