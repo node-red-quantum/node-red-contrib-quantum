@@ -87,7 +87,7 @@ class PythonShell {
       command = command ? dedent(command) : '';
       this.script += '\n' + command + '\n';
       command = 'print("#CommandStart#")\n' + command + '\n';
-      command += 'from sys import stderr as stderr_buffer; stderr_buffer.flush()\n';
+      command += '\nfrom sys import stderr as stderr_buffer; stderr_buffer.flush()\n';
       command += 'print("#CommandEnd#")\n';
 
       let promise = createPromise(this.process)
