@@ -1,6 +1,7 @@
 const shell = require('../quantum/python').PythonShell;
 const assert = require('chai').assert;
 const dedent = require('dedent-js');
+const replaceAll = require('string.prototype.replaceall');
 
 const nameError = dedent(`
   Traceback (most recent call last):
@@ -196,6 +197,41 @@ describe('PythonShell', function() {
           .then((err) => {
             assert.strictEqual(err, nameError);
           });
+    });
+
+    it('return outputs on parallel statement commands', async function() {
+      let outputs = await Promise.all([
+        shell.execute('print(1)'),
+        shell.execute('print(2)'),
+        shell.execute('print(3)'),
+      ]);
+      assert.deepEqual(outputs, ['1', '2', '3']);
+    });
+
+    it('return outputs on parallel loop commands', async () => {
+      let outputs = await Promise.all([
+        shell.execute('for i in range(0, 3): print(i)'),
+        shell.execute('for i in range(3, 6): print(i)'),
+        shell.execute('for i in range(6, 9): print(i)'),
+      ]);
+      assert.deepEqual(outputs, ['0\n1\n2', '3\n4\n5', '6\n7\n8']);
+    });
+
+    it('return errors on parallel invalid commands', async () => {
+      let outputs = await Promise.all([
+        shell.execute('print(x)').catch((err) => err),
+        shell.execute('print(x)').catch((err) => err),
+      ]);
+      assert.deepEqual(outputs, [nameError, nameError]);
+    });
+
+    it('return errors and outputs on parallel mixed commands', async () => {
+      let outputs = await Promise.all([
+        shell.execute('print(x)').catch((err) => err),
+        shell.execute('x = 10'),
+        shell.execute('print(x)'),
+      ]);
+      assert.deepEqual(outputs, [nameError, '', '10']);
     });
   });
 });
