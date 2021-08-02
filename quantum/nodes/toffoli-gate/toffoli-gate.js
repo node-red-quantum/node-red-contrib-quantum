@@ -118,10 +118,12 @@ module.exports = function(RED) {
           if (err) done(err);
           else {
             send(node.qubits);
-            node.qubits = []; // Emptying the runtime variable upon output
             done();
           }
         });
+
+        // Emptying the runtime variable upon output
+        node.qubits = [];
       }
     });
   }

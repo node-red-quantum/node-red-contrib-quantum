@@ -102,9 +102,6 @@ module.exports = function(RED) {
           return;
         }
 
-        // Emptying the runtime variables upon output
-        node.qubits = [];
-        node.qreg = '';
         const params = node.shots;
         script += util.format(snippets.SIMULATOR, params);
         await shell.execute(script, (err, data) => {
@@ -115,6 +112,10 @@ module.exports = function(RED) {
             done();
           }
         });
+
+        // Emptying the runtime variable upon output
+        node.qubits = [];
+        node.qreg = '';
       }
     });
   }
