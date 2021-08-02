@@ -27,8 +27,40 @@
 
 <script type="text/html" data-help-name="reset">
   <p>
-    <!-- Node documentation goes here. -->
-    This node undos the operations which were previously performed on the input
-    qubit and restores it to its original state of |0>.
+    This node resets a qubit back to its initial state: the 0 state.
   </p>
+
+  <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">object</span>
+        </dt>
+        <dd>The qubit object to reset.</dd>
+        <dt class="optional">topic 
+          <span class="property-type">string</span>
+        </dt>
+        <dd>"Quantum Circuit"</dd>
+    </dl>
+
+  <h3>Outputs</h3>
+    <dl class="message-properties">
+      <dt>payload
+          <span class="property-type">object</span>
+      </dt>
+      <dd>The same qubit object that was received as input and reset.</dd>
+      <dt class="optional">topic 
+        <span class="property-type">string</span>
+      </dt>
+      <dd>"Quantum Circuit"</dd>
+    </dl>
+
+  <h3>Details</h3>
+    <p>
+      Qubit objects can be generated from:
+      <ul>
+        <li>'Quantum circuit' node in 'Bits only' mode.</li>
+        <li>'Quantum register' node along with 'Quantum circuit' in 'Register & bits' mode.</li>
+      </ul>
+    </p>
+
 </script>
