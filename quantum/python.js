@@ -34,9 +34,9 @@ function createPromise(process) {
         process.stdout.removeAllListeners();
         process.stderr.removeAllListeners();
         if (errorData.trim()) {
-          reject(errorData);
+          reject(errorData.trim());
         } else {
-          resolve(outputData);
+          resolve(outputData.trim());
         }
       }
     });
@@ -91,8 +91,8 @@ class PythonShell {
       command += 'print("#CommandEnd#")\n';
 
       let promise = createPromise(this.process)
-          .then((data) => callback !== undefined ? callback(null, data.trim()) : data.trim())
-          .catch((err) => callback !== undefined ? callback(err.trim(), null) : err.trim());
+          .then((data) => callback !== undefined ? callback(null, data) : data)
+          .catch((err) => callback !== undefined ? callback(err, null) : err);
       this.process.stdin.write(command);
 
       return promise;
