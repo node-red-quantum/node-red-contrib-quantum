@@ -109,10 +109,43 @@
 
 <script type="text/html" data-help-name="rotation-gate">
   <p>
-    <!-- Node documentation goes here. -->
-    This node rotates the input qubit about the given axis by the given angle.
-    <br />
-    To use this node, select the axis which you would like to rotate the qubit
-    about and slide the slider to the chosen angle of rotation.
+    This node rotates the input qubit by a given angle about the x, y or z axis.<br /><br />
+    To do so, open the node properties, select the rotation axis & 
+    drag the slider to specify the angle of rotation (in radians).
   </p>
+
+  <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">object</span>
+        </dt>
+        <dd>The qubit object to apply the rotation.</dd>
+        <dt class="optional">topic 
+          <span class="property-type">string</span>
+        </dt>
+        <dd>"Quantum Circuit"</dd>
+    </dl>
+
+  <h3>Outputs</h3>
+    <dl class="message-properties">
+      <dt>payload
+          <span class="property-type">object</span>
+      </dt>
+      <dd>The same qubit object that was received as input.</dd>
+      <dt class="optional">topic 
+        <span class="property-type">string</span>
+      </dt>
+      <dd>"Quantum Circuit"</dd>
+    </dl>
+
+  <h3>Details</h3>
+    <p>
+      Qubit objects can be generated from:
+      <ul>
+        <li>'Quantum circuit' node in 'Bits only' mode.</li>
+        <li>'Quantum register' node along with 'Quantum circuit' in 'Register & bits' mode.</li>
+      </ul>
+    </p>
+    <br />
+
 </script>
