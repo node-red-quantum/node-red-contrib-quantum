@@ -9,6 +9,7 @@ const pythonScript = require('python-shell').PythonShell;
 const pythonExecutable = os.platform() === 'win32' ? 'venv/Scripts/python.exe' : 'venv/bin/python';
 const pythonPath = path.resolve(appRoot, pythonExecutable);
 const childProcess = require('child_process');
+const replaceAll = require('string.prototype.replaceall');
 const Mutex = require('async-mutex').Mutex;
 const mutex = new Mutex();
 
@@ -21,10 +22,10 @@ function createPromise(process) {
     process.stdout.on('data', function(data) {
       let done = false;
 
-      if (data.match(/#CommandStart#/)) {
-        data = data.replace(/#CommandStart#/, '');
-      } if (data.match(/#CommandEnd#/)) {
-        data = data.replace(/#CommandEnd#/, '');
+      if (data.includes('#CommandStart#')) {
+        data = data.replace('#CommandStart#', '');
+      } if (data.includes('#CommandEnd#')) {
+        data = data.replace('#CommandEnd#', '');
         done = true;
       }
       outputData += data;
@@ -41,18 +42,8 @@ function createPromise(process) {
     });
 
     process.stderr.on('data', function(data) {
-      if (data.includes('>>>')) {
-        data = data.replace(/>>>/g, '');
-      } if (data.includes('...')) {
-        data = data.replace(/.../g, '');
-      }
-
-      // When the input is a code block, the result will sometimes (seemingly non-deterministicly)
-      // be a single period. This is a workaround to prevent it being added to the output.
-      if (data.trim() === '.') {
-        data = '';
-      }
-
+      data = replaceAll(data, '>>>', '');
+      data = replaceAll(data, '...', '');
       errorData += data;
     });
   });
