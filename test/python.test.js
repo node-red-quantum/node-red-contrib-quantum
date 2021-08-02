@@ -1,9 +1,8 @@
 const shell = require('../quantum/python').PythonShell;
 const assert = require('chai').assert;
 const dedent = require('dedent-js');
-const replaceAll = require('string.prototype.replaceall');
 
-const nameError = dedent(`
+const NAME_ERROR = dedent(`
   Traceback (most recent call last):
     File "<stdin>", line 1, in <module>
   NameError: name 'x' is not defined`);
@@ -166,7 +165,7 @@ describe('PythonShell', function() {
 
     it('return error on invalid command', async function() {
       let output = await shell.execute('print(x)');
-      assert.strictEqual(output, nameError);
+      assert.strictEqual(output, NAME_ERROR);
     });
 
     it('return output with callback', async function() {
@@ -178,7 +177,7 @@ describe('PythonShell', function() {
 
     it('return error with callback', async function() {
       await shell.execute('print(x)', (err, data) => {
-        assert.strictEqual(err, nameError);
+        assert.strictEqual(err, NAME_ERROR);
         assert.isNull(data);
       });
     });
@@ -195,7 +194,7 @@ describe('PythonShell', function() {
       let promise = shell.execute('print(x)');
       await promise
           .then((err) => {
-            assert.strictEqual(err, nameError);
+            assert.strictEqual(err, NAME_ERROR);
           });
     });
 
@@ -222,7 +221,7 @@ describe('PythonShell', function() {
         shell.execute('print(x)').catch((err) => err),
         shell.execute('print(x)').catch((err) => err),
       ]);
-      assert.deepEqual(outputs, [nameError, nameError]);
+      assert.deepEqual(outputs, [NAME_ERROR, NAME_ERROR]);
     });
 
     it('return errors and outputs on parallel mixed commands', async () => {
@@ -231,7 +230,7 @@ describe('PythonShell', function() {
         shell.execute('x = 10'),
         shell.execute('print(x)'),
       ]);
-      assert.deepEqual(outputs, [nameError, '', '10']);
+      assert.deepEqual(outputs, [NAME_ERROR, '', '10']);
     });
   });
 });
