@@ -34,7 +34,7 @@ function createPromise(process) {
         process.stdout.removeAllListeners();
         process.stderr.removeAllListeners();
         if (errorData.trim()) {
-          reject(new Error(errorData.trim()));
+          reject(errorData.trim());
         } else {
           resolve(outputData.trim());
         }
