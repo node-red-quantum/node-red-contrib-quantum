@@ -7,26 +7,33 @@ const shell = require('../../python').PythonShell;
 module.exports = function(RED) {
   function CircuitOutputNode(config) {
     RED.nodes.createNode(this, config);
-    const node = this;
 
-    node.on('input', async (msg, send, done) => {
-      let shellScript = '';
-      // Add error control logic
-      shellScript += snippets.IMPORTS;
-      // const params = '/Users/zhiqiang/.node-red/circuit_img.png';
-      shellScript += util.format(snippets.CIRCUIT_DRAW);
-      await shell.execute(shellScript, (err, data) => {
-        if (err) node.error(err);
-        else {
-          // print the diagram to debug console
-          node.warn(data);
-          // pass the quantum register config to the output
-          send(msg);
+    this.on('input', async function(msg, send, done) {
+      let script = '';
+      script += snippets.IMPORTS;
+      await shell.restart();
+
+      let circuitScript;
+      circuitScript = script + util.format(snippets.CIRCUIT_DRAW);
+      await shell.execute(circuitScript, (err) => {
+        if (err) {
+          done(err);
         }
       });
-      shell.stop();
-    });
-  }
 
+      let bufferScript;
+      bufferScript = script + util.format(snippets.BUFFER_DRAW);
+      await shell.execute(bufferScript, (err, data) => {
+        if (err) {
+          done(err);
+        } else {
+          msg.payload = data.split('\'')[1];
+          msg.encoding = 'base64';
+          send(msg);
+          done();
+        }
+      });
+    });
+  };
   RED.nodes.registerType('circuit-output', CircuitOutputNode);
 };

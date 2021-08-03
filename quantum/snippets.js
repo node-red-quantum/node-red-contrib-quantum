@@ -16,6 +16,9 @@ const IMPORTS =
 `import numpy as np
  from qiskit import *
  from qiskit.tools.visualization import circuit_drawer
+ import matplotlib.pyplot as plt
+ import base64
+ import io
  `;
 
 const QUANTUM_CIRCUIT =
@@ -62,7 +65,15 @@ const NOT_GATE =
 `;
 
 const CIRCUIT_DRAW =
-`circuit_drawer(qc)
+`circuit_drawer(qc, output="mpl")
+`;
+
+const BUFFER_DRAW =
+`buffer = io.BytesIO()
+plt.savefig(buffer,  format='png')
+buffer.seek(0)
+b64_string = base64.b64encode(buffer.read())
+print(b64_string)
 `;
 
 module.exports = {
@@ -78,4 +89,5 @@ module.exports = {
   SIMULATOR,
   NOT_GATE,
   CIRCUIT_DRAW,
+  BUFFER_DRAW,
 };
