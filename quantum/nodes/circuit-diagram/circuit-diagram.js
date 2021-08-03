@@ -1,6 +1,5 @@
 'use strict';
 
-const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 
@@ -8,24 +7,13 @@ module.exports = function(RED) {
   function CircuitDiagramNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
-    const node = this;
 
     this.on('input', async function(msg, send, done) {
-      let script = snippets.IMPORTS;
+      let script = snippets.CIRCUIT_BUFFER;
 
-      let circuitScript;
-      circuitScript = script + util.format(snippets.CIRCUIT_DRAW);
-      await shell.execute(circuitScript, (err) => {
+      await shell.execute(script, (err, data) => {
         if (err) {
-          node.error(err);
-        }
-      });
-
-      let bufferScript;
-      bufferScript = util.format(snippets.BUFFER_DRAW);
-      await shell.execute(bufferScript, (err, data) => {
-        if (err) {
-          node.error(err);
+          done(err);
         } else {
           msg.payload = data.split('\'')[1];
           msg.encoding = 'base64';
