@@ -13,10 +13,8 @@
 // Probably shouldn't use wildcard import here for efficiency but whatever will
 // worry about it later.
 const IMPORTS =
-`import numpy as np
- from math import pi
- from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister
- from qiskit.visualization import circuit_drawer
+`from math import pi
+from qiskit import *
 `;
 
 const QUANTUM_CIRCUIT =
