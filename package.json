@@ -58,7 +58,7 @@
       "barrier": "quantum/nodes/barrier/barrier.js",
       "identity": "quantum/nodes/identity/identity.js",
       "simulator": "quantum/nodes/simulator/simulator.js",
-      "circuit-output": "quantum/nodes/circuit-output/circuit-output.js",
+      "circuit-diagram": "quantum/nodes/circuit-diagram/circuit-diagram.js",
       "swap": "quantum/nodes/swap/swap.js",
       "identity-gate": "quantum/nodes/identity-gate/identity-gate.js",
       "not-gate": "quantum/nodes/not-gate/not-gate.js",

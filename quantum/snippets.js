@@ -14,12 +14,12 @@
 // worry about it later.
 const IMPORTS =
 `import numpy as np
- from qiskit import *
- from qiskit.tools.visualization import circuit_drawer
+ from math import pi
+ from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister
+ from qiskit.visualization import circuit_drawer
  import matplotlib.pyplot as plt
  import base64
  import io
- from math import pi
 `;
 
 const QUANTUM_CIRCUIT =
@@ -66,7 +66,7 @@ const NOT_GATE =
 `;
 
 const CIRCUIT_DRAW =
-`circuit_drawer(qc, output='mpl')
+`qc.draw(output='mpl')
 `;
 
 const BUFFER_DRAW =

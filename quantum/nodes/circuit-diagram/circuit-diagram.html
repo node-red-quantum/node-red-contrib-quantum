@@ -1,5 +1,5 @@
 <script type="text/javascript">
-  RED.nodes.registerType("circuit-output", {
+  RED.nodes.registerType("circuit-diagram", {
     category: "quantum",
     color: "#33B1FF",
     defaults: {
@@ -8,21 +8,21 @@
     inputs: 1,
     outputs: 1,
     icon: "function.svg",
-    paletteLabel: "circuit output",
+    paletteLabel: "circuit diagram",
     label: function () {
-      return this.name || "circuit output";
+      return this.name || "circuit diagram";
     },
   });
 </script>
 
-<script type="text/html" data-template-name="circuit-output">
+<script type="text/html" data-template-name="circuit-diagram">
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
 </script>
 
-<script type="text/html" data-help-name="circuit-output">
+<script type="text/html" data-help-name="circuit-diagram">
   <p>
     <!-- Node documentation goes here. -->
   </p>
