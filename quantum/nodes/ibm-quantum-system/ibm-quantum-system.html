@@ -1,7 +1,7 @@
 <script type="text/javascript">
   RED.nodes.registerType("ibm-quantum-system", {
     category: "quantum",
-    color: "#33B1FF",
+    color: "#A8A8A8",
     defaults: {
       name: { value: "" },
       api_token: { value: "", required: true },
@@ -24,6 +24,11 @@
       ><i class="fa fa-tag"></i> IBM Quantum System
     </label>
   </div>
+  <div class="form-row">
+    <label for="node-input-name" id="node-name">Name: </label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+
   <div class="form-row">
     <label for="node-input-api_token" id="user-api-token"
       >IBM Quantum API Token:
@@ -58,6 +63,9 @@
     IBM Quantum. <br /><br />
     To use this node you must enter your API token for your IBM Quantum account
     and enter the quantum backend which you would like to use to run your
-    quantum flow.
+    quantum flow. <br /><br />
+    By default, this node returns only the results of the quantum flow, but the
+    'Verbose' output option can be selected to include information about the
+    quantum machine it was run on, the job ID, etc.
   </p>
 </script>
