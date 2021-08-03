@@ -65,7 +65,7 @@ const NOT_GATE =
 `;
 
 const CIRCUIT_DRAW =
-`circuit_drawer(qc, output="mpl")
+`circuit_drawer(qc, output='mpl')
 `;
 
 const BUFFER_DRAW =
