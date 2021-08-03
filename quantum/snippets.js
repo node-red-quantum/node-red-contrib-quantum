@@ -17,9 +17,6 @@ const IMPORTS =
  from math import pi
  from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister
  from qiskit.visualization import circuit_drawer
- import matplotlib.pyplot as plt
- import base64
- import io
 `;
 
 const QUANTUM_CIRCUIT =
@@ -70,7 +67,10 @@ const CIRCUIT_DRAW =
 `;
 
 const BUFFER_DRAW =
-`buffer = io.BytesIO()
+`import matplotlib.pyplot as plt
+import base64
+import io
+buffer = io.BytesIO()
 plt.savefig(buffer,  format='png')
 buffer.seek(0)
 b64_string = base64.b64encode(buffer.read())
