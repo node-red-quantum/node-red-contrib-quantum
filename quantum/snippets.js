@@ -40,11 +40,22 @@ const HADAMARD_GATE = `qc.h(%s)
 const MEASURE = `qc.measure(%s)
 `;
 
-const SIMULATOR = `simulator = Aer.get_backend('qasm_simulator')
+const LOCAL_SIMULATOR = `simulator = Aer.get_backend('qasm_simulator')
 result = execute(qc, backend = simulator, shots = %s).result()
 counts = result.get_counts()
 print(counts)
 `;
+
+const IBMQ_SYSTEM_VERBOSE = `provider = IBMQ.enable_account('%s')
+backend_service = provider.get_backend('%s')
+job = execute(qc, backend=backend_service)
+job.result()`;
+
+const IBMQ_SYSTEM_RESULT = `provider = IBMQ.enable_account('%s')
+backend_service = provider.get_backend('%s')
+job = execute(qc, backend=backend_service)
+counts = job.result().get_counts()
+print(counts)`;
 
 const NOT_GATE = `qc.x(%s)
 `;
@@ -77,7 +88,9 @@ module.exports = {
   BARRIER,
   HADAMARD_GATE,
   MEASURE,
-  SIMULATOR,
+  LOCAL_SIMULATOR,
+  IBMQ_SYSTEM_VERBOSE,
+  IBMQ_SYSTEM_RESULT,
   NOT_GATE,
   RESET,
   PHASE_GATE,

@@ -6,7 +6,7 @@ const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
 
 module.exports = function(RED) {
-  function SimulatorNode(config) {
+  function LocalSimulatorNode(config) {
     RED.nodes.createNode(this, config);
     this.shots = config.shots || 1;
     this.qubits = [];
@@ -86,8 +86,9 @@ module.exports = function(RED) {
         node.qubits = [];
         node.qreg = '';
 
-        const params = node.shots;
-        script += util.format(snippets.SIMULATOR, params);
+        let params = node.shots;
+        script += util.format(snippets.LOCAL_SIMULATOR, params);
+
         await shell.execute(script, (err, data) => {
           if (err) done(err);
           else {
@@ -100,5 +101,5 @@ module.exports = function(RED) {
     });
   }
 
-  RED.nodes.registerType('simulator', SimulatorNode);
+  RED.nodes.registerType('local-simulator', LocalSimulatorNode);
 };

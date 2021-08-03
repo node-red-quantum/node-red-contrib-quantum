@@ -9,7 +9,7 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.qubits = [];
-    this.targetPosition = config.targetPosition;
+    const targetPosition = config.targetPosition;
     const node = this;
 
     this.on('input', async function(msg, send, done) {
@@ -58,11 +58,11 @@ module.exports = function(RED) {
         let target = node.qubits[0];
 
         // Determine which node is the target based on position.
-        if (node.targetPosition == 'Top') {
+        if (targetPosition == 'Top') {
           target = node.qubits[0];
           control1 = node.qubits[1];
           control2 = node.qubits[2];
-        } else if (node.targetPosition == 'Middle') {
+        } else if (targetPosition == 'Middle') {
           target = node.qubits[1];
           control1 = node.qubits[0];
           control2 = node.qubits[2];
@@ -108,7 +108,11 @@ module.exports = function(RED) {
           node.status({
             fill: 'grey',
             shape: 'dot',
-            text: 'Target: register ' + target.payload.register + ' / qubit ' + target.payload.qubit.toString(),
+            text:
+              'Target: register ' +
+              target.payload.register +
+              ' / qubit ' +
+              target.payload.qubit.toString(),
           });
         }
 

@@ -10,8 +10,8 @@ module.exports = function (RED) {
     RED.nodes.createNode(this, config);
     const node = this;
     const apiToken = config.api_token;
-    // const preferredProvider = config.preferred_provider;
     const preferredBackend = config.preferred_backend;
+    const outputPreference = config.preferred_output;
     this.qubits = [];
     this.qreg = "";
 
@@ -93,13 +93,23 @@ module.exports = function (RED) {
         node.qubits = [];
         node.qreg = "";
 
-        let ibmqScript = `
-        provider = IBMQ.enable_account('${apiToken}')
-        backend_service = provider.get_backend('${preferredBackend}')
-        job = execute(qc, backend=backend_service)
-        job.result()`;
+        let script = "";
 
-        shell.execute(ibmqScript, (err, data) => {
+        if (outputPreference == "Verbose") {
+          script += util.format(
+            snippets.IBMQ_SYSTEM_VERBOSE,
+            apiToken,
+            preferredBackend
+          );
+        } else {
+          script += util.format(
+            snippets.IBMQ_SYSTEM_RESULT,
+            apiToken,
+            preferredBackend
+          );
+        }
+
+        shell.execute(script, (err, data) => {
           if (err) {
             node.error(err, msg);
           } else {

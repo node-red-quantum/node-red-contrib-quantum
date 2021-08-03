@@ -66,7 +66,7 @@
       "toffoli-gate": "quantum/nodes/toffoli-gate/toffoli-gate.js",
       "measure": "quantum/nodes/measure/measure.js",
       "execute": "quantum/nodes/execute/execute.js",
-      "simulator": "quantum/nodes/simulator/simulator.js",
+      "local-simulator": "quantum/nodes/local-simulator/local-simulator.js",
       "ibm-quantum-system": "quantum/nodes/ibm-quantum-system/ibm-quantum-system.js"
     }
   }
