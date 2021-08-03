@@ -1,0 +1,36 @@
+<script type="text/javascript">
+  RED.nodes.registerType("qubit", {
+    category: "quantum",
+    color: "#33B1FF",
+    defaults: {
+      name: { value: "" },
+    },
+    outputs: 1,
+    inputs: 1,
+    icon: "font-awesome/fa-chevron-right",
+    align: "left",
+    paletteLabel: "qubit",
+    label: function () {
+      return this.name || "qubit";
+    },
+    inputLabels: "Qubit",
+    outputLabels: "Qubit",
+  });
+</script>
+
+<script type="text/html" data-template-name="qubit">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+</script>
+
+<script type="text/html" data-help-name="qubit">
+  <p>
+    <!-- Node documentation goes here. -->
+    This node is used to improve structure of the quantum circuit, such that
+    each qubit can be easily identified. <br />
+    This node does not do anything to the input qubit. It only shows the label
+    for the input qubit to increase circuit readability.
+  </p>
+</script>

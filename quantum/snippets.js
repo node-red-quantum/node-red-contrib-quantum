@@ -19,7 +19,8 @@ const IMPORTS =
  import matplotlib.pyplot as plt
  import base64
  import io
- `;
+ from math import pi
+`;
 
 const QUANTUM_CIRCUIT =
 `qc = QuantumCircuit(%s)
@@ -49,7 +50,7 @@ const HADAMARD_GATE =
 `qc.h(%s)
 `;
 
-const MEASUREMENT =
+const MEASURE =
 `qc.measure(%s)
 `;
 
@@ -76,6 +77,30 @@ b64_string = base64.b64encode(buffer.read())
 print(b64_string)
 `;
 
+const RESET =
+`qc.reset(%s)
+`;
+
+const PHASE_GATE =
+`qc.p(%s, %s)
+`;
+
+const ROTATION_GATE =
+`qc.r%s(%s, %s)
+`;
+
+const UNITARY_GATE =
+`qc.u(%s, %s, %s, %s)
+`;
+
+const IDENTITY =
+`qc.id(%s)
+`;
+
+const SWAP =
+`qc.swap(%s, %s)
+`;
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,
@@ -85,9 +110,15 @@ module.exports = {
   CNOT_GATE,
   BARRIER,
   HADAMARD_GATE,
-  MEASUREMENT,
+  MEASURE,
   SIMULATOR,
   NOT_GATE,
   CIRCUIT_DRAW,
   BUFFER_DRAW,
+  RESET,
+  PHASE_GATE,
+  ROTATION_GATE,
+  IDENTITY,
+  SWAP,
+  UNITARY_GATE,
 };

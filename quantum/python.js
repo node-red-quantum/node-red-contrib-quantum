@@ -9,6 +9,8 @@ const pythonScript = require('python-shell').PythonShell;
 const pythonExecutable = os.platform() === 'win32' ? 'venv/Scripts/python.exe' : 'venv/bin/python';
 const pythonPath = path.resolve(appRoot, pythonExecutable);
 const childProcess = require('child_process');
+const Mutex = require('async-mutex').Mutex;
+const mutex = new Mutex();
 
 
 function createPromise(process) {
@@ -44,6 +46,13 @@ function createPromise(process) {
       } if (data.includes('...')) {
         data = data.replace(/.../g, '');
       }
+
+      // When the input is a code block, the result will sometimes (seemingly non-deterministicly)
+      // be a single period. This is a workaround to prevent it being added to the output.
+      if (data.trim() === '.') {
+        data = '';
+      }
+
       errorData += data;
     });
   });
@@ -83,25 +92,21 @@ class PythonShell {
       throw new Error('Python process has not been started - call start() before executing commands.');
     }
 
-    await new Promise((resolve) => {
-      const timer = setInterval(() => {
-        if (!this.process.stdout.readableFlowing && !this.process.stderr.readableFlowing) {
-          resolve();
-          clearInterval(timer);
-        }
-      }, 250);
+    let promise;
+    await mutex.runExclusive(async () => {
+      command = command ? dedent(command) : '';
+      this.script += '\n' + command + '\n';
+      command = '\nprint("#CommandStart#")\n' + command + '\nprint("#CommandEnd#")\n';
+
+      promise = createPromise(this.process)
+          .then((data) => callback !== undefined ? callback(null, data.trim()) : data.trim())
+          .catch((err) => callback !== undefined ? callback(err.trim(), null) : err.trim());
+
+      this.process.stdin.write(command);
+      promise = await promise;
     });
 
-    command = command ? dedent(command) : '';
-    this.script += '\n' + command + '\n';
-    command = '\nprint("#CommandStart#")\n' + command + '\nprint("#CommandEnd#")\n';
-
-    const promise = createPromise(this.process);
-    this.process.stdin.write(command);
-
-    return promise
-        .then((data) => callback !== undefined ? callback(null, data.trim()) : data.trim())
-        .catch((err) => callback !== undefined ? callback(err.trim(), null) : err.trim());
+    return promise;
   }
 
   /**
