@@ -1,10 +1,10 @@
-module.exports = function (RED) {
-  "use strict";
+module.exports = function(RED) {
+  'use strict';
 
-  const util = require("util");
-  const snippets = require("../../snippets");
-  const shell = require("../../python").PythonShell;
-  const errors = require("../../errors");
+  const util = require('util');
+  const snippets = require('../../snippets');
+  const shell = require('../../python').PythonShell;
+  const errors = require('../../errors');
 
   function IBMQuantumSystemNode(config) {
     RED.nodes.createNode(this, config);
@@ -13,9 +13,9 @@ module.exports = function (RED) {
     const preferredBackend = config.preferred_backend;
     const outputPreference = config.preferred_output;
     this.qubits = [];
-    this.qreg = "";
+    this.qreg = '';
 
-    this.on("input", async function (msg, send, done) {
+    this.on('input', async function(msg, send, done) {
       let qubitsArrived = true;
 
       // Validate the node input msg: check for qubit object.
@@ -28,7 +28,7 @@ module.exports = function (RED) {
       }
 
       // If the quantum circuit does not have registers
-      if (typeof msg.payload.register === "undefined") {
+      if (typeof msg.payload.register === 'undefined') {
         node.qreg = undefined;
         node.qubits.push(msg);
 
@@ -84,28 +84,28 @@ module.exports = function (RED) {
         }
 
         node.status({
-          fill: "orange",
-          shape: "dot",
-          text: "Job running...",
+          fill: 'orange',
+          shape: 'dot',
+          text: 'Job running...',
         });
 
         // Emptying the runtime variables upon output
         node.qubits = [];
-        node.qreg = "";
+        node.qreg = '';
 
-        let script = "";
+        let script = '';
 
-        if (outputPreference == "Verbose") {
+        if (outputPreference == 'Verbose') {
           script += util.format(
-            snippets.IBMQ_SYSTEM_VERBOSE,
-            apiToken,
-            preferredBackend
+              snippets.IBMQ_SYSTEM_VERBOSE,
+              apiToken,
+              preferredBackend,
           );
         } else {
           script += util.format(
-            snippets.IBMQ_SYSTEM_RESULT,
-            apiToken,
-            preferredBackend
+              snippets.IBMQ_SYSTEM_RESULT,
+              apiToken,
+              preferredBackend,
           );
         }
 
@@ -119,9 +119,9 @@ module.exports = function (RED) {
             done();
 
             node.status({
-              fill: "green",
-              shape: "dot",
-              text: "Job completed!",
+              fill: 'green',
+              shape: 'dot',
+              text: 'Job completed!',
             });
           }
         });
@@ -129,5 +129,5 @@ module.exports = function (RED) {
     });
   }
 
-  RED.nodes.registerType("ibm-quantum-system", IBMQuantumSystemNode);
+  RED.nodes.registerType('ibm-quantum-system', IBMQuantumSystemNode);
 };

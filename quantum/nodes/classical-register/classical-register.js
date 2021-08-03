@@ -15,8 +15,6 @@ module.exports = function(RED) {
     const node = this;
 
     this.on('input', async function(msg, send, done) {
-      let script = '';
-
       // Validate the node input msg: check for register object.
       // Return corresponding errors or null if no errors.
       // Stop the node execution upon an error
@@ -27,11 +25,15 @@ module.exports = function(RED) {
       }
 
       // Add arguments to classical register code
-      script += util.format(
+      let crscript = util.format(
           snippets.CLASSICAL_REGISTER,
           '_' + node.name,
           node.classicalBits.toString() + ', "' + node.name + '"',
       );
+
+      await shell.execute(crscript, (err) => {
+        if (err) node.error(err);
+      });
 
       // Completing the 'quantumCircuit' flow context array
       let register = {
@@ -43,6 +45,9 @@ module.exports = function(RED) {
           'quantumCircuit[' + msg.payload.register.toString() + ']',
           register,
       );
+
+      // get quantum circuit config and circuit ready event from flow context
+      let quantumCircuitConfig = flowContext.get('quantumCircuitConfig');
 
       // If the quantum circuit has not yet been initialised by another register
       if (typeof flowContext.get('quantumCircuit') !== undefined) {
@@ -78,16 +83,17 @@ module.exports = function(RED) {
             circuitScript = util.format(circuitScript, register.registerVar);
           });
 
-          script += circuitScript;
+          // Run the script in the python shell, and if no error occurs
+          // then notify the runtime when the node is done.
+          await shell.execute(circuitScript, (err) => {
+            if (err) done(err);
+            else done();
+          });
         }
       }
 
-      // Run the script in the python shell, and if no error occurs
-      // then notify the runtime when the node is done.
-      await shell.execute(script, (err) => {
-        if (err) done(err);
-        else done();
-      });
+      // update quantum circuit config
+      quantumCircuitConfig[node.name] = register;
     });
   }
 

@@ -1,0 +1,33 @@
+<script type="text/javascript">
+  RED.nodes.registerType("script", {
+    category: "quantum",
+    color: "#A8A8A8",
+    defaults: {
+      name: { value: "" },
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-code",
+    paletteLabel: "script",
+    label: function () {
+      return this.name || "script";
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="script">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+</script>
+
+<script type="text/html" data-help-name="script">
+  <p>Return the Python script at the time of execution.</p>
+  <p>
+    This node is not run until the preceeding node has finished executing. Note that this node is for debugging and
+    development purposes, and is not suitable for production use in its current state. This is due to the fact that a
+    user will not be able to generate the full script as execution will be triggered as the first qubit arrives, despite
+    other qubits still having quantum gates to flow through.
+  </p>
+</script>
