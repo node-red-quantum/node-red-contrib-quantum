@@ -66,6 +66,7 @@
       "hadamard-gate": "quantum/nodes/hadamard-gate/hadamard-gate.js",
       "cnot-gate": "quantum/nodes/cnot-gate/cnot-gate.js",
       "toffoli-gate": "quantum/nodes/toffoli-gate/toffoli-gate.js",
+      "controlled-u-gate":"quantum/nodes/controlled-u-gate/controlled-u-gate.js",
       "measure": "quantum/nodes/measure/measure.js",
       "script": "quantum/nodes/script/script.js",
       "simulator": "quantum/nodes/simulator/simulator.js"

@@ -84,6 +84,10 @@ const SWAP =
 `qc.swap(%s, %s)
 `;
 
+const CU_GATE =
+`qc.cu(%s, %s, %s, %s, %s, %s)
+`;
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,
@@ -102,4 +106,5 @@ module.exports = {
   IDENTITY,
   SWAP,
   UNITARY_GATE,
+  CU_GATE,
 };
