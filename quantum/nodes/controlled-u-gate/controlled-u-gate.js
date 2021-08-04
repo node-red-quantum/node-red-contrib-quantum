@@ -73,10 +73,10 @@ module.exports = function(RED) {
         // Use qubits only if there are no registers.
         if (typeof msg.payload.register === 'undefined') {
           script += util.format(snippets.CU_GATE,
-              node.theta,
-              node.phi,
-              node.lambda,
-              node.gamma,
+              node.theta + '*pi',
+              node.phi + '*pi',
+              node.lambda + '*pi',
+              node.gamma + '*pi',
               controlQubit.payload.qubit.toString(),
               targetQubit.payload.qubit.toString(),
           );
@@ -89,10 +89,10 @@ module.exports = function(RED) {
         } else {
           // Use registers if there are quantum registers.
           script += util.format(snippets.CU_GATE,
-              node.theta,
-              node.phi,
-              node.lambda,
-              node.gamma,
+              node.theta + '*pi',
+              node.phi + '*pi',
+              node.lambda + '*pi',
+              node.gamma + '*pi',
               controlQubit.payload.registerVar + '[' +
               controlQubit.payload.qubit.toString() + ']',
               targetQubit.payload.registerVar + '[' +
