@@ -36,7 +36,8 @@
     "app-root-path": "^3.0.0",
     "async-mutex": "^0.3.1",
     "dedent-js": "^1.0.1",
-    "python-shell": "^3.0.0"
+    "python-shell": "^3.0.0",
+    "string.prototype.replaceall": "^1.0.5"
   },
   "devDependencies": {
     "chai": "^4.3.4",
