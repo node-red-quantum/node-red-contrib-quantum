@@ -1,17 +1,17 @@
+'use strict';
+
+const util = require('util');
+const snippets = require('../../snippets');
+const shell = require('../../python').PythonShell;
+const errors = require('../../errors');
+
 module.exports = function(RED) {
-  'use strict';
-
-  const util = require('util');
-  const snippets = require('../../snippets');
-  const shell = require('../../python').PythonShell;
-  const errors = require('../../errors');
-
   function IBMQuantumSystemNode(config) {
     RED.nodes.createNode(this, config);
+    this.apiToken = config.api_token;
+    this.preferredBackend = config.preferred_backend;
+    this.outputPreference = config.preferred_output;
     const node = this;
-    const apiToken = config.api_token;
-    const preferredBackend = config.preferred_backend;
-    const outputPreference = config.preferred_output;
     this.qubits = [];
     this.qreg = '';
 
@@ -95,23 +95,23 @@ module.exports = function(RED) {
 
         let script = '';
 
-        if (outputPreference == 'Verbose') {
+        if (node.outputPreference == 'Verbose') {
           script += util.format(
               snippets.IBMQ_SYSTEM_VERBOSE,
-              apiToken,
-              preferredBackend,
+              node.apiToken,
+              node.preferredBackend,
           );
         } else {
           script += util.format(
               snippets.IBMQ_SYSTEM_RESULT,
-              apiToken,
-              preferredBackend,
+              node.apiToken,
+              node.preferredBackend,
           );
         }
 
-        shell.execute(script, (err, data) => {
+        await shell.execute(script, (err, data) => {
           if (err) {
-            node.error(err, msg);
+            done(err);
           } else {
             msg.payload = data;
             send(msg);
