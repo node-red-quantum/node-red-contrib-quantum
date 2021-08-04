@@ -38,7 +38,7 @@ module.exports = function(RED) {
             node.theta + '*pi',
             node.phi + '*pi',
             node.lambda + '*pi',
-            `msg.payload.registerVar + '[' + msg.payload.qubit + ']'`,
+            msg.payload.registerVar + '[' + msg.payload.qubit + ']',
         );
       }
 

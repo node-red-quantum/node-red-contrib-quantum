@@ -65,7 +65,7 @@ module.exports = function(RED) {
 
         // If all register initialised & the circuit has not been initialised by another register:
         // Initialise the quantum circuit
-        if (count == structure.length && typeof flowContext.get('quantumCircuit') !== undefined) {
+        if (count == structure.length && typeof(flowContext.get('quantumCircuit')) !== undefined) {
           // Delete the 'quantumCircuit' flow context variable, not used anymore
           flowContext.set('quantumCircuit', undefined);
 

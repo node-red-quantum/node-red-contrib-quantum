@@ -12,6 +12,13 @@ module.exports = function(RED) {
     this.qubits = [];
     this.qreg = '';
     const node = this;
+
+    // Reset runtime variables upon output or error
+    const reset = function() {
+      node.qubits = [];
+      node.qreg = '';
+    };
+
     this.on('input', async function(msg, send, done) {
       let script = '';
       let qubitsArrived = true;
@@ -22,6 +29,7 @@ module.exports = function(RED) {
       let error = errors.validateQubitInput(msg);
       if (error) {
         done(error);
+        reset();
         return;
       }
 
@@ -43,12 +51,14 @@ module.exports = function(RED) {
         // because the user connected qubits from different quantum circuits
         if ((
           !Object.keys(node.qreg).includes(msg.payload.registerVar) &&
-            Object.keys(node.qreg).length == msg.payload.structure.qreg
+          Object.keys(node.qreg).length == msg.payload.structure.qreg
         ) || (
           Object.keys(node.qreg).includes(msg.payload.registerVar) &&
-            node.qreg[msg.payload.registerVar].count == node.qreg[msg.payload.registerVar].total
+          node.qreg[msg.payload.registerVar].count == node.qreg[msg.payload.registerVar].total
         )) {
           done(new Error(errors.QUBITS_FROM_DIFFERENT_CIRCUITS));
+          reset();
+          return;
         }
 
         // Storing information about which qubits were received
@@ -99,23 +109,21 @@ module.exports = function(RED) {
         let error = errors.validateQubitsFromSameCircuit(node.qubits);
         if (error) {
           done(error);
+          reset();
           return;
         }
 
-        // Emptying the runtime variables upon output
-        node.qubits = [];
-        node.qreg = '';
-
         const params = node.shots;
         script += util.format(snippets.LOCAL_SIMULATOR, params);
-
         await shell.execute(script, (err, data) => {
-          if (err) done(err);
-          else {
+          if (err) {
+            done(err);
+          } else {
             msg.payload = JSON.parse(data.replace(/'/g, '"'));
             send(msg);
             done();
           }
+          reset();
         });
       }
     });

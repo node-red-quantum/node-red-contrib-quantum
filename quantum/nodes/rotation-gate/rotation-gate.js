@@ -35,7 +35,7 @@ module.exports = function(RED) {
         script += util.format(snippets.ROTATION_GATE,
             node.axis,
             node.angle + '*pi',
-            `msg.payload.registerVar + '[' + msg.payload.qubit + ']'`,
+            msg.payload.registerVar + '[' + msg.payload.qubit + ']',
         );
       }
 

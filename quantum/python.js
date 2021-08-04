@@ -13,6 +13,7 @@ const replaceAll = require('string.prototype.replaceall');
 const Mutex = require('async-mutex').Mutex;
 const mutex = new Mutex();
 
+
 function createPromise(process) {
   return new Promise((resolve, reject) => {
     let outputData = '';
