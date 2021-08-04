@@ -15,6 +15,12 @@ module.exports = function(RED) {
     this.qubits = [];
     this.qreg = '';
 
+    // Reset runtime variables upon output or error
+    const reset = function() {
+      node.qubits = [];
+      node.qreg = '';
+    };
+
     this.on('input', async function(msg, send, done) {
       let qubitsArrived = true;
 
@@ -24,6 +30,7 @@ module.exports = function(RED) {
       let error = errors.validateQubitInput(msg);
       if (error) {
         done(error);
+        reset();
         return;
       }
 
@@ -80,6 +87,7 @@ module.exports = function(RED) {
         let error = errors.validateQubitsFromSameCircuit(node.qubits);
         if (error) {
           done(error);
+          reset();
           return;
         }
 
@@ -89,12 +97,7 @@ module.exports = function(RED) {
           text: 'Job running...',
         });
 
-        // Emptying the runtime variables upon output
-        node.qubits = [];
-        node.qreg = '';
-
         let script = '';
-
         if (node.outputPreference == 'Verbose') {
           script += util.format(
               snippets.IBMQ_SYSTEM_VERBOSE,
@@ -127,6 +130,7 @@ module.exports = function(RED) {
             send(msg);
             done();
           }
+          reset();
         });
       }
     });
