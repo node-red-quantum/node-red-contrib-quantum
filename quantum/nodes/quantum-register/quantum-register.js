@@ -33,8 +33,7 @@ module.exports = function(RED) {
       }
 
       // Add arguments to quantum register code
-      script += util.format(
-          snippets.QUANTUM_REGISTER,
+      script += util.format(snippets.QUANTUM_REGISTER,
           msg.payload.register.toString(),
           node.outputs.toString() + ', "' + node.name + '"',
       );
@@ -45,10 +44,7 @@ module.exports = function(RED) {
         registerName: node.name,
         registerVar: 'qr' + msg.payload.register.toString(),
       };
-      flowContext.set(
-          'quantumCircuit[' + msg.payload.register.toString() + ']',
-          register,
-      );
+      flowContext.set('quantumCircuit[' + msg.payload.register.toString() + ']', register);
 
       // get quantum circuit config and circuit ready event from flow context
       let quantumCircuitConfig = flowContext.get('quantumCircuitConfig');
@@ -56,15 +52,12 @@ module.exports = function(RED) {
       quantumCircuitConfig[node.name] = register;
 
       // If the quantum circuit has not yet been initialised by another register
-      if (typeof flowContext.get('quantumCircuit') !== undefined) {
+      if (typeof(flowContext.get('quantumCircuit')) !== undefined) {
         let structure = flowContext.get('quantumCircuit');
 
         // Validating the registers' structure according to the user input in 'Quantum Circuit'
         // And counting how many registers were initialised so far.
-        let [error, count] = errors.validateRegisterStrucutre(
-            structure,
-            msg.payload.structure,
-        );
+        let [error, count] = errors.validateRegisterStrucutre(structure, msg.payload.structure);
         if (error) {
           done(error);
           return;
@@ -72,18 +65,12 @@ module.exports = function(RED) {
 
         // If all register initialised & the circuit has not been initialised by another register:
         // Initialise the quantum circuit
-        if (
-          count == structure.length &&
-          typeof flowContext.get('quantumCircuit') !== undefined
-        ) {
+        if (count == structure.length && typeof flowContext.get('quantumCircuit') !== undefined) {
           // Delete the 'quantumCircuit' flow context variable, not used anymore
           flowContext.set('quantumCircuit', undefined);
 
           // Add arguments to quantum circuit code
-          let circuitScript = util.format(
-              snippets.QUANTUM_CIRCUIT,
-              '%s,'.repeat(count),
-          );
+          let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, '%s,'.repeat(count));
 
           structure.map((register) => {
             circuitScript = util.format(circuitScript, register.registerVar);

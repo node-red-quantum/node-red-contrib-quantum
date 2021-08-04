@@ -108,11 +108,7 @@ module.exports = function(RED) {
           node.status({
             fill: 'grey',
             shape: 'dot',
-            text:
-              'Target: register ' +
-              target.payload.register +
-              ' / qubit ' +
-              target.payload.qubit.toString(),
+            text: 'Target: register ' + target.payload.register + ' / qubit ' + target.payload.qubit.toString(),
           });
         }
 
