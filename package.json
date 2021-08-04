@@ -57,9 +57,6 @@
       "qubit": "quantum/nodes/qubit/qubit.js",
       "reset": "quantum/nodes/reset/reset.js",
       "barrier": "quantum/nodes/barrier/barrier.js",
-      "identity": "quantum/nodes/identity/identity.js",
-      "simulator": "quantum/nodes/simulator/simulator.js",
-      "circuit-diagram": "quantum/nodes/circuit-diagram/circuit-diagram.js",
       "swap": "quantum/nodes/swap/swap.js",
       "identity-gate": "quantum/nodes/identity-gate/identity-gate.js",
       "not-gate": "quantum/nodes/not-gate/not-gate.js",
@@ -70,6 +67,8 @@
       "cnot-gate": "quantum/nodes/cnot-gate/cnot-gate.js",
       "toffoli-gate": "quantum/nodes/toffoli-gate/toffoli-gate.js",
       "measure": "quantum/nodes/measure/measure.js",
+      "simulator": "quantum/nodes/simulator/simulator.js",
+      "circuit-diagram": "quantum/nodes/circuit-diagram/circuit-diagram.js",
       "script": "quantum/nodes/script/script.js"
     }
   }
