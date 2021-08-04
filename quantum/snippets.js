@@ -56,18 +56,28 @@ counts = result.get_counts()
 print(counts)
 `;
 
-const IBMQ_SYSTEM_VERBOSE =
+const IBMQ_SYSTEM_DEFAULT =
+`from qiskit.providers.ibmq import least_busy
+provider = IBMQ.enable_account('%s')
+backends = provider.backends(filters=lambda x: x.configuration().n_qubits >= %s)
+backend_service = least_busy(backends)
+`;
+
+const IBMQ_SYSTEM_PREFERRED =
 `provider = IBMQ.enable_account('%s')
 backend_service = provider.get_backend('%s')
-job = execute(qc, backend=backend_service)
-job.result()`;
+`;
+
+const IBMQ_SYSTEM_VERBOSE =
+`job = execute(qc, backend=backend_service)
+job.result()
+`;
 
 const IBMQ_SYSTEM_RESULT =
-`provider = IBMQ.enable_account('%s')
-backend_service = provider.get_backend('%s')
-job = execute(qc, backend=backend_service)
+`job = execute(qc, backend=backend_service)
 counts = job.result().get_counts()
-print(counts)`;
+print(counts)
+`;
 
 const NOT_GATE =
 `qc.x(%s)
@@ -108,6 +118,8 @@ module.exports = {
   HADAMARD_GATE,
   MEASURE,
   LOCAL_SIMULATOR,
+  IBMQ_SYSTEM_DEFAULT,
+  IBMQ_SYSTEM_PREFERRED,
   IBMQ_SYSTEM_VERBOSE,
   IBMQ_SYSTEM_RESULT,
   NOT_GATE,

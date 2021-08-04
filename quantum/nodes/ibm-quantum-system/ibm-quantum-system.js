@@ -98,18 +98,17 @@ module.exports = function(RED) {
         });
 
         let script = '';
-        if (node.outputPreference == 'Verbose') {
-          script += util.format(
-              snippets.IBMQ_SYSTEM_VERBOSE,
-              node.apiToken,
-              node.preferredBackend,
-          );
+
+        if (node.preferredBackend) {
+          script += util.format(snippets.IBMQ_SYSTEM_PREFERRED, node.apiToken, node.preferredBackend);
         } else {
-          script += util.format(
-              snippets.IBMQ_SYSTEM_RESULT,
-              node.apiToken,
-              node.preferredBackend,
-          );
+          script += util.format(snippets.IBMQ_SYSTEM_DEFAULT, node.apiToken, node.qubits.length);
+        }
+
+        if (node.outputPreference == 'Verbose') {
+          script += snippets.IBMQ_SYSTEM_VERBOSE;
+        } else {
+          script += snippets.IBMQ_SYSTEM_RESULT;
         }
 
         await shell.execute(script, (err, data) => {
