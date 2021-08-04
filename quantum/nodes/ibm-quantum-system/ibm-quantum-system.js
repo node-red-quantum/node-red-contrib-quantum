@@ -111,18 +111,21 @@ module.exports = function(RED) {
 
         await shell.execute(script, (err, data) => {
           if (err) {
+            node.status({
+              fill: 'red',
+              shape: 'dot',
+              text: 'Job failed!',
+            });
             done(err);
           } else {
-            msg.payload = data;
-            send(msg);
-
-            done();
-
             node.status({
               fill: 'green',
               shape: 'dot',
               text: 'Job completed!',
             });
+            msg.payload = data;
+            send(msg);
+            done();
           }
         });
       }
