@@ -83,6 +83,18 @@ const NOT_GATE =
 `qc.x(%s)
 `;
 
+const CIRCUIT_BUFFER =
+`import matplotlib.pyplot as plt
+import base64
+import io
+qc.draw(output='mpl')
+buffer = io.BytesIO()
+plt.savefig(buffer,  format='png')
+buffer.seek(0)
+b64_string = base64.b64encode(buffer.read())
+print(b64_string)
+`;
+
 const RESET =
 `qc.reset(%s)
 `;
@@ -123,6 +135,7 @@ module.exports = {
   IBMQ_SYSTEM_VERBOSE,
   IBMQ_SYSTEM_RESULT,
   NOT_GATE,
+  CIRCUIT_BUFFER,
   RESET,
   PHASE_GATE,
   ROTATION_GATE,
