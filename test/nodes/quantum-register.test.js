@@ -13,7 +13,7 @@ describe('QuantumRegisterNode', function() {
     nodeTestHelper.stopServer(done);
   });
 
-  it('load node', function(done) {
+  xit('load node', function(done) {
     testUtil.isLoaded(quantumRegisterNode, 'quantum-register', done);
   });
 });

@@ -13,7 +13,7 @@ describe('QuantumCircuitNode', function() {
     nodeTestHelper.stopServer(done);
   });
 
-  it('load node', function(done) {
+  xit('load node', function(done) {
     testUtil.isLoaded(quantumCircuitNode, 'quantum-circuit', done);
   });
 });
