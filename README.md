@@ -23,7 +23,7 @@ Quantum computing functionality for Node-RED.
 
 ### Writing Unit Tests
 - Unit tests are written using the [Mocha](https://mochajs.org/) testing framework, whilst utilising [Chai.js](https://www.chaijs.com/) for assertions.
-- Test suites for nodes should be in a single file with the format *\<node-name\>.test.js*. For example, the Quantum Circuit node would have a test suite named *quantum-circuit.test.js*.
+- Test suites for nodes should be in a single file with the format *\<node-name\>_spec.js*. For example, the Quantum Circuit node would have a test suite named *quantum-circuit_spec.js*.
 - All test suites should be placed in the [*test*](test/) directory.
 - Unit tests should be grouped using the `describe()` function provided by Mocha:
   - When testing a class, unit test groups should be nested, with the enclosed groups containing tests for each individual method/property.
