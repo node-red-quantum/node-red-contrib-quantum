@@ -35,7 +35,7 @@ module.exports = function(RED) {
       }
 
       // If the quantum circuit does not have registers
-      if (typeof msg.payload.register === 'undefined') {
+      if (typeof(msg.payload.register) === 'undefined') {
         node.qreg = undefined;
         node.qubits.push(msg);
 
@@ -48,15 +48,15 @@ module.exports = function(RED) {
         // Keep track of qubits that have arrived and the remaining ones
         if (node.qubits.length == 0) node.qreg = {};
 
-        // Throw an error if too many qubits are received by the quantum system node
+        // Throw an error if too many qubits are received by the simulator node
         // because the user connected qubits from different quantum circuits
-        if (
-          (!Object.keys(node.qreg).includes(msg.payload.registerVar) &&
-            Object.keys(node.qreg).length == msg.payload.structure.qreg) ||
-          (Object.keys(node.qreg).includes(msg.payload.registerVar) &&
-            node.qreg[msg.payload.registerVar].count ==
-              node.qreg[msg.payload.registerVar].total)
-        ) {
+        if ((
+          !Object.keys(node.qreg).includes(msg.payload.registerVar) &&
+          Object.keys(node.qreg).length == msg.payload.structure.qreg
+        ) || (
+          Object.keys(node.qreg).includes(msg.payload.registerVar) &&
+          node.qreg[msg.payload.registerVar].count == node.qreg[msg.payload.registerVar].total
+        )) {
           done(new Error(errors.QUBITS_FROM_DIFFERENT_CIRCUITS));
           reset();
           return;
