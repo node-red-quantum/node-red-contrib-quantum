@@ -73,32 +73,16 @@ module.exports = function(RED) {
 
         node.qubits.push(msg);
 
-        // If the simulator node has inputs from more q-registers than there are in the circuit
-        if (Object.keys(node.qreg).length > msg.payload.structure.qreg) {
-          done(new Error(errors.QUBITS_FROM_DIFFERENT_CIRCUITS));
-          reset();
-          return;
-        } else if (Object.keys(node.qreg).length == msg.payload.structure.qreg) {
+        // Checking whether all qubits have arrived or not
+        if (Object.keys(node.qreg).length == msg.payload.structure.qreg) {
           Object.keys(node.qreg).map((key) => {
-            // If the simulator node has inputs from more qubits than there are in a register
-            if (node.qreg[key].count > node.qreg[key].total) {
-              done(new Error(errors.QUBITS_FROM_DIFFERENT_CIRCUITS));
-              reset();
-              return;
-              // If not all qubits have arrived
-            } else if (node.qreg[key].count < node.qreg[key].total) {
+            if (node.qreg[key].count < node.qreg[key].total) {
               qubitsArrived = false;
             }
           });
         } else {
           qubitsArrived = false;
         }
-        // Checking whether all qubits have arrived or not
-        Object.keys(node.qreg).map((key) => {
-          if (node.qreg[key].count < node.qreg[key].total) {
-            qubitsArrived = false;
-          }
-        });
       }
 
       // If all qubits have arrived,
