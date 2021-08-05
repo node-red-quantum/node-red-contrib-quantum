@@ -4,6 +4,9 @@ const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 
+const EventEmitter = require('events');
+const quantumCircuitReady = new EventEmitter();
+
 module.exports = function(RED) {
   let quantumCircuitNode = {};
   let classicalRegisters = [];
@@ -20,6 +23,31 @@ module.exports = function(RED) {
     const flowContext = this.context().flow;
     const output = new Array(this.outputs);
     const node = this;
+
+    flowContext.set('quantumCircuitReadyEvent', quantumCircuitReady);
+
+    const quantumCircuitProxyHandler = {
+      set: (obj, prop, value) => {
+        obj[prop] = value;
+        if (Object.keys(obj).length == node.outputs) {
+          quantumCircuitReady.emit('circuitReady', obj);
+          flowContext.set('quantumCircuitConfig', new Proxy({}, quantumCircuitProxyHandler));
+        }
+        return true;
+      },
+    };
+
+    let quantumCircuitConfig = new Proxy({}, quantumCircuitProxyHandler);
+    flowContext.set('quantumCircuitConfig', quantumCircuitConfig);
+
+    flowContext.set('isCircuitReady', () => {
+      let event = flowContext.get('quantumCircuitReadyEvent');
+      return new Promise((res, rej) => {
+        event.on('circuitReady', (circuitConfig) => {
+          res(circuitConfig);
+        });
+      });
+    });
 
     this.on('input', async function(msg, send, done) {
       let script = '';

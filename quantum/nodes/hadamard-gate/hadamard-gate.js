@@ -24,7 +24,7 @@ module.exports = function(RED) {
 
       let qrConfig = msg.payload;
       script += util.format(snippets.HADAMARD_GATE,
-        qrConfig.register ? `${qrConfig.register}[${qrConfig.qubit}]` : `${qrConfig.qubit}`);
+        qrConfig.register ? `q${qrConfig.register}[${qrConfig.qubit}]` : `${qrConfig.qubit}`);
 
       // execute the script and pass the quantum register config to the output if no errors occurred
       await shell.execute(script, (err) => {
