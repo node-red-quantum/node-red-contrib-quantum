@@ -16,6 +16,11 @@ module.exports = function(RED) {
     this.qubits = [];
     const node = this;
 
+    // Reset runtime variables upon output or error
+    const reset = function() {
+      node.qubits = [];
+    };
+
     this.on('input', async function(msg, send, done) {
       let script = '';
 
@@ -25,6 +30,7 @@ module.exports = function(RED) {
       let error = errors.validateQubitInput(msg);
       if (error) {
         done(error);
+        reset();
         return;
       }
 
@@ -37,6 +43,7 @@ module.exports = function(RED) {
         let error = errors.validateQubitsFromSameCircuit(node.qubits);
         if (error) {
           done(error);
+          reset();
           return;
         }
 
@@ -115,9 +122,9 @@ module.exports = function(RED) {
           if (err) done(err);
           else {
             send(node.qubits);
-            node.qubits = []; // Emptying the runtime variable upon output
             done();
           }
+          reset();
         });
       }
     });

@@ -12,7 +12,6 @@ module.exports = function(RED) {
     this.name = config.name.trim().toLowerCase().replace(/ /g, '_');
     this.outputs = parseInt(config.outputs);
     const flowContext = this.context().flow;
-    const output = new Array(this.outputs);
     const node = this;
 
     this.on('input', async function(msg, send, done) {
@@ -82,6 +81,7 @@ module.exports = function(RED) {
 
       // Creating an array of messages to be sent
       // Each message represents a different qubit
+      let output = new Array(node.outputs);
       for (let i = 0; i < node.outputs; i++) {
         output[i] = {
           topic: 'Quantum Circuit',

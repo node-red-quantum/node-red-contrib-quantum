@@ -21,7 +21,6 @@ module.exports = function(RED) {
     this.cbitsreg = parseInt(config.cbitsreg);
     this.outputs = parseInt(config.outputs);
     const flowContext = this.context().flow;
-    const output = new Array(this.outputs);
     const node = this;
 
     flowContext.set('quantumCircuitReadyEvent', quantumCircuitReady);
@@ -60,6 +59,7 @@ module.exports = function(RED) {
       if (node.structure == 'registers') {
         // Creating an array of messages to be sent
         // Each message represents a dfifferent register
+        let output = new Array(node.outputs);
         for (let i = 0; i < node.outputs; i++) {
           output[i] = {
             topic: 'Quantum Circuit',
@@ -79,6 +79,7 @@ module.exports = function(RED) {
 
         // Creating an array of messages to be sent
         // Each message represents a different qubit
+        let output = new Array(node.outputs);
         for (let i = 0; i < node.outputs; i++) {
           output[i] = {
             topic: 'Quantum Circuit',
