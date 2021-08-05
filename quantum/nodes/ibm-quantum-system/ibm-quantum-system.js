@@ -35,7 +35,7 @@ module.exports = function(RED) {
       }
 
       // If the quantum circuit does not have registers
-      if (typeof msg.payload.register === 'undefined') {
+      if (typeof(msg.payload.register) === 'undefined') {
         node.qreg = undefined;
         node.qubits.push(msg);
 
