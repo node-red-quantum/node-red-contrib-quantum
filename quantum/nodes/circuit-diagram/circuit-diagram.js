@@ -11,6 +11,12 @@ module.exports = function(RED) {
     this.qreg = '';
     const node = this;
 
+    // Reset runtime variables upon output or error
+    const reset = function() {
+      node.qubits = [];
+      node.qreg = '';
+    };
+
     this.on('input', async function(msg, send, done) {
       let qubitsArrived = true;
 
@@ -20,6 +26,7 @@ module.exports = function(RED) {
       let error = errors.validateQubitInput(msg);
       if (error) {
         done(error);
+        reset();
         return;
       }
 
