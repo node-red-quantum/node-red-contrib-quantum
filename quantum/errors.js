@@ -36,7 +36,8 @@ const QUBITS_FROM_DIFFERENT_CIRCUITS =
 'Only qubits from the same quantum circuit should be connected to this node.';
 
 const SAME_QUBIT_RECEIVED_TWICE =
-'There should be only one instance of each qubit at all times.';
+'Please connect the right number of qubits to the node. For circuit output nodes, ' +
+'all qubits should be connected as input. There should be only 1 instance of each qubit at all times in the circuit.';
 
 function validateQubitInput(msg) {
   let keys = Object.keys(msg.payload);
