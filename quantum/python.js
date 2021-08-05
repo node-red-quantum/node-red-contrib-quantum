@@ -15,37 +15,53 @@ const mutex = new Mutex();
 
 
 function createPromise(process) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     let outputData = '';
     let errorData = '';
 
-    process.stdout.on('data', function(data) {
-      let done = false;
+    await new Promise((resolve) => {
+      process.stdout.on('data', function(data) {
+        let done = false;
 
-      if (data.includes('#CommandStart#')) {
-        data = data.replace('#CommandStart#', '');
-      } if (data.includes('#CommandEnd#')) {
-        data = data.replace('#CommandEnd#', '');
-        done = true;
-      }
-      outputData += data;
-
-      if (done) {
-        process.stdout.removeAllListeners();
-        process.stderr.removeAllListeners();
-        if (errorData.trim()) {
-          reject(errorData.trim());
-        } else {
-          resolve(outputData.trim());
+        if (data.includes('#CommandStart#')) {
+          data = data.replace('#CommandStart#', '');
+        } if (data.includes('#CommandEnd#')) {
+          data = data.replace('#CommandEnd#', '');
+          done = true;
         }
-      }
+        outputData += data;
+
+        if (done) {
+          resolve();
+        }
+      });
     });
 
-    process.stderr.on('data', function(data) {
-      data = replaceAll(data, '>>>', '');
-      data = replaceAll(data, '...', '');
-      errorData += data;
+    await new Promise((resolve) => {
+      process.stderr.on('data', function(data) {
+        let done = false;
+
+        data = replaceAll(data, '>>>', '');
+        data = replaceAll(data, '...', '');
+        if (data.includes('#StderrEnd#')) {
+          data = data.replace('#StderrEnd#', '');
+          done = true;
+        }
+        errorData += data;
+
+        if (done) {
+          resolve();
+        }
+      });
     });
+
+    process.stdout.removeAllListeners();
+    process.stderr.removeAllListeners();
+    if (errorData.trim()) {
+      reject(errorData.trim());
+    } else {
+      resolve(outputData.trim());
+    }
   });
 }
 
@@ -87,7 +103,7 @@ class PythonShell {
       command = command ? dedent(command) : '';
       this.script += '\n' + command + '\n';
       command = 'print("#CommandStart#")\n' + command + '\n';
-      command += '\nfrom sys import stderr as stderr_buffer; stderr_buffer.flush()\n';
+      command += '\nfrom sys import stderr as stderr_buffer; print("#StderrEnd#", file=stderr_buffer)\n';
       command += 'print("#CommandEnd#")\n';
 
       let promise = createPromise(this.process)
@@ -109,7 +125,7 @@ class PythonShell {
    * and system information. If not required, this can be ignored.
    * @throws {Error} Throws an Error object if path to the Python executable cannot be found.
   */
-  start() {
+  async start() {
     if (!this.process) {
       if (!fileSystem.existsSync(this.path)) {
         throw new Error(`cannot resolve path for Python executable: ${this.path}`);
@@ -150,7 +166,7 @@ class PythonShell {
    * and system information. If not required, this can be ignored.
    * @throws {Error} Throws an Error if the Python executable cannot be found.
   */
-  restart() {
+  async restart() {
     this.stop();
     return this.start();
   }
