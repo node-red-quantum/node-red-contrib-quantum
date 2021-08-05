@@ -11,6 +11,11 @@ module.exports = function(RED) {
     this.qubits = [];
     const node = this;
 
+    // Reset runtime variables upon output or error
+    const reset = function() {
+      node.qubits = [];
+    };
+
     this.on('input', async function(msg, send, done) {
       let script = '';
 
@@ -20,6 +25,7 @@ module.exports = function(RED) {
       let error = errors.validateQubitInput(msg);
       if (error) {
         done(error);
+        reset();
         return;
       }
 
@@ -32,6 +38,7 @@ module.exports = function(RED) {
         let error = errors.validateQubitsFromSameCircuit(node.qubits);
         if (error) {
           done(error);
+          reset();
           return;
         }
 
@@ -70,12 +77,13 @@ module.exports = function(RED) {
         // Run the script in the python shell, and if no error occurs
         // then send one qubit object per node output
         await shell.execute(script, (err) => {
-          if (err) done(err);
-          else {
+          if (err) {
+            done(err);
+          } else {
             send(node.qubits);
-            node.qubits = []; // Emptying the runtime variable upon output
             done();
           }
+          reset();
         });
       }
     });

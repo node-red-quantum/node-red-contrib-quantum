@@ -49,10 +49,33 @@ const MEASURE =
 `qc.measure(%s)
 `;
 
-const SIMULATOR =
+const LOCAL_SIMULATOR =
 `simulator = Aer.get_backend('qasm_simulator')
 result = execute(qc, backend = simulator, shots = %s).result()
 counts = result.get_counts()
+print(counts)
+`;
+
+const IBMQ_SYSTEM_DEFAULT =
+`from qiskit.providers.ibmq import least_busy
+provider = IBMQ.enable_account('%s')
+backends = provider.backends(filters=lambda x: x.configuration().n_qubits >= %s)
+backend_service = least_busy(backends)
+`;
+
+const IBMQ_SYSTEM_PREFERRED =
+`provider = IBMQ.enable_account('%s')
+backend_service = provider.get_backend('%s')
+`;
+
+const IBMQ_SYSTEM_VERBOSE =
+`job = execute(qc, backend=backend_service)
+job.result()
+`;
+
+const IBMQ_SYSTEM_RESULT =
+`job = execute(qc, backend=backend_service)
+counts = job.result().get_counts()
 print(counts)
 `;
 
@@ -94,7 +117,11 @@ module.exports = {
   BARRIER,
   HADAMARD_GATE,
   MEASURE,
-  SIMULATOR,
+  LOCAL_SIMULATOR,
+  IBMQ_SYSTEM_DEFAULT,
+  IBMQ_SYSTEM_PREFERRED,
+  IBMQ_SYSTEM_VERBOSE,
+  IBMQ_SYSTEM_RESULT,
   NOT_GATE,
   RESET,
   PHASE_GATE,
