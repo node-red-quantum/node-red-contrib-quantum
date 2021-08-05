@@ -17,6 +17,9 @@ const IMPORTS =
 from qiskit import *
 from qiskit.visualization import *
 from qiskit.quantum_info import *
+import io
+import base64
+import matplotlib
 `;
 
 const QUANTUM_CIRCUIT =
@@ -87,8 +90,7 @@ const SWAP =
 `;
 
 const BLOCH_SPHERE =
-`state = Statevector.from_instruction(qc)
-plot_bloch_multivector(state)
+`
 `;
 
 module.exports = {
