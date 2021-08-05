@@ -15,11 +15,6 @@
 const IMPORTS =
 `from math import pi
 from qiskit import *
-from qiskit.visualization import *
-from qiskit.quantum_info import *
-import io
-import base64
-import matplotlib
 `;
 
 const QUANTUM_CIRCUIT =
@@ -90,7 +85,21 @@ const SWAP =
 `;
 
 const BLOCH_SPHERE =
-`
+`from qiskit.visualization import *
+from qiskit.quantum_info import *
+import io
+import base64
+import matplotlib
+
+state = Statevector.from_instruction(qc)
+blochResult = plot_bloch_multivector(state)
+
+ioByte = io.BytesIO()
+blochResult.savefig(ioByte, format = 'png')
+ioByte.seek(0)
+b64_str = base64.b64encode(ioByte.read())
+print(b64_str)
+ioByte.close()
 `;
 
 module.exports = {
