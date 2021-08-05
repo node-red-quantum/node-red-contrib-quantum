@@ -1,8 +1,8 @@
 'use strict';
 
-const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
+const errors = require('../../errors');
 
 module.exports = function(RED){
   function blochSphereNode(config){
@@ -106,7 +106,7 @@ module.exports = function(RED){
 
     });
 
-  }
+  };
   RED.nodes.registerType('bloch-sphere', blochSphereNode);
 
 };
