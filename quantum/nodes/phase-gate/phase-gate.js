@@ -27,9 +27,8 @@ module.exports = function(RED) {
       if (typeof msg.payload.register === 'undefined') {
         script += util.format(snippets.PHASE_GATE, node.phase + '*pi', msg.payload.qubit);
       } else {
-        script += util.format(snippets.PHASE_GATE,
-            node.phase + '*pi',
-            `msg.payload.registerVar + '[' + msg.payload.qubit + ']'`,
+        script += util.format(snippets.PHASE_GATE, node.phase + '*pi',
+            msg.payload.registerVar + '[' + msg.payload.qubit + ']',
         );
       }
 

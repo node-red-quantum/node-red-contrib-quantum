@@ -6,12 +6,19 @@ const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
 
 module.exports = function(RED) {
-  function SimulatorNode(config) {
+  function LocalSimulatorNode(config) {
     RED.nodes.createNode(this, config);
     this.shots = config.shots || 1;
     this.qubits = [];
     this.qreg = '';
     const node = this;
+
+    // Reset runtime variables upon output or error
+    const reset = function() {
+      node.qubits = [];
+      node.qreg = '';
+    };
+
     this.on('input', async function(msg, send, done) {
       let script = '';
       let qubitsArrived = true;
@@ -22,6 +29,7 @@ module.exports = function(RED) {
       let error = errors.validateQubitInput(msg);
       if (error) {
         done(error);
+        reset();
         return;
       }
 
@@ -49,6 +57,8 @@ module.exports = function(RED) {
           node.qreg[msg.payload.registerVar].count == node.qreg[msg.payload.registerVar].total
         )) {
           done(new Error(errors.QUBITS_FROM_DIFFERENT_CIRCUITS));
+          reset();
+          return;
         }
 
         // Storing information about which qubits were received
@@ -99,25 +109,25 @@ module.exports = function(RED) {
         let error = errors.validateQubitsFromSameCircuit(node.qubits);
         if (error) {
           done(error);
+          reset();
           return;
         }
 
-        // Emptying the runtime variables upon output
-        node.qubits = [];
-        node.qreg = '';
         const params = node.shots;
-        script += util.format(snippets.SIMULATOR, params);
+        script += util.format(snippets.LOCAL_SIMULATOR, params);
         await shell.execute(script, (err, data) => {
-          if (err) done(err);
-          else {
+          if (err) {
+            done(err);
+          } else {
             msg.payload = JSON.parse(data.replace(/'/g, '"'));
             send(msg);
             done();
           }
+          reset();
         });
       }
     });
   }
 
-  RED.nodes.registerType('simulator', SimulatorNode);
+  RED.nodes.registerType('local-simulator', LocalSimulatorNode);
 };
