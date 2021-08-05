@@ -11,9 +11,9 @@ module.exports = function(RED) {
     this.apiToken = config.api_token;
     this.preferredBackend = config.preferred_backend;
     this.outputPreference = config.preferred_output;
-    const node = this;
     this.qubits = [];
     this.qreg = '';
+    const node = this;
 
     // Reset runtime variables upon output or error
     const reset = function() {
