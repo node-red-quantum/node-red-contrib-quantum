@@ -20,24 +20,6 @@ function createPromise(process) {
     let errorData = '';
 
     await new Promise((resolve) => {
-      process.stdout.on('data', function(data) {
-        let done = false;
-
-        if (data.includes('#CommandStart#')) {
-          data = data.replace('#CommandStart#', '');
-        } if (data.includes('#CommandEnd#')) {
-          data = data.replace('#CommandEnd#', '');
-          done = true;
-        }
-        outputData += data;
-
-        if (done) {
-          resolve();
-        }
-      });
-    });
-
-    await new Promise((resolve) => {
       process.stderr.on('data', function(data) {
         let done = false;
 
@@ -48,6 +30,22 @@ function createPromise(process) {
           done = true;
         }
         errorData += data;
+
+        if (done) {
+          resolve();
+        }
+      });
+    });
+
+    await new Promise((resolve) => {
+      process.stdout.on('data', function(data) {
+        let done = false;
+
+        if (data.includes('#StdoutEnd#')) {
+          data = data.replace('#StdoutEnd#', '');
+          done = true;
+        }
+        outputData += data;
 
         if (done) {
           resolve();
@@ -101,10 +99,10 @@ class PythonShell {
       }
 
       command = command ? dedent(command) : '';
-      this.script += '\n' + command + '\n';
-      command = 'print("#CommandStart#")\n' + command + '\n';
-      command += '\nfrom sys import stderr as stderr_buffer; print("#StderrEnd#", file=stderr_buffer)\n';
-      command += 'print("#CommandEnd#")\n';
+      command = '\n' + command + '\n';
+      this.script += command;
+      command += '\nfrom sys import stderr; print("#StderrEnd#", file=stderr)\n';
+      command += 'print("#StdoutEnd#")\n';
 
       let promise = createPromise(this.process)
           .then((data) => callback !== undefined ? callback(null, data) : data)
