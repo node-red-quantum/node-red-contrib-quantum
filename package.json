@@ -28,7 +28,7 @@
     "setup": "(npm run link && npm run venv) && echo Setup complete - run 'npm start' to open Node-RED",
     "link": "bash bin/link.sh || bin/link.sh",
     "venv": "bash bin/pyvenv.sh || bin/pyvenv.sh",
-    "test": "mocha \"test/**/*.test.js\"",
+    "test": "mocha \"test/**/*_spec.js\"",
     "clean": "rm -r venv/ & npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
     "lint": "eslint --fix --ignore-path .gitignore ."
   },
