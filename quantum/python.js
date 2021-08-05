@@ -16,20 +16,15 @@ const mutex = new Mutex();
 
 function createPromise(process) {
   return new Promise(async (resolve, reject) => {
-    let outputData = '';
-    let errorData = '';
+    let stdoutData = '';
+    let stderrData = '';
 
     await new Promise((resolve) => {
       process.stdout.on('data', function(data) {
-        let done = false;
+        stdoutData += data;
 
-        if (data.includes('#StdoutEnd#')) {
-          data = data.replace('#StdoutEnd#', '');
-          done = true;
-        }
-        outputData += data;
-
-        if (done) {
+        if (stdoutData.includes('#StdoutEnd#')) {
+          stdoutData = stdoutData.replace('#StdoutEnd#', '');
           resolve();
         }
       });
@@ -37,17 +32,12 @@ function createPromise(process) {
 
     await new Promise((resolve) => {
       process.stderr.on('data', function(data) {
-        let done = false;
+        stderrData += data;
 
-        data = replaceAll(data, '>>>', '');
-        data = replaceAll(data, '...', '');
-        if (data.includes('#StderrEnd#')) {
-          data = data.replace('#StderrEnd#', '');
-          done = true;
-        }
-        errorData += data;
-
-        if (done) {
+        if (stderrData.includes('#StderrEnd#')) {
+          stderrData = replaceAll(stderrData, '>>>', '');
+          stderrData = replaceAll(stderrData, '...', '');
+          stderrData = stderrData.replace('#StderrEnd#', '');
           resolve();
         }
       });
@@ -55,10 +45,10 @@ function createPromise(process) {
 
     process.stdout.removeAllListeners();
     process.stderr.removeAllListeners();
-    if (errorData.trim()) {
-      reject(errorData.trim());
+    if (stderrData.trim()) {
+      reject(stderrData.trim());
     } else {
-      resolve(outputData.trim());
+      resolve(stdoutData.trim());
     }
   });
 }
