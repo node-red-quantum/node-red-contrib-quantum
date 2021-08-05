@@ -82,6 +82,7 @@ module.exports = function(RED) {
         let error = errors.validateQubitsFromSameCircuit(node.qubits);
         if (error) {
           done(error);
+          reset();
           return;
         }
 
@@ -99,6 +100,7 @@ module.exports = function(RED) {
             send(msg);
             done();
           }
+          reset();
         });
       }
     });
