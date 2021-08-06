@@ -51,6 +51,9 @@ module.exports = function(RED) {
     this.on('input', async function(msg, send, done) {
       let script = '';
       script += snippets.IMPORTS;
+
+      let output = new Array(node.outputs);
+
       // Creating a temporary 'quantumCircuitArray' flow context array
       // This variable represents the quantum circuit structure
       let quantumCircuitArray = new Array(node.outputs);
@@ -59,7 +62,6 @@ module.exports = function(RED) {
       if (node.structure == 'registers') {
         // Creating an array of messages to be sent
         // Each message represents a dfifferent register
-        let output = new Array(node.outputs);
         for (let i = 0; i < node.outputs; i++) {
           output[i] = {
             topic: 'Quantum Circuit',
@@ -79,7 +81,6 @@ module.exports = function(RED) {
 
         // Creating an array of messages to be sent
         // Each message represents a different qubit
-        let output = new Array(node.outputs);
         for (let i = 0; i < node.outputs; i++) {
           output[i] = {
             topic: 'Quantum Circuit',
