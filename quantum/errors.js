@@ -35,6 +35,10 @@ const INVALID_REGISTER_NUMBER =
 const QUBITS_FROM_DIFFERENT_CIRCUITS =
 'Only qubits from the same quantum circuit should be connected to this node.';
 
+const SAME_QUBIT_RECEIVED_TWICE =
+'Please connect the right number of qubits to the node. For circuit output nodes, ' +
+'all qubits should be connected as input. There should be only 1 instance of each qubit at all times in the circuit.';
+
 function validateQubitInput(msg) {
   let keys = Object.keys(msg.payload);
 
@@ -63,6 +67,18 @@ function validateQubitsFromSameCircuit(qubits) {
   let circuitId = qubits[0].payload.structure.quantumCircuitId;
   let valid = qubits.every((obj) => obj.payload.structure.quantumCircuitId === circuitId);
   if (!valid) return new Error(QUBITS_FROM_DIFFERENT_CIRCUITS);
+
+  valid = true;
+  qubits.map((qubit, index) => {
+    for (let i = index+1; i < qubits.length; i++) {
+      if (i != index &&
+      qubit.payload.register == qubits[i].payload.register &&
+      qubit.payload.qubit == qubits[i].payload.qubit) {
+        valid = false;
+      }
+    }
+  });
+  if (!valid) return new Error(SAME_QUBIT_RECEIVED_TWICE);
   else return null;
 };
 
@@ -93,6 +109,7 @@ module.exports = {
   NOT_REGISTER_OBJECT,
   INVALID_REGISTER_NUMBER,
   QUBITS_FROM_DIFFERENT_CIRCUITS,
+  SAME_QUBIT_RECEIVED_TWICE,
   validateQubitInput,
   validateRegisterInput,
   validateQubitsFromSameCircuit,
