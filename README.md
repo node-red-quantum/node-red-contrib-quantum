@@ -1,5 +1,40 @@
-# Node-RED Quantum
-Quantum computing functionality for Node-RED.
+# node-red-quantum
+
+[![platform](https://img.shields.io/badge/platform-Node--RED-red)](https://nodered.org)
+![NPM version]()
+![NPM]()
+
+**Node-RED Quantum** provides a set of nodes to build and run quantum computing algorithms within Node-RED. \
+This module is a user-friendly library that is suitable to new quantum computing users thanks to its extensive documentation. \
+It was designed to facilitate the integration of quantum algorithms within classical programs and is fully scalable since all the elemental quantum operations are included. 
+
+
+This module require node.js version ... . 
+
+For the latest changes, please read the [CHANGELOG.md]().
+
+![Quantum Circuit example]()
+
+
+## Pre-requisites
+
+Node-RED Quantum requires [Node-RED](https://nodered.org) as well as [Python](https://www.python.org/).
+
+## Install
+
+
+
+## Features
+
+
+
+## Using Node-RED Quantum
+
+
+
+## Quantum Computing
+
+
 
 ## Developers
 ### Installation
