@@ -4,8 +4,8 @@ const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
 
-module.exports = function(RED){
-  function blochSphereNode(config){
+module.exports = function(RED) {
+  function BlochSphereNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.qubits = [];
@@ -22,17 +22,14 @@ module.exports = function(RED){
       }
       // Throw Error if:
       // - The user connects it to a node that is not from the quantum library
-      if (typeof(msg.payload.register) === 'undefined'){
-
+      if (typeof(msg.payload.register) === 'undefined') {
         node.qreg = undefined;
         node.qubits.push(msg);
 
-        //Check if all qubits arrived.
-        if(node.qubits.length < msg.payload.structure.qubits){
+        // Check if all qubits arrived.
+        if (node.qubits.length < msg.payload.structure.qubits) {
           qubitsArrived = false;
-
         }
-
       } else {
         // If the quantum circuit has registers
         // Keep track of qubits that have arrived and the remaining ones
@@ -74,7 +71,6 @@ module.exports = function(RED){
         } else {
           qubitsArrived = false;
         }
-
       }
 
       if (qubitsArrived) {
@@ -84,29 +80,23 @@ module.exports = function(RED){
           done(error);
           return;
         }
-      
+
         node.qubits = [];
         node.qreg = '';
 
         let script = snippets.BLOCH_SPHERE;
         await shell.execute(script, (err, data)=>{
-          if(err){
+          if (err) {
             done(err);
-
           } else {
             msg.payload = data.split('\'')[1];
             msg.encoding = 'base64';
             send(msg);
             done();
-
           }
-
         });
       }
-
     });
-
   };
-  RED.nodes.registerType('bloch-sphere', blochSphereNode);
-
+  RED.nodes.registerType('bloch-sphere', BlochSphereNode);
 };
