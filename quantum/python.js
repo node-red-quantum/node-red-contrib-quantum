@@ -9,6 +9,9 @@ const pythonScript = require('python-shell').PythonShell;
 const pythonExecutable = os.platform() === 'win32' ? 'venv/Scripts/python.exe' : 'venv/bin/python';
 const pythonPath = path.resolve(appRoot, pythonExecutable);
 const childProcess = require('child_process');
+const replaceAll = require('string.prototype.replaceall');
+const Mutex = require('async-mutex').Mutex;
+const mutex = new Mutex();
 
 
 function createPromise(process) {
@@ -19,10 +22,10 @@ function createPromise(process) {
     process.stdout.on('data', function(data) {
       let done = false;
 
-      if (data.match(/#CommandStart#/)) {
-        data = data.replace(/#CommandStart#/, '');
-      } if (data.match(/#CommandEnd#/)) {
-        data = data.replace(/#CommandEnd#/, '');
+      if (data.includes('#CommandStart#')) {
+        data = data.replace('#CommandStart#', '');
+      } if (data.includes('#CommandEnd#')) {
+        data = data.replace('#CommandEnd#', '');
         done = true;
       }
       outputData += data;
@@ -31,26 +34,16 @@ function createPromise(process) {
         process.stdout.removeAllListeners();
         process.stderr.removeAllListeners();
         if (errorData.trim()) {
-          reject(errorData);
+          reject(errorData.trim());
         } else {
-          resolve(outputData);
+          resolve(outputData.trim());
         }
       }
     });
 
     process.stderr.on('data', function(data) {
-      if (data.includes('>>>')) {
-        data = data.replace(/>>>/g, '');
-      } if (data.includes('...')) {
-        data = data.replace(/.../g, '');
-      }
-
-      // When the input is a code block, the result will sometimes (seemingly non-deterministicly)
-      // be a single period. This is a workaround to prevent it being added to the output.
-      if (data.trim() === '.') {
-        data = '';
-      }
-
+      data = replaceAll(data, '>>>', '');
+      data = replaceAll(data, '...', '');
       errorData += data;
     });
   });
@@ -86,29 +79,24 @@ class PythonShell {
    * @throws {Error} Throws an Error if the Python process has not been started.
   */
   async execute(command, callback) {
-    if (!this.process) {
-      throw new Error('Python process has not been started - call start() before executing commands.');
-    }
+    return mutex.runExclusive(async () => {
+      if (!this.process) {
+        throw new Error('Python process has not been started - call start() before executing commands.');
+      }
 
-    await new Promise((resolve) => {
-      const timer = setInterval(() => {
-        if (!this.process.stdout.readableFlowing && !this.process.stderr.readableFlowing) {
-          resolve();
-          clearInterval(timer);
-        }
-      }, 250);
+      command = command ? dedent(command) : '';
+      this.script += '\n' + command + '\n';
+      command = 'print("#CommandStart#")\n' + command + '\n';
+      command += '\nfrom sys import stderr as stderr_buffer; stderr_buffer.flush()\n';
+      command += 'print("#CommandEnd#")\n';
+
+      let promise = createPromise(this.process)
+          .then((data) => callback !== undefined ? callback(null, data) : data)
+          .catch((err) => callback !== undefined ? callback(err, null) : err);
+      this.process.stdin.write(command);
+
+      return promise;
     });
-
-    command = command ? dedent(command) : '';
-    this.script += '\n' + command + '\n';
-    command = '\nprint("#CommandStart#")\n' + command + '\nprint("#CommandEnd#")\n';
-
-    const promise = createPromise(this.process);
-    this.process.stdin.write(command);
-
-    return promise
-        .then((data) => callback !== undefined ? callback(null, data.trim()) : data.trim())
-        .catch((err) => callback !== undefined ? callback(err.trim(), null) : err.trim());
   }
 
   /**
@@ -143,7 +131,9 @@ class PythonShell {
   */
   stop() {
     if (this.process) {
-      this.process.stdin.end();
+      this.process.stdin.destroy();
+      this.process.stdout.destroy();
+      this.process.stderr.destroy();
       this.process.kill();
       this.process = null;
       this.script = '';

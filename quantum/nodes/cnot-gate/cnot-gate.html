@@ -3,8 +3,8 @@
     category: "quantum",
     color: "#FA4D56",
     defaults: {
-      name: {value: ""},
-      targetPosition: {value: "", required: true},
+      name: { value: "" },
+      targetPosition: { value: "", required: true },
     },
     inputs: 1,
     outputs: 2,
@@ -14,18 +14,17 @@
       return this.name || "CNOT";
     },
     inputLabels: "Qubits",
-    outputLabels: function(index) {  
+    outputLabels: function (index) {
       if (index == 0) return "Top qubit";
       else return "Bottom qubit";
-    }
+    },
   });
 </script>
 
 <script type="text/html" data-template-name="cnot-gate">
   <div class="form-row">
-    <label for="node-input-cnot-gate"
-      ><i class="fa fa-tag"></i> CNot Gate</label
-    >
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
   </div>
 
   <div class="form-row">
@@ -37,10 +36,4 @@
       <option value="Lower">Lower</option>
     </select>
   </div>
-</script>
-
-<script type="text/html" data-help-name="cnot-gate">
-  <p>
-    <!-- Node documentation goes here. -->
-  </p>
 </script>

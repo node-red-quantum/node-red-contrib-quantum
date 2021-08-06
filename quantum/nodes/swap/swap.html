@@ -3,7 +3,7 @@
     category: "quantum",
     color: "#33B1FF",
     defaults: {
-      name: {value: ""},
+      name: { value: "" },
     },
     inputs: 1,
     outputs: 2,
@@ -13,10 +13,10 @@
       return this.name || "swap";
     },
     inputLabels: "Qubits",
-    outputLabels: function(index) {  
+    outputLabels: function (index) {
       if (index == 0) return "Top qubit";
       else return "Bottom qubit";
-    }
+    },
   });
 </script>
 
@@ -25,10 +25,4 @@
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
-</script>
-
-<script type="text/html" data-help-name="swap">
-  <p>
-    <!-- Node documentation goes here. -->
-  </p>
 </script>

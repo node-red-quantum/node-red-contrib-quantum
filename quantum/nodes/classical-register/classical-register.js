@@ -3,6 +3,7 @@
 const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
+const errors = require('../../errors');
 
 module.exports = function(RED) {
   function ClassicalRegisterNode(config) {
@@ -14,30 +15,24 @@ module.exports = function(RED) {
     const node = this;
 
     this.on('input', async function(msg, send, done) {
-      let script = '';
-      // Throw a connection error if:
-      // - The user connects it to a node that is not from the quantum library
-      // - The user did not select the 'Registers & Bits' option in the 'Quantum Circuit' node
-      // - The user does not connect the register node to the output of the 'Quantum Circuit' node
-      if (msg.topic !== 'Quantum Circuit') {
-        throw new Error(
-            'Register nodes must be connected to nodes from the quantum library only',
-        );
-      } else if (typeof(msg.payload.register) === 'undefined') {
-        throw new Error(
-            'Select "Registers & Qubits" in the "Quantum Circuit" node properties to use registers.',
-        );
-      } else if (typeof(msg.payload.register) !== 'number') {
-        throw new Error(
-            'Register nodes must be connected to the outputs of the "Quantum Circuit" node.',
-        );
+      // Validate the node input msg: check for register object.
+      // Return corresponding errors or null if no errors.
+      // Stop the node execution upon an error
+      let error = errors.validateRegisterInput(msg);
+      if (error) {
+        done(error);
+        return;
       }
 
       // Add arguments to classical register code
-      script += util.format(snippets.CLASSICAL_REGISTER,
+      let crscript = util.format(snippets.CLASSICAL_REGISTER,
           '_' + node.name,
           node.classicalBits.toString() + ', "' + node.name + '"',
       );
+
+      await shell.execute(crscript, (err) => {
+        if (err) node.error(err);
+      });
 
       // Completing the 'quantumCircuit' flow context array
       let register = {
@@ -47,32 +42,24 @@ module.exports = function(RED) {
       };
       flowContext.set('quantumCircuit[' + msg.payload.register.toString() + ']', register);
 
+      // get quantum circuit config and circuit ready event from flow context
+      let quantumCircuitConfig = flowContext.get('quantumCircuitConfig');
+
       // If the quantum circuit has not yet been initialised by another register
       if (typeof(flowContext.get('quantumCircuit')) !== undefined) {
-        // Counting the number of registers that were set in the 'quantumCircuit' array
         let structure = flowContext.get('quantumCircuit');
 
-        let count = 0;
-        let qreg = 0;
-        let creg = 0;
-        structure.map((x) => {
-          if (typeof(x) !== 'undefined') {
-            count += 1;
-            if (x.registerType === 'quantum') qreg += 1;
-            else creg += 1;
-          }
-        });
+        // Validating the registers' structure according to the user input in 'Quantum Circuit'
+        // And counting how many registers were initialised so far.
+        let [error, count] = errors.validateRegisterStrucutre(structure, msg.payload.structure);
+        if (error) {
+          done(error);
+          return;
+        }
 
-        // If the user specified a register structure in the 'Quantum Circuit' node that
-        // does not match the visual structure built using the register nodes, throw an error
-        if (qreg > msg.payload.structure.qreg || creg > msg.payload.structure.creg) {
-          throw new Error(
-              'Please enter the correct number of quantum & classical registers in the "Quantum Circuit" node.',
-          );
-
-        // If all set & the quantum circuit has not yet been initialised by another register:
+        // If all register initialised & the circuit has not been initialised by another register:
         // Initialise the quantum circuit
-        } else if (count == structure.length && typeof(flowContext.get('quantumCircuit')) !== undefined) {
+        if (count == structure.length && typeof(flowContext.get('quantumCircuit')) !== undefined) {
           // Delete the 'quantumCircuit' flow context variable, not used anymore
           flowContext.set('quantumCircuit', undefined);
 
@@ -83,16 +70,17 @@ module.exports = function(RED) {
             circuitScript = util.format(circuitScript, register.registerVar);
           });
 
-          script += circuitScript;
+          // Run the script in the python shell, and if no error occurs
+          // then notify the runtime when the node is done.
+          await shell.execute(circuitScript, (err) => {
+            if (err) done(err);
+            else done();
+          });
         }
       }
 
-      // Run the script in the python shell, and if no error occurs
-      // then notify the runtime when the node is done.
-      await shell.execute(script, (err) => {
-        if (err) node.error(err);
-        else done();
-      });
+      // update quantum circuit config
+      quantumCircuitConfig[node.name] = register;
     });
   }
 
