@@ -31,7 +31,8 @@
     "venv": "bash bin/pyvenv.sh || bin/pyvenv.sh",
     "test": "mocha \"test/**/*_spec.js\"",
     "clean": "rm -r venv/ & npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
-    "lint": "eslint --fix --ignore-path .gitignore ."
+    "lint": "eslint --fix --ignore-path .gitignore .",
+    "postinstall": "npm run venv"
   },
   "dependencies": {
     "app-root-path": "^3.0.0",
