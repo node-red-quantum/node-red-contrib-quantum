@@ -1,10 +1,6 @@
-### 0.0.1: First Release
+###  v0.1.0 - 07/08/2021: First development release 
 
- - First release published to npm
+ - Initial development release
 
-### 0.0.2: Second Release
 
-**Enhancements**
-
-**Fixes**
 
