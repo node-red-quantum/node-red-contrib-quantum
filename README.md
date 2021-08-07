@@ -10,9 +10,7 @@ This module is a user-friendly library that is suitable to new quantum computing
 It was designed to facilitate the integration of quantum algorithms within classical programs and is fully scalable since all the elemental quantum operations are included. 
 
 
-This module require node.js version ... . 
-
-For the latest changes, please read the [CHANGELOG.md]().
+For the latest changes, please read the [CHANGELOG](CHANGELOG.md).
 
 ![Quantum Circuit example]()
 
