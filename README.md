@@ -11,7 +11,7 @@ This module is a user-friendly library that is suitable to new quantum computing
 
 For the latest changes, please read the [CHANGELOG](CHANGELOG.md).
 
-![Quantum Circuit example]()
+![Quantum Circuit example](./images/QuantumRandomNumber.png)
 
 ## Prerequisites
 Node-RED Quantum requires at minimum [Node-RED 1.0](https://nodered.org) and [Python 3](https://www.python.org/).
