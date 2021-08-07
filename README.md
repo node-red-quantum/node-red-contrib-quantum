@@ -15,25 +15,8 @@ For the latest changes, please read the [CHANGELOG](CHANGELOG.md).
 ![Quantum Circuit example]()
 
 
-## Pre-requisites
-
-Node-RED Quantum requires [Node-RED](https://nodered.org) as well as [Python](https://www.python.org/).
-
-## Install
-
-
-
-## Features
-
-
-
-## Using Node-RED Quantum
-
-
-
-## Quantum Computing
-
-
+## Prerequisites
+Node-RED Quantum requires at minimum [Node-RED v1.0](https://nodered.org) and [Python 3](https://www.python.org/).
 
 ## Developers
 ### Installation
