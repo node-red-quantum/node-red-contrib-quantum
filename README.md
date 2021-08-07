@@ -9,14 +9,12 @@
 This module is a user-friendly library that is suitable to new quantum computing users thanks to its extensive documentation. \
 It was designed to facilitate the integration of quantum algorithms within classical programs and is fully scalable since all the elemental quantum operations are included. 
 
-
 For the latest changes, please read the [CHANGELOG](CHANGELOG.md).
 
 ![Quantum Circuit example]()
 
-
 ## Prerequisites
-Node-RED Quantum requires at minimum [Node-RED v1.0](https://nodered.org) and [Python 3](https://www.python.org/).
+Node-RED Quantum requires at minimum [Node-RED 1.0](https://nodered.org) and [Python 3](https://www.python.org/).
 
 ## Developers
 ### Installation
