@@ -21,7 +21,8 @@
   "files": [
     "bin/",
     "quantum/",
-    "AUTHORS"
+    "AUTHORS",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "start": "node-red || npx node-red",
