@@ -2,10 +2,10 @@ const shell = require('../quantum/python').PythonShell;
 const assert = require('chai').assert;
 const dedent = require('dedent-js');
 
-const NAME_ERROR = dedent(`
-  Traceback (most recent call last):
-    File "<stdin>", line 1, in <module>
-  NameError: name 'x' is not defined`);
+const NAME_ERROR =
+`Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'x' is not defined`;
 
 
 describe('PythonShell', function() {
@@ -142,7 +142,7 @@ describe('PythonShell', function() {
     });
 
     it('return output on block command', async function() {
-      let input = `
+      let input = dedent`
         x = 10
         if x < 20:
           print(x)
@@ -153,7 +153,7 @@ describe('PythonShell', function() {
     });
 
     it('return output on loop command', async function() {
-      let input = `
+      let input = dedent`
         for i in range(3):
           print(i)
         

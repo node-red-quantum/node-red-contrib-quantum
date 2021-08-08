@@ -2,7 +2,6 @@
 
 const os = require('os');
 const path = require('path');
-const dedent = require('dedent-js');
 const fileSystem = require('fs');
 const pythonExecutable = os.platform() === 'win32' ? 'venv/Scripts/python.exe' : 'venv/bin/python';
 const pythonPath = path.resolve(__dirname + '/..', pythonExecutable);
@@ -82,7 +81,7 @@ class PythonShell {
         throw new Error('Python process has not been started - call start() before executing commands.');
       }
 
-      command = command ? dedent(command) : '';
+      command = command ? command : '';
       this.script += '\n' + command + '\n';
       command = 'print("#CommandStart#")\n' + command + '\n';
       command += '\nfrom sys import stderr as stderr_buffer; stderr_buffer.flush()\n';
