@@ -2,12 +2,11 @@
 
 const os = require('os');
 const path = require('path');
-const appRoot = require('app-root-path').path;
 const dedent = require('dedent-js');
 const fileSystem = require('fs');
 const pythonScript = require('python-shell').PythonShell;
 const pythonExecutable = os.platform() === 'win32' ? 'venv/Scripts/python.exe' : 'venv/bin/python';
-const pythonPath = path.resolve(appRoot, pythonExecutable);
+const pythonPath = path.resolve(__dirname + '/..', pythonExecutable);
 const childProcess = require('child_process');
 const replaceAll = require('string.prototype.replaceall');
 const Mutex = require('async-mutex').Mutex;
