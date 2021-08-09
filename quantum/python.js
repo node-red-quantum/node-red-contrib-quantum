@@ -11,42 +11,46 @@ const Mutex = require('async-mutex').Mutex;
 const mutex = new Mutex();
 
 
-function createPromise(process) {
-  return new Promise(async (resolve, reject) => {
+async function createPromise(process) {
+  return new Promise((resolve, reject) => {
     let stdoutData = '';
     let stderrData = '';
+    let stdoutDone = false;
+    let stderrDone = false;
 
-    await new Promise((resolve) => {
-      process.stdout.on('data', function(data) {
-        stdoutData += data;
+    let done = function() {
+      process.stdout.removeAllListeners();
+      process.stderr.removeAllListeners();
+      if (stderrData.trim()) {
+        reject(stderrData.trim());
+      } else {
+        resolve(stdoutData.trim());
+      }
+    };
 
-        if (stdoutData.includes('#StdoutEnd#')) {
-          stdoutData = stdoutData.replace('#StdoutEnd#', '');
-          resolve();
+    process.stdout.on('data', function(data) {
+      stdoutData += data;
+      if (stdoutData.includes('#StdoutEnd#')) {
+        stdoutData = stdoutData.replace('#StdoutEnd#', '');
+        stdoutDone = true;
+        if (stdoutDone && stderrDone) {
+          done();
         }
-      });
+      }
     });
 
-    await new Promise((resolve) => {
-      process.stderr.on('data', function(data) {
-        stderrData += data;
-
-        if (stderrData.includes('#StderrEnd#')) {
-          stderrData = replaceAll(stderrData, '>>>', '');
-          stderrData = replaceAll(stderrData, '...', '');
-          stderrData = stderrData.replace('#StderrEnd#', '');
-          resolve();
+    process.stderr.on('data', function(data) {
+      stderrData += data;
+      if (stderrData.includes('#StderrEnd#')) {
+        stderrData = replaceAll(stderrData, '>>>', '');
+        stderrData = replaceAll(stderrData, '...', '');
+        stderrData = stderrData.replace('#StderrEnd#', '');
+        stderrDone = true;
+        if (stdoutDone && stderrDone) {
+          done();
         }
-      });
+      }
     });
-
-    process.stdout.removeAllListeners();
-    process.stderr.removeAllListeners();
-    if (stderrData.trim()) {
-      reject(stderrData.trim());
-    } else {
-      resolve(stdoutData.trim());
-    }
   });
 }
 
