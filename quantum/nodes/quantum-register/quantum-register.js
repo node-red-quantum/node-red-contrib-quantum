@@ -16,6 +16,7 @@ module.exports = function(RED) {
 
     this.on('input', async function(msg, send, done) {
       let script = '';
+      let output = new Array(node.outputs);
 
       // Validate the node input msg: check for register object.
       // Return corresponding errors or null if no errors.
@@ -81,7 +82,6 @@ module.exports = function(RED) {
 
       // Creating an array of messages to be sent
       // Each message represents a different qubit
-      let output = new Array(node.outputs);
       for (let i = 0; i < node.outputs; i++) {
         output[i] = {
           topic: 'Quantum Circuit',
