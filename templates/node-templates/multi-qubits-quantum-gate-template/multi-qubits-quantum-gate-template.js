@@ -6,7 +6,7 @@ const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
 
 module.exports = function(RED) {
-  function MultiQubitGateNode(config) {
+  function MultiQubitGateNode(config) { // Change name
     RED.nodes.createNode(this, config);
     this.name = config.name;
     this.qubits = [];
