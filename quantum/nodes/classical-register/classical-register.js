@@ -12,7 +12,6 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     this.name = config.name.trim().toLowerCase().replace(/ /g, '_');
     this.classicalBits = config.classicalBits;
-    const flowContext = state;
     const node = this;
 
     this.on('input', async function(msg, send, done) {
@@ -41,14 +40,14 @@ module.exports = function(RED) {
         registerName: node.name,
         registerVar: 'cr_' + node.name,
       };
-      flowContext.set('quantumCircuit[' + msg.payload.register.toString() + ']', register);
+      state.set('quantumCircuit[' + msg.payload.register.toString() + ']', register);
 
       // get quantum circuit config and circuit ready event from flow context
-      let quantumCircuitConfig = flowContext.get('quantumCircuitConfig');
+      let quantumCircuitConfig = state.get('quantumCircuitConfig');
 
       // If the quantum circuit has not yet been initialised by another register
-      if (typeof(flowContext.get('quantumCircuit')) !== undefined) {
-        let structure = flowContext.get('quantumCircuit');
+      if (typeof(state.get('quantumCircuit')) !== undefined) {
+        let structure = state.get('quantumCircuit');
 
         // Validating the registers' structure according to the user input in 'Quantum Circuit'
         // And counting how many registers were initialised so far.
@@ -60,9 +59,9 @@ module.exports = function(RED) {
 
         // If all register initialised & the circuit has not been initialised by another register:
         // Initialise the quantum circuit
-        if (count == structure.length && typeof(flowContext.get('quantumCircuit')) !== undefined) {
+        if (count == structure.length && typeof(state.get('quantumCircuit')) !== undefined) {
           // Delete the 'quantumCircuit' flow context variable, not used anymore
-          flowContext.set('quantumCircuit', undefined);
+          state.set('quantumCircuit', undefined);
 
           // Add arguments to quantum circuit code
           let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, '%s,'.repeat(count));
