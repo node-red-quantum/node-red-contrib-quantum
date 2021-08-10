@@ -35,10 +35,26 @@ module.exports = function(RED) {
         // Define the node's Qiskit script in `snippets.js`
         script += util.format(snippets.TEMPLATE, msg.payload.qubit);
 
+        // If needed, use the node's status to share
+        // infromation on the quantum operation performed
+        node.status({
+          fill: 'grey',
+          shape: 'dot',
+          text: '',
+        });
+
       // If the quantum circuit makes use of registers
       } else {
         // Define the node's Qiskit script in `snippets.js`
         script += util.format(snippets.TEMPLATE, msg.payload.registerVar + '[' + msg.payload.qubit + ']');
+
+        // If needed, use the node's status to share
+        // infromation on the quantum operation performed
+        node.status({
+          fill: 'grey',
+          shape: 'dot',
+          text: '',
+        });
       }
 
       // Run the Qiskit script in the python shell
