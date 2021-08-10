@@ -3,6 +3,7 @@
 const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
+const state = require('../../state').GlobalState;
 const errors = require('../../errors');
 
 module.exports = function(RED) {
@@ -11,7 +12,7 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     this.name = config.name.trim().toLowerCase().replace(/ /g, '_');
     this.classicalBits = config.classicalBits;
-    const flowContext = this.context().flow;
+    const flowContext = state;
     const node = this;
 
     this.on('input', async function(msg, send, done) {

@@ -3,6 +3,7 @@
 const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
+const state = require('../../state').GlobalState;
 
 const EventEmitter = require('events');
 const quantumCircuitReady = new EventEmitter();
@@ -20,7 +21,7 @@ module.exports = function(RED) {
     this.qbitsreg = parseInt(config.qbitsreg);
     this.cbitsreg = parseInt(config.cbitsreg);
     this.outputs = parseInt(config.outputs);
-    const flowContext = this.context().flow;
+    const flowContext = state;
     const node = this;
 
     flowContext.set('quantumCircuitReadyEvent', quantumCircuitReady);
