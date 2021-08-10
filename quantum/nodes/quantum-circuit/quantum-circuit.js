@@ -21,7 +21,6 @@ module.exports = function(RED) {
     this.cbitsreg = parseInt(config.cbitsreg);
     this.outputs = parseInt(config.outputs);
     const flowContext = this.context().flow;
-    const output = new Array(this.outputs);
     const node = this;
 
     flowContext.set('quantumCircuitReadyEvent', quantumCircuitReady);
@@ -52,6 +51,9 @@ module.exports = function(RED) {
     this.on('input', async function(msg, send, done) {
       let script = '';
       script += snippets.IMPORTS;
+
+      let output = new Array(node.outputs);
+
       // Creating a temporary 'quantumCircuitArray' flow context array
       // This variable represents the quantum circuit structure
       let quantumCircuitArray = new Array(node.outputs);

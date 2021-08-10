@@ -12,11 +12,11 @@ module.exports = function(RED) {
     this.name = config.name.trim().toLowerCase().replace(/ /g, '_');
     this.outputs = parseInt(config.outputs);
     const flowContext = this.context().flow;
-    const output = new Array(this.outputs);
     const node = this;
 
     this.on('input', async function(msg, send, done) {
       let script = '';
+      let output = new Array(node.outputs);
 
       // Validate the node input msg: check for register object.
       // Return corresponding errors or null if no errors.

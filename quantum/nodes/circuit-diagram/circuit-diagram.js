@@ -1,16 +1,12 @@
 'use strict';
 
-const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
 
 module.exports = function(RED) {
-  function IBMQuantumSystemNode(config) {
+  function CircuitDiagramNode(config) {
     RED.nodes.createNode(this, config);
-    this.apiToken = config.api_token;
-    this.preferredBackend = config.preferred_backend;
-    this.outputPreference = config.preferred_output;
     this.qubits = [];
     this.qreg = '';
     const node = this;
@@ -87,7 +83,7 @@ module.exports = function(RED) {
       }
 
       // If all qubits have arrived,
-      // generate the quantum system script and run it
+      // generate the circuit print script and run it
       if (qubitsArrived) {
         // Checking that all qubits received as input are from the same quantum circuit
         let error = errors.validateQubitsFromSameCircuit(node.qubits);
@@ -97,41 +93,17 @@ module.exports = function(RED) {
           return;
         }
 
-        node.status({
-          fill: 'orange',
-          shape: 'dot',
-          text: 'Job running...',
-        });
+        // Emptying the runtime variables upon output
+        node.qubits = [];
+        node.qreg = '';
 
-        let script = '';
-
-        if (node.preferredBackend) {
-          script += util.format(snippets.IBMQ_SYSTEM_PREFERRED, node.apiToken, node.preferredBackend);
-        } else {
-          script += util.format(snippets.IBMQ_SYSTEM_DEFAULT, node.apiToken, node.qubits.length);
-        }
-
-        if (node.outputPreference == 'Verbose') {
-          script += snippets.IBMQ_SYSTEM_VERBOSE;
-        } else {
-          script += snippets.IBMQ_SYSTEM_RESULT;
-        }
-
+        let script = snippets.CIRCUIT_BUFFER;
         await shell.execute(script, (err, data) => {
           if (err) {
-            node.status({
-              fill: 'red',
-              shape: 'dot',
-              text: 'Job failed!',
-            });
             done(err);
           } else {
-            node.status({
-              fill: 'green',
-              shape: 'dot',
-              text: 'Job completed!',
-            });
-            msg.payload = data;
+            msg.payload = data.split('\'')[1];
+            msg.encoding = 'base64';
             send(msg);
             done();
           }
@@ -139,7 +111,6 @@ module.exports = function(RED) {
         });
       }
     });
-  }
-
-  RED.nodes.registerType('ibm-quantum-system', IBMQuantumSystemNode);
+  };
+  RED.nodes.registerType('circuit-diagram', CircuitDiagramNode);
 };
