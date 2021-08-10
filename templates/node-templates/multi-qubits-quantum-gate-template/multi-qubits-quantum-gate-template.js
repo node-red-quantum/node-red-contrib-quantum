@@ -72,7 +72,7 @@ module.exports = function(RED) {
               targetQubit.payload.qubit.toString(),
           );
 
-          // Use the node's status to share infromation on
+          // Use the node's status to share information on
           // the quantum operation performed
           node.status({
             fill: 'grey',
@@ -91,7 +91,7 @@ module.exports = function(RED) {
               targetQubit.payload.qubit.toString() + ']',
           );
 
-          // Use the node's status to share infromation on
+          // Use the node's status to share information on
           // the quantum operation performed
           node.status({
             fill: 'grey',

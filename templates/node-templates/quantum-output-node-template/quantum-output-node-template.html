@@ -1,0 +1,30 @@
+<script type="text/javascript">
+    RED.nodes.registerType("quantum-output-node-template", { // Change the name
+      category: "quantum",
+      color: "#A8A8A8",
+      defaults: {
+        name: { value: "" },
+        shots: { value: 0, validate: RED.validators.number() },
+      },
+      inputs: 1,
+      outputs: 1,
+      icon: "font-awesome/fa-microchip",
+      paletteLabel: "quantum output node template",
+      label: function () {
+        return this.name || "quantum output node";
+      },
+      inputLabels: "Qubits",
+      outputLabels: "Circuit output",
+    });
+  </script>
+  
+  <script type="text/html" data-template-name="quantum-output-node-template"> <!-- Change the name -->
+    <div class="form-row">
+      <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name" />
+    </div>
+    <div class="form-row">
+      <label for="node-input-shots"><i class="fa fa-tag"></i> Shots</label>
+      <input type="text" id="node-input-shots" placeholder="Name" />
+    </div>
+</script>
