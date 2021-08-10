@@ -8,6 +8,7 @@ const errors = require('../../errors');
 module.exports = function(RED) {
   function LocalSimulatorNode(config) {
     RED.nodes.createNode(this, config);
+    this.name = config.name;
     this.shots = config.shots || 1;
     this.qubits = [];
     this.qreg = '';
