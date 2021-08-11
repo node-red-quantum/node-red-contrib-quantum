@@ -6,26 +6,25 @@ const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
 
 module.exports = function(RED) {
-  function LocalSimulatorNode(config) {
+  function QuantumOutputNode(config) { // Change the name
     RED.nodes.createNode(this, config);
     this.name = config.name;
-    this.shots = config.shots || 1;
     this.qubits = [];
     this.qreg = '';
     const node = this;
 
-    // Reset runtime variables upon output or error
+    // Define a 'reset' function to empty the runtime variables upon sending node output
     const reset = function() {
       node.qubits = [];
       node.qreg = '';
+      // Initialise other runtime variables here
     };
 
     this.on('input', async function(msg, send, done) {
       let script = '';
       let qubitsArrived = true;
 
-      // Validate the node input msg: check for qubit object.
-      // Return corresponding errors or null if no errors.
+      // Validate the node input msg: check for valid qubit object.
       // Stop the node execution upon an error
       let error = errors.validateQubitInput(msg);
       if (error) {
@@ -36,16 +35,17 @@ module.exports = function(RED) {
 
       // If the quantum circuit does not have registers
       if (typeof msg.payload.register === 'undefined') {
-        node.qreg = undefined;
+        // Store the qubit objects received as input into the `node.qubits` array
         node.qubits.push(msg);
+        node.qreg = undefined;
 
         // If not all qubits have arrived
         if (node.qubits.length < msg.payload.structure.qubits) {
           qubitsArrived = false;
         }
+
+      // If the quantum circuit has registers
       } else {
-        // If the quantum circuit has registers
-        // Keep track of qubits that have arrived and the remaining ones
         if (node.qubits.length == 0) node.qreg = {};
 
         // Throw an error if too many qubits are received by the simulator node
@@ -72,6 +72,7 @@ module.exports = function(RED) {
           };
         }
 
+        // Store the qubit objects received as input into the `node.qubits` array
         node.qubits.push(msg);
 
         // Checking whether all qubits have arrived or not
@@ -86,10 +87,9 @@ module.exports = function(RED) {
         }
       }
 
-      // If all qubits have arrived,
-      // generate the simulator script and run it
+      // If all qubits have arrived
       if (qubitsArrived) {
-        // Checking that all qubits received as input are from the same quantum circuit
+        // Checking that the qubits received as input are from the same quantum circuit
         let error = errors.validateQubitsFromSameCircuit(node.qubits);
         if (error) {
           done(error);
@@ -97,13 +97,17 @@ module.exports = function(RED) {
           return;
         }
 
-        const params = node.shots;
-        script += util.format(snippets.LOCAL_SIMULATOR, params);
+        // Define the node's Qiskit script in `snippets.js`
+        script += util.format(snippets.TEMPLATE);
+
+        // Run the Qiskit script in the python shell
+        // If no error occur, send the qubit object as node output
         await shell.execute(script, (err, data) => {
           if (err) {
             done(err);
           } else {
-            msg.payload = JSON.parse(data.replace(/'/g, '"'));
+            // Store the node's output in `msg.payload` and send it
+            msg.payload = '';
             send(msg);
             done();
           }
@@ -113,5 +117,5 @@ module.exports = function(RED) {
     });
   }
 
-  RED.nodes.registerType('local-simulator', LocalSimulatorNode);
+  RED.nodes.registerType('quantum-output-node-template', QuantumOutputNode); // Change the name
 };
