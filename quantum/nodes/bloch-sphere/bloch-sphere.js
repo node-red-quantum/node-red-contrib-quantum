@@ -90,19 +90,15 @@ module.exports = function(RED) {
           return;
         }
 
-        node.qubits = [];
-        node.qreg = '';
-
         script += util.format(snippets.BLOCH_SPHERE);
         await shell.execute(script, (err, data)=>{
-          // console.log(shell.script.trim());
           if (err) {
-            // check if its because script contain qc.measure
-            // snippets.measure.tostring()[4] output is: 'qc.m'
-            if (shell.script.includes(snippets.MEASURE.toString()[4])) {
-              done('Measure Node should not be included as part of the quantum circuit while using Bloch Sphere Diagram Node.\nPlease unlink or remove any measure nodes.');
+            // check if it is because the script contains a measurement
+            // `snippets.MEASURE.toString().substring(0, 11)` output is: 'qc.measure('
+            if (shell.script.includes(snippets.MEASURE.toString().substring(0, 11))) {
+              done(new Error(errors.BLOCH_SPHERE_WITH_MEASUREMENT));
+            // Other errors
             } else {
-            // other problem
               done(err);
             }
           } else {
@@ -111,6 +107,7 @@ module.exports = function(RED) {
             send(msg);
             done();
           }
+          reset();
         });
       }
     });
