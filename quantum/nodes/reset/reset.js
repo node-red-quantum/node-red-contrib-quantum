@@ -9,7 +9,6 @@ module.exports = function(RED) {
   function ResetNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
-    const node = this;
 
     this.on('input', async function(msg, send, done) {
       let script = '';
