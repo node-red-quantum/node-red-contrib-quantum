@@ -1,6 +1,5 @@
 'use strict';
 
-const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
@@ -90,7 +89,7 @@ module.exports = function(RED) {
           return;
         }
 
-        script += util.format(snippets.BLOCH_SPHERE);
+        script += snippets.BLOCH_SPHERE + snippets.ENCODE_IMAGE;
         await shell.execute(script, (err, data)=>{
           if (err) {
             // check if it is because the script contains a measurement

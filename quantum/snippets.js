@@ -83,16 +83,8 @@ const NOT_GATE =
 `qc.x(%s)
 `;
 
-const CIRCUIT_BUFFER =
-`import matplotlib.pyplot as plt
-import base64
-import io
-qc.draw(output='mpl')
-buffer = io.BytesIO()
-plt.savefig(buffer,  format='png')
-buffer.seek(0)
-b64_string = base64.b64encode(buffer.read())
-print(b64_string)
+const CIRCUIT_DIAGRAM =
+`qc.draw(output='mpl')
 `;
 
 const RESET =
@@ -120,25 +112,26 @@ const SWAP =
 `;
 
 const BLOCH_SPHERE =
-`from qiskit.visualization import *
-from qiskit.quantum_info import *
-import io
-import base64
-import matplotlib
-
+`from qiskit.visualization import plot_bloch_multivector
+from qiskit.quantum_info import Statevector
 state = Statevector.from_instruction(qc)
-blochResult = plot_bloch_multivector(state)
-
-ioByte = io.BytesIO()
-blochResult.savefig(ioByte, format = 'png')
-ioByte.seek(0)
-b64_str = base64.b64encode(ioByte.read())
-print(b64_str)
-ioByte.close()
+plot_bloch_multivector(state)
 `;
 
 const CU_GATE =
 `qc.cu(%s, %s, %s, %s, %s, %s)
+`;
+
+const ENCODE_IMAGE =
+`import matplotlib.pyplot as plt
+import base64
+import io
+buffer = io.BytesIO()
+plt.savefig(buffer,  format='png')
+buffer.seek(0)
+b64_str = base64.b64encode(buffer.read())
+print(b64_str)
+buffer.close()
 `;
 
 module.exports = {
@@ -157,7 +150,7 @@ module.exports = {
   IBMQ_SYSTEM_VERBOSE,
   IBMQ_SYSTEM_RESULT,
   NOT_GATE,
-  CIRCUIT_BUFFER,
+  CIRCUIT_DIAGRAM,
   RESET,
   PHASE_GATE,
   ROTATION_GATE,
@@ -166,4 +159,5 @@ module.exports = {
   UNITARY_GATE,
   BLOCH_SPHERE,
   CU_GATE,
+  ENCODE_IMAGE,
 };
