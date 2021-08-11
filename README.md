@@ -13,9 +13,11 @@ This module is a user-friendly library that is suitable to new quantum computing
 
 This Node-RED library was developed in the context of a UCL IXN partnership with IBM. Defined and arranged by IBM, the project was allocated to students from UCL's computer science department as part of their Master's thesis. 
 
+For the latest changes, please read the [CHANGELOG](CHANGELOG.md).
+
 For more details on the authors, please read the [AUTHORS](AUTHORS) file.
 
-For the latest changes, please read the [CHANGELOG](CHANGELOG.md).
+For information on how to contribute, please read the [CONTRIBUTING](CONTRIBUTING.md) guidelines.
 
 ![Quantum Circuit example](./images/QuantumRandomNumber.png)
 
