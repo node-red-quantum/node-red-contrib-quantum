@@ -87,8 +87,16 @@ module.exports = function(RED) {
         let script = snippets.BLOCH_SPHERE;
         await shell.execute(script, (err, data)=>{
           if (err) {
-            done(err);
-          } else {
+            //check if its because script contain qc.measure
+            //snippets.measure.tostring()[4] output is: 'qc.m'
+            if (shell.script.includes(snippets.MEASURE.toString()[4])){
+              done("Measure Node should not be included as part of the quantum circuit while using Bloch Sphere Diagram Node.\nPlease unlink or remove any measure nodes.");
+            } else{
+            //other problem
+              console.log("other error occured")
+              done(err);
+            }
+          }else {
             msg.payload = data.split('\'')[1];
             msg.encoding = 'base64';
             send(msg);
