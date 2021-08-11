@@ -13,7 +13,7 @@ module.exports = function(RED) {
     this.qreg = '';
     const node = this;
 
-    const reset = function(){
+    const reset = function() {
       node.qubits = [];
       node.qreg = '';
     };
@@ -33,7 +33,7 @@ module.exports = function(RED) {
       if (typeof(msg.payload.register) === 'undefined') {
         node.qubits.push(msg);
         node.qreg = undefined;
-        
+
         // Check if all qubits arrived.
         if (node.qubits.length < msg.payload.structure.qubits) {
           qubitsArrived = false;
@@ -86,7 +86,7 @@ module.exports = function(RED) {
         let error = errors.validateQubitsFromSameCircuit(node.qubits);
         if (error) {
           done(error);
-          reset()
+          reset();
           return;
         }
 
@@ -95,17 +95,17 @@ module.exports = function(RED) {
 
         script += util.format(snippets.BLOCH_SPHERE);
         await shell.execute(script, (err, data)=>{
-          //console.log(shell.script.trim());
+          // console.log(shell.script.trim());
           if (err) {
-            //check if its because script contain qc.measure
-            //snippets.measure.tostring()[4] output is: 'qc.m'
-            if (shell.script.includes(snippets.MEASURE.toString()[4])){
-              done("Measure Node should not be included as part of the quantum circuit while using Bloch Sphere Diagram Node.\nPlease unlink or remove any measure nodes.");
-            } else{
-            //other problem
+            // check if its because script contain qc.measure
+            // snippets.measure.tostring()[4] output is: 'qc.m'
+            if (shell.script.includes(snippets.MEASURE.toString()[4])) {
+              done('Measure Node should not be included as part of the quantum circuit while using Bloch Sphere Diagram Node.\nPlease unlink or remove any measure nodes.');
+            } else {
+            // other problem
               done(err);
             }
-          }else {
+          } else {
             msg.payload = data.split('\'')[1];
             msg.encoding = 'base64';
             send(msg);
