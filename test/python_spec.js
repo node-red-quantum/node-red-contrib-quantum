@@ -2,10 +2,10 @@ const shell = require('../quantum/python').PythonShell;
 const assert = require('chai').assert;
 const dedent = require('dedent-js');
 
-const NAME_ERROR = dedent(`
-  Traceback (most recent call last):
-    File "<stdin>", line 1, in <module>
-  NameError: name 'x' is not defined`);
+const NAME_ERROR =
+`Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'x' is not defined`;
 
 
 describe('PythonShell', function() {
@@ -142,7 +142,7 @@ describe('PythonShell', function() {
     });
 
     it('return output on block command', async function() {
-      let input = `
+      let input = dedent`
         x = 10
         if x < 20:
           print(x)
@@ -153,7 +153,7 @@ describe('PythonShell', function() {
     });
 
     it('return output on loop command', async function() {
-      let input = `
+      let input = dedent`
         for i in range(3):
           print(i)
         
@@ -163,7 +163,7 @@ describe('PythonShell', function() {
       assert.strictEqual(output, '0\n1\n2\n3');
     });
 
-    xit('return error on invalid command', async function() {
+    it('return error on invalid command', async function() {
       let output = await shell.execute('print(x)');
       assert.strictEqual(output, NAME_ERROR);
     });
@@ -175,7 +175,7 @@ describe('PythonShell', function() {
       });
     });
 
-    xit('return error with callback', async function() {
+    it('return error with callback', async function() {
       await shell.execute('print(x)', (err, data) => {
         assert.strictEqual(err, NAME_ERROR);
         assert.isNull(data);
@@ -190,7 +190,7 @@ describe('PythonShell', function() {
           });
     });
 
-    xit('return error with promise', async function() {
+    it('return error with promise', async function() {
       let promise = shell.execute('print(x)');
       await promise
           .then((err) => {
@@ -216,7 +216,7 @@ describe('PythonShell', function() {
       assert.deepEqual(outputs, ['0\n1\n2', '3\n4\n5', '6\n7\n8']);
     });
 
-    xit('return errors on parallel invalid commands', async () => {
+    it('return errors on parallel invalid commands', async () => {
       let outputs = await Promise.all([
         shell.execute('print(x)'),
         shell.execute('print(x)'),
@@ -224,7 +224,7 @@ describe('PythonShell', function() {
       assert.deepEqual(outputs, [NAME_ERROR, NAME_ERROR]);
     });
 
-    xit('return errors and outputs on parallel mixed commands', async () => {
+    it('return errors and outputs on parallel mixed commands', async () => {
       let outputs = await Promise.all([
         shell.execute('print(x)'),
         shell.execute('x = 10'),
