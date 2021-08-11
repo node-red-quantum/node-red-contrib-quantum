@@ -93,7 +93,6 @@ module.exports = function(RED) {
               done("Measure Node should not be included as part of the quantum circuit while using Bloch Sphere Diagram Node.\nPlease unlink or remove any measure nodes.");
             } else{
             //other problem
-              console.log("other error occured")
               done(err);
             }
           }else {
