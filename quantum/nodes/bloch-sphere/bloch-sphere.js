@@ -1,5 +1,6 @@
 'use strict';
 
+const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
@@ -12,20 +13,27 @@ module.exports = function(RED) {
     this.qreg = '';
     const node = this;
 
+    const reset = function(){
+      node.qubits = [];
+      node.qreg = '';
+    };
+
     this.on('input', async function(msg, send, done) {
+      let script = '';
       let qubitsArrived = true;
 
       let error = errors.validateQubitInput(msg);
       if (error) {
         done(error);
+        reset();
         return;
       }
       // Throw Error if:
       // - The user connects it to a node that is not from the quantum library
       if (typeof(msg.payload.register) === 'undefined') {
-        node.qreg = undefined;
         node.qubits.push(msg);
-
+        node.qreg = undefined;
+        
         // Check if all qubits arrived.
         if (node.qubits.length < msg.payload.structure.qubits) {
           qubitsArrived = false;
@@ -78,14 +86,16 @@ module.exports = function(RED) {
         let error = errors.validateQubitsFromSameCircuit(node.qubits);
         if (error) {
           done(error);
+          reset()
           return;
         }
 
         node.qubits = [];
         node.qreg = '';
 
-        let script = snippets.BLOCH_SPHERE;
+        script += util.format(snippets.BLOCH_SPHERE);
         await shell.execute(script, (err, data)=>{
+          //console.log(shell.script.trim());
           if (err) {
             //check if its because script contain qc.measure
             //snippets.measure.tostring()[4] output is: 'qc.m'
