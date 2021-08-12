@@ -16,4 +16,8 @@ describe('NotGateNode', function() {
   it('load node', function(done) {
     testUtil.isLoaded(notGateNode, 'not-gate', done);
   });
+
+  it('pass qubit through gate', function(done) {
+    testUtil.qubitsPassedThroughGate(notGateNode, 'not-gate', done);
+  });
 });

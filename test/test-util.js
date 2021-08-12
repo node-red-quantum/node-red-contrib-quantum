@@ -5,7 +5,7 @@ const quantumCircuitNode = require('../quantum/nodes/quantum-circuit/quantum-cir
 
 nodeTestHelper.init(require.resolve('node-red'));
 
-
+// Test that node is successfully loaded into Node-RED.
 function isLoaded(node, nodeName, done) {
   let flow = [{id: '1', type: nodeName, name: nodeName}];
 
@@ -20,43 +20,71 @@ function isLoaded(node, nodeName, done) {
   });
 }
 
-// Test that qubit was passed to gate
-function qubitPassedGate(node, nodeName, done) {
-  let flow = [{id: 'n1', type: quantumCircuitNode, name: 'Circuit', structure: 'circuit-structure-qubits', cbitsreg: '1', qbitsreg: '1', wires: [['n2']]},
+
+// Test that qubit(s) successfully passed through the gate.
+function qubitsPassedThroughGate(node, nodeName, cbits, qbits, done) {
+  // Write code to duplicate wires to single gate input & include all required properties from nodes for their tests.
+  let flow = [{id: 'n1', type: quantumCircuitNode, name: 'Circuit', structure: 'circuit-structure-qubits', cbitsreg: cbits, qbitsreg: qbits, wires: [['n2']]},
     {id: 'n2', type: nodeName, name: nodeName, wires: [['n3']]},
     {id: 'n3', type: 'helper'}];
 
+  // Figure out what causes the 'AssertionError: Target cannot be null or undefined.'
   nodeTestHelper.load(node, flow, function() {
     let gate = nodeTestHelper.getNode('n2');
     let outputNode = nodeTestHelper.getNode('n3');
+    let payloadObject = {
+      structure: {
+        quantumCircuitId: n1,
+        creg: cbits,
+        qreg: qbits,
+      },
+      register: undefined,
+      qubit: 1, // Add loop to generate array of qubits when necessary
+    };
+
     try {
-      assert.propertyVal(gate, 'payload', 'q1');
-      assert.propertyVal(outputNode, 'payload', 'q1');
+      assert.propertyVal(gate, 'payload', payloadObject);
+      assert.propertyVal(outputNode, 'payload', payloadObject);
     } catch (err) {
       done(err);
     }
   });
 }
+
 
 // Test that correct script was passed to the shell by the node.
-function qiskitScriptSent(node, nodeName, scriptString, done) {
-  let flow = [{id: 'n1', type: quantumCircuitNode, name: 'Circuit', structure: 'circuit-structure-qubits', cbitsreg: '1', qbitsreg: '1', wires: [['n2']]},
-    {id: 'n2', type: nodeName, name: nodeName, wires: [['n3']]},
-    {id: 'n3', type: 'helper'}];
+// function qiskitScriptSent(node, nodeName, scriptString, done) {
+//   let flow = [{id: 'n1', type: quantumCircuitNode, name: 'Circuit', structure: 'circuit-structure-qubits', cbitsreg: '1', qbitsreg: '1', wires: [['n2']]},
+//     {id: 'n2', type: nodeName, name: nodeName, wires: [['n3']]},
+//     {id: 'n3', type: 'helper'}];
 
-  nodeTestHelper.load(node, flow, function() {
-    let sentScript = shell.returnLastString();
-    try {
-      assert.equal(sentScript, scriptString);
-    } catch (err) {
-      done(err);
-    }
-  });
-}
+//   nodeTestHelper.load(node, flow, function() {
+//     let sentScript = shell.returnLastString();
+//     try {
+//       assert.equal(sentScript, scriptString);
+//     } catch (err) {
+//       done(err);
+//     }
+//   });
+// }
+
+
+// Test that using gates without quantum circuit node throws an error.
+// function nonQuantumFlow(node, nodeName, done) {
+//   let flow = [{id: 'n1', type: 'helper'},
+//     {id: 'n2', type: nodeName, name: nodeName, wires: [['n3']]},
+//     {id: 'n3', type: 'helper'}];
+
+//   nodeTestHelper.load(node, flow, function() {
+
+//   });
+// }
+
 
 module.exports = {
   nodeTestHelper,
   isLoaded,
-  qubitPassedGate,
-  qiskitScriptSent,
+  qubitsPassedThroughGate,
+  // qiskitScriptSent,
+  // nonQuantumFlow,
 };

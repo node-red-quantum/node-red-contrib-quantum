@@ -16,7 +16,5 @@ describe('ToffoliGateNode', function() {
 
   it('load node', function(done) {
     testUtil.isLoaded(toffoliGateNode, 'toffoli-gate', done);
-    testUtil.qubitPassedGate(toffoliGateNode, 'toffoli-gate', done);
-    testUtil.qiskitScriptSent(toffoliGateNode, 'toffoli-gate', snippets.TOFFOLI_GATE);
   });
 });
