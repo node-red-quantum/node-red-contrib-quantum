@@ -1,20 +1,17 @@
 'use strict';
 
-const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
 
 module.exports = function(RED) {
-  function LocalSimulatorNode(config) {
+  function BlochSphereNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
-    this.shots = config.shots || 1;
     this.qubits = [];
     this.qreg = '';
     const node = this;
 
-    // Reset runtime variables upon output or error
     const reset = function() {
       node.qubits = [];
       node.qreg = '';
@@ -24,22 +21,19 @@ module.exports = function(RED) {
       let script = '';
       let qubitsArrived = true;
 
-      // Validate the node input msg: check for qubit object.
-      // Return corresponding errors or null if no errors.
-      // Stop the node execution upon an error
       let error = errors.validateQubitInput(msg);
       if (error) {
         done(error);
         reset();
         return;
       }
-
-      // If the quantum circuit does not have registers
-      if (typeof msg.payload.register === 'undefined') {
-        node.qreg = undefined;
+      // Throw Error if:
+      // - The user connects it to a node that is not from the quantum library
+      if (typeof(msg.payload.register) === 'undefined') {
         node.qubits.push(msg);
+        node.qreg = undefined;
 
-        // If not all qubits have arrived
+        // Check if all qubits arrived.
         if (node.qubits.length < msg.payload.structure.qubits) {
           qubitsArrived = false;
         }
@@ -86,8 +80,6 @@ module.exports = function(RED) {
         }
       }
 
-      // If all qubits have arrived,
-      // generate the simulator script and run it
       if (qubitsArrived) {
         // Checking that all qubits received as input are from the same quantum circuit
         let error = errors.validateQubitsFromSameCircuit(node.qubits);
@@ -97,13 +89,20 @@ module.exports = function(RED) {
           return;
         }
 
-        const params = node.shots;
-        script += util.format(snippets.LOCAL_SIMULATOR, params);
-        await shell.execute(script, (err, data) => {
+        script += snippets.BLOCH_SPHERE + snippets.ENCODE_IMAGE;
+        await shell.execute(script, (err, data)=>{
           if (err) {
-            done(err);
+            // check if it is because the script contains a measurement
+            // `snippets.MEASURE.toString().substring(0, 11)` output is: 'qc.measure('
+            if (shell.script.includes(snippets.MEASURE.toString().substring(0, 11))) {
+              done(new Error(errors.BLOCH_SPHERE_WITH_MEASUREMENT));
+            // Other errors
+            } else {
+              done(err);
+            }
           } else {
-            msg.payload = JSON.parse(data.replace(/'/g, '"'));
+            msg.payload = data.split('\'')[1];
+            msg.encoding = 'base64';
             send(msg);
             done();
           }
@@ -111,7 +110,6 @@ module.exports = function(RED) {
         });
       }
     });
-  }
-
-  RED.nodes.registerType('local-simulator', LocalSimulatorNode);
+  };
+  RED.nodes.registerType('bloch-sphere', BlochSphereNode);
 };
