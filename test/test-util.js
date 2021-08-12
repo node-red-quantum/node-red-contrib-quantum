@@ -45,6 +45,7 @@ function qubitsPassedThroughGate(node, nodeName, cbits, qbits, done) {
     try {
       assert.propertyVal(gate, 'payload', payloadObject);
       assert.propertyVal(outputNode, 'payload', payloadObject);
+      done();
     } catch (err) {
       done(err);
     }
