@@ -17,4 +17,8 @@ describe('ToffoliGateNode', function() {
   it('load node', function(done) {
     testUtil.isLoaded(toffoliGateNode, 'toffoli-gate', done);
   });
+
+  it('sends the correct Qiskit script to the shell', function(done) {
+    testUtil.qiskitScriptSent(toffoliGateNode, 'toffoli-gate', snippets.TOFFOLI_GATE, done);
+  });
 });

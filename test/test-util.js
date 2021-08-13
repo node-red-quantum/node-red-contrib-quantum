@@ -41,11 +41,12 @@ function qubitsPassedThroughGate(node, nodeName, cbits, qbits, done) {
       register: undefined,
       qubit: 1, // Add loop to generate array of qubits when necessary
     };
-
     try {
-      assert.propertyVal(gate, 'payload', payloadObject);
-      assert.propertyVal(outputNode, 'payload', payloadObject);
-      done();
+      n1.on('input', function(msg) {
+        msg.should.have.property('topic', 'Quantum Circuit');
+        msg.should.have.property('payload', payloadObject);
+        done();
+      });
     } catch (err) {
       done(err);
     }
@@ -54,20 +55,21 @@ function qubitsPassedThroughGate(node, nodeName, cbits, qbits, done) {
 
 
 // Test that correct script was passed to the shell by the node.
-// function qiskitScriptSent(node, nodeName, scriptString, done) {
-//   let flow = [{id: 'n1', type: quantumCircuitNode, name: 'Circuit', structure: 'circuit-structure-qubits', cbitsreg: '1', qbitsreg: '1', wires: [['n2']]},
-//     {id: 'n2', type: nodeName, name: nodeName, wires: [['n3']]},
-//     {id: 'n3', type: 'helper'}];
+function qiskitScriptSent(node, nodeName, scriptString, done) {
+  let flow = [{id: 'n1', type: quantumCircuitNode, name: 'Circuit', structure: 'circuit-structure-qubits', cbitsreg: '1', qbitsreg: '1', wires: [['n2']]},
+    {id: 'n2', type: nodeName, name: nodeName, wires: [['n3']]},
+    {id: 'n3', type: 'helper'}];
 
-//   nodeTestHelper.load(node, flow, function() {
-//     let sentScript = shell.returnLastString();
-//     try {
-//       assert.equal(sentScript, scriptString);
-//     } catch (err) {
-//       done(err);
-//     }
-//   });
-// }
+  nodeTestHelper.load(node, flow, function() {
+    let sentScript = shell.returnLastString();
+    try {
+      assert.equal(sentScript, scriptString);
+      done();
+    } catch (err) {
+      done(err);
+    }
+  });
+}
 
 
 // Test that using gates without quantum circuit node throws an error.
@@ -86,6 +88,6 @@ module.exports = {
   nodeTestHelper,
   isLoaded,
   qubitsPassedThroughGate,
-  // qiskitScriptSent,
+  qiskitScriptSent,
   // nonQuantumFlow,
 };
