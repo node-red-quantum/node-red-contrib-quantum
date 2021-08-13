@@ -23,23 +23,23 @@ module.exports = function(RED) {
     this.outputs = parseInt(config.outputs);
     const node = this;
 
-    state.set('quantumCircuitReadyEvent', quantumCircuitReady);
+    state.setPersistent('quantumCircuitReadyEvent', quantumCircuitReady);
 
     const quantumCircuitProxyHandler = {
       set: (obj, prop, value) => {
         obj[prop] = value;
         if (Object.keys(obj).length == node.outputs) {
           quantumCircuitReady.emit('circuitReady', obj);
-          state.set('quantumCircuitConfig', new Proxy({}, quantumCircuitProxyHandler));
+          state.setPersistent('quantumCircuitConfig', new Proxy({}, quantumCircuitProxyHandler));
         }
         return true;
       },
     };
 
     let quantumCircuitConfig = new Proxy({}, quantumCircuitProxyHandler);
-    state.set('quantumCircuitConfig', quantumCircuitConfig);
+    state.setPersistent('quantumCircuitConfig', quantumCircuitConfig);
 
-    state.set('isCircuitReady', () => {
+    state.setPersistent('isCircuitReady', () => {
       let event = state.get('quantumCircuitReadyEvent');
       return new Promise((res, rej) => {
         event.on('circuitReady', (circuitConfig) => {
@@ -49,6 +49,7 @@ module.exports = function(RED) {
     });
 
     this.on('input', async function(msg, send, done) {
+      state.resetRuntime();
       let script = '';
       script += snippets.IMPORTS;
 
@@ -57,7 +58,7 @@ module.exports = function(RED) {
       // Creating a temporary 'quantumCircuitArray' flow context array
       // This variable represents the quantum circuit structure
       let quantumCircuitArray = new Array(node.outputs);
-      state.set('quantumCircuit', quantumCircuitArray);
+      state.setRuntime('quantumCircuit', quantumCircuitArray);
       // If the user wants to use registers
       if (node.structure == 'registers') {
         // Creating an array of messages to be sent

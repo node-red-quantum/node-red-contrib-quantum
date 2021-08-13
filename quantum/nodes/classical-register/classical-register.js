@@ -40,7 +40,7 @@ module.exports = function(RED) {
         registerName: node.name,
         registerVar: 'cr_' + node.name,
       };
-      state.set('quantumCircuit[' + msg.payload.register.toString() + ']', register);
+      state.setRuntime('quantumCircuit[' + msg.payload.register.toString() + ']', register);
 
       // get quantum circuit config and circuit ready event from flow context
       let quantumCircuitConfig = state.get('quantumCircuitConfig');
@@ -60,8 +60,8 @@ module.exports = function(RED) {
         // If all register initialised & the circuit has not been initialised by another register:
         // Initialise the quantum circuit
         if (count == structure.length && typeof(state.get('quantumCircuit')) !== undefined) {
-          // Delete the 'quantumCircuit' flow context variable, not used anymore
-          state.set('quantumCircuit', undefined);
+          // Delete the 'quantumCircuit' variable, not used anymore
+          state.del('quantumCircuit');
 
           // Add arguments to quantum circuit code
           let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, '%s,'.repeat(count));
