@@ -1,0 +1,28 @@
+<script type="text/javascript">
+  RED.nodes.registerType("grovers-algo", {
+    category: "quantum",
+    color: "#8a3ffc",
+    defaults: {
+      name: { value: "" },
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-search",
+    align: "right",
+    paletteLabel: "Grover's algorithm node",
+    label: function () {
+      return this.name || "Grover's algorithm";
+    },
+    inputLabels: "Input",
+    outputLabels: "Output",
+  });
+</script>
+
+<script type="text/html" data-template-name="grovers-algo">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+</script>
+
+

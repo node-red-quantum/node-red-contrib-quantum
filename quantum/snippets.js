@@ -95,6 +95,25 @@ b64_string = base64.b64encode(buffer.read())
 print(b64_string)
 `;
 
+const GROVERS_ALGO =
+`from qiskit import QuantumCircuit
+from qiskit import Aer
+from qiskit.utils import QuantumInstance
+from qiskit.quantum_info import Statevector
+from qiskit.algorithms import Grover, AmplificationProblem
+
+element = '%s'
+oracle = Statevector.from_label(element)
+problem = AmplificationProblem(oracle=oracle, is_good_state = lambda bitstr: bitstr==element)
+backend = Aer.get_backend('qasm_simulator')
+grover = Grover(quantum_instance=backend)
+result = grover.amplify(problem)
+print('Success!' if result.oracle_evaluation else 'Failure!')
+print('Top measurement:', result.top_measurement)
+iterations = Grover.optimal_num_iterations(num_solutions=1, num_qubits=len(element))
+print('iterations = %i'%iterations)
+`;
+
 const RESET =
 `qc.reset(%s)
 `;
@@ -138,6 +157,7 @@ module.exports = {
   IBMQ_SYSTEM_PREFERRED,
   IBMQ_SYSTEM_VERBOSE,
   IBMQ_SYSTEM_RESULT,
+  GROVERS_ALGO,
   NOT_GATE,
   CIRCUIT_BUFFER,
   RESET,
