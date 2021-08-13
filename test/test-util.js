@@ -47,6 +47,15 @@ function qubitsPassedThroughGate(node, nodeName, cbits, qbits, done) {
         msg.should.have.property('payload', payloadObject);
         done();
       });
+      n2.receive({payload: payloadObject, topic: 'Quantum Circuit'});
+
+      n2.on('input', function(msg) {
+        msg.should.have.property('topic', 'Quantum Circuit');
+        msg.should.have.property('payload', payloadObject);
+        done();
+      });
+
+      n3.receive({payload: payloadObject, topic: 'Quantum Circuit'});
     } catch (err) {
       done(err);
     }
