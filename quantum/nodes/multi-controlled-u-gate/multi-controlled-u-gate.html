@@ -52,17 +52,35 @@
 
     oneditprepare: function () {
       document.getElementById("node-input-nbControls").onchange = function () {
-        let input = parseInt(this.value);
-        document.getElementById("node-input-outputs").value = input + 1;
+        let outputs = parseInt(this.value) + 1;
+        let target = parseInt(document.getElementById("node-input-targetPosition").value || 0);
+        document.getElementById("node-input-outputs").value = outputs;
 
-        let options = "<option value='0'>Qubit a - Upper qubit</option>";
-        for (let i = 1; i < input; i++) {
-          options += ("<option value='" + i.toString() + "'>Qubit " + String.fromCharCode(97 + i) +"</option>\n");
+        let options = "";
+        for (let i = 0; i < outputs; i++) {
+          if (i == 0) {
+            if (i == target){
+              options += ("<option value='0' selected>Qubit a - Upper qubit</option>\n");
+            } else {
+              options += ("<option value='0'>Qubit a - Upper qubit</option>\n");
+            }
+          } else if (i == outputs-1) {
+            if (i == target){
+              options += ("<option value='" + i.toString() + "' selected>Qubit " + String.fromCharCode(97 + i) + " - Lower qubit</option>");
+            } else {
+              options += ("<option value='" + i.toString() + "'>Qubit " + String.fromCharCode(97 + i) + " - Lower qubit</option>");
+            }
+          } else {
+            if (i == target){
+              options += ("<option value='" + i.toString() + "' selected>Qubit " + String.fromCharCode(97 + i) + "</option>\n");
+            } else {
+              options += ("<option value='" + i.toString() + "'>Qubit " + String.fromCharCode(97 + i) + "</option>\n");
+            }
+          }
         }
-        options += ("<option value='" + input.toString() + "'>Qubit " + String.fromCharCode(97 + input) + " - Lower qubit</option>");
         document.getElementById("node-input-targetPosition").innerHTML = options;
       };
-
+ 
       document.getElementById("node-input-theta-slider").onchange = function () {
         document.getElementById("node-input-theta").value = this.value;
       };
@@ -90,8 +108,8 @@
         document.getElementById("node-input-lambda-slider").value = this.value;
       };
       
-      document.getElementById("node-input-nbControls").value = parseInt(this.nbControls);
-      this.outputs = parseInt(this.nbControls) + 1;
+      document.getElementById("node-input-nbControls").value = parseInt(this.nbControls || 1);
+      document.getElementById("node-input-outputs").value = parseInt(this.nbControls || 1) + 1;
 
       document.getElementById("node-input-theta").value = this.theta;
       document.getElementById("node-input-theta-slider").value = this.theta;
