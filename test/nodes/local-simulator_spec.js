@@ -23,11 +23,11 @@ describe('LocalSimulatorNode', function() {
 
   it('execute script', function(done) {
     const flow = new FlowBuilder();
-    flow.addQuantumCircuit('n0', ['n1'], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
-    flow.addHadamardGate('n1', ['n2']);
-    flow.addMeasure('n2', ['n3'], {selectedBit: '0'});
-    flow.addLocalSimulator('n3', ['n4'], {shots: '1'});
-    flow.addHelper('n4', []);
+    flow.add('quantum-circuit', 'n0', ['n1'], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
+    flow.add('hadamard-gate', 'n1', ['n2']);
+    flow.add('measure', 'n2', ['n3'], {selectedBit: '0'});
+    flow.add('local-simulator', 'n3', ['n4'], {shots: '1'});
+    flow.addOutput('n4', []);
 
     nodeTestHelper.load(flow.nodes, flow.flow, function() {
       let n0 = nodeTestHelper.getNode('n0');
