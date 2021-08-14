@@ -42,7 +42,7 @@ module.exports = function(RED) {
     flowContext.set('isCircuitReady', () => {
       let event = flowContext.get('quantumCircuitReadyEvent');
       return new Promise((res, rej) => {
-        event.on('circuitReady', (circuitConfig) => {
+        event.once('circuitReady', (circuitConfig) => {
           res(circuitConfig);
         });
       });
@@ -74,6 +74,10 @@ module.exports = function(RED) {
               register: i,
             },
           };
+          if (msg.req && msg.res) {
+            output[i].req = msg.req;
+            output[i].res = msg.res;
+          }
         };
       } else { // If the user does not want to use registers
         // Add arguments to quantum circuit code
@@ -94,6 +98,10 @@ module.exports = function(RED) {
               qubit: i,
             },
           };
+          if (msg.req && msg.res) {
+            output[i].req = msg.req;
+            output[i].res = msg.res;
+          }
         };
       }
 

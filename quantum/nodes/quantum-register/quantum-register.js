@@ -93,6 +93,10 @@ module.exports = function(RED) {
             qubit: i,
           },
         };
+        if (msg.req && msg.res) {
+          output[i].req = msg.req;
+          output[i].res = msg.res;
+        }
       }
 
       // Run the script in the python shell, and if no error occurs
