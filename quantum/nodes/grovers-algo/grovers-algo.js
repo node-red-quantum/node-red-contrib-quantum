@@ -8,7 +8,7 @@ const errors = require('../../errors');
 module.exports = function(RED) {
   function GroversAlgoNode(config) { // Change name
     RED.nodes.createNode(this, config);
-    this.name = config.name || "Grover's algorithm";
+    this.name = config.name || 'Grover\'s algorithm';
     const node = this;
 
     this.on('input', async function(msg, send, done) {

@@ -6,7 +6,6 @@ const shell = require('../../quantum/python').PythonShell;
 
 
 describe('GroversAlgoNode', function() {
-  this.timeout(10000);
   beforeEach(function(done) {
     nodeTestHelper.startServer(done);
   });
@@ -22,33 +21,32 @@ describe('GroversAlgoNode', function() {
   });
 
   it('default name outputs correctly', function(done) {
-    var flow = [{ id: "groversNode", type: "grovers-algo", wires: []}]
-    nodeTestHelper.load(groversAlgoNode, flow, function () {
-      var groversNode = nodeTestHelper.getNode("groversNode");
-      groversNode.should.have.property('name', "Grover's algorithm");
+    let flow = [{id: 'groversNode', type: 'grovers-algo', wires: []}];
+    nodeTestHelper.load(groversAlgoNode, flow, function() {
+      let groversNode = nodeTestHelper.getNode('groversNode');
+      groversNode.should.have.property('name', 'Grover\'s algorithm');
       done();
     });
   });
 
   it('return success output on valid input', function(done) {
-    var flow = [{ id: "groversNode", type: "grovers-algo", wires: [["helperNode"]]},
-      { id: "helperNode", type: "helper" }]
-    nodeTestHelper.load(groversAlgoNode, flow, function () {
-      var groversNode = nodeTestHelper.getNode("groversNode");
-      var helperNode = nodeTestHelper.getNode("helperNode");
-      helperNode.on("input", function (msg) {
+    let flow = [{id: 'groversNode', type: 'grovers-algo', wires: [['helperNode']]},
+      {id: 'helperNode', type: 'helper'}];
+    nodeTestHelper.load(groversAlgoNode, flow, function() {
+      let groversNode = nodeTestHelper.getNode('groversNode');
+      let helperNode = nodeTestHelper.getNode('helperNode');
+      helperNode.on('input', function(msg) {
         const expectedPayload = 'Success!\n' +
           'Top measurement: 111111\n' +
           'iterations = 6';
         try {
           msg.should.have.property('payload', expectedPayload);
           done();
-        }
-        catch(err){
+        } catch (err) {
           done(err);
         }
       });
-      groversNode.receive({ payload: "111111" });
+      groversNode.receive({payload: '111111'});
     });
-  });
+  }).timeout(10000);
 });
