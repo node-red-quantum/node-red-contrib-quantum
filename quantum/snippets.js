@@ -111,6 +111,11 @@ const SWAP =
 `qc.swap(%s, %s)
 `;
 
+const MULTI_CONTROLLED_U_GATE =
+`from qiskit.circuit.library import UGate
+qc.append(UGate(%s, %s, %s).control(%s), %s)
+`;
+
 const BLOCH_SPHERE =
 `from qiskit.visualization import plot_bloch_multivector
 from qiskit.quantum_info import Statevector
@@ -145,6 +150,7 @@ module.exports = {
   HADAMARD_GATE,
   MEASURE,
   LOCAL_SIMULATOR,
+  MULTI_CONTROLLED_U_GATE,
   IBMQ_SYSTEM_DEFAULT,
   IBMQ_SYSTEM_PREFERRED,
   IBMQ_SYSTEM_VERBOSE,
