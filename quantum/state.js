@@ -1,4 +1,4 @@
-class GlobalState {
+class State {
   constructor() {
     this.state = {};
     this.runtimeState = {};
@@ -50,4 +50,6 @@ class GlobalState {
   }
 }
 
-module.exports.GlobalState = new GlobalState();
+module.exports.GlobalState = {};
+module.exports.State = State;
+
