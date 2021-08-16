@@ -3,7 +3,7 @@
 const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
-const state = require('../../state').GlobalState;
+const globalState = require('../../state').GlobalState;
 const errors = require('../../errors');
 
 module.exports = function(RED) {
@@ -15,6 +15,7 @@ module.exports = function(RED) {
     const node = this;
 
     this.on('input', async function(msg, send, done) {
+      const state = globalState.getState(msg.circuitId);
       let script = '';
       let output = new Array(node.outputs);
 

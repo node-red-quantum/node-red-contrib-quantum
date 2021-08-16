@@ -50,6 +50,23 @@ class State {
   }
 }
 
-module.exports.GlobalState = {};
-module.exports.State = State;
+class GlobalState {
+  constructor() {
+    this.globalState = {};
+  }
 
+  newState(id) {
+    if (!this.globalState.hasOwnProperty(id)) {
+      this.globalState[id] = new State();
+    } else {
+      console.log(`State already exists for ${id}`);
+    }
+    return this.globalState[id];
+  }
+
+  getState(id) {
+    return this.globalState[id];
+  }
+}
+
+module.exports.GlobalState = new GlobalState();
