@@ -3,7 +3,7 @@
 const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
-const globalState = require('../../state').GlobalState;
+const stateManager = require('../../state').StateManager;
 
 const EventEmitter = require('events');
 const quantumCircuitReady = new EventEmitter();
@@ -21,7 +21,7 @@ module.exports = function(RED) {
     this.qbitsreg = parseInt(config.qbitsreg);
     this.cbitsreg = parseInt(config.cbitsreg);
     this.outputs = parseInt(config.outputs);
-    const state = globalState.newState(this.id);
+    const state = stateManager.newState(this.id);
     const node = this;
 
     state.setPersistent('quantumCircuitReadyEvent', quantumCircuitReady);

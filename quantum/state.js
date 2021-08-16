@@ -50,7 +50,7 @@ class State {
   }
 }
 
-class GlobalState {
+class StateManager {
   constructor() {
     this.globalState = {};
   }
@@ -69,4 +69,4 @@ class GlobalState {
   }
 }
 
-module.exports.GlobalState = new GlobalState();
+module.exports.StateManager = new StateManager();

@@ -3,7 +3,7 @@
 const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
-const globalState = require('../../state').GlobalState;
+const stateManager = require('../../state').StateManager;
 const errors = require('../../errors');
 
 module.exports = function(RED) {
@@ -15,7 +15,7 @@ module.exports = function(RED) {
     const node = this;
 
     this.on('input', async function(msg, send, done) {
-      const state = globalState.getState(msg.circuitId);
+      const state = stateManager.getState(msg.circuitId);
 
       // Validate the node input msg: check for register object.
       // Return corresponding errors or null if no errors.
