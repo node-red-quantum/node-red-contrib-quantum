@@ -1,9 +1,11 @@
-const localSimulatorNode = require('../../quantum/nodes/local-simulator/local-simulator.js');
+const util = require('util');
+const assert = require('chai').assert;
 const testUtil = require('../test-util');
-const shell = require('../../quantum/python.js').PythonShell;
 const nodeTestHelper = testUtil.nodeTestHelper;
 const {FlowBuilder} = require('../flow-builder');
-const assert = require('chai').assert;
+const localSimulatorNode = require('../../quantum/nodes/local-simulator/local-simulator.js');
+const shell = require('../../quantum/python.js').PythonShell;
+const snippets = require('../../quantum/snippets.js');
 
 
 describe('LocalSimulatorNode', function() {
@@ -35,7 +37,8 @@ describe('LocalSimulatorNode', function() {
 
       n4.on('input', function(msg) {
         try {
-          assert.isNotEmpty(msg.payload);
+          let command = util.format(snippets.LOCAL_SIMULATOR, '1');
+          assert.strictEqual(shell.lastCommand, command);
           done();
         } catch (err) {
           done(err);
