@@ -62,6 +62,9 @@ module.exports = function(RED) {
         if (binaryString.length != node.outputs) {
           done(new Error(`Binary string length mismatch. Expect: ${node.outputs}, actual: ${binaryString.length}`));
           return;
+        } else if (!/^[01]+$/.test(binaryString)) { // Use regular expression to check if it's a valid binary string
+          done(new Error(`Input should be a binary string`));
+          return;
         }
         // Set temporary flow context
         flowContext.set('binaryString', binaryString.split('').map(x => parseInt(x)));
