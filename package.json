@@ -75,7 +75,7 @@
       "circuit-diagram": "quantum/nodes/circuit-diagram/circuit-diagram.js",
       "script": "quantum/nodes/script/script.js",
       "grovers-algo":  "quantum/nodes/grovers-algo/grovers-algo.js",
-      "bloch-sphere": "quantum/nodes/bloch-sphere/bloch-sphere.js",
+      "bloch-sphere": "quantum/nodes/bloch-sphere/bloch-sphere.js"
     }
   }
 }
