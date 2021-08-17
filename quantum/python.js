@@ -172,13 +172,4 @@ class PythonShell {
 */
 module.exports.PythonShell = new PythonShell();
 
-/**
- * Returns the most recent script input sent to the Python shell.
- *
- * @return {string} The most recent string added to the Python shell script.
- */
-module.exports.returnLastString = function() {
-  let scriptArr = this.script.split('\n');
-  return scriptArr[scriptArr.length - 1];
-};
 
