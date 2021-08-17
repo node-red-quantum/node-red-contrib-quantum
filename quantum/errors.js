@@ -40,7 +40,7 @@ const SAME_QUBIT_RECEIVED_TWICE =
 'all qubits should be connected as input. There should be only 1 instance of each qubit at all times in the circuit.';
 
 const NOT_BIT_STRING =
-  'Only bit string consisting 0 and 1 are allowed';
+'Only bit string consisting 0 and 1 are allowed';
 
 const BLOCH_SPHERE_WITH_MEASUREMENT =
 'The "Bloch Sphere Diagram" node is not compatible with "Measure" nodes because ' +
