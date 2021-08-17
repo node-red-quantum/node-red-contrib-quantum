@@ -24,7 +24,7 @@ describe('GroversAlgoNode', function() {
     let flow = [{id: 'groversNode', type: 'grovers-algo', wires: []}];
     nodeTestHelper.load(groversAlgoNode, flow, function() {
       let groversNode = nodeTestHelper.getNode('groversNode');
-      groversNode.should.have.property('name', 'Grover\'s algorithm');
+      groversNode.should.have.property('name', 'Grovers');
       done();
     });
   });
