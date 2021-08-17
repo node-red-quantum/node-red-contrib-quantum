@@ -31,26 +31,51 @@ class FlowBuilder {
     this.nodes = [];
   }
 
+  /**
+   * Return the flow JSON as a string.
+   *
+   * This method is primarily intended for debugging purposes.
+   *
+   * @return {string} The JSON representation of the flow.
+  */
   get flowString() {
     return JSON.stringify(this.flow);
   }
 
-  add(type, id, wires, properties) {
-    if (!NODES.hasOwnProperty(type)) {
-      throw new Error(`Failed to find node ${type}`);
+  /**
+   * Add a quantum node to the flow.
+   *
+   * @param {string} name The name of the node.
+   * @param {string} id The id of the node.
+   * @param {string[]} wires The nodes which are connected to the output.
+   * @param {Object.<string, string>} properties The properties of the node (optional).
+  */
+  add(name, id, wires, properties) {
+    if (!NODES.hasOwnProperty(name)) {
+      throw new Error(`Failed to find node ${name}`);
     }
-    let name = type.replace(/-/g, ' ');
-    let json = {id: id, wires: [wires], type: type, name: name};
+    let json = {id: id, wires: [wires], type: name, name: name.replace(/-/g, ' ')};
     Object.assign(json, properties);
-    this.nodes.push(NODES[type]);
+    this.nodes.push(NODES[name]);
     this.flow.push(json);
   }
 
+  /**
+   * Add an output node to the flow.
+   *
+   * This is a node provided by the Node-RED Test Helper specifically for reading
+   * the output of the flow. This node should usually be the last node in the flow.
+   *
+   * @param {string} id The id of the node.
+  */
   addOutput(id) {
     let json = {id: id, type: 'helper', name: 'output'};
     this.flow.push(json);
   }
 
+  /**
+   * Reset the flow to be empty.
+  */
   reset() {
     this.flow = [];
     this.nodes = [];

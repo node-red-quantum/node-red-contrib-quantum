@@ -27,7 +27,7 @@ describe('LocalSimulatorNode', function() {
     flow.add('hadamard-gate', 'n1', ['n2']);
     flow.add('measure', 'n2', ['n3'], {selectedBit: '0'});
     flow.add('local-simulator', 'n3', ['n4'], {shots: '1'});
-    flow.addOutput('n4', []);
+    flow.addOutput('n4');
 
     nodeTestHelper.load(flow.nodes, flow.flow, function() {
       let n0 = nodeTestHelper.getNode('n0');
