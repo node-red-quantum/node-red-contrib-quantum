@@ -80,8 +80,8 @@ function validateGroversInput(msg) {
 };
 
 function validateQubitsFromSameCircuit(qubits) {
-  let circuitId = qubits[0].payload.structure.quantumCircuitId;
-  let valid = qubits.every((obj) => obj.payload.structure.quantumCircuitId === circuitId);
+  let circuitId = qubits[0].circuitId;
+  let valid = qubits.every((obj) => obj.circuitId === circuitId);
   if (!valid) return new Error(QUBITS_FROM_DIFFERENT_CIRCUITS);
 
   valid = true;
