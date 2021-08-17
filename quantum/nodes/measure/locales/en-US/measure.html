@@ -1,11 +1,53 @@
 <script type="text/html" data-help-name="measure">
     <p>
-      This node measures the value of a qubit in order to convert the
-      superpositioned qubit to a classical bit of value 0 or 1. <br /><br />
-      To use this node you must have a classical bits initialised in the circuit
-      then you must select the classical bit to which you wish to send the result
-      of the measurement.
+      This node measures the value of a qubit ('0' or '1') and saves the result on a classical bit.
     </p>
+    <p>
+      To do so, open the node properties and select on which classical bit to save the measurement result:
+      <ul>
+        <li>If using registers, select a classical bit from the appropriate classical register.</li>
+        <li>If not using registers, select a classical bit from the list.</li>
+      </ul>
+      It is very important to understand that, even though a qubit can take an infinite number of states, 
+      our technology only allows us to measure '0' or '1', like on a classical bit. <br/>
+      Since we measure and interpret a qubit state using classical machines, this can be seen as a projection 
+      of quantum computing back to classical computing: from quantum states back to binary values. 
+      <br/><br />
+      This leads to probabilistic measurement results.
+      In terms of the <b>Bloch Sphere</b>, the closest the qubit state is from the '1 state', the more likely we are to measure a '1'.
+      <br /><br />
+      <b>Careful -</b> The act of measuring a qubit collapses the qubit state: the state of the qubit after being measured 
+      is not representative of the qubit state before the measurement.<br/>
+      Please measure the qubits at the end of the quantum circuit or reset them after a measurement.
+      <br/><br/>
+      <a href="https://qiskit.org/textbook/ch-states/representing-qubit-states.html#rules-measurement">Qubit measurement - Qiskit textbook</a><br/>
+      <a href="https://qiskit.org/documentation/stubs/qiskit.circuit.QuantumCircuit.html#qiskit.circuit.QuantumCircuit.measure">Qubit measurement - Qiskit documentation</a>
+      <br/><br/>
+    </p>
+
+    <h3>Inputs</h3>
+      <dl class="message-properties">
+          <dt>payload
+              <span class="property-type">object</span>
+          </dt>
+          <dd>The qubit object to measure.</dd>
+          <dt class="optional">topic 
+            <span class="property-type">string</span>
+          </dt>
+          <dd>"Quantum Circuit"</dd>
+      </dl>
+  
+    <h3>Outputs</h3>
+      <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">object</span>
+        </dt>
+        <dd>The same qubit object that was received as input.</dd>
+        <dt class="optional">topic 
+          <span class="property-type">string</span>
+        </dt>
+        <dd>"Quantum Circuit"</dd>
+      </dl>
 
     <br />
     <h3>Details</h3>

@@ -59,10 +59,14 @@
           Since we measure and interpret a qubit state using classical machines, this can be seen as a projection of quantum computing back to classical computing: from quantum states back to binary values.
           <br /><br />
           This leads to probabilistic measurement results.
-          In practice, the closest the qubit state is from the '1 state', the more likely we are to measure a '1'.
+          In terms of the <b>Bloch Sphere</b>, the closest the qubit state is from the '1 state', the more likely we are to measure a '1'.
           <br/><br/>
           <b>Example:</b> If we measure a 1000 times a qubit that has a state in the x-y plane, then we will get more or less 500 '0' measurements and 500 '1' measurements. 
           <br/><br/>
+          <b>Careful -</b> The act of measuring a qubit collapses the qubit state: the state of the qubit after being measured 
+          is not representative of the qubit state before the measurement.<br/>
+          Please measure the qubits at the end of the quantum circuit or reset them after a measurement.
+          <br /><br />
           <a href="https://qiskit.org/textbook/ch-states/representing-qubit-states.html#rules-measurement">Qubit measurement - Qiskit textbook</a>
         </p>
     
