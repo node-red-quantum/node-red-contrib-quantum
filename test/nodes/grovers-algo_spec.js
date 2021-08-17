@@ -36,8 +36,7 @@ describe('GroversAlgoNode', function() {
       let groversNode = nodeTestHelper.getNode('groversNode');
       let helperNode = nodeTestHelper.getNode('helperNode');
       helperNode.on('input', function(msg) {
-        const expectedPayload = 'Success!\n' +
-          'Top measurement: 111111\n' +
+        const expectedPayload = 'Top measurement: 111111\n' +
           'iterations = 6';
         try {
           msg.should.have.property('payload', expectedPayload);
