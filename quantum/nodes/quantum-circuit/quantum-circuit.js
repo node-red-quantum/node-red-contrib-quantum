@@ -3,6 +3,7 @@
 const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
+const runtime = require('@node-red/runtime');
 
 const EventEmitter = require('events');
 const quantumCircuitReady = new EventEmitter();
@@ -53,6 +54,18 @@ module.exports = function(RED) {
       script += snippets.IMPORTS;
 
       let output = new Array(node.outputs);
+
+      // Check if the input msg contains binar string definition
+      if (msg.payload.binaryString) {
+        // Check the length of the binary string
+        let binaryString = msg.payload.binaryString;
+        if (binaryString.length != node.outputs) {
+          done(new Error(`Binary string length mismatch. Expect: ${node.outputs}, actual: ${binaryString.length}`));
+          return;
+        }
+        // Set temporary flow context
+        flowContext.set('binaryString', binaryString.split('').map(x => parseInt(x)));
+      }
 
       // Creating a temporary 'quantumCircuitArray' flow context array
       // This variable represents the quantum circuit structure

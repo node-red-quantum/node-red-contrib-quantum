@@ -16,6 +16,7 @@ module.exports = function(RED) {
 
     this.on('input', async function(msg, send, done) {
       let script = '';
+      let initScript = '';
       let output = new Array(node.outputs);
 
       // Validate the node input msg: check for register object.
@@ -82,7 +83,14 @@ module.exports = function(RED) {
 
       // Creating an array of messages to be sent
       // Each message represents a different qubit
+      let binaryArr = undefined;
+      if (flowContext.get('binaryString')) {
+        binaryArr = flowContext.get('binaryString');
+      }
       for (let i = 0; i < node.outputs; i++) {
+        if (binaryArr.shift() == 1) {
+          initScript += util.format(snippets.NOT_GATE, `qr${msg.payload.register}[${i}]`);
+        }
         output[i] = {
           topic: 'Quantum Circuit',
           payload: {
@@ -106,6 +114,12 @@ module.exports = function(RED) {
       });
       // wait for quantum circuit to be initialised
       await circuitReady();
+      if (initScript != '') {
+        await shell.execute(initScript, (err) => {
+          if (err) done(err);
+        });
+        if (binaryArr.length == 0) flowContext.set('binaryString', undefined);
+      }
       send(output);
       done();
     });
