@@ -28,6 +28,7 @@ module.exports = function(RED) {
           done();
         }
       });
+      shell.stop();
     });
   }
   RED.nodes.registerType('grovers', GroversNode); // Change name
