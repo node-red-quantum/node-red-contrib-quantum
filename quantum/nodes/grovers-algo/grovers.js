@@ -2,14 +2,15 @@
 
 const util = require('util');
 const snippets = require('../../snippets');
-const shell = require('../../python').PythonShell;
+const {PythonShellClass} = require('../../python');
 const errors = require('../../errors');
 
 module.exports = function(RED) {
-  function GroversAlgoNode(config) { // Change name
+  function GroversNode(config) { // Change name
     RED.nodes.createNode(this, config);
     this.name = config.name || 'Grovers';
     const node = this;
+    const shell = new PythonShellClass();
 
     this.on('input', async function(msg, send, done) {
       let error = errors.validateGroversInput(msg);
@@ -17,8 +18,8 @@ module.exports = function(RED) {
         done(error);
         return;
       }
-      const script = util.format(snippets.GROVERS_ALGO, msg.payload);
-      await shell.restart();
+      const script = util.format(snippets.GROVERS, msg.payload);
+      await shell.start();
       await shell.execute(script, (err, data) => {
         if (err) done(err);
         else {
@@ -29,5 +30,5 @@ module.exports = function(RED) {
       });
     });
   }
-  RED.nodes.registerType('grovers-algo', GroversAlgoNode); // Change name
+  RED.nodes.registerType('grovers', GroversNode); // Change name
 };

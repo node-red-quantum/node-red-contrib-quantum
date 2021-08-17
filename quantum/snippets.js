@@ -87,10 +87,8 @@ const CIRCUIT_DIAGRAM =
 `qc.draw(output='mpl')
 `;
 
-const GROVERS_ALGO =
-`from qiskit import QuantumCircuit
-from qiskit import Aer
-from qiskit.utils import QuantumInstance
+const GROVERS =
+`from qiskit import Aer
 from qiskit.quantum_info import Statevector
 from qiskit.algorithms import Grover, AmplificationProblem
 
@@ -173,7 +171,7 @@ module.exports = {
   IBMQ_SYSTEM_PREFERRED,
   IBMQ_SYSTEM_VERBOSE,
   IBMQ_SYSTEM_RESULT,
-  GROVERS_ALGO,
+  GROVERS,
   NOT_GATE,
   CIRCUIT_DIAGRAM,
   RESET,
