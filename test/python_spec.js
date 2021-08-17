@@ -15,7 +15,7 @@ describe('PythonShell', function() {
     });
 
     it('process starts empty', async function() {
-      assert.isUndefined(shell.process);
+      assert.isNull(shell.process);
     });
 
     it('script starts empty', async function() {
