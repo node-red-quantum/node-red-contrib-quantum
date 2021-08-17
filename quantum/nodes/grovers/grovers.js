@@ -6,7 +6,7 @@ const {PythonShellClass} = require('../../python');
 const errors = require('../../errors');
 
 module.exports = function(RED) {
-  function GroversNode(config) { // Change name
+  function GroversNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name || 'Grovers';
     const node = this;
@@ -31,5 +31,5 @@ module.exports = function(RED) {
       shell.stop();
     });
   }
-  RED.nodes.registerType('grovers', GroversNode); // Change name
+  RED.nodes.registerType('grovers', GroversNode);
 };

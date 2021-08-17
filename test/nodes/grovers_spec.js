@@ -1,4 +1,4 @@
-const groversNode = require('../../quantum/nodes/grovers-algo/grovers.js');
+const groversNode = require('../../quantum/nodes/grovers/grovers.js');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
 const assert = require('chai').assert;
