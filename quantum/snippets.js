@@ -56,7 +56,13 @@ counts = result.get_counts()
 print(counts)
 `;
 
-const IBMQ_SYSTEM_DEFAULT =
+const IBMQ_SYSTEM_DEFAULT_SIMUL =
+`from qiskit.providers.ibmq import least_busy
+provider = IBMQ.enable_account('%s')
+backend_service = provider.get_backend('ibmq_qasm_simulator')
+`;
+
+const IBMQ_SYSTEM_DEFAULT_QUBIT =
 `from qiskit.providers.ibmq import least_busy
 provider = IBMQ.enable_account('%s')
 backends = provider.backends(filters=lambda x: x.configuration().n_qubits >= %s)
@@ -151,7 +157,8 @@ module.exports = {
   MEASURE,
   LOCAL_SIMULATOR,
   MULTI_CONTROLLED_U_GATE,
-  IBMQ_SYSTEM_DEFAULT,
+  IBMQ_SYSTEM_DEFAULT_SIMUL,
+  IBMQ_SYSTEM_DEFAULT_QUBIT,
   IBMQ_SYSTEM_PREFERRED,
   IBMQ_SYSTEM_VERBOSE,
   IBMQ_SYSTEM_RESULT,

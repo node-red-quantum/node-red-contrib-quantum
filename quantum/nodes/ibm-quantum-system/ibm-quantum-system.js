@@ -9,6 +9,7 @@ module.exports = function(RED) {
   function IBMQuantumSystemNode(config) {
     RED.nodes.createNode(this, config);
     this.apiToken = config.api_token;
+    this.chosenSystem = config.chosen_system;
     this.preferredBackend = config.preferred_backend;
     this.outputPreference = config.preferred_output;
     this.qubits = [];
@@ -33,6 +34,7 @@ module.exports = function(RED) {
         reset();
         return;
       }
+
 
       // If the quantum circuit does not have registers
       if (typeof(msg.payload.register) === 'undefined') {
@@ -97,6 +99,13 @@ module.exports = function(RED) {
           return;
         }
 
+        // Returns an error message if the given circuit is too big for the default simulator to run
+        if (node.qubits.length > 32 && node.chosenSystem == 'Simulator' && !node.preferredBackend) {
+          done(new Error(errors.QUBITS_FROM_DIFFERENT_CIRCUITS));
+          reset();
+          return;
+        }
+
         node.status({
           fill: 'orange',
           shape: 'dot',
@@ -105,10 +114,14 @@ module.exports = function(RED) {
 
         let script = '';
 
-        if (node.preferredBackend) {
-          script += util.format(snippets.IBMQ_SYSTEM_PREFERRED, node.apiToken, node.preferredBackend);
+        if (node.chosen_system == 'Qubit_System') {
+          if (node.preferredBackend) {
+            script += util.format(snippets.IBMQ_SYSTEM_PREFERRED, node.apiToken, node.preferredBackend);
+          } else {
+            script += util.format(snippets.IBMQ_SYSTEM_DEFAULT_QUBIT, node.apiToken, node.qubits.length);
+          }
         } else {
-          script += util.format(snippets.IBMQ_SYSTEM_DEFAULT, node.apiToken, node.qubits.length);
+          script += util.format(snippets.IBMQ_SYSTEM_DEFAULT_SIMUL, node.apiToken);
         }
 
         if (node.outputPreference == 'Verbose') {
