@@ -64,6 +64,7 @@ class PythonShell {
   constructor(path) {
     this.path = path ? path : pythonPath;
     this.script = '';
+    this.lastCommand = '';
   }
 
   /**
@@ -90,6 +91,7 @@ class PythonShell {
       }
 
       command = command ? command : '';
+      this.lastCommand = command;
       command = '\n' + command + '\n';
       this.script += command;
       command += '\nprint("#StdoutEnd#")\n';
@@ -142,6 +144,7 @@ class PythonShell {
       this.process.kill();
       this.process = null;
       this.script = '';
+      this.lastCommand = '';
     }
   }
 
