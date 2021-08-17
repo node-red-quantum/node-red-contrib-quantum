@@ -42,6 +42,11 @@ const SAME_QUBIT_RECEIVED_TWICE =
 const NOT_BIT_STRING =
   'Only bit string consisting 0 and 1 are allowed';
 
+const BLOCH_SPHERE_WITH_MEASUREMENT =
+'The "Bloch Sphere Diagram" node is not compatible with "Measure" nodes because ' +
+'measuring a qubit can collapse its state and lead to inconsistencies.\n'+
+'Please disconnect or remove any "Measure" node from the quantum circuit.';
+
 function validateQubitInput(msg) {
   let keys = Object.keys(msg.payload);
 
@@ -121,6 +126,7 @@ module.exports = {
   INVALID_REGISTER_NUMBER,
   QUBITS_FROM_DIFFERENT_CIRCUITS,
   SAME_QUBIT_RECEIVED_TWICE,
+  BLOCH_SPHERE_WITH_MEASUREMENT,
   validateQubitInput,
   validateRegisterInput,
   validateQubitsFromSameCircuit,

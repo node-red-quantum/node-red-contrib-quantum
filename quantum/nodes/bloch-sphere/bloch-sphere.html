@@ -1,0 +1,25 @@
+<script type="text/javascript">
+  RED.nodes.registerType("bloch-sphere", {
+    category: "quantum",
+    color: "#A8A8A8",
+    defaults: {
+      name: { value: "" },
+    },
+    inputs: 1,
+    outputs: 1,
+    paletteLabel: "bloch sphere diagram",
+    icon: "font-awesome/fa-bullseye",
+    align: 'left',
+    label: function () {
+      return this.name || "bloch sphere";
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="bloch-sphere">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+</script>
+
