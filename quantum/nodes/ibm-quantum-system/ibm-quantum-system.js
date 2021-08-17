@@ -101,7 +101,7 @@ module.exports = function(RED) {
 
         // Returns an error message if the given circuit is too big for the default simulator to run
         if (node.qubits.length > 32 && node.chosenSystem == 'Simulator' && !node.preferredBackend) {
-          done(new Error(errors.QUBITS_FROM_DIFFERENT_CIRCUITS));
+          done(new Error(errors.DEFAULT_SIMULATOR_TOO_SMALL));
           reset();
           return;
         }
