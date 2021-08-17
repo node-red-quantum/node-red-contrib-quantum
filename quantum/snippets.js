@@ -83,16 +83,8 @@ const NOT_GATE =
 `qc.x(%s)
 `;
 
-const CIRCUIT_BUFFER =
-`import matplotlib.pyplot as plt
-import base64
-import io
-qc.draw(output='mpl')
-buffer = io.BytesIO()
-plt.savefig(buffer,  format='png')
-buffer.seek(0)
-b64_string = base64.b64encode(buffer.read())
-print(b64_string)
+const CIRCUIT_DIAGRAM =
+`qc.draw(output='mpl')
 `;
 
 const GROVERS_ALGO =
@@ -137,8 +129,32 @@ const SWAP =
 `qc.swap(%s, %s)
 `;
 
+const MULTI_CONTROLLED_U_GATE =
+`from qiskit.circuit.library import UGate
+qc.append(UGate(%s, %s, %s).control(%s), %s)
+`;
+
+const BLOCH_SPHERE =
+`from qiskit.visualization import plot_bloch_multivector
+from qiskit.quantum_info import Statevector
+state = Statevector.from_instruction(qc)
+plot_bloch_multivector(state)
+`;
+
 const CU_GATE =
 `qc.cu(%s, %s, %s, %s, %s, %s)
+`;
+
+const ENCODE_IMAGE =
+`import matplotlib.pyplot as plt
+import base64
+import io
+buffer = io.BytesIO()
+plt.savefig(buffer,  format='png')
+buffer.seek(0)
+b64_str = base64.b64encode(buffer.read())
+print(b64_str)
+buffer.close()
 `;
 
 module.exports = {
@@ -152,18 +168,21 @@ module.exports = {
   HADAMARD_GATE,
   MEASURE,
   LOCAL_SIMULATOR,
+  MULTI_CONTROLLED_U_GATE,
   IBMQ_SYSTEM_DEFAULT,
   IBMQ_SYSTEM_PREFERRED,
   IBMQ_SYSTEM_VERBOSE,
   IBMQ_SYSTEM_RESULT,
   GROVERS_ALGO,
   NOT_GATE,
-  CIRCUIT_BUFFER,
+  CIRCUIT_DIAGRAM,
   RESET,
   PHASE_GATE,
   ROTATION_GATE,
   IDENTITY,
   SWAP,
   UNITARY_GATE,
+  BLOCH_SPHERE,
   CU_GATE,
+  ENCODE_IMAGE,
 };

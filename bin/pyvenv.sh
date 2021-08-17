@@ -37,7 +37,7 @@ fi
 
 
 # Install package dependencies.
-declare -a packages=("qiskit" "matplotlib" "pylatexenc")
+declare -a packages=("qiskit" "matplotlib==3.3.4" "pylatexenc")
 for i in "${packages[@]}"; do
   # Check if the package is installed. If yes, exit successfully.
   if [[ -x "$python_path" ]]; then
