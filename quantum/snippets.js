@@ -98,9 +98,9 @@ problem = AmplificationProblem(oracle=oracle, is_good_state = lambda bitstr: bit
 backend = Aer.get_backend('qasm_simulator')
 grover = Grover(quantum_instance=backend)
 result = grover.amplify(problem)
-print('Top measurement:', result.top_measurement)
+print(result.top_measurement)
 iterations = Grover.optimal_num_iterations(num_solutions=1, num_qubits=len(element))
-print('iterations = %i'%iterations)
+print(iterations)
 `;
 
 const RESET =

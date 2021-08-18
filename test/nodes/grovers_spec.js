@@ -36,9 +36,10 @@ describe('GroversNode', function() {
       let helperNode = nodeTestHelper.getNode('helperNode');
 
       helperNode.on('input', function(msg) {
-        const expectedPayload = 'Top measurement: 111111\n' + 'iterations = 6';
+        const expectedPayload = { topMeasurement: '111111', iterationsNum: 6};
         try {
-          assert.strictEqual(msg.payload, expectedPayload);
+          assert.strictEqual(msg.payload.topMeasurement, expectedPayload.topMeasurement);
+          assert.strictEqual(msg.payload.iterationsNum, expectedPayload.iterationsNum);
           done();
         } catch (err) {
           done(err);

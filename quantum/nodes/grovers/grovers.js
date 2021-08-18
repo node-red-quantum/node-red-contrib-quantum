@@ -23,7 +23,11 @@ module.exports = function(RED) {
       await shell.execute(script, (err, data) => {
         if (err) done(err);
         else {
-          msg.payload = data;
+          const results = data.split('\n');
+          msg.payload = {
+            topMeasurement: results[0],
+            iterationsNum: Number(results[1])
+          };
           send(msg);
           done();
         }
