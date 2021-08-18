@@ -1,6 +1,9 @@
-const toffoliGateNode = require('../../quantum/nodes/toffoli-gate/toffoli-gate.js');
+const util = require('util');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
+const {FlowBuilder} = require('../flow-builder');
+const toffoliGateNode = require('../../quantum/nodes/toffoli-gate/toffoli-gate.js');
+const snippets = require('../../quantum/snippets.js');
 
 
 describe('ToffoliGateNode', function() {
