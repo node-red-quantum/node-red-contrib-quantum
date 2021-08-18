@@ -16,4 +16,8 @@ describe('ResetNode', function() {
   it('load node', function(done) {
     testUtil.isLoaded(resetNode, 'reset', done);
   });
+
+  it('pass qubit through node', function(done) {
+    testUtil.qubitsPassedThroughGate('reset', null, done);
+  });
 });

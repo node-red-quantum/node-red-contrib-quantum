@@ -16,4 +16,8 @@ describe('QubitNode', function() {
   it('load node', function(done) {
     testUtil.isLoaded(qubitNode, 'qubit', done);
   });
+
+  it('pass qubit through node', function(done) {
+    testUtil.qubitsPassedThroughGate('qubit', null, done);
+  });
 });

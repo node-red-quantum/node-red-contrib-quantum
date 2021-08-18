@@ -1,4 +1,5 @@
 const notGateNode = require('../../quantum/nodes/not-gate/not-gate.js');
+const shell = require('../../quantum/python.js').PythonShell;
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
 
@@ -9,6 +10,7 @@ describe('NotGateNode', function() {
   });
 
   afterEach(function(done) {
+    shell.stop();
     nodeTestHelper.unload();
     nodeTestHelper.stopServer(done);
   });
@@ -18,6 +20,6 @@ describe('NotGateNode', function() {
   });
 
   it('pass qubit through gate', function(done) {
-    testUtil.qubitsPassedThroughGate(notGateNode, 'not-gate', done);
+    testUtil.qubitsPassedThroughGate('not-gate', null, done);
   });
 });
