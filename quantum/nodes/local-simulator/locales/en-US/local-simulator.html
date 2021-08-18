@@ -1,42 +1,42 @@
 <script type="text/html" data-help-name="local-simulator">
-    <p>
-      This node simulates the operation of a quantum circuit and returns a simulated output.
-    </p>
-    <p>
-      To do so, indicate the number of times you would like to simulate the circuit (shots),
-      place this node at the end of the quantum circuit and 
-      connect all qubit objects.
-      <br />
-      If not all qubit objects are connected, the node will assume that 
-      the circuit has not finished running and will wait indefinitely.
-      <br /><br />
-      The <b>output of a quantum circuit</b> correspond to the value of the classical bits that were set up with the circuit. <br />
-      The <i>Measure</i> node is the only node capable of changing a classical bit value. Simulating a quantum circuit
-      without any <i>Measure</i> nodes will simply result in all the shots generating the same number: the default classical 
-      bits value (e.g. 000 for 3 bits).
-      <br /><br />
-      The number of shots refers to the number of times the circuit is run to obtain
-      a probability distribution of results. This is due to the probabilistic nature of qubit measurements.<br />
-      The 'counts' refer to the number of shots that resulted in each output of the circuit.<br />
-      For more information about qubit measurements, please refer to the <i>Measure</i> node documentation.
-      <br /><br />
-      This node makes use of Qiskit's local QASM simulator. <br/>
-      <a href="https://qiskit.org/documentation/stubs/qiskit.providers.aer.QasmSimulator.html">QASM simulator - Qiskit documentation</a> <br/>
-      <a href="https://qiskit.org/documentation/stubs/qiskit.result.Result.html#qiskit.result.Result.get_counts">Counts output - Qiskit documentation</a>
-      <br /><br />
-    </p>
+  <p>
+    This node simulates the operation of a quantum circuit and returns a simulated output.
+  </p>
+  <p>
+    To do so, indicate the number of times you would like to simulate the circuit (shots),
+    place this node at the end of the quantum circuit and 
+    connect all qubit objects.
+    <br />
+    If not all qubit objects are connected, the node will assume that 
+    the circuit has not finished running and will wait indefinitely.
+    <br /><br />
+    The <b>output of a quantum circuit</b> correspond to the value of the classical bits that were set up with the circuit. <br />
+    The <i>Measure</i> node is the only node capable of changing a classical bit value. Simulating a quantum circuit
+    without any <i>Measure</i> nodes will simply result in all the shots generating the same number: the default classical 
+    bits value (e.g. 000 for 3 bits).
+    <br /><br />
+    The number of shots refers to the number of times the circuit is run to obtain
+    a probability distribution of results. This is due to the probabilistic nature of qubit measurements.<br />
+    The 'counts' refer to the number of shots that resulted in each output of the circuit.<br />
+    For more information about qubit measurements, please refer to the <i>Measure</i> node documentation.
+    <br /><br />
+    This node makes use of Qiskit's local QASM simulator. <br/>
+    <a href="https://qiskit.org/documentation/stubs/qiskit.providers.aer.QasmSimulator.html">QASM simulator - Qiskit documentation</a> <br/>
+    <a href="https://qiskit.org/documentation/stubs/qiskit.result.Result.html#qiskit.result.Result.get_counts">Counts output - Qiskit documentation</a>
+    <br /><br />
+  </p>
 
-    <h3>Inputs</h3>
-    <dl class="message-properties">
-        <dt>payload
-            <span class="property-type">object</span>
-        </dt>
-        <dd>All qubit objects of the quantum circuit.</dd>
-        <dt class="optional">topic 
-          <span class="property-type">string</span>
-        </dt>
-        <dd>"Quantum Circuit"</dd>
-    </dl>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>payload
+          <span class="property-type">object</span>
+      </dt>
+      <dd>All qubit objects of the quantum circuit.</dd>
+      <dt class="optional">topic 
+        <span class="property-type">string</span>
+      </dt>
+      <dd>"Quantum Circuit"</dd>
+  </dl>
 
   <h3>Outputs</h3>
     <dl class="message-properties">
@@ -56,25 +56,25 @@
       <dd>"Quantum Circuit"</dd>
     </dl>
 
+  <br />
+  <h3>Details</h3>
     <br />
-    <h3>Details</h3>
-      <br />
-      <p>
-        Qubit objects can be generated from:
-        <ul>
-        <li><i>Quantum Circuit</i> node in 'Bits only' mode.</li>
-        <li><i>Quantum Register</i> node along with <i>Quantum Circuit</i> in 'Register' mode.</li>
-        </ul>
-        Unless specified, qubits are initialised in the 0 state.
-        <br /><br />
-        <b>
-          For a brief summary of the main quantum computing concepts, please refer to the 
-          <i>Details</i> section of the <i>Quantum Circuit</i> node.
-        </b>
-        <br /><br />
-        <a href="https://flows.nodered.org/node/node-red-contrib-quantum">Node-RED Quantum documentation - Node-RED website</a><br/>
-        <a href="https://www.npmjs.com/package/node-red-contrib-quantum">Node-RED Quantum documentation - NPM website</a>
-        <br /><br />
-      </p>
+    <p>
+      Qubit objects can be generated from:
+      <ul>
+      <li><i>Quantum Circuit</i> node in 'Bits only' mode.</li>
+      <li><i>Quantum Register</i> node along with <i>Quantum Circuit</i> in 'Register' mode.</li>
+      </ul>
+      Unless specified, qubits are initialised in the 0 state.
+      <br /><br />
+      <b>
+        For a brief summary of the main quantum computing concepts, please refer to the 
+        <i>Details</i> section of the <i>Quantum Circuit</i> node.
+      </b>
+      <br /><br />
+      <a href="https://flows.nodered.org/node/node-red-contrib-quantum">Node-RED Quantum documentation - Node-RED website</a><br/>
+      <a href="https://www.npmjs.com/package/node-red-contrib-quantum">Node-RED Quantum documentation - NPM website</a>
+      <br /><br />
+    </p>
   </script>
   
