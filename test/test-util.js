@@ -19,10 +19,10 @@ function isLoaded(node, nodeName, done) {
   });
 }
 
-function commandExecuted(flowBuilder, inputId, outputId, command, done) {
+function commandExecuted(flowBuilder, command, done) {
   nodeTestHelper.load(flowBuilder.nodes, flowBuilder.flow, function() {
-    let inputNode = nodeTestHelper.getNode(inputId);
-    let outputNode = nodeTestHelper.getNode(outputId);
+    let inputNode = nodeTestHelper.getNode(flowBuilder.inputId);
+    let outputNode = nodeTestHelper.getNode(flowBuilder.outputId);
 
     outputNode.on('input', function() {
       try {

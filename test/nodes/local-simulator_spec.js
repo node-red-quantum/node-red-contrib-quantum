@@ -29,6 +29,6 @@ describe('LocalSimulatorNode', function() {
     flow.add('local-simulator', 'n3', ['n4'], {shots: '1'});
     flow.addOutput('n4');
 
-    testUtil.commandExecuted(flow, 'n0', 'n4', command, done);
+    testUtil.commandExecuted(flow, command, done);
   });
 });

@@ -28,6 +28,6 @@ describe('MeasureNode', function() {
     flow.add('measure', 'n2', ['n3'], {selectedBit: '0'});
     flow.addOutput('n3');
 
-    testUtil.commandExecuted(flow, 'n0', 'n3', command, done);
+    testUtil.commandExecuted(flow, command, done);
   });
 });
