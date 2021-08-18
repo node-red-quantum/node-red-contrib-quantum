@@ -9,10 +9,6 @@ NameError: name 'x' is not defined`;
 
 
 describe('PythonShell', function() {
-  before(() => {
-    shell.stop();
-  });
-
   describe('#constructor', function() {
     it('python path is default', async function() {
       assert.match(shell.path, /venv\/bin\/python|venv\/Scripts\/python.exe/);
