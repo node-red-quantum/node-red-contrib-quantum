@@ -122,7 +122,11 @@ module.exports = function(RED) {
             script += util.format(snippets.IBMQ_SYSTEM_DEFAULT_QUBIT, node.apiToken, node.qubits.length);
           }
         } else {
-          script += util.format(snippets.IBMQ_SYSTEM_DEFAULT_SIMUL, node.apiToken, node.qubits.length);
+          if (node.qubits.length > 32) {
+            script += util.format(snippets.IBMQ_SYSTEM_DEFAULT_SIMUL, node.apiToken, node.qubits.length);
+          } else {
+            script += util.format(snippets.IBMQ_SYSTEM_QASM, node.apiToken);
+          }
         }
 
         if (node.outputPreference == 'Verbose') {
