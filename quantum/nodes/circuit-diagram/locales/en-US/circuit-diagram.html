@@ -1,7 +1,48 @@
 <script type="text/html" data-help-name="circuit-diagram">
   <p>
-    This node is used for generating a circuit diagram.
+    This node is used to generate a diagram of your quantum circuit.
   </p>
+  <p>
+    To do so, place this node at the end of the quantum circuit and 
+    connect all qubit objects from the circuit.
+    <br />
+    If not all qubits objects are connected, the node will assume that 
+    the circuit has not finished running and will wait indefinitely.
+    <br /><br />
+    To visualise the generated diagram into the Node-RED editor, we recommend to download the 
+    <a href="https://flows.nodered.org/node/node-red-contrib-image-output">node-red-contrib-image-output</a> 
+    module and connect it to the output of the <i>Circuit Diagram</i> node.
+    <br /><br />
+    It is a common feature in Qiskit to generate visual representations of your circuit for
+    debugging since it is often easier to visualise a quantum circuit rather than reading the equivalent python code.
+    <br /><br />
+    <a href="https://qiskit.org/documentation/stubs/qiskit.circuit.QuantumCircuit.html#qiskit.circuit.QuantumCircuit.draw">Circuit Diagram - Qiskit documentation</a>
+    <br /><br />
+  </p>
+
+  <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">object</span>
+        </dt>
+        <dd>All qubit objects of the quantum circuit.</dd>
+        <dt class="optional">topic 
+          <span class="property-type">string</span>
+        </dt>
+        <dd>"Quantum Circuit"</dd>
+    </dl>
+
+  <h3>Outputs</h3>
+    <dl class="message-properties">
+      <dt>payload
+          <span class="property-type">string</span>
+      </dt>
+      <dd>A base64 string representation of the circuit diagram.</dd>
+      <dt class="optional">topic 
+        <span class="property-type">string</span>
+      </dt>
+      <dd>"Quantum Circuit"</dd>
+    </dl>
 
   <br />
   <h3>Details</h3>
