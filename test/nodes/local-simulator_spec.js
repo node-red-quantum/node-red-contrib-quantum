@@ -23,10 +23,10 @@ describe('LocalSimulatorNode', function() {
   it('execute command', function(done) {
     let command = util.format(snippets.LOCAL_SIMULATOR, '1');
     let flow = new FlowBuilder();
-    flow.add('quantum-circuit', 'n0', ['n1'], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
-    flow.add('hadamard-gate', 'n1', ['n2']);
-    flow.add('measure', 'n2', ['n3'], {selectedBit: '0'});
-    flow.add('local-simulator', 'n3', ['n4'], {shots: '1'});
+    flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
+    flow.add('hadamard-gate', 'n1', [['n2']]);
+    flow.add('measure', 'n2', [['n3']], {selectedBit: '0'});
+    flow.add('local-simulator', 'n3', [['n4']], {shots: '1'});
     flow.addOutput('n4');
 
     testUtil.commandExecuted(flow, command, done);

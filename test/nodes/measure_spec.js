@@ -23,9 +23,9 @@ describe('MeasureNode', function() {
   it('execute command', function(done) {
     let command = util.format(snippets.MEASURE, '0, 0');
     let flow = new FlowBuilder();
-    flow.add('quantum-circuit', 'n0', ['n1'], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
-    flow.add('hadamard-gate', 'n1', ['n2']);
-    flow.add('measure', 'n2', ['n3'], {selectedBit: '0'});
+    flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
+    flow.add('hadamard-gate', 'n1', [['n2']]);
+    flow.add('measure', 'n2', [['n3']], {selectedBit: '0'});
     flow.addOutput('n3');
 
     testUtil.commandExecuted(flow, command, done);
