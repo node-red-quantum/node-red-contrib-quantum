@@ -1,5 +1,6 @@
 const assert = require('chai').assert;
 const nodeTestHelper = require('node-red-node-test-helper');
+const shell = require('../quantum/python.js').PythonShell;
 
 nodeTestHelper.init(require.resolve('node-red'));
 
@@ -18,7 +19,28 @@ function isLoaded(node, nodeName, done) {
   });
 }
 
+function commandExecuted(flowBuilder, inputId, outputId, command, done) {
+  nodeTestHelper.load(flowBuilder.nodes, flowBuilder.flow, function() {
+    let inputNode = nodeTestHelper.getNode(inputId);
+    let outputNode = nodeTestHelper.getNode(outputId);
+
+    outputNode.on('input', function() {
+      try {
+        assert.strictEqual(shell.lastCommand, command);
+        done();
+      } catch (err) {
+        done(err);
+      } finally {
+        shell.stop();
+      }
+    });
+
+    inputNode.receive({payload: ''});
+  });
+}
+
 module.exports = {
   nodeTestHelper,
   isLoaded,
+  commandExecuted,
 };
