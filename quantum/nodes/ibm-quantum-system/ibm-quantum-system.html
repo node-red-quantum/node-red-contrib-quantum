@@ -4,9 +4,10 @@
     color: "#A8A8A8",
     defaults: {
       name: { value: "" },
-      chosen_system: {value: ""},
       api_token: { value: "", required: true },
+      chosen_system: {value: ""},
       preferred_backend: { value: "" },
+      shots: { value: 0, validate: RED.validators.number() },
       preferred_output: { value: "" },
     },
     inputs: 1,
@@ -42,14 +43,6 @@
   </div>
 
   <div class="form-row">
-    <label for="node-input-preferred_output">Output Format</label>
-    <select name="preferred_output" id="node-input-preferred_output">
-      <option value="Results">Results Only</option>
-      <option value="Verbose">Verbose</option>
-    </select>
-  </div>
-
-  <div class="form-row">
     <label for="node-input-preferred_backend" id="user-backend"
       >Quantum Backend
     </label>
@@ -59,6 +52,19 @@
       placeholder="Preferred Backend"
       style="margin-bottom: 20px;"
     />
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-shots"><i class="fa fa-tag"></i> Shots</label>
+    <input type="number" id="node-input-shots" placeholder="1000"/>
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-preferred_output">Output Format</label>
+    <select name="preferred_output" id="node-input-preferred_output">
+      <option value="Results">Results Only</option>
+      <option value="Verbose">Verbose</option>
+    </select>
   </div>
 
 </script>

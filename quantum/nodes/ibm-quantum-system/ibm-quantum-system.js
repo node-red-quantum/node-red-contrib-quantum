@@ -12,6 +12,7 @@ module.exports = function(RED) {
     this.chosenSystem = config.chosen_system;
     this.preferredBackend = config.preferred_backend;
     this.outputPreference = config.preferred_output;
+    this.shots = config.shots;
     this.qubits = [];
     this.qreg = '';
     const node = this;
@@ -121,13 +122,13 @@ module.exports = function(RED) {
             script += util.format(snippets.IBMQ_SYSTEM_DEFAULT_QUBIT, node.apiToken, node.qubits.length);
           }
         } else {
-          script += util.format(snippets.IBMQ_SYSTEM_DEFAULT_SIMUL, node.apiToken);
+          script += util.format(snippets.IBMQ_SYSTEM_DEFAULT_SIMUL, node.apiToken, node.qubits.length);
         }
 
         if (node.outputPreference == 'Verbose') {
-          script += snippets.IBMQ_SYSTEM_VERBOSE;
+          script += util.format(snippets.IBMQ_SYSTEM_VERBOSE, node.shots);
         } else {
-          script += snippets.IBMQ_SYSTEM_RESULT;
+          script += util.format(snippets.IBMQ_SYSTEM_RESULT, node.shots);
         }
 
         await shell.execute(script, (err, data) => {
