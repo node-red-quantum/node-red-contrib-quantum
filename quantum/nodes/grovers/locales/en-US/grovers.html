@@ -1,55 +1,26 @@
-<script type="text/html" data-help-name="grovers">
+<script type="text/html" data-help-name="Grovers">
   <p>
     This node applies Grover's algorithm to find specified bit string value in the search space
-  </p>
-  <p>
-    <!-- In depth description of the node's features and how to use (node properties, node connections, ...) -->
-    <br /><br />
-    <!-- For quantum gates, explain the geometric operation in terms of the Bloch Sphere -->
-    <br/><br/>
-    <a href="">Template gate - Qiskit textbook</a><br/> <!-- Insert url to Qiskit textbook -->
-    <a href="">Template gate - Qiskit documentation</a> <!-- Insert url to Qiskit documentation -->
   </p>
 
   <h3>Inputs</h3>
     <dl class="message-properties">
         <dt>payload
-            <span class="property-type">object</span>
+            <span class="property-type">string</span>
         </dt>
-        <dd>The qubit object to apply the gate to.</dd>
-        <dt class="optional">topic
-          <span class="property-type">string</span>
-        </dt>
-        <dd>"Quantum Circuit"</dd>
+        <dd>Bit string that signifies the state which needs to be found using grover's algorithm</dd>
     </dl>
 
   <h3>Outputs</h3>
     <dl class="message-properties">
-      <dt>payload
-          <span class="property-type">object</span>
+      <dt>payload.topMeasurement
+          <span class="property-type">string</span>
       </dt>
-      <dd>The same qubit object that was received as input.</dd>
-      <dt class="optional">topic
-        <span class="property-type">string</span>
-      </dt>
-      <dd>"Quantum Circuit"</dd>
+      <dd>Top measurement produced by algorithm that satisfies the input bit string state</dd>
+        <dt>payload.iterationsNum
+            <span class="property-type">integer</span>
+        </dt>
+        <dd>Number of times it took algorithm to find the desired state</dd>
     </dl>
 
-  <h3>Details</h3>
-    <p>
-        Qubit objects can be generated from:
-        <ul>
-        <li><i>Quantum Circuit</i> node in 'Bits only' mode.</li>
-        <li><i>Quantum Register</i> node along with <i>Quantum Circuit</i> in 'Register' mode.</li>
-        </ul>
-
-        Unless specified, qubits are initialised in the 0 state.
-    </p>
-
-    <p>
-      <b>
-        For a brief summary of the main quantum computing concepts, please refer to the
-        <i>Details</i> section of the <i>Quantum Circuit</i> node.
-      </b>
-    </p>
   </script>
