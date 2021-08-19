@@ -12,7 +12,7 @@ module.exports = function(RED) {
     this.chosenSystem = config.chosen_system;
     this.preferredBackend = config.preferred_backend;
     this.outputPreference = config.preferred_output;
-    this.shots = config.shots;
+    this.shots = config.shots || 1;
     this.qubits = [];
     this.qreg = '';
     const node = this;
@@ -115,16 +115,17 @@ module.exports = function(RED) {
 
         let script = '';
 
-        console.log(node.chosenSystem);
         if (node.preferredBackend) {
           script += util.format(snippets.IBMQ_SYSTEM_PREFERRED, node.apiToken, node.preferredBackend);
-        } else if (node.chosen_system == 'Qubit_System') {
-          script += util.format(snippets.IBMQ_SYSTEM_DEFAULT, node.apiToken, node.qubits.length, 'False');
         } else {
-          if (node.qubits.length > 32) {
-            script += util.format(snippets.IBMQ_SYSTEM_DEFAULT, node.apiToken, node.qubits.length, 'True');
+          if (node.chosen_system == 'Qubit_System') {
+            script += util.format(snippets.IBMQ_SYSTEM_DEFAULT, node.apiToken, node.qubits.length, 'False');
           } else {
-            script += util.format(snippets.IBMQ_SYSTEM_QASM, node.apiToken);
+            if (node.qubits.length > 32) {
+              script += util.format(snippets.IBMQ_SYSTEM_DEFAULT, node.apiToken, node.qubits.length, 'True');
+            } else {
+              script += util.format(snippets.IBMQ_SYSTEM_QASM, node.apiToken);
+            }
           }
         }
 
