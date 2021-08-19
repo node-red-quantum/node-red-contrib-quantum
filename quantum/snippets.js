@@ -139,6 +139,10 @@ print(b64_str)
 buffer.close()
 `;
 
+const PORTFOLIO_OPTIMISATION =
+`
+`;
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,
@@ -166,4 +170,5 @@ module.exports = {
   BLOCH_SPHERE,
   CU_GATE,
   ENCODE_IMAGE,
+  PORTFOLIO_OPTIMISATION
 };
