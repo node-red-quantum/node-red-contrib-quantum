@@ -4,29 +4,40 @@
     The quantum backends are provided by IBM Quantum Services.
   </p>
   <p>
+    <b>1 -</b>
     To do so, you need to open an <a href="https://www.ibm.com/account/">IBMid account</a> (free) and use it to 
     sign in with <a href="https://quantum-computing.ibm.com/">IBM Quantum</a>. From the dashboard, 
     you will be able to copy your API token and paste it into the node's properties. 
     <br/><br/>
-    Then, select whether you want to run the circuit on:
+    <b>2 -</b>
+    Then, you can either choose to run your circuit on:
     <ul>
-      <li>A remote IBM quantum simulator</li>
-      <li>An actual IBM quantum system</li>
+      <li>The least busy remote IBM quantum simulator</li>
+      <li>The least busy actual IBM quantum system</li>
     </ul>
-    If you want to use a specific quantum system or simulator from IBM, you can indicate 
-    its name in the 'Quantum Backend' input field (e.g. 'ibmq_lima'). If empty, the node 
+    <b>OR</b>
+  </p>
+  <p>
+    If you want to use a specific quantum backend from IBM, you can indicate 
+    its name in the 'Specific Quantum Backend' input field (e.g. 'ibmq_lima'). If empty, the node 
     will use the least busy backend with enough qubits to run your circuit.
-    <br />
+    <br /><br />
     You can find a list of 
     <a href="https://quantum-computing.ibm.com/services?services=systems&systems=yours">quantum backends</a>
-    in your IBM Quantum account by clicking <i>IBM Quantum Services </i> > <i>Systems</i> or <i>Simulators</i> > <i>Your systems</i>.
+    in your IBM Quantum account. <br/>
+    Please be aware that because of cloud services availability, your circuit will be put in a queue, 
+    waiting to be executed on an IBM backend which can take some time. You can check your 
+    <a href="https://quantum-computing.ibm.com/jobs?jobs=circuit">job status</a> from your IBM Quantum account.
     <br /><br />
+    <b>3 -</b> 
     Indicate the number of times you would like to simulate the circuit (shots). 
-    <br />
+    <br /><br />
+    <b>4 -</b>
     By default, this node only returns the results (counts) of the quantum circuit. 
     However, you can select the 'Verbose' output option to include more information such as the
     quantum machine it was run on, the job ID, the time it took to run etc.
     <br /><br />
+    <b>5 -</b>
     Finally, place this node at the end of the quantum circuit and connect all qubit objects.
     <br />
     If not all qubit objects are connected, the node will assume that 
