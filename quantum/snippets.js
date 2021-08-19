@@ -87,6 +87,22 @@ const CIRCUIT_DIAGRAM =
 `qc.draw(output='mpl')
 `;
 
+const GROVERS =
+`from qiskit import Aer
+from qiskit.quantum_info import Statevector
+from qiskit.algorithms import Grover, AmplificationProblem
+
+element = '%s'
+oracle = Statevector.from_label(element)
+problem = AmplificationProblem(oracle=oracle, is_good_state = lambda bitstr: bitstr==element)
+backend = Aer.get_backend('qasm_simulator')
+grover = Grover(quantum_instance=backend)
+result = grover.amplify(problem)
+print(result.top_measurement)
+iterations = Grover.optimal_num_iterations(num_solutions=1, num_qubits=len(element))
+print(iterations)
+`;
+
 const RESET =
 `qc.reset(%s)
 `;
@@ -155,6 +171,7 @@ module.exports = {
   IBMQ_SYSTEM_PREFERRED,
   IBMQ_SYSTEM_VERBOSE,
   IBMQ_SYSTEM_RESULT,
+  GROVERS,
   NOT_GATE,
   CIRCUIT_DIAGRAM,
   RESET,

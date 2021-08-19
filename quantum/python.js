@@ -64,6 +64,7 @@ class PythonShell {
   constructor(path) {
     this.path = path ? path : pythonPath;
     this.script = '';
+    this.process = null;
     this.lastCommand = '';
   }
 
@@ -171,3 +172,4 @@ class PythonShell {
  * functions, and objects which are created will be kept in memory until the flow ends.
 */
 module.exports.PythonShell = new PythonShell();
+module.exports.PythonShellClass = PythonShell;
