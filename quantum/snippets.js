@@ -146,7 +146,7 @@ from qiskit.algorithms import Shor
 backend = Aer.get_backend('qasm_simulator')
 shor = Shor(quantum_instance=backend)
 result = shor.factor(%s)
-print(result.factors[0])
+print(result)
 `;
 
 module.exports = {
