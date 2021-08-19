@@ -1,9 +1,10 @@
 <script type="text/javascript">
   RED.nodes.registerType("shors", {
-    category: "quantum",
+    category: "quantum algorithms",
     color: "#737177",
     defaults: {
       name: { value: "" },
+      integer: { value: 0, validate: RED.validators.number() },
     },
     inputs: 1,
     outputs: 1,
@@ -25,7 +26,7 @@
   </div>
 
   <div class="form-row">
-    <label for="node-input-integer">Input a Integer</label>
-    <input type="text" id="node-input-integer"/>
+    <label for="node-input-integer"><i class="fa fa-tag"></i> Integer</label>
+    <input type="number" id="node-input-integer"/>
   </div>
 </script>
