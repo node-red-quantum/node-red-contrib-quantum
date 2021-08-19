@@ -74,7 +74,8 @@
       "ibm-quantum-system": "quantum/nodes/ibm-quantum-system/ibm-quantum-system.js",
       "circuit-diagram": "quantum/nodes/circuit-diagram/circuit-diagram.js",
       "bloch-sphere": "quantum/nodes/bloch-sphere/bloch-sphere.js",
-      "script": "quantum/nodes/script/script.js"
+      "script": "quantum/nodes/script/script.js",
+      "shors": "quantum/nodes/shors/shors.js"
     }
   }
 }
