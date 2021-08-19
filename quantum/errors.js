@@ -44,10 +44,6 @@ const BLOCH_SPHERE_WITH_MEASUREMENT =
 'measuring a qubit can collapse its state and lead to inconsistencies.\n'+
 'Please disconnect or remove any "Measure" node from the quantum circuit.';
 
-const DEFAULT_SIMULATOR_TOO_SMALL =
-'The quantum circuit provided has too many qubits to be run on the default QASM Simulator. ' +
-'Please enter the name of a simulator with enough qubits to run this circuit.';
-
 function validateQubitInput(msg) {
   let keys = Object.keys(msg.payload);
 
@@ -120,7 +116,6 @@ module.exports = {
   QUBITS_FROM_DIFFERENT_CIRCUITS,
   SAME_QUBIT_RECEIVED_TWICE,
   BLOCH_SPHERE_WITH_MEASUREMENT,
-  DEFAULT_SIMULATOR_TOO_SMALL,
   validateQubitInput,
   validateRegisterInput,
   validateQubitsFromSameCircuit,
