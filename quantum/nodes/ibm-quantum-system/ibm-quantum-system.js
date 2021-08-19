@@ -115,14 +115,14 @@ module.exports = function(RED) {
 
         let script = '';
 
-
+        console.log(node.chosenSystem);
         if (node.preferredBackend) {
           script += util.format(snippets.IBMQ_SYSTEM_PREFERRED, node.apiToken, node.preferredBackend);
         } else if (node.chosen_system == 'Qubit_System') {
-          script += util.format(snippets.IBMQ_SYSTEM_DEFAULT_QUBIT, node.apiToken, node.qubits.length);
+          script += util.format(snippets.IBMQ_SYSTEM_DEFAULT, node.apiToken, node.qubits.length, 'False');
         } else {
           if (node.qubits.length > 32) {
-            script += util.format(snippets.IBMQ_SYSTEM_DEFAULT_SIMUL, node.apiToken, node.qubits.length);
+            script += util.format(snippets.IBMQ_SYSTEM_DEFAULT, node.apiToken, node.qubits.length, 'True');
           } else {
             script += util.format(snippets.IBMQ_SYSTEM_QASM, node.apiToken);
           }
