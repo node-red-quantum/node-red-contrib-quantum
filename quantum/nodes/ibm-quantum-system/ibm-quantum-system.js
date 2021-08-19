@@ -118,7 +118,7 @@ module.exports = function(RED) {
         if (node.preferredBackend) {
           script += util.format(snippets.IBMQ_SYSTEM_PREFERRED, node.apiToken, node.preferredBackend);
         } else {
-          if (node.chosen_system == 'Qubit_System') {
+          if (node.chosenSystem == 'Qubit_System') {
             script += util.format(snippets.IBMQ_SYSTEM_DEFAULT, node.apiToken, node.qubits.length, 'False');
           } else {
             if (node.qubits.length > 32) {
