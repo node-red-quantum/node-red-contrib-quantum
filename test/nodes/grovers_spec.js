@@ -2,6 +2,7 @@ const groversNode = require('../../quantum/nodes/grovers/grovers.js');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
 const assert = require('chai').assert;
+const errors = require('../../quantum/errors');
 
 
 describe('GroversNode', function() {
@@ -47,6 +48,20 @@ describe('GroversNode', function() {
       });
 
       groversTestNode.receive({payload: '111111'});
+    });
+  });
+
+  it('should fail on invalid input', function(done) {
+    let flow = [{id: 'groversNode', type: 'grovers', wires: [['helperNode']]},
+      {id: 'helperNode', type: 'helper'}];
+
+    nodeTestHelper.load(groversNode, flow, function() {
+      let groversTestNode = nodeTestHelper.getNode('groversNode');
+      groversTestNode.on('call:error', call => {
+        call.should.be.calledWithExactly(errors.NOT_BIT_STRING);
+        done();
+      });
+      groversTestNode.receive({payload: '111112'});
     });
   });
 });

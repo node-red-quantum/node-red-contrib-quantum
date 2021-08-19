@@ -14,7 +14,7 @@ module.exports = function(RED) {
     this.on('input', async function(msg, send, done) {
       let error = errors.validateGroversInput(msg);
       if (error) {
-        done(error);
+        this.error(error.message);
         return;
       }
 
