@@ -7,7 +7,17 @@
       api_token: { value: "", required: true },
       chosen_system: { value: "" },
       preferred_backend: { value: "" },
-      shots: { value: 1, validate: RED.validators.number() },
+      shots: { 
+        value: 1, 
+        validate: function (x) {
+          x = parseInt(x);
+          if (Number.isInteger(x) && x > 0) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+      },
       preferred_output: { value: "" },
     },
     inputs: 1,
@@ -34,23 +44,21 @@
     <input type="text" id="node-input-api_token" placeholder="API Token" style="margin-bottom: 20px;"/>
   </div>
 
-  <div class="form-row">
-    <label for="node-input-chosen_system">Simulator/Qubit System</label>
-    <select name="chosen_system" id="node-input-chosen_system">
+  <div style="width:40%; text-align:center; float:left; margin-bottom: 40px;">
+    <label for="node-input-chosen_system">Least Busy Backend</label>
+    <select name="chosen_system" id="node-input-chosen_system" style="width:85%">
       <option value="Simulator">Simulator</option>
-      <option value="Qubit_System">Qubit System</option>
+      <option value="Qubit_System">Quantum System</option>
     </select>
   </div>
-
-  <div class="form-row">
-    <label for="node-input-preferred_backend" id="user-backend"
-      >Quantum Backend
-    </label>
+  <div style="width:5%; font-size:10pt; text-align:center; float:left; margin-top: 20px;">OR</div>
+  <div style="width:40%; text-align:center; float:left; margin-bottom: 40px;">
+    <label for="node-input-preferred_backend" id="user-backend">Specific Backend</label>
     <input
       type="text"
       id="node-input-preferred_backend"
       placeholder="Preferred Backend"
-      style="margin-bottom: 20px;"
+      style="width:85%"
     />
   </div>
 
