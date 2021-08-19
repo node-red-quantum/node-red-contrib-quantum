@@ -43,6 +43,24 @@ class FlowBuilder {
   }
 
   /**
+   * Return the ID of the first node.
+   *
+   * @return {string} The nodes ID string.
+  */
+  get inputId() {
+    return this.flow[0].id;
+  }
+
+  /**
+   * Return the ID of the last node.
+   *
+   * @return {string} The nodes ID string.
+  */
+  get outputId() {
+    return this.flow[this.flow.length - 1].id;
+  }
+
+  /**
    * Add a quantum node to the flow.
    *
    * @param {string} name The name of the node.
