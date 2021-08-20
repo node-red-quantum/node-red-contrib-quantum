@@ -23,6 +23,7 @@ const NODES = {
   'swap': require('../quantum/nodes/swap/swap.js'),
   'toffoli-gate': require('../quantum/nodes/toffoli-gate/toffoli-gate.js'),
   'unitary-gate': require('../quantum/nodes/unitary-gate/unitary-gate.js'),
+  'grovers': require('../quantum/nodes/grovers/grovers')
 };
 
 class FlowBuilder {

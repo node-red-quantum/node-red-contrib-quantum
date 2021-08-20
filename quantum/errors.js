@@ -127,6 +127,7 @@ module.exports = {
   QUBITS_FROM_DIFFERENT_CIRCUITS,
   SAME_QUBIT_RECEIVED_TWICE,
   BLOCH_SPHERE_WITH_MEASUREMENT,
+  NOT_BIT_STRING,
   validateQubitInput,
   validateRegisterInput,
   validateQubitsFromSameCircuit,

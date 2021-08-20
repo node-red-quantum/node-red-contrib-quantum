@@ -2,6 +2,8 @@ const groversNode = require('../../quantum/nodes/grovers/grovers.js');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
 const assert = require('chai').assert;
+const {FlowBuilder} = require('../flow-builder');
+const errors = require('../../quantum/errors');
 
 
 describe('GroversNode', function() {
@@ -19,19 +21,22 @@ describe('GroversNode', function() {
   });
 
   it('default name outputs correctly', function(done) {
-    let flow = [{id: 'groversNode', type: 'grovers', wires: []}];
-    nodeTestHelper.load(groversNode, flow, function() {
+    flow = new FlowBuilder();
+    flow.add('grovers', 'groversNode', []);
+
+    nodeTestHelper.load(flow.nodes, flow.flow, function() {
       let groversTestNode = nodeTestHelper.getNode('groversNode');
-      groversTestNode.should.have.property('name', 'Grovers');
+      groversTestNode.should.have.property('name', 'grovers');
       done();
     });
   });
 
   it('return success output on valid input', function(done) {
-    let flow = [{id: 'groversNode', type: 'grovers', wires: [['helperNode']]},
-      {id: 'helperNode', type: 'helper'}];
+    flow = new FlowBuilder();
+    flow.add('grovers', 'groversNode', [['helperNode']]);
+    flow.addOutput('helperNode');
 
-    nodeTestHelper.load(groversNode, flow, function() {
+    nodeTestHelper.load(flow.nodes, flow.flow, function() {
       let groversTestNode = nodeTestHelper.getNode('groversNode');
       let helperNode = nodeTestHelper.getNode('helperNode');
 
@@ -44,9 +49,26 @@ describe('GroversNode', function() {
         } catch (err) {
           done(err);
         }
+        finally{
+          groversTestNode.shell.stop();
+        }
       });
 
       groversTestNode.receive({payload: '111111'});
+    });
+  });
+
+  it('should fail on invalid input', function(done) {
+    flow  = new FlowBuilder();
+    flow.add('grovers', 'groversNode', []);
+
+    nodeTestHelper.load(flow.nodes, flow.flow, function() {
+      let groversTestNode = nodeTestHelper.getNode('groversNode');
+      groversTestNode.on('call:error', call => {
+        call.should.be.calledWithExactly(errors.NOT_BIT_STRING);
+        done();
+      });
+      groversTestNode.receive({payload: '111112'});
     });
   });
 });
