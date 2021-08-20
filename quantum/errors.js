@@ -39,6 +39,9 @@ const SAME_QUBIT_RECEIVED_TWICE =
 'Please connect the right number of qubits to the node. For circuit output nodes, ' +
 'all qubits should be connected as input. There should be only 1 instance of each qubit at all times in the circuit.';
 
+const NOT_BIT_STRING =
+'Only bit string consisting 0 and 1 are allowed';
+
 const BLOCH_SPHERE_WITH_MEASUREMENT =
 'The "Bloch Sphere Diagram" node is not compatible with "Measure" nodes because ' +
 'measuring a qubit can collapse its state and lead to inconsistencies.\n'+
@@ -68,9 +71,17 @@ function validateRegisterInput(msg) {
   } else return null;
 };
 
+function validateGroversInput(msg) {
+  const regex = new RegExp('^[0-1]{1,}$');
+  if (!regex.test(msg.payload)) {
+    return new Error(NOT_BIT_STRING);
+  }
+  return null;
+};
+
 function validateQubitsFromSameCircuit(qubits) {
-  let circuitId = qubits[0].payload.structure.quantumCircuitId;
-  let valid = qubits.every((obj) => obj.payload.structure.quantumCircuitId === circuitId);
+  let circuitId = qubits[0].circuitId;
+  let valid = qubits.every((obj) => obj.circuitId === circuitId);
   if (!valid) return new Error(QUBITS_FROM_DIFFERENT_CIRCUITS);
 
   valid = true;
@@ -120,4 +131,5 @@ module.exports = {
   validateRegisterInput,
   validateQubitsFromSameCircuit,
   validateRegisterStrucutre,
+  validateGroversInput,
 };

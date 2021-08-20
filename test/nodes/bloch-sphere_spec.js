@@ -1,9 +1,9 @@
-const quantumCircuitNode = require('../../quantum/nodes/quantum-circuit/quantum-circuit.js');
+const blochSphereNode = require('../../quantum/nodes/bloch-sphere/bloch-sphere.js');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
 
 
-describe('QuantumCircuitNode', function() {
+describe('BlochSphereNode', function() {
   beforeEach(function(done) {
     nodeTestHelper.startServer(done);
   });
@@ -14,6 +14,6 @@ describe('QuantumCircuitNode', function() {
   });
 
   it('load node', function(done) {
-    testUtil.isLoaded(quantumCircuitNode, 'quantum-circuit', done);
+    testUtil.isLoaded(blochSphereNode, 'bloch-sphere', done);
   });
 });

@@ -38,7 +38,7 @@ module.exports = function(RED) {
           send(msg);
 
           const status = (!node.selectedRegVarName) ? `Result: cbit ${node.selectedBit}`:
-          `Result: register ${node.selectedRegVarName} / cbit ${node.selectedBit}`;
+          `Result: register ${node.selectedRegVarName.substring(3)} / cbit ${node.selectedBit}`;
           node.status({
             fill: 'grey',
             shape: 'dot',

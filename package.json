@@ -68,12 +68,14 @@
       "cnot-gate": "quantum/nodes/cnot-gate/cnot-gate.js",
       "toffoli-gate": "quantum/nodes/toffoli-gate/toffoli-gate.js",
       "controlled-u-gate": "quantum/nodes/controlled-u-gate/controlled-u-gate.js",
+      "multi-controlled-u-gate": "quantum/nodes/multi-controlled-u-gate/multi-controlled-u-gate.js",
       "measure": "quantum/nodes/measure/measure.js",
       "local-simulator": "quantum/nodes/local-simulator/local-simulator.js",
       "ibm-quantum-system": "quantum/nodes/ibm-quantum-system/ibm-quantum-system.js",
       "circuit-diagram": "quantum/nodes/circuit-diagram/circuit-diagram.js",
-      "bloch-sphere": "quantum/nodes/bloch-sphere/bloch-sphere.js",
-      "script": "quantum/nodes/script/script.js"
+      "script": "quantum/nodes/script/script.js",
+      "grovers":  "quantum/nodes/grovers/grovers.js",
+      "bloch-sphere": "quantum/nodes/bloch-sphere/bloch-sphere.js"
     }
   }
 }
