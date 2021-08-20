@@ -16,6 +16,7 @@ module.exports = function(RED) {
       if (error) {
         this.error(error.message);
         done();
+        return;
       }
 
       const script = util.format(snippets.GROVERS, msg.payload);
