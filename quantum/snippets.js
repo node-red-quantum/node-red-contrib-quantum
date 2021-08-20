@@ -56,10 +56,16 @@ counts = result.get_counts()
 print(counts)
 `;
 
+const IBMQ_SYSTEM_QASM =
+`from qiskit.providers.ibmq import least_busy
+provider = IBMQ.enable_account('%s')
+backend_service = provider.get_backend('ibmq_qasm_simulator')
+`;
+
 const IBMQ_SYSTEM_DEFAULT =
 `from qiskit.providers.ibmq import least_busy
 provider = IBMQ.enable_account('%s')
-backends = provider.backends(filters=lambda x: x.configuration().n_qubits >= %s)
+backends = provider.backends(filters=lambda x: (x.configuration().n_qubits >= %s and x.configuration().simulator == %s))
 backend_service = least_busy(backends)
 `;
 
@@ -69,12 +75,12 @@ backend_service = provider.get_backend('%s')
 `;
 
 const IBMQ_SYSTEM_VERBOSE =
-`job = execute(qc, backend=backend_service)
+`job = execute(qc, backend=backend_service, shots=%s)
 job.result()
 `;
 
 const IBMQ_SYSTEM_RESULT =
-`job = execute(qc, backend=backend_service)
+`job = execute(qc, backend=backend_service, shots=%s)
 counts = job.result().get_counts()
 print(counts)
 `;
@@ -167,6 +173,7 @@ module.exports = {
   MEASURE,
   LOCAL_SIMULATOR,
   MULTI_CONTROLLED_U_GATE,
+  IBMQ_SYSTEM_QASM,
   IBMQ_SYSTEM_DEFAULT,
   IBMQ_SYSTEM_PREFERRED,
   IBMQ_SYSTEM_VERBOSE,
