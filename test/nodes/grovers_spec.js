@@ -33,29 +33,13 @@ describe('GroversNode', function() {
 
   it('return success output on valid input', function(done) {
     flow = new FlowBuilder();
-    flow.add('grovers', 'groversNode', [['helperNode']]);
-    flow.addOutput('helperNode');
+    flow.add('grovers', 'n1', [['n2']]);
+    flow.addOutput('n2');
 
-    nodeTestHelper.load(flow.nodes, flow.flow, function() {
-      let groversTestNode = nodeTestHelper.getNode('groversNode');
-      let helperNode = nodeTestHelper.getNode('helperNode');
+    const givenInput = {payload: '111111'};
+    const expectedOutput = { topMeasurement: '111111', iterationsNum: 6};
 
-      helperNode.on('input', function(msg) {
-        const expectedPayload = { topMeasurement: '111111', iterationsNum: 6};
-        try {
-          assert.strictEqual(msg.payload.topMeasurement, expectedPayload.topMeasurement);
-          assert.strictEqual(msg.payload.iterationsNum, expectedPayload.iterationsNum);
-          done();
-        } catch (err) {
-          done(err);
-        }
-        finally{
-          groversTestNode.shell.stop();
-        }
-      });
-
-      groversTestNode.receive({payload: '111111'});
-    });
+    testUtil.correctOutputReceived(flow, givenInput, expectedOutput, done);
   });
 
   it('should fail on invalid input', function(done) {
