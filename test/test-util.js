@@ -23,11 +23,14 @@ function commandExecuted(flowBuilder, command, done) {
   nodeTestHelper.load(flowBuilder.nodes, flowBuilder.flow, function() {
     let inputNode = nodeTestHelper.getNode(flowBuilder.inputId);
     let outputNode = nodeTestHelper.getNode(flowBuilder.outputId);
+    let called = false;
 
     outputNode.on('input', function() {
+      if (called) return;
       try {
         assert.strictEqual(shell.lastCommand, command);
         done();
+        called = true;
       } catch (err) {
         done(err);
       } finally {
