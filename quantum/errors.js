@@ -44,6 +44,15 @@ const BLOCH_SPHERE_WITH_MEASUREMENT =
 'measuring a qubit can collapse its state and lead to inconsistencies.\n'+
 'Please disconnect or remove any "Measure" node from the quantum circuit.';
 
+const GREATER_THAN_TWO =
+'The input integer should be greater than 2';
+
+const INPUT_ODD_INTEGER =
+'The input integer should be odd';
+
+const INPUT_AN_INTEGER =
+'The input number should an integer';
+
 function validateQubitInput(msg) {
   let keys = Object.keys(msg.payload);
 
@@ -106,6 +115,19 @@ function validateRegisterStrucutre(structureInitialised, strucutreExpected) {
   }
 };
 
+function validateShorsInput(params) {
+  if (params < 3) {
+    return new Error(GREATER_THAN_TWO);
+  }
+  if (params % 2 === 0) {
+    return new Error(INPUT_ODD_INTEGER);
+  }
+  if (params % 1 !== 0) {
+    return new Error(INPUT_AN_INTEGER);
+  }
+  return null;
+};
+
 module.exports = {
   NOT_QUANTUM_NODE,
   USE_REGISTER_NODES,
@@ -116,8 +138,12 @@ module.exports = {
   QUBITS_FROM_DIFFERENT_CIRCUITS,
   SAME_QUBIT_RECEIVED_TWICE,
   BLOCH_SPHERE_WITH_MEASUREMENT,
+  GREATER_THAN_TWO,
+  INPUT_ODD_INTEGER,
+  INPUT_AN_INTEGER,
   validateQubitInput,
   validateRegisterInput,
   validateQubitsFromSameCircuit,
   validateRegisterStrucutre,
+  validateShorsInput,
 };

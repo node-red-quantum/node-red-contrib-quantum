@@ -13,12 +13,12 @@ module.exports = function(RED) {
     const node = this;
 
     this.on('input', async function(msg, send, done) {
-      // let error = errors.validateShorsInput(msg);
-      // if (error) {
-      //   done(error);
-      //   return;
-      // }
       const params = node.integer;
+      let error = errors.validateShorsInput(params);
+      if (error) {
+        done(error);
+        return;
+      }
       const script = util.format(snippets.SHORS, params);
       await shell.start();
       await shell.execute(script, (err, data) => {
