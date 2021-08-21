@@ -21,7 +21,6 @@ module.exports = function(RED) {
     this.qbitsreg = parseInt(config.qbitsreg);
     this.cbitsreg = parseInt(config.cbitsreg);
     this.outputs = parseInt(config.outputs);
-    this.shell = shell;
     const state = stateManager.newState(this.id);
     const node = this;
 

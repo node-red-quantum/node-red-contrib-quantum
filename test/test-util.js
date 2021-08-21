@@ -1,5 +1,6 @@
 const assert = require('chai').assert;
 const nodeTestHelper = require('node-red-node-test-helper');
+const shell = require('../quantum/python').PythonShell;
 
 nodeTestHelper.init(require.resolve('node-red'));
 
@@ -35,7 +36,7 @@ function correctOutputReceived(flow, givenInput, expectedOutput, done) {
         done(err);
       }
       finally{
-        inputNode.shell.stop();
+        shell.stop();
       }
     });
     inputNode.receive(givenInput);
