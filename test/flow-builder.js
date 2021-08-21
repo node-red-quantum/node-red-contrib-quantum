@@ -12,6 +12,7 @@ const NODES = {
   'identity-gate': require('../quantum/nodes/identity-gate/identity-gate.js'),
   'local-simulator': require('../quantum/nodes/local-simulator/local-simulator.js'),
   'measure': require('../quantum/nodes/measure/measure.js'),
+  'multi-controlled-u-gate': require('../quantum/nodes/multi-controlled-u-gate/multi-controlled-u-gate.js'),
   'not-gate': require('../quantum/nodes/not-gate/not-gate.js'),
   'phase-gate': require('../quantum/nodes/phase-gate/phase-gate.js'),
   'quantum-circuit': require('../quantum/nodes/quantum-circuit/quantum-circuit.js'),
