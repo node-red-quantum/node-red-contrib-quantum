@@ -25,9 +25,9 @@ For information on how to contribute, please read the [CONTRIBUTING](CONTRIBUTIN
 ![Quantum Circuit example](./images/QuantumRandomNumber.png)
 
 
-# Table of content 
+# Table of contents
 - [Prologue](#prologue)
-- [Table of content](#table-of-content)
+- [Table of contents](#table-of-contents)
 - [Pre-requisites](#pre-requisites)
 - [Install](#install)
 - [About Quantum Computing](#about-quantum-computing)
