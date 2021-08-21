@@ -36,7 +36,7 @@ For information on how to contribute, please read the [CONTRIBUTING](CONTRIBUTIN
     - [*Quantum Circuit* node](#quantum-circuit-node)
     - [*Quantum Register* node](#quantum-register-node)
     - [*Classical Register* node](#classical-register-node)
-  - [II - Circuit control nodes](#ii---circuit-control-nodes)
+  - [II - Qubit control nodes](#ii---qubit-control-nodes)
     - [*Qubit* node](#qubit-node)
     - [*Reset* node](#reset-node)
     - [*Barrier* node](#barrier-node)
@@ -92,7 +92,7 @@ Node-RED Quantum requires at minimum [Node-RED 1.0](https://nodered.org) and [Py
 
 
 
-## II - Circuit control nodes
+## II - Qubit control nodes
 
 ### *Qubit* node
 
