@@ -62,6 +62,7 @@ For information on how to contribute, please read the [CONTRIBUTING](CONTRIBUTIN
 - [*'Quantum Algorithms'* nodes - Leveraging quantum computing](#quantum-algorithms-nodes---leveraging-quantum-computing)
     - [Grover's algorithm](#grovers-algorithm)
     - [Shor's algorithm](#shors-algorithm)
+- [Tutorials & Examples](#tutorials--examples)
 
 
 
@@ -150,3 +151,7 @@ Node-RED Quantum requires at minimum [Node-RED 1.0](https://nodered.org) and [Py
 ### Grover's algorithm
 
 ### Shor's algorithm
+
+
+
+# Tutorials & Examples
