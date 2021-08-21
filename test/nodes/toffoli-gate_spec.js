@@ -3,7 +3,9 @@ const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
 const snippets = require('../../quantum/snippets');
 const shell = require('../../quantum/python.js').PythonShell;
+const {FlowBuilder} = require('../flow-builder.js');
 
+const flow = new FlowBuilder();
 
 describe('ToffoliGateNode', function() {
   beforeEach(function(done) {
@@ -12,6 +14,7 @@ describe('ToffoliGateNode', function() {
 
   afterEach(function(done) {
     shell.stop();
+    flow.reset();
     nodeTestHelper.unload();
     nodeTestHelper.stopServer(done);
   });
@@ -20,11 +23,23 @@ describe('ToffoliGateNode', function() {
     testUtil.isLoaded(toffoliGateNode, 'toffoli-gate', done);
   });
 
-  // it('pass qubit through gate', function(done) {
-  //   testUtil.qubitsPassedThroughGate('toffoli-gate', {}, done);
-  // });
+  it('pass qubit through gate', function(done) {
+    flow.add('quantum-circuit', 'n0', [['n1'], ['n1'], ['n1']], {structure: 'qubits', outputs: '3', qbitsreg: '3', cbitsreg: '3'});
+    flow.add('toffoli-gate', 'n1', [['n2'], ['n2'], ['n2']]);
+    flow.addOutput('n2');
 
-  // it('sends the correct Qiskit script to the shell', function(done) {
-  //   testUtil.qiskitScriptSent(toffoliGateNode, 'toffoli-gate', snippets.TOFFOLI_GATE, done);
-  // });
+    let payloadObject = [
+      {structure: {qubits: 3, cbits: 3},
+        register: undefined,
+        qubit: 0},
+      {structure: {qubits: 3, cbits: 3},
+        register: undefined,
+        qubit: 1},
+      {structure: {qubits: 3, cbits: 3},
+        register: undefined,
+        qubit: 2},
+    ];
+
+    testUtil.qubitsPassedThroughGate(flow, payloadObject, done);
+  });
 });
