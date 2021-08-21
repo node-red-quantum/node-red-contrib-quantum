@@ -30,11 +30,11 @@ function commandExecuted(flowBuilder, command, done) {
       try {
         assert.strictEqual(shell.lastCommand, command);
         done();
-        called = true;
       } catch (err) {
         done(err);
       } finally {
         shell.stop();
+        called = true;
       }
     });
 
