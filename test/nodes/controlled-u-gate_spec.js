@@ -16,4 +16,18 @@ describe('ControlledUGateNode', function() {
   it('load node', function(done) {
     testUtil.isLoaded(controlledUGateNode, 'controlled-u-gate', done);
   });
+
+  it('pass qubit through gate', function(done) {
+    flow.add('quantum-circuit', 'n0', ['n1'], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
+    flow.add('controlled-u-gate', 'n1', [['n2']], {targetPosition: 'Upper', theta: '0', phi: '0', lambda: '0', gamma: '0'});
+    flow.addOutput('n2');
+
+    let payloadObject = {
+      structure: {qubits: 1, cbits: 1},
+      register: undefined,
+      qubit: 0,
+    };
+
+    testUtil.qubitsPassedThroughGate(flow, payloadObject, done);
+  });
 });
