@@ -23,15 +23,25 @@ describe('BarrierNode', function() {
   });
 
   it('pass qubit through node', function(done) {
-    flow.add('quantum-circuit', 'n0', ['n1'], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
-    flow.add('barrier', 'n1', ['n2']);
-    flow.addOutput('n2');
+    flow.add('quantum-circuit', 'n0', [['n1'], ['n2'], ['n3']], {structure: 'qubits', outputs: '3', qbitsreg: '3', cbitsreg: '3'});
+    flow.add('hadamard-gate', 'n1', ['n3']);
+    flow.add('not-gate', 'n2', ['n3']);
+    flow.add('barrier', 'n3', [['n4'], ['n4'], ['n4']], {outputs: 3});
+    flow.addOutput('n4');
 
-    let payloadObject = {
-      structure: {qubits: 1, cbits: 1},
+    let payloadObject = [{
+      structure: {qubits: 3, cbits: 3},
       register: undefined,
       qubit: 0,
-    };
+    }, {
+      structure: {qubits: 3, cbits: 3},
+      register: undefined,
+      qubit: 1,
+    }, {
+      structure: {qubits: 3, cbits: 3},
+      register: undefined,
+      qubit: 2,
+    }];
 
     testUtil.qubitsPassedThroughGate(flow, payloadObject, done);
   });
