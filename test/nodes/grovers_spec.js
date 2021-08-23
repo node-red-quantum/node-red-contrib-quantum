@@ -1,8 +1,7 @@
-const groversNode = require('../../quantum/nodes/grovers/grovers.js');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
-const assert = require('chai').assert;
 const {FlowBuilder} = require('../flow-builder');
+const groversNode = require('../../quantum/nodes/grovers/grovers.js');
 const errors = require('../../quantum/errors');
 
 

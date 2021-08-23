@@ -29,7 +29,7 @@
     "setup": "(npm run link && npm run venv) && echo Setup complete - run 'npm start' to open Node-RED",
     "link": "bash bin/link.sh || bin/link.sh",
     "venv": "bash bin/pyvenv.sh || bin/pyvenv.sh",
-    "test": "mocha \"test/**/*_spec.js\"",
+    "test": "mocha \"test/**/*_spec.js\" --timeout 10000",
     "clean": "rm -r venv/ & npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
     "lint": "eslint --fix --ignore-path .gitignore .",
     "postinstall": "npm run venv"
@@ -70,12 +70,12 @@
       "controlled-u-gate": "quantum/nodes/controlled-u-gate/controlled-u-gate.js",
       "multi-controlled-u-gate": "quantum/nodes/multi-controlled-u-gate/multi-controlled-u-gate.js",
       "measure": "quantum/nodes/measure/measure.js",
-      "local-simulator": "quantum/nodes/local-simulator/local-simulator.js",
-      "ibm-quantum-system": "quantum/nodes/ibm-quantum-system/ibm-quantum-system.js",
+      "bloch-sphere": "quantum/nodes/bloch-sphere/bloch-sphere.js",
       "circuit-diagram": "quantum/nodes/circuit-diagram/circuit-diagram.js",
       "script": "quantum/nodes/script/script.js",
-      "grovers":  "quantum/nodes/grovers/grovers.js",
-      "bloch-sphere": "quantum/nodes/bloch-sphere/bloch-sphere.js"
+      "local-simulator": "quantum/nodes/local-simulator/local-simulator.js",
+      "ibm-quantum-system": "quantum/nodes/ibm-quantum-system/ibm-quantum-system.js",
+      "grovers":  "quantum/nodes/grovers/grovers.js"
     }
   }
 }

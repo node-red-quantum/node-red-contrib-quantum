@@ -13,6 +13,7 @@ const NODES = {
   'identity-gate': require('../quantum/nodes/identity-gate/identity-gate.js'),
   'local-simulator': require('../quantum/nodes/local-simulator/local-simulator.js'),
   'measure': require('../quantum/nodes/measure/measure.js'),
+  'multi-controlled-u-gate': require('../quantum/nodes/multi-controlled-u-gate/multi-controlled-u-gate.js'),
   'not-gate': require('../quantum/nodes/not-gate/not-gate.js'),
   'phase-gate': require('../quantum/nodes/phase-gate/phase-gate.js'),
   'quantum-circuit': require('../quantum/nodes/quantum-circuit/quantum-circuit.js'),
@@ -44,6 +45,24 @@ class FlowBuilder {
   }
 
   /**
+   * Return the ID of the first node.
+   *
+   * @return {string} The nodes ID string.
+  */
+  get inputId() {
+    return this.flow[0].id;
+  }
+
+  /**
+   * Return the ID of the last node.
+   *
+   * @return {string} The nodes ID string.
+  */
+  get outputId() {
+    return this.flow[this.flow.length - 1].id;
+  }
+
+  /**
    * Add a quantum node to the flow.
    *
    * @param {string} name The name of the node.
@@ -55,9 +74,11 @@ class FlowBuilder {
     if (!NODES.hasOwnProperty(name)) {
       throw new Error(`Failed to find node ${name}`);
     }
-    let json = {id: id, wires: [wires], type: name, name: name.replace(/-/g, ' ')};
+    let json = {id: id, wires: wires, type: name, name: name.replace(/-/g, ' ')};
     Object.assign(json, properties);
-    this.nodes.push(NODES[name]);
+    if (!this.nodes.includes(NODES[name])) {
+      this.nodes.push(NODES[name]);
+    }
     this.flow.push(json);
   }
 
