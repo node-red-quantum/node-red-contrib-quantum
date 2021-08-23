@@ -20,7 +20,7 @@
   ],
   "files": [
     "bin/",
-    "quantum/",
+    "nodes/",
     "AUTHORS",
     "CHANGELOG.md"
   ],
