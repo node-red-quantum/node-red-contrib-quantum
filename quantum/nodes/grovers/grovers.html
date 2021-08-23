@@ -1,26 +1,28 @@
 <script type="text/javascript">
-  RED.nodes.registerType("hadamard-gate", {
-    category: "quantum",
-    color: "#ad3989",
+  RED.nodes.registerType("grovers", {
+    category: "quantum algorithms",
+    color: "#737177",
     defaults: {
       name: { value: "" },
     },
     inputs: 1,
     outputs: 1,
-    icon: "font-awesome/fa-header",
+    icon: "font-awesome/fa-search",
     align: "right",
-    paletteLabel: "hadamard gate",
+    paletteLabel: "Grovers",
     label: function () {
-      return this.name || "hadamard";
+      return this.name || "Grovers";
     },
-    inputLabels: "Qubit",
-    outputLabels: "Qubit",
+    inputLabels: "Input",
+    outputLabels: "Output",
   });
 </script>
 
-<script type="text/html" data-template-name="hadamard-gate">
+<script type="text/html" data-template-name="grovers">
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
 </script>
+
+
