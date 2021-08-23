@@ -12,7 +12,7 @@
       The 'control' qubit state is not affected.
       <br /><br />
       <a href="https://qiskit.org/textbook/ch-gates/multiple-qubits-entangled-states.html#cnot">CNOT gate - Qiskit textbook</a><br/>
-      <a href="https://qiskit.org/documentation/stubs/qiskit.circuit.library.CXGate.html">CNOT gate - Qiskit documentation</a>
+      <a href="https://qiskit.org/documentation/stubs/qiskit.circuit.QuantumCircuit.html#qiskit.circuit.QuantumCircuit.cx">CNOT gate - Qiskit documentation</a>
       <br /><br />
       Now, let's assume the 'target' qubit is in the '0' state. <br />
       If the 'control' qubit is in a <b>superposition</b> state (25% '0' / 75% '1'),
@@ -23,7 +23,8 @@
       </ul>
       The 2 qubits are now connected by a 'spooky' phenomenon called <b>entanglement</b>.
       <br/><br/>
-      <a href="https://qiskit.org/textbook/ch-gates/multiple-qubits-entangled-states.html#entangled">Entanglement - Qiskit textbook</a>  
+      <a href="https://qiskit.org/textbook/ch-gates/multiple-qubits-entangled-states.html#entangled">Entanglement - Qiskit textbook</a>
+      <br /><br />  
     </p>
   
     <h3>Inputs</h3>
@@ -50,22 +51,25 @@
         <dd>"Quantum Circuit"</dd>
       </dl>
   
+    <br />
     <h3>Details</h3>
+      <br />
       <p>
-          Qubit objects can be generated from:
-          <ul>
-          <li><i>Quantum Circuit</i> node in 'Bits only' mode.</li>
-          <li><i>Quantum Register</i> node along with <i>Quantum Circuit</i> in 'Register' mode.</li>
-          </ul>
-  
-          Unless specified, qubits are initialised in the 0 state.
-      </p>
-      
-      <p>
+        Qubit objects can be generated from:
+        <ul>
+        <li><i>Quantum Circuit</i> node in 'Bits only' mode.</li>
+        <li><i>Quantum Register</i> node along with <i>Quantum Circuit</i> in 'Register' mode.</li>
+        </ul>
+        Unless specified, qubits are initialised in the 0 state.
+        <br /><br />
         <b>
           For a brief summary of the main quantum computing concepts, please refer to the 
           <i>Details</i> section of the <i>Quantum Circuit</i> node.
         </b>
+        <br /><br />
+        <a href="https://flows.nodered.org/node/node-red-contrib-quantum">Node-RED Quantum documentation - Node-RED website</a><br/>
+        <a href="https://www.npmjs.com/package/node-red-contrib-quantum">Node-RED Quantum documentation - NPM website</a>
+        <br /><br />
       </p>
   </script>
   

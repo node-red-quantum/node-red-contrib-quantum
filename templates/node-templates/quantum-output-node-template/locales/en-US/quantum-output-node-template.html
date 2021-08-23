@@ -4,9 +4,9 @@
   </p>
   <p>
     <!-- In depth description of the node's features and how to use (node properties, node connections, ...) -->
+    <!-- For quantum circuit output nodes, please be specific on where and how to connect the node in the quantum circuit -->
     <br/><br/>
-    <a href="">Template output - Qiskit textbook</a><br/> <!-- Insert url to Qiskit textbook -->
-    <a href="">Template output - Qiskit documentation</a> <!-- Insert url to Qiskit documentation -->
+    <a href=""><!-- Template Output --> - Qiskit documentation</a> <!-- Insert url to Qiskit documentation -->
   </p>
 
   <h3>Inputs</h3>
@@ -14,7 +14,7 @@
         <dt>payload
             <span class="property-type">object</span>
         </dt>
-        <dd>All qubit of the quantum circuit.</dd>
+        <dd>All qubit objects of the quantum circuit.</dd>
         <dt class="optional">topic 
           <span class="property-type">string</span>
         </dt>
@@ -24,30 +24,33 @@
   <h3>Outputs</h3>
     <dl class="message-properties">
       <dt>payload
-          <span class="property-type">object</span>
+          <span class="property-type">object</span> <!-- Change the payload type -->
       </dt>
-      <dd>The output generated from the quantum circuit.</dd> <!-- Change according to the quantum output being implemented -->
+      <dd>The output generated from the quantum circuit.</dd> <!-- Change according to the quantum output being generated -->
       <dt class="optional">topic 
         <span class="property-type">string</span>
       </dt>
       <dd>"Quantum Circuit"</dd>
     </dl>
 
+  <br />
   <h3>Details</h3>
+    <br />
     <p>
-        Qubit objects can be generated from:
-        <ul>
+      Qubit objects can be generated from:
+      <ul>
         <li><i>Quantum Circuit</i> node in 'Bits only' mode.</li>
         <li><i>Quantum Register</i> node along with <i>Quantum Circuit</i> in 'Register' mode.</li>
-        </ul>
-
-        Unless specified, qubits are initialised in the 0 state.
-    </p>
-    
-    <p>
+      </ul>
+      Unless specified, qubits are initialised in the 0 state.
+      <br /><br />
       <b>
         For a brief summary of the main quantum computing concepts, please refer to the 
         <i>Details</i> section of the <i>Quantum Circuit</i> node.
       </b>
+      <br /><br />
+      <a href="https://flows.nodered.org/node/node-red-contrib-quantum">Node-RED Quantum documentation - Node-RED website</a><br/>
+      <a href="https://www.npmjs.com/package/node-red-contrib-quantum">Node-RED Quantum documentation - NPM website</a>
+      <br /><br />
     </p>
 </script>
