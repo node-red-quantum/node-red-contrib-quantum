@@ -9,8 +9,10 @@ module.exports = function(RED) {
   function IBMQuantumSystemNode(config) {
     RED.nodes.createNode(this, config);
     this.apiToken = config.api_token;
+    this.chosenSystem = config.chosen_system;
     this.preferredBackend = config.preferred_backend;
     this.outputPreference = config.preferred_output;
+    this.shots = config.shots || 1;
     this.qubits = [];
     this.qreg = '';
     const node = this;
@@ -33,6 +35,7 @@ module.exports = function(RED) {
         reset();
         return;
       }
+
 
       // If the quantum circuit does not have registers
       if (typeof(msg.payload.register) === 'undefined') {
@@ -108,13 +111,21 @@ module.exports = function(RED) {
         if (node.preferredBackend) {
           script += util.format(snippets.IBMQ_SYSTEM_PREFERRED, node.apiToken, node.preferredBackend);
         } else {
-          script += util.format(snippets.IBMQ_SYSTEM_DEFAULT, node.apiToken, node.qubits.length);
+          if (node.chosenSystem == 'Qubit_System') {
+            script += util.format(snippets.IBMQ_SYSTEM_DEFAULT, node.apiToken, node.qubits.length, 'False');
+          } else {
+            if (node.qubits.length > 32) {
+              script += util.format(snippets.IBMQ_SYSTEM_DEFAULT, node.apiToken, node.qubits.length, 'True');
+            } else {
+              script += util.format(snippets.IBMQ_SYSTEM_QASM, node.apiToken);
+            }
+          }
         }
 
         if (node.outputPreference == 'Verbose') {
-          script += snippets.IBMQ_SYSTEM_VERBOSE;
+          script += util.format(snippets.IBMQ_SYSTEM_VERBOSE, node.shots);
         } else {
-          script += snippets.IBMQ_SYSTEM_RESULT;
+          script += util.format(snippets.IBMQ_SYSTEM_RESULT, node.shots);
         }
 
         await shell.execute(script, (err, data) => {

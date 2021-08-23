@@ -49,19 +49,19 @@
     },
 
     oneditprepare: function () {
-      if (document.getElementById("node-input-structure").value == "qubits") {
-        $(".circuit-structure-qubits").addClass("selected");
-        document.getElementById("number-qbitsreg").innerHTML =
-          "Number of qubits";
-        document.getElementById("number-cbitsreg").innerHTML =
-          "Number of classical bits";
-      } else {
-        document.getElementById("node-input-structure").value = "registers";
+      if (document.getElementById("node-input-structure").value == "registers") {
         $(".circuit-structure-registers").addClass("selected");
         document.getElementById("number-qbitsreg").innerHTML =
           "Number of quantum registers";
         document.getElementById("number-cbitsreg").innerHTML =
           "Number of classical registers";
+      } else {
+        document.getElementById("node-input-structure").value = "qubits";
+        $(".circuit-structure-qubits").addClass("selected");
+        document.getElementById("number-qbitsreg").innerHTML =
+          "Number of qubits";
+        document.getElementById("number-cbitsreg").innerHTML =
+          "Number of classical bits";
       }
 
       $(".circuit-structure-qubits").on("click", function () {
@@ -123,15 +123,15 @@
     <span class="circuit-structure-toggle">
       <button
         type="button"
-        class="red-ui-button toggle circuit-structure-registers"
-      >
-        Registers
-      </button>
-      <button
-        type="button"
         class="red-ui-button toggle circuit-structure-qubits"
       >
         Bits only
+      </button>
+      <button
+        type="button"
+        class="red-ui-button toggle circuit-structure-registers"
+      >
+        Registers
       </button>
     </span>
   </div>
