@@ -150,6 +150,10 @@ factors = [] if result.factors == [] else result.factors[0]
 print(factors)
 `;
 
+// const SHORS =
+// `print(%s)
+// `;
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,

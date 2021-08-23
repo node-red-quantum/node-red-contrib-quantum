@@ -115,14 +115,14 @@ function validateRegisterStrucutre(structureInitialised, strucutreExpected) {
   }
 };
 
-function validateShorsInput(params) {
-  if (params < 3) {
+function validateShorsInput(msg) {
+  if (msg.payload < 3) {
     return new Error(GREATER_THAN_TWO);
   }
-  if (params % 2 === 0) {
+  if (msg.payload % 2 === 0) {
     return new Error(INPUT_ODD_INTEGER);
   }
-  if (params % 1 !== 0) {
+  if (typeof(msg.payload) !== 'number' || msg.payload % 1 !== 0) {
     return new Error(INPUT_AN_INTEGER);
   }
   return null;
@@ -138,9 +138,6 @@ module.exports = {
   QUBITS_FROM_DIFFERENT_CIRCUITS,
   SAME_QUBIT_RECEIVED_TWICE,
   BLOCH_SPHERE_WITH_MEASUREMENT,
-  GREATER_THAN_TWO,
-  INPUT_ODD_INTEGER,
-  INPUT_AN_INTEGER,
   validateQubitInput,
   validateRegisterInput,
   validateQubitsFromSameCircuit,
