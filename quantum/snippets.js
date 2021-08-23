@@ -140,8 +140,90 @@ buffer.close()
 `;
 
 const PORTFOLIO_OPTIMISATION =
-`
+`from qiskit.circuit.library import TwoLocal
+from qiskit.aqua import QuantumInstance
+from qiskit.finance.applications.ising import portfolio
+from qiskit.optimization.applications.ising.common import sample_most_likely
+from qiskit.finance.data_providers import RandomDataProvider
+from qiskit.aqua.algorithms import VQE, QAOA, NumPyMinimumEigensolver
+from qiskit.aqua.components.optimizers import COBYLA
+import numpy as np
+import matplotlib.pylot as plt
+import datatime
+
+num_assets = 4
+
+stucks = [("TICKERS%s" % i) for i in range(num_assets)]
+data = RandomDataProvider(tickers=stocks, 
+  start=datetime.datetime(2020,1,1), 
+  end=datetime.datetime(2020,1,30))
+data.run()
+mu = data.get_period_return_mean_vector()
+sigma = data.get_period_return_covariance_matrix()
+
+q = 0.5
+budget = num_assets // 2
+penalty = num_assets
+qubitOp, offset = portfolio.get_operator(mu, sigma, q, budget, penalty)
+
+def index_to_selection(i, num_assets):
+  s = "{0:b}".format(i).rjust(num_assets)
+  x = np.array([1 if s[i]=='1' else 0 for i in reversed(range(num_assets))])
+
+def print_result(result):
+  selection = sample_most_likely(result.eigenstate)
+  value = portfolio.portfolio_value(selection, mu, sigma, q, budget, penalty)
+  print("Optimal: Selection {}, value {:.4f}".format(selection, value))
+
+  eigenvector = result.eigenstate if isinstance(result.eigenstate, np.ndarray) else result.eigenstate.to_matrix()
+  probabilities = np.abs(eigenvector)**2
+  i_sorted = reversed(np.argsort(probabilities))
+  print("\n-----------------------Full Result-----------------------")
+  print("selection\tvalue\t\tprobability")
+  print("---------------------------------------------------------")
+
+  for i in i_sorted:
+    x = index_to_selection(i, num_assets)
+    value = portfolio.portfolio_value(x, mu, sigma, q, budget, penalty)
+    probability = probabilities[i]
+    print("%10s\t%.4f\t\t%.4f" %(x, value, probability))
 `;
+
+const NUMPYMINIMUMEIGENSOLVER =
+`exact_eigensolver = NumPyMinimumEigensolver(qubitOp)
+result = exact_eigensolver.run()
+print_result(result)
+`;
+
+const VQE =
+` backend = Aer.get_backend("statevector_simulator")
+seed = 50
+
+cobyla = COBYLA()
+cobyla.set_options(maxiter=500)
+ry = TwoLocal(qubitOp.num_qubits, "ry", "cz", reps=3, entanglement="full")
+vqe = VQE(qubitOp, ry, cobyla)
+vqe.random_seed = seed
+
+quantum_instance = QuantumInstance(backend=backend, seed_simulator=seed, seed_transpiler=seed)
+result = vqe.run(quantum_instance)
+print_result(result)
+`;
+
+const QAOA = 
+`backend = Aer.get_backend("statevector_simulator")
+seed = 50
+
+cobyla = COBYLA()
+cobyla.set_options(maxiter=250)
+qaoa = QAOA(qubitOp, cobyla, 3)
+qaoa.random_seed = seed
+
+quantum_instance = QuantumInstance(backend=backend, seed_simulator=seed, seed_transpiler=seed)
+result = qaoa.run(quantum_instance)
+print_result(result)
+`;
+
 
 module.exports = {
   IMPORTS,
@@ -170,5 +252,8 @@ module.exports = {
   BLOCH_SPHERE,
   CU_GATE,
   ENCODE_IMAGE,
-  PORTFOLIO_OPTIMISATION
+  PORTFOLIO_OPTIMISATION,
+  NUMPYMINIMUMEIGENSOLVER,
+  QVE,
+  QAOA
 };
