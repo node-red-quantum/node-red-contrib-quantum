@@ -22,7 +22,7 @@ For more details on the authors, please read the [AUTHORS](AUTHORS) file.
 
 For information on how to contribute, please read the [CONTRIBUTING](CONTRIBUTING.md) guidelines.
 
-![Quantum Circuit example](./images/QuantumRandomNumber.png)
+![Quantum Circuit example](./resources/quantum-random-number.png)
 
 
 # Table of contents
