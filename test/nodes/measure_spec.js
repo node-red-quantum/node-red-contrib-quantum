@@ -22,7 +22,7 @@ describe('MeasureNode', function() {
     let flow = new FlowBuilder();
 
     flow.add('quantum-circuit', 'n0', [['n1']],
-      {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
+        {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
     flow.add('not-gate', 'n1', [['n2']]);
     flow.add('measure', 'n2', [['n3']], {selectedBit: '0'});
     flow.add('local-simulator', 'n3', [['n4']], {shots: 1});

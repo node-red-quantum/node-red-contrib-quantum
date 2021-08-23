@@ -10,11 +10,12 @@ module.exports = function(RED) {
   function GroversNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name || 'Grovers';
+    const node = this;
 
     this.on('input', async function(msg, send, done) {
       let error = errors.validateGroversInput(msg);
       if (error) {
-        this.error(error.message);
+        node.error(error.message);
         done();
         return;
       }

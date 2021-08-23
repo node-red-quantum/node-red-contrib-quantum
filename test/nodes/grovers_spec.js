@@ -37,18 +37,18 @@ describe('GroversNode', function() {
     flow.addOutput('n2');
 
     const givenInput = {payload: '111111'};
-    const expectedOutput = { topMeasurement: '111111', iterationsNum: 6};
+    const expectedOutput = {topMeasurement: '111111', iterationsNum: 6};
 
     testUtil.correctOutputReceived(flow, givenInput, expectedOutput, done);
   });
 
   it('should fail on invalid input', function(done) {
-    flow  = new FlowBuilder();
+    flow = new FlowBuilder();
     flow.add('grovers', 'groversNode', []);
 
     nodeTestHelper.load(flow.nodes, flow.flow, function() {
       let groversTestNode = nodeTestHelper.getNode('groversNode');
-      groversTestNode.on('call:error', call => {
+      groversTestNode.on('call:error', (call) => {
         call.should.be.calledWithExactly(errors.NOT_BIT_STRING);
         done();
       });

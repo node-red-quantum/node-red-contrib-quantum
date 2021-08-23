@@ -27,15 +27,13 @@ function correctOutputReceived(flow, givenInput, expectedOutput, done) {
     const outputNodeId = flow.flow[flow.flow.length - 1].id;
     const outputNode = nodeTestHelper.getNode(outputNodeId);
 
-    outputNode.on('input', function(msg){
+    outputNode.on('input', function(msg) {
       try {
         assert.deepEqual(msg.payload, expectedOutput);
         done();
-      }
-      catch(err){
+      } catch (err) {
         done(err);
-      }
-      finally{
+      } finally {
         shell.stop();
       }
     });

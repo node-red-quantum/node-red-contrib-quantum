@@ -7,6 +7,7 @@ const NODES = {
   'classical-register': require('../quantum/nodes/classical-register/classical-register.js'),
   'cnot-gate': require('../quantum/nodes/cnot-gate/cnot-gate.js'),
   'controlled-u-gate': require('../quantum/nodes/controlled-u-gate/controlled-u-gate.js'),
+  'grovers': require('../quantum/nodes/grovers/grovers.js'),
   'hadamard-gate': require('../quantum/nodes/hadamard-gate/hadamard-gate.js'),
   'ibm-quantum-system': require('../quantum/nodes/ibm-quantum-system/ibm-quantum-system.js'),
   'identity-gate': require('../quantum/nodes/identity-gate/identity-gate.js'),
@@ -23,7 +24,6 @@ const NODES = {
   'swap': require('../quantum/nodes/swap/swap.js'),
   'toffoli-gate': require('../quantum/nodes/toffoli-gate/toffoli-gate.js'),
   'unitary-gate': require('../quantum/nodes/unitary-gate/unitary-gate.js'),
-  'grovers': require('../quantum/nodes/grovers/grovers')
 };
 
 class FlowBuilder {
