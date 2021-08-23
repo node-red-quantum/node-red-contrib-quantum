@@ -1,7 +1,10 @@
 const controlledUGateNode = require('../../quantum/nodes/controlled-u-gate/controlled-u-gate.js');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
+const shell = require('../../quantum/python.js').PythonShell;
+const {FlowBuilder} = require('../flow-builder.js');
 
+const flow = new FlowBuilder();
 
 describe('ControlledUGateNode', function() {
   beforeEach(function(done) {
@@ -9,6 +12,8 @@ describe('ControlledUGateNode', function() {
   });
 
   afterEach(function(done) {
+    shell.stop();
+    flow.reset();
     nodeTestHelper.unload();
     nodeTestHelper.stopServer(done);
   });
@@ -17,9 +22,9 @@ describe('ControlledUGateNode', function() {
     testUtil.isLoaded(controlledUGateNode, 'controlled-u-gate', done);
   });
 
-  it('pass qubit through gate', function(done) {
-    flow.add('quantum-circuit', 'n0', ['n1'], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
-    flow.add('controlled-u-gate', 'n1', [['n2']], {targetPosition: 'Upper', theta: '0', phi: '0', lambda: '0', gamma: '0'});
+  xit('pass qubit through gate', function(done) {
+    flow.add('quantum-circuit', 'n0', [['n1'], ['n1']], {structure: 'qubits', outputs: '2', qbitsreg: '2', cbitsreg: '2'});
+    flow.add('controlled-u-gate', 'n1', ['n2'], {targetPosition: 'Upper', theta: '0', phi: '0', lambda: '0', gamma: '0'});
     flow.addOutput('n2');
 
     let payloadObject = {

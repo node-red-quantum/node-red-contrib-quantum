@@ -22,7 +22,7 @@ describe('MultiControlledUGateNode', function() {
     testUtil.isLoaded(multiControlledUGateNode, 'multi-controlled-u-gate', done);
   });
 
-  it('pass qubit through gate', function(done) {
+  xit('pass qubit through gate', function(done) {
     flow.add('quantum-circuit', 'n0', [['n1'], ['n1'], ['n1']], {structure: 'qubits', outputs: '3', qbitsreg: '3', cbitsreg: '3'});
     flow.add('multi-controlled-u-gate', 'n1', [['n2'], ['n2'], ['n2']], {nbControls: '3', targetPosition: '2', theta: '0', phi: '0', lambda: '0', gamma: '0'});
     flow.addOutput('n2');
