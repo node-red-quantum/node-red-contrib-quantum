@@ -1,8 +1,9 @@
-const phaseGateNode = require('../../quantum/nodes/phase-gate/phase-gate.js');
+const util = require('util');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
-const shell = require('../../quantum/python.js').PythonShell;
-const {FlowBuilder} = require('../flow-builder.js');
+const {FlowBuilder} = require('../flow-builder');
+const phaseGateNode = require('../../quantum/nodes/phase-gate/phase-gate.js');
+const snippets = require('../../quantum/snippets.js');
 
 const flow = new FlowBuilder();
 
@@ -12,7 +13,6 @@ describe('PhaseGateNode', function() {
   });
 
   afterEach(function(done) {
-    shell.stop();
     flow.reset();
     nodeTestHelper.unload();
     nodeTestHelper.stopServer(done);
@@ -23,8 +23,8 @@ describe('PhaseGateNode', function() {
   });
 
   it('pass qubit through gate', function(done) {
-    flow.add('quantum-circuit', 'n0', ['n1'], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
-    flow.add('phase-gate', 'n1', ['n2'], {phase: '1'});
+    flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
+    flow.add('phase-gate', 'n1', [['n2']], {phase: '1'});
     flow.addOutput('n2');
 
     let payloadObject = {
@@ -34,5 +34,14 @@ describe('PhaseGateNode', function() {
     };
 
     testUtil.qubitsPassedThroughGate(flow, payloadObject, done);
+  });
+
+  it('execute command', function(done) {
+    let command = util.format(snippets.PHASE_GATE, '0*pi', '0');
+    flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
+    flow.add('phase-gate', 'n1', [['n2']], {phase: '0'});
+    flow.addOutput('n2');
+
+    testUtil.commandExecuted(flow, command, done);
   });
 });

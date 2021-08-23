@@ -73,9 +73,11 @@ class FlowBuilder {
     if (!NODES.hasOwnProperty(name)) {
       throw new Error(`Failed to find node ${name}`);
     }
-    let json = {id: id, wires: [wires], type: name, name: name.replace(/-/g, ' ')};
+    let json = {id: id, wires: wires, type: name, name: name.replace(/-/g, ' ')};
     Object.assign(json, properties);
-    this.nodes.push(NODES[name]);
+    if (!this.nodes.includes(NODES[name])) {
+      this.nodes.push(NODES[name]);
+    }
     this.flow.push(json);
   }
 

@@ -1,8 +1,9 @@
-const resetNode = require('../../quantum/nodes/reset/reset.js');
+const util = require('util');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
-const shell = require('../../quantum/python.js').PythonShell;
-const {FlowBuilder} = require('../flow-builder.js');
+const {FlowBuilder} = require('../flow-builder');
+const resetNode = require('../../quantum/nodes/reset/reset.js');
+const snippets = require('../../quantum/snippets.js');
 
 const flow = new FlowBuilder();
 
@@ -12,7 +13,6 @@ describe('ResetNode', function() {
   });
 
   afterEach(function(done) {
-    shell.stop();
     flow.reset();
     nodeTestHelper.unload();
     nodeTestHelper.stopServer(done);
@@ -23,8 +23,8 @@ describe('ResetNode', function() {
   });
 
   it('pass qubit through node', function(done) {
-    flow.add('quantum-circuit', 'n0', ['n1'], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
-    flow.add('reset', 'n1', ['n2']);
+    flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
+    flow.add('reset', 'n1', [['n2']]);
     flow.addOutput('n2');
 
     let payloadObject = {
@@ -34,5 +34,14 @@ describe('ResetNode', function() {
     };
 
     testUtil.qubitsPassedThroughGate(flow, payloadObject, done);
+  });
+
+  it('execute command', function(done) {
+    let command = util.format(snippets.RESET, '0');
+    flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
+    flow.add('reset', 'n1', [['n2']]);
+    flow.addOutput('n2');
+
+    testUtil.commandExecuted(flow, command, done);
   });
 });

@@ -1,8 +1,9 @@
-const swapNode = require('../../quantum/nodes/swap/swap.js');
+const util = require('util');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
-const shell = require('../../quantum/python.js').PythonShell;
-const {FlowBuilder} = require('../flow-builder.js');
+const {FlowBuilder} = require('../flow-builder');
+const swapNode = require('../../quantum/nodes/swap/swap.js');
+const snippets = require('../../quantum/snippets.js');
 
 const flow = new FlowBuilder();
 
@@ -12,7 +13,6 @@ describe('SwapNode', function() {
   });
 
   afterEach(function(done) {
-    shell.stop();
     flow.reset();
     nodeTestHelper.unload();
     nodeTestHelper.stopServer(done);
@@ -23,7 +23,8 @@ describe('SwapNode', function() {
   });
 
   xit('pass qubit through node', function(done) {
-    flow.add('quantum-circuit', 'n0', [['n1'], ['n1']], {structure: 'qubits', outputs: '2', qbitsreg: '2', cbitsreg: '2'});
+    flow.add('quantum-circuit', 'n0', [['n1'], ['n1']],
+        {structure: 'qubits', outputs: '2', qbitsreg: '2', cbitsreg: '2'});
     flow.add('swap', 'n1', [['n2'], ['n2']]);
     flow.addOutput('n2');
 
@@ -37,5 +38,15 @@ describe('SwapNode', function() {
     ];
 
     testUtil.qubitsPassedThroughGate(flow, payloadObject, done);
+  });
+
+  it('execute command', function(done) {
+    let command = util.format(snippets.SWAP, '0', '1');
+    flow.add('quantum-circuit', 'n0', [['n1'], ['n1']],
+        {structure: 'qubits', outputs: '2', qbitsreg: '2', cbitsreg: '1'});
+    flow.add('swap', 'n1', [['n2']]);
+    flow.addOutput('n2');
+
+    testUtil.commandExecuted(flow, command, done);
   });
 });

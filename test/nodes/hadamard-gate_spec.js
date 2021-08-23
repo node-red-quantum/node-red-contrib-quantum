@@ -1,8 +1,9 @@
-const hadamardGateNode = require('../../quantum/nodes/hadamard-gate/hadamard-gate.js');
+const util = require('util');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
-const shell = require('../../quantum/python.js').PythonShell;
-const {FlowBuilder} = require('../flow-builder.js');
+const {FlowBuilder} = require('../flow-builder');
+const hadamardGateNode = require('../../quantum/nodes/hadamard-gate/hadamard-gate.js');
+const snippets = require('../../quantum/snippets.js');
 
 const flow = new FlowBuilder();
 
@@ -12,7 +13,6 @@ describe('HadamardGateNode', function() {
   });
 
   afterEach(function(done) {
-    shell.stop();
     flow.reset();
     nodeTestHelper.unload();
     nodeTestHelper.stopServer(done);
@@ -23,8 +23,8 @@ describe('HadamardGateNode', function() {
   });
 
   it('pass qubit through gate', function(done) {
-    flow.add('quantum-circuit', 'n0', ['n1'], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
-    flow.add('hadamard-gate', 'n1', ['n2']);
+    flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
+    flow.add('hadamard-gate', 'n1', [['n2']]);
     flow.addOutput('n2');
 
     let payloadObject = {
@@ -34,5 +34,14 @@ describe('HadamardGateNode', function() {
     };
 
     testUtil.qubitsPassedThroughGate(flow, payloadObject, done);
+  });
+
+  it('execute command', function(done) {
+    let command = util.format(snippets.HADAMARD_GATE, '0');
+    flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
+    flow.add('hadamard-gate', 'n1', [['n2']]);
+    flow.addOutput('n2');
+
+    testUtil.commandExecuted(flow, command, done);
   });
 });

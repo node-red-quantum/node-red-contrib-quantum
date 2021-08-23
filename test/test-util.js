@@ -1,12 +1,9 @@
 const assert = require('chai').assert;
 const shell = require('../quantum/python').PythonShell;
 const nodeTestHelper = require('node-red-node-test-helper');
-// const quantumCircuitNode = require('../quantum/nodes/quantum-circuit/quantum-circuit.js');
-// const {FlowBuilder} = require('./flow-builder.js');
-
-// const generatedFlow = new FlowBuilder();
 
 nodeTestHelper.init(require.resolve('node-red'));
+
 
 // Test that node is successfully loaded into Node-RED.
 function isLoaded(node, nodeName, done) {
@@ -35,8 +32,33 @@ function qubitsPassedThroughGate(generatedFlow, expectedPayload, done) {
         done();
       } catch (err) {
         done(err);
+      } finally {
+        shell.stop();
       }
     });
+    inputNode.receive({payload: ''});
+  });
+}
+
+function commandExecuted(flowBuilder, command, done) {
+  nodeTestHelper.load(flowBuilder.nodes, flowBuilder.flow, function() {
+    let inputNode = nodeTestHelper.getNode(flowBuilder.inputId);
+    let outputNode = nodeTestHelper.getNode(flowBuilder.outputId);
+    let called = false;
+
+    outputNode.on('input', function() {
+      if (called) return;
+      try {
+        assert.strictEqual(shell.lastCommand, command);
+        done();
+      } catch (err) {
+        done(err);
+      } finally {
+        shell.stop();
+        called = true;
+      }
+    });
+
     inputNode.receive({payload: ''});
   });
 }
@@ -58,5 +80,5 @@ module.exports = {
   nodeTestHelper,
   isLoaded,
   qubitsPassedThroughGate,
-  // nonQuantumFlow,
+  commandExecuted,
 };

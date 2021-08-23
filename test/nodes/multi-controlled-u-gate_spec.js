@@ -1,8 +1,9 @@
-const multiControlledUGateNode = require('../../quantum/nodes/multi-controlled-u-gate/multi-controlled-u-gate.js');
+const util = require('util');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
-const shell = require('../../quantum/python.js').PythonShell;
-const {FlowBuilder} = require('../flow-builder.js');
+const {FlowBuilder} = require('../flow-builder');
+const multiControlledUGateNode = require('../../quantum/nodes/multi-controlled-u-gate/multi-controlled-u-gate.js');
+const snippets = require('../../quantum/snippets.js');
 
 const flow = new FlowBuilder();
 
@@ -12,7 +13,6 @@ describe('MultiControlledUGateNode', function() {
   });
 
   afterEach(function(done) {
-    shell.stop();
     flow.reset();
     nodeTestHelper.unload();
     nodeTestHelper.stopServer(done);
@@ -23,8 +23,10 @@ describe('MultiControlledUGateNode', function() {
   });
 
   xit('pass qubit through gate', function(done) {
-    flow.add('quantum-circuit', 'n0', [['n1'], ['n1'], ['n1']], {structure: 'qubits', outputs: '3', qbitsreg: '3', cbitsreg: '3'});
-    flow.add('multi-controlled-u-gate', 'n1', [['n2'], ['n2'], ['n2']], {nbControls: '3', targetPosition: '2', theta: '0', phi: '0', lambda: '0', gamma: '0'});
+    flow.add('quantum-circuit', 'n0', [['n1'], ['n1'], ['n1']],
+        {structure: 'qubits', outputs: '3', qbitsreg: '3', cbitsreg: '3'});
+    flow.add('multi-controlled-u-gate', 'n1', [['n2'], ['n2'], ['n2']],
+        {nbControls: '3', targetPosition: '2', theta: '0', phi: '0', lambda: '0', gamma: '0'});
     flow.addOutput('n2');
 
     let payloadObject = [
@@ -42,5 +44,16 @@ describe('MultiControlledUGateNode', function() {
       }];
 
     testUtil.qubitsPassedThroughGate(flow, payloadObject, done);
+  });
+
+  it('execute command', function(done) {
+    let command = util.format(snippets.MULTI_CONTROLLED_U_GATE, '0*pi', '0*pi', '0*pi', '1', '[ 1, 0 ]');
+    flow.add('quantum-circuit', 'n0', [['n1'], ['n1']],
+        {structure: 'qubits', outputs: '2', qbitsreg: '2', cbitsreg: '1'});
+    flow.add('multi-controlled-u-gate', 'n1', [['n2'], ['n2']],
+        {outputs: '2', nbControls: '1', targetPosition: '0', theta: '0', phi: '0', lambda: '0'});
+    flow.addOutput('n2');
+
+    testUtil.commandExecuted(flow, command, done);
   });
 });

@@ -1,5 +1,5 @@
-const scriptNode = require('../../quantum/nodes/script/script.js');
 const testUtil = require('../test-util');
+const scriptNode = require('../../quantum/nodes/script/script.js');
 const nodeTestHelper = testUtil.nodeTestHelper;
 
 

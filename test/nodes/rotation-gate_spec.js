@@ -1,8 +1,9 @@
-const rotationGateNode = require('../../quantum/nodes/rotation-gate/rotation-gate.js');
+const util = require('util');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
-const shell = require('../../quantum/python.js').PythonShell;
-const {FlowBuilder} = require('../flow-builder.js');
+const {FlowBuilder} = require('../flow-builder');
+const rotationGateNode = require('../../quantum/nodes/rotation-gate/rotation-gate.js');
+const snippets = require('../../quantum/snippets.js');
 
 const flow = new FlowBuilder();
 
@@ -12,7 +13,6 @@ describe('RotationGateNode', function() {
   });
 
   afterEach(function(done) {
-    shell.stop();
     flow.reset();
     nodeTestHelper.unload();
     nodeTestHelper.stopServer(done);
@@ -23,8 +23,8 @@ describe('RotationGateNode', function() {
   });
 
   it('pass qubit through gate', function(done) {
-    flow.add('quantum-circuit', 'n0', ['n1'], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
-    flow.add('rotation-gate', 'n1', ['n2'], {axis: 'x', angle: '1'});
+    flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
+    flow.add('rotation-gate', 'n1', [['n2']], {axis: 'x', angle: '1'});
     flow.addOutput('n2');
 
     let payloadObject = {
@@ -34,5 +34,14 @@ describe('RotationGateNode', function() {
     };
 
     testUtil.qubitsPassedThroughGate(flow, payloadObject, done);
+  });
+
+  it('execute command', function(done) {
+    let command = util.format(snippets.ROTATION_GATE, 'x', '-0.2*pi', 0);
+    flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
+    flow.add('rotation-gate', 'n1', [['n2']], {axis: 'x', angle: '-0.2'});
+    flow.addOutput('n2');
+
+    testUtil.commandExecuted(flow, command, done);
   });
 });
