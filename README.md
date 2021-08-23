@@ -55,6 +55,16 @@ Node-RED Quantum requires at minimum [Node-RED 1.0](https://nodered.org) and [Py
 
 [Node-RED Quantum wiki](https://github.com/louislefevre/node-red-contrib-quantum/wiki)
 
+
+[Circuit Initialisation nodes](../../wiki/Circuit-Initialisation-Nodes)
+
+[Qubit Control nodes](../../wiki/Qubit-Control-Nodes)
+
+[Quantum Gate nodes](../../wiki/Quantum-Gate-Nodes)
+
+[Circuit Output nodes](../../wiki/Circuit-Output-Nodes)
+
+
 # *'Quantum Algorithms'* nodes - Leveraging quantum computing
 
 [Node-RED Quantum wiki](https://github.com/louislefevre/node-red-contrib-quantum/wiki)
