@@ -1,9 +1,9 @@
 const util = require('util');
 const testUtil = require('../test-util');
-const quantumCircuitNode = require('../../quantum/nodes/quantum-circuit/quantum-circuit.js');
+const quantumCircuitNode = require('../../nodes/quantum/quantum-circuit/quantum-circuit.js');
 const {FlowBuilder} = require('../flow-builder');
 const nodeTestHelper = testUtil.nodeTestHelper;
-const snippets = require('../../quantum/snippets.js');
+const snippets = require('../../nodes/snippets.js');
 
 
 describe('QuantumCircuitNode', function() {

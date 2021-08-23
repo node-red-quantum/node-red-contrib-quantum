@@ -1,8 +1,8 @@
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
 const {FlowBuilder} = require('../flow-builder');
-const blochSphereNode = require('../../quantum/nodes/bloch-sphere/bloch-sphere.js');
-const snippets = require('../../quantum/snippets.js');
+const blochSphereNode = require('../../nodes/quantum/bloch-sphere/bloch-sphere.js');
+const snippets = require('../../nodes/snippets.js');
 
 
 describe('BlochSphereNode', function() {
