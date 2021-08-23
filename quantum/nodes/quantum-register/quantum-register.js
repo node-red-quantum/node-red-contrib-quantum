@@ -85,8 +85,8 @@ module.exports = function(RED) {
       // Creating an array of messages to be sent
       // Each message represents a different qubit
       let binaryArr = undefined;
-      if (flowContext.get('binaryString')) {
-        binaryArr = flowContext.get('binaryString');
+      if (state.get('binaryString')) {
+        binaryArr = state.get('binaryString');
       }
       for (let i = 0; i < node.outputs; i++) {
         if (binaryArr.shift() == 1) {
@@ -119,7 +119,7 @@ module.exports = function(RED) {
         await shell.execute(initScript, (err) => {
           if (err) done(err);
         });
-        if (binaryArr.length == 0) flowContext.set('binaryString', undefined);
+        if (binaryArr.length == 0) state.del('binaryString');
       }
       send(output);
       done();
