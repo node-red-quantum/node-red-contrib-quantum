@@ -68,7 +68,7 @@ module.exports = function(RED) {
           return;
         }
         // Set temporary flow context
-        flowContext.set('binaryString', binaryString.split('').map(x => parseInt(x)));
+        state.setRuntime('binaryString', binaryString.split('').map(x => parseInt(x)));
       }
 
       // Creating a temporary 'quantumCircuitArray' flow context array
@@ -97,8 +97,17 @@ module.exports = function(RED) {
           }
         };
       } else { // If the user does not want to use registers
-        // Add arguments to quantum circuit code
+        // initialise qubit if binary string exists
         script += util.format(snippets.QUANTUM_CIRCUIT, node.qbitsreg + ', ' + node.cbitsreg);
+        let binaryString = state.get('binaryString');
+        if (binaryString) {
+          for (let i = 0; i < binaryString.length; i++) {
+            if (binaryString[i] == 1) {
+              script += util.format(snippets.NOT_GATE, i);
+            }
+          }
+        }
+        // Add arguments to quantum circuit code
 
         // Creating an array of messages to be sent
         // Each message represents a different qubit
@@ -127,6 +136,7 @@ module.exports = function(RED) {
       await shell.execute(script, (err) => {
         if (err) done(err);
         else {
+          state.del('binaryString');
           send(output);
           done();
         }
