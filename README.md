@@ -46,7 +46,18 @@ Node-RED Quantum requires at minimum [Node-RED 1.0](https://nodered.org) and [Py
 
 # Install
 
+1. In the terminal of your machine, install **Node-RED** by executing the command:
+`sudo npm install -g --unsafe-perm node-red`.
 
+2. Once **Node-RED** has been installed, start the application by entering the command `node-red` in the terminal.
+   
+3. Navigate to **Node-RED** by following the IP address returned in the terminal. This will usually be `http://127.0.0.1:1880/`.
+   
+4. In **Node-RED**, navigate to the **Palette Manager** (top-right corner), select **Install** and search for *'quantum'*, as depicted below.
+   
+5. Install the **node-red-contrib-quantum** package. Once installed, it will show as quantum nodes in the **Palette** (on the left of the Node-RED editor). Please note that this installation may take a few minutes, as it needs to install the Python virtual environment required for executing the nodes.
+
+![Node-RED palette manager](./resources/installation-guide/palette-manager.png)
 
 <br /><br />
 
