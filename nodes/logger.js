@@ -34,38 +34,28 @@ function logToFile(fileName, logLevel, message) {
   });
 }
 
-class Logger {
-  constructor(fileName) {
-    this.fileName = fileName;
-    this.info('Logger created');
-  }
-
-  fatal(message) {
-    logToFile(this.fileName, 'FATAL', message);
-  }
-
-  error(message) {
-    logToFile(this.fileName, 'ERROR', message);
-  }
-
-  warn(message) {
-    logToFile(this.fileName, 'WARN', message);
-  }
-
-  info(message) {
-    logToFile(this.fileName, 'INFO', message);
-  }
-
-  debug(message) {
-    logToFile(this.fileName, 'DEBUG', message);
-  }
-
-  trace(message) {
-    logToFile(this.fileName, 'TRACE', message);
-  }
-}
-
 
 let fileName = formatDate(new Date());
 fileName = fileName.replace(/ /g, '_');
-module.exports.Logger = new Logger(`logs/${fileName}.log`);
+fileName = `logs/${fileName}.log`;
+
+module.exports = {
+  fatal(message) {
+    logToFile(fileName, 'FATAL', message);
+  },
+  error(message) {
+    logToFile(fileName, 'ERROR', message);
+  },
+  warn(message) {
+    logToFile(fileName, 'WARN', message);
+  },
+  info(message) {
+    logToFile(fileName, 'INFO', message);
+  },
+  debug(message) {
+    logToFile(fileName, 'DEBUG', message);
+  },
+  trace(message) {
+    logToFile(fileName, 'TRACE', message);
+  },
+};
