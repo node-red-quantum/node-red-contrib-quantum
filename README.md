@@ -1,4 +1,4 @@
-<header><h1 style='font-size: 25pt'>node-red-quantum</h1></header>
+# node-red-quantum
 
 [![platform](https://img.shields.io/badge/platform-Node--RED-red)](https://nodered.org)
 [![CI Status](https://img.shields.io/github/workflow/status/louislefevre/node-red-contrib-quantum/Node.js%20CI)](https://github.com/louislefevre/node-red-contrib-quantum/actions/workflows/node.js.yml)
