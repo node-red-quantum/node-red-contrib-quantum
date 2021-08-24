@@ -1,0 +1,72 @@
+<script type="text/html" data-help-name="bloch-sphere">
+  <p>
+    This node is used to generate a bloch sphere representation of the state of each qubit.
+  </p>
+  <p>
+    To do so, place this node at the end of the quantum circuit and 
+    connect all qubit objects from the circuit.
+    <br />
+    If not all qubit objects are connected, the node will assume that 
+    the circuit has not finished running and will wait indefinitely.
+    <br /><br />
+    To visualise the generated bloch spheres into the Node-RED editor, we recommend to download the 
+    <a href="https://flows.nodered.org/node/node-red-contrib-image-output">node-red-contrib-image-output</a> 
+    module and connect it to the output of the <i>Bloch Sphere</i> node.
+    <br /><br />
+    <b>Careful -</b> <i>Measure</i> nodes are not compatible with the <i>Bloch Sphere</i> node because 
+    the act of measuring a qubit collapses the qubit state.<br/>
+    Please remove <i>Measure</i> nodes from the circuit before using the <i>Bloch Sphere</i> node.
+    <br /><br />
+    For more details on the <b>Bloch Sphere</b> representation of qubit states, please refer to the 
+    <i>Details</i> section of the <i>Quantum Circuit</i> node.
+    <br /><br />
+    <a href="https://qiskit.org/textbook/ch-states/representing-qubit-states.html#bloch-sphere-2">Bloch Sphere - Qiskit textbook</a><br />
+    <a href="https://qiskit.org/documentation/stubs/qiskit.visualization.plot_bloch_multivector.html">Bloch Sphere - Qiskit documentation</a>
+    <br /><br />
+  </p>
+
+  <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">object</span>
+        </dt>
+        <dd>All qubit objects of the quantum circuit.</dd>
+        <dt class="optional">topic 
+          <span class="property-type">string</span>
+        </dt>
+        <dd>"Quantum Circuit"</dd>
+    </dl>
+
+  <h3>Outputs</h3>
+    <dl class="message-properties">
+      <dt>payload
+          <span class="property-type">string</span>
+      </dt>
+      <dd>A base64 string representation of the generated bloch sphere image.</dd>
+      <dt class="optional">topic 
+        <span class="property-type">string</span>
+      </dt>
+      <dd>"Quantum Circuit"</dd>
+    </dl>
+
+  <br />
+  <h3>Details</h3>
+    <br />
+    <p>
+      Qubit objects can be generated from:
+      <ul>
+      <li><i>Quantum Circuit</i> node in 'Bits only' mode.</li>
+      <li><i>Quantum Register</i> node along with <i>Quantum Circuit</i> in 'Register' mode.</li>
+      </ul>
+      Unless specified, qubits are initialised in the 0 state.
+      <br /><br />
+      <b>
+        For a brief summary of the main quantum computing concepts, please refer to the 
+        <i>Details</i> section of the <i>Quantum Circuit</i> node.
+      </b>
+      <br /><br />
+      <a href="https://flows.nodered.org/node/node-red-contrib-quantum">Node-RED Quantum documentation - Node-RED website</a><br/>
+      <a href="https://www.npmjs.com/package/node-red-contrib-quantum">Node-RED Quantum documentation - NPM website</a>
+      <br /><br />
+    </p>
+</script>

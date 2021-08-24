@@ -1,4 +1,4 @@
-const groversNode = require('../../quantum/nodes/grovers/grovers.js');
+const groversNode = require('../../nodes/quantum-algorithms/grovers/grovers.js');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
 const assert = require('chai').assert;
@@ -36,7 +36,7 @@ describe('GroversNode', function() {
       let helperNode = nodeTestHelper.getNode('helperNode');
 
       helperNode.on('input', function(msg) {
-        const expectedPayload = { topMeasurement: '111111', iterationsNum: 6};
+        const expectedPayload = {topMeasurement: '111111', iterationsNum: 6};
         try {
           assert.strictEqual(msg.payload.topMeasurement, expectedPayload.topMeasurement);
           assert.strictEqual(msg.payload.iterationsNum, expectedPayload.iterationsNum);

@@ -1,0 +1,75 @@
+<script type="text/html" data-help-name="cnot-gate">
+    <p>
+      This node allows you to apply a NOT gate to a 'target' qubit if the 'control' qubit is in the '1' state.
+      The NOT gate inverses the qubit state: 0 &#8594; 1 / 1 &#8594; 0.
+    </p>
+    <p>
+      To do this, connect two qubits as input and indicate whether the
+      target is the visually upper or visually lower qubit, out of the two input qubits.
+      <br /><br />
+      In terms of the <b>Bloch Sphere</b>,
+      this corresponds to a reflection of the sphere along the x-axis of the 'target' qubit.<br/>
+      The 'control' qubit state is not affected.
+      <br /><br />
+      <a href="https://qiskit.org/textbook/ch-gates/multiple-qubits-entangled-states.html#cnot">CNOT gate - Qiskit textbook</a><br/>
+      <a href="https://qiskit.org/documentation/stubs/qiskit.circuit.QuantumCircuit.html#qiskit.circuit.QuantumCircuit.cx">CNOT gate - Qiskit documentation</a>
+      <br /><br />
+      Now, let's assume the 'target' qubit is in the '0' state. <br />
+      If the 'control' qubit is in a <b>superposition</b> state (25% '0' / 75% '1'),
+      then the combined state of the 2 qubits will be:
+      <ul>
+        <li>'00' with 25% probability</li>
+        <li>'11' with 75% probability</li>
+      </ul>
+      The 2 qubits are now connected by a 'spooky' phenomenon called <b>entanglement</b>.
+      <br/><br/>
+      <a href="https://qiskit.org/textbook/ch-gates/multiple-qubits-entangled-states.html#entangled">Entanglement - Qiskit textbook</a>
+      <br /><br />  
+    </p>
+  
+    <h3>Inputs</h3>
+      <dl class="message-properties">
+          <dt>payload
+              <span class="property-type">object</span>
+          </dt>
+          <dd>The 2 qubit objects to be used as 'control' & 'target' for the CNOT gate.</dd>
+          <dt class="optional">topic 
+            <span class="property-type">string</span>
+          </dt>
+          <dd>"Quantum Circuit"</dd>
+      </dl>
+  
+    <h3>Outputs</h3>
+      <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">object</span>
+        </dt>
+        <dd>The same qubit objects that were received as input.</dd>
+        <dt class="optional">topic 
+          <span class="property-type">string</span>
+        </dt>
+        <dd>"Quantum Circuit"</dd>
+      </dl>
+  
+    <br />
+    <h3>Details</h3>
+      <br />
+      <p>
+        Qubit objects can be generated from:
+        <ul>
+        <li><i>Quantum Circuit</i> node in 'Bits only' mode.</li>
+        <li><i>Quantum Register</i> node along with <i>Quantum Circuit</i> in 'Register' mode.</li>
+        </ul>
+        Unless specified, qubits are initialised in the 0 state.
+        <br /><br />
+        <b>
+          For a brief summary of the main quantum computing concepts, please refer to the 
+          <i>Details</i> section of the <i>Quantum Circuit</i> node.
+        </b>
+        <br /><br />
+        <a href="https://flows.nodered.org/node/node-red-contrib-quantum">Node-RED Quantum documentation - Node-RED website</a><br/>
+        <a href="https://www.npmjs.com/package/node-red-contrib-quantum">Node-RED Quantum documentation - NPM website</a>
+        <br /><br />
+      </p>
+  </script>
+  
