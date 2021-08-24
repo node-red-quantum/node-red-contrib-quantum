@@ -12,22 +12,13 @@ module.exports = function(RED) {
     this.name = config.name;
 
     this.on('input', async function(msg, send, done) {
-<<<<<<< HEAD
-      // let error = errors.validateShorsInput(msg);
-      // if (error) {
-      //   done(error);
-      //   return;
-      // }
-      const params = Number(msg.payload);
-      const script = util.format(snippets.SHORS, params);
-=======
       let error = errors.validateShorsInput(msg);
       if (error) {
-        done(error);
-        return;
+         this.error(error.message);
+         return;
       }
-      const script = util.format(snippets.SHORS, msg.payload);
->>>>>>> 7c529b7fee59e80670f05584f4ad33ab9491c826
+      const params = Number(msg.payload);
+      const script = util.format(snippets.SHORS, params);
       await shell.start();
       await shell.execute(script, (err, data) => {
         if (err) {
