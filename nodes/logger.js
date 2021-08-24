@@ -14,7 +14,7 @@ function formatDate(date) {
   return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
 
-function logToFile(fileName, logLevel, message) {
+function logToFile(fileName, logLevel, id, message) {
   if (process.env.NODE_ENV !== 'dev') {
     return;
   }
@@ -26,7 +26,7 @@ function logToFile(fileName, logLevel, message) {
 
   let now = new Date();
   let timestamp = formatDate(now);
-  let log = `[${timestamp}] [${logLevel}] ${message}\n`;
+  let log = `[${timestamp}] [${logLevel}] [${id}] ${message}\n`;
   fs.appendFile(fileName, log, function(err) {
     if (err) {
       console.error(`Failed to log to file ${fileName}: ${err}`);
@@ -40,22 +40,22 @@ fileName = fileName.replace(/ /g, '_');
 fileName = `logs/${fileName}.log`;
 
 module.exports = {
-  fatal(message) {
-    logToFile(fileName, 'FATAL', message);
+  fatal(id, message) {
+    logToFile(fileName, 'FATAL', id, message);
   },
-  error(message) {
-    logToFile(fileName, 'ERROR', message);
+  error(id, message) {
+    logToFile(fileName, 'ERROR', id, message);
   },
-  warn(message) {
-    logToFile(fileName, 'WARN', message);
+  warn(id, message) {
+    logToFile(fileName, 'WARN', id, message);
   },
-  info(message) {
-    logToFile(fileName, 'INFO', message);
+  info(id, message) {
+    logToFile(fileName, 'INFO', id, message);
   },
-  debug(message) {
-    logToFile(fileName, 'DEBUG', message);
+  debug(id, message) {
+    logToFile(fileName, 'DEBUG', id, message);
   },
-  trace(message) {
-    logToFile(fileName, 'TRACE', message);
+  trace(id, message) {
+    logToFile(fileName, 'TRACE', id, message);
   },
 };
