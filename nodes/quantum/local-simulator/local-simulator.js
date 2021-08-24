@@ -4,6 +4,7 @@ const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
+const logger = require('../../logger');
 
 module.exports = function(RED) {
   function LocalSimulatorNode(config) {
@@ -20,7 +21,10 @@ module.exports = function(RED) {
       node.qreg = '';
     };
 
+    logger.trace(this.id, 'Initialised local simulator');
+
     this.on('input', async function(msg, send, done) {
+      logger.trace(node.id, 'Local simulator received input');
       let script = '';
       let qubitsArrived = true;
 
@@ -100,6 +104,7 @@ module.exports = function(RED) {
         const params = node.shots;
         script += util.format(snippets.LOCAL_SIMULATOR, params);
         await shell.execute(script, (err, data) => {
+          logger.trace(node.id, 'Executed local simulator command');
           if (err) {
             done(err);
           } else {
