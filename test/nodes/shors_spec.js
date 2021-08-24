@@ -35,14 +35,13 @@ describe('ShorsNode', function() {
       console.log('loaded here');
 
       helperNode.on('input', function(msg) {
-        const expectedFactors = '[3, 5]'
-        try{
+        const expectedFactors = '[3, 5]';
+        try {
           const actualFactors = msg.payload.listOfFactors;
           assert.deepEqual(actualFactors, expectedFactors);
           done();
-        }
-        catch(err) {
-          done(err)
+        } catch (err) {
+          done(err);
         }
       });
 
