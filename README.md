@@ -29,8 +29,6 @@ For information on how to contribute, please read the [CONTRIBUTING](CONTRIBUTIN
 - [Pre-requisites](#pre-requisites)
 - [Install](#install)
 - [About Quantum Computing](#about-quantum-computing)
-  - [Qubit State](#qubit-state)
-  - [Qubit Measurement](#qubit-measurement)
 - [*'Quantum'* nodes - Building quantum circuits](#quantum-nodes---building-quantum-circuits)
 - [*'Quantum Algorithms'* nodes - Leveraging quantum computing](#quantum-algorithms-nodes---leveraging-quantum-computing)
 - [Tutorials & Examples](#tutorials--examples)
@@ -61,7 +59,7 @@ Node-RED Quantum requires at minimum [Node.js 12.0.0](https://nodejs.org/en/), [
 
 # About Quantum Computing
 
-## Qubit State
+## Qubit State <!-- omit in toc -->
 
 A qubit is the same to a quantum computer than what a bit is to a classical computer: the smallest unit of information.<br />
 The <b>Bloch sphere</b> representation is considered as the most simple and ludic way to understand & visualise a qubit (see image below).<br />
@@ -81,9 +79,9 @@ To set the qubit in a particular state, we operate rotations or reflections of t
 <br/><br/>
 
 <img  src="./resources/quantum-computing/bloch-sphere-horizontal.png" width="750px"/>
-<br /><br />
+<br />
 
-## Qubit Measurement
+## Qubit Measurement <!-- omit in toc -->
 
 It is very important to understand that, even though a qubit can take an infinite number of states, our technology only allows us to measure '0' or '1', like on a classical bit. Since we measure and interpret a qubit state using classical machines, this can be seen as a projection of quantum computing back to classical computing: from quantum states back to binary values. <br />
 <a href="https://qiskit.org/textbook/ch-states/representing-qubit-states.html#rules-measurement">Qubit measurement - Qiskit textbook</a>
