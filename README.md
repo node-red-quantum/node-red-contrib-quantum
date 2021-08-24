@@ -106,12 +106,12 @@ In practice, **entanglement** arises when the operation of a gate on a qubit is 
 <b>Example -</b> A CNOT gate applies a NOT gate (0 &#8594; 1 & 1 &#8594; 0) to the 'target' qubit **if and only if** the 'control' qubit is in the '1' state.
 <br /><br />
 Now, let's assume that the 'control' qubit is in a <b>superposition</b> state (25% '0' / 75% '1'), while the 'target' qubit is in the '0' state.<br />
-Then, the combined state of the 2 qubits after applying the CNOT gate will be:
+Then, the <u>combined</u> state of the 2 qubits after applying the CNOT gate will be:
 <ul>
     <li>'00' with 25% probability</li>
     <li>'11' with 75% probability</li>
 </ul>
-The 2 qubits are now <b>entangled</b>.
+The 2 qubits are now <b>entangled</b>. If we measure one of them to be in the '1' state, then we know that other qubit will be in the '1' state as well.
 <br /><br />
 <a href="https://qiskit.org/textbook/ch-gates/multiple-qubits-entangled-states.html#entangled">Entanglement - Qiskit textbook</a>  
 <br /><br />
