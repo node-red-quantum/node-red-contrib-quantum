@@ -33,12 +33,12 @@ For information on how to contribute, please read the [CONTRIBUTING](CONTRIBUTIN
 - [*'Quantum Algorithms'* nodes - Leveraging quantum computing](#quantum-algorithms-nodes---leveraging-quantum-computing)
 - [Tutorials & Examples](#tutorials--examples)
 
-<br /><br />
+<br />
 
 # Pre-requisites
 Node-RED Quantum requires at minimum [Node.js 12.0.0](https://nodejs.org/en/), [Node-RED 1.0](https://nodered.org) and [Python 3](https://www.python.org/).
 
-<br /><br />
+<br />
 
 # Install
 
@@ -55,7 +55,7 @@ Node-RED Quantum requires at minimum [Node.js 12.0.0](https://nodejs.org/en/), [
 
 ![Node-RED palette manager](./resources/installation-guide/palette-manager.png)
 
-<br /><br />
+<br />
 
 # About Quantum Computing
 
@@ -78,8 +78,7 @@ To set the qubit in a particular state, we operate rotations or reflections of t
 <b>Example -</b> Applying a &#960; radians rotation about the x-axis on a qubit that is in the '0 state' will put it in the '1 state'. 
 <br/><br/>
 
-<img  src="./resources/quantum-computing/bloch-sphere-horizontal.png" width="750px"/>
-<br />
+<img  src="./resources/quantum-computing/bloch-sphere-horizontal.png" width="750px"/><br />
 
 ## Qubit Measurement <!-- omit in toc -->
 
@@ -94,7 +93,7 @@ In terms of the <b>Bloch Sphere</b>, the closest the qubit state is from the '1 
 <b>Careful -</b> The act of measuring a qubit collapses the qubit state: the state of the qubit after being measured 
 is not representative of the qubit state before the measurement. Please measure the qubits at the end of the quantum circuit or reset them after a measurement.
 
-<br /><br />
+<br />
 
 # *'Quantum'* nodes - Building quantum circuits
 
@@ -111,14 +110,14 @@ is not representative of the qubit state before the measurement. Please measure 
 
 For detailed information on how to use each node, please head to the [Node-RED Quantum wiki](https://github.com/louislefevre/node-red-contrib-quantum/wiki).
 
-<br /><br />
+<br />
 
 # *'Quantum Algorithms'* nodes - Leveraging quantum computing
 
 For detailed information on how to use each node, please head to the [Node-RED Quantum wiki](https://github.com/louislefevre/node-red-contrib-quantum/wiki).
 
-<br /><br />
+<br />
 
 # Tutorials & Examples
 
-<br /><br />
+<br />
