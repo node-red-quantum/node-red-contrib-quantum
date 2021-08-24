@@ -1,7 +1,8 @@
-const shorsNode = require('../../quantum/nodes/shors/shors.js');
+const shorsNode = require('../../nodes/quantum-algorithms/shors/shors.js');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
 const assert = require('chai').assert;
+
 describe('ShorsNode', function() {
   beforeEach(function(done) {
     nodeTestHelper.startServer(done);
