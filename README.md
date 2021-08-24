@@ -62,9 +62,9 @@ Node-RED Quantum requires at minimum [Node.js 12.0.0](https://nodejs.org/en/), [
 ## Qubit State <!-- omit in toc -->
 
 A qubit is the same to a quantum computer than what a bit is to a classical computer: the smallest unit of information.<br />
-The <b>Bloch sphere</b> representation is considered as the most simple and ludic way to understand & visualise a qubit (see image below).<br />
 <a href="https://qiskit.org/textbook/ch-states/representing-qubit-states.html#statevectors"> Classical vs Quantum bits - Qiskit textbook</a>
 <br /><br />
+The <b>Bloch sphere</b> representation is considered as the most simple and ludic way to understand & visualise a qubit (see image below).
 In contrast with classical bits that can only be in a '0' or a '1' state, qubits can store much more information.
 In fact, all points on the sphere represent a different qubit state, the usual classical bit states being labelled as:
 <ul>
