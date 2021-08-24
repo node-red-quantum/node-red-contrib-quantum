@@ -23,7 +23,7 @@ For more details on the authors, please read the [AUTHORS](AUTHORS) file.
 For information on how to contribute, please read the [CONTRIBUTING](CONTRIBUTING.md) guidelines.
 
 
-![Quantum Circuit example](./resources/quantum-random-number.png)
+![Quantum Circuit example](./resources/quantum-circuit-examples/quantum-random-number.png)
 
 
 # Table of contents
@@ -74,7 +74,7 @@ Node-RED Quantum requires at minimum [Node-RED 1.0](https://nodered.org) and [Py
     <br />
 </div>
 
-<img style="width:30%; float:right; margin-left:5%;" src="./resources/bloch-sphere.png" width="250px"/>
+<img style="width:30%; float:right; margin-left:5%;" src="./resources/quantum-computing/bloch-sphere.png" width="250px"/>
 
 <h3>Qubit Measurement</h3>
 <p>
