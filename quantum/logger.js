@@ -5,22 +5,12 @@ const fs = require('fs');
 
 function formatDate(date) {
   let year = date.getFullYear();
-  let month = date.getMonth() + 1;
-  let day = date.getDate();
-  let hour = date.getHours();
-  let minute = date.getMinutes();
-  let second = date.getSeconds();
+  let month = String(date.getMonth() + 1).padStart(2, '0');
+  let day = String(date.getDate()).padStart(2, '0');
+  let hour = String(date.getHours()).padStart(2, '0');
+  let minute = String(date.getMinutes()).padStart(2, '0');
+  let second = String(date.getSeconds()).padStart(2, '0');
   return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-}
-
-function createFile(file) {
-  fs.writeFile(file, '', function(err) {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log('File ' + file + ' created');
-    }
-  });
 }
 
 function logToFile(fileName, logLevel, message) {
@@ -37,7 +27,7 @@ function logToFile(fileName, logLevel, message) {
 class Logger {
   constructor(fileName) {
     this.fileName = fileName;
-    createFile(fileName);
+    this.info('Logger created');
   }
 
   fatal(message) {
