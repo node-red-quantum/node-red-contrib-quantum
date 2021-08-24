@@ -1,6 +1,7 @@
 `use strict`;
 
 const fs = require('fs');
+const {dirname} = require('path');
 
 
 function formatDate(date) {
@@ -16,6 +17,11 @@ function formatDate(date) {
 function logToFile(fileName, logLevel, message) {
   if (process.env.NODE_ENV !== 'dev') {
     return;
+  }
+
+  let dir = dirname(fileName);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
   }
 
   let now = new Date();
