@@ -28,6 +28,7 @@ For information on how to contribute, please read the [CONTRIBUTING](CONTRIBUTIN
 <br /><br />
 
 # Table of contents
+- [node-red-quantum](#node-red-quantum)
 - [Prologue](#prologue)
 - [Table of contents](#table-of-contents)
 - [Pre-requisites](#pre-requisites)
@@ -113,13 +114,15 @@ Node-RED Quantum requires at minimum [Node-RED 1.0](https://nodered.org) and [Py
 # *'Quantum'* nodes - Building quantum circuits
 
 
-[Circuit Initialisation nodes](../../wiki/Circuit-Initialisation-Nodes)
+* [Circuit Initialisation nodes](https://github.com/louislefevre/node-red-contrib-quantum/wiki/Circuit-Initialisation-Nodes)
 
-[Qubit Control nodes](../../wiki/Qubit-Control-Nodes)
+* [Qubit Control nodes](https://github.com/louislefevre/node-red-contrib-quantum/wiki/Qubit-Control-Nodes)
 
-[Quantum Gate nodes](../../wiki/Quantum-Gate-Nodes)
+* [Quantum Gate nodes](https://github.com/louislefevre/node-red-contrib-quantum/wiki/Quantum-Gate-Nodes)
 
-[Circuit Output nodes](../../wiki/Circuit-Output-Nodes)
+* [Circuit Output nodes](https://github.com/louislefevre/node-red-contrib-quantum/wiki/Circuit-Output-Nodes)
+
+<br/>
 
 For detailed information on how to use each node, please head to the [Node-RED Quantum wiki](https://github.com/louislefevre/node-red-contrib-quantum/wiki).
 
