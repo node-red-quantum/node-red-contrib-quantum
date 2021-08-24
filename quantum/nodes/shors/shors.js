@@ -18,7 +18,7 @@ module.exports = function(RED) {
       //   done(error);
       //   return;
       // }
-      const params = node.integer;
+      const params = Number(msg.payload);
       const script = util.format(snippets.SHORS, params);
       await shell.start();
       await shell.execute(script, (err, data) => {
