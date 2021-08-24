@@ -30,8 +30,11 @@
     "link": "bash bin/link.sh || bin/link.sh",
     "venv": "bash bin/pyvenv.sh || bin/pyvenv.sh",
     "test": "mocha \"test/**/*_spec.js\" --timeout 10000",
-    "clean": "rm -r venv/ & npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
     "lint": "eslint --fix --ignore-path .gitignore .",
+    "rmlogs": "rm -r logs/",
+    "rmvenv": "rm -r venv/",
+    "unlink": "npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
+    "clean": "npm run rmlogs & npm run rmvenv & npm run unlink",
     "postinstall": "npm run venv"
   },
   "dependencies": {
