@@ -5,10 +5,12 @@ on:
     branches: [ master ]
     paths:
       - 'quantum/**'
+      - 'test/**'
   pull_request:
     branches: [ master ]
     paths:
       - 'quantum/**'
+      - 'test/**'
 
 jobs:
   build:
