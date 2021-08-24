@@ -29,7 +29,7 @@ function logToFile(fileName, logLevel, message) {
   let log = `[${timestamp}] [${logLevel}] ${message}\n`;
   fs.appendFile(fileName, log, function(err) {
     if (err) {
-      console.log(err);
+      console.error(`Failed to log to file ${fileName}: ${err}`);
     }
   });
 }
