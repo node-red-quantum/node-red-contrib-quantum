@@ -1,6 +1,6 @@
 const assert = require('chai').assert;
 const nodeTestHelper = require('node-red-node-test-helper');
-const shell = require('../quantum/python.js').PythonShell;
+const shell = require('../nodes/python.js').PythonShell;
 
 nodeTestHelper.init(require.resolve('node-red'));
 

@@ -1,4 +1,4 @@
-const qubitNode = require('../../quantum/nodes/qubit/qubit.js');
+const qubitNode = require('../../nodes/quantum/qubit/qubit.js');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
 
