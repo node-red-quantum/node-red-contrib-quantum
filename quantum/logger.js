@@ -14,6 +14,10 @@ function formatDate(date) {
 }
 
 function logToFile(fileName, logLevel, message) {
+  if (process.env.NODE_ENV !== 'dev') {
+    return;
+  }
+
   let now = new Date();
   let timestamp = formatDate(now);
   let log = `[${timestamp}] [${logLevel}] ${message}\n`;

@@ -25,7 +25,7 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "start": "node-red || npx node-red",
+    "start": "export NODE_ENV=dev && (node-red || npx node-red)",
     "setup": "(npm run link && npm run venv) && echo Setup complete - run 'npm start' to open Node-RED",
     "link": "bash bin/link.sh || bin/link.sh",
     "venv": "bash bin/pyvenv.sh || bin/pyvenv.sh",
