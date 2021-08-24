@@ -25,6 +25,7 @@ For information on how to contribute, please read the [CONTRIBUTING](CONTRIBUTIN
 
 ![Quantum Circuit example](./resources/quantum-circuit-examples/quantum-random-number.png)
 
+<br /><br />
 
 # Table of contents
 - [Prologue](#prologue)
@@ -36,16 +37,18 @@ For information on how to contribute, please read the [CONTRIBUTING](CONTRIBUTIN
 - [*'Quantum Algorithms'* nodes - Leveraging quantum computing](#quantum-algorithms-nodes---leveraging-quantum-computing)
 - [Tutorials & Examples](#tutorials--examples)
 
-
+<br /><br />
 
 # Pre-requisites
 Node-RED Quantum requires at minimum [Node-RED 1.0](https://nodered.org) and [Python 3](https://www.python.org/).
 
-
+<br /><br />
 
 # Install
 
 
+
+<br /><br />
 
 # About Quantum Computing
 
@@ -92,14 +95,11 @@ Node-RED Quantum requires at minimum [Node-RED 1.0](https://nodered.org) and [Py
     Please measure the qubits at the end of the quantum circuit or reset them after a measurement.
     <br /><br />
     <a href="https://qiskit.org/textbook/ch-states/representing-qubit-states.html#rules-measurement">Qubit measurement - Qiskit textbook</a>
-    <br /><br />
 </p>
 
-
+<br /><br />
 
 # *'Quantum'* nodes - Building quantum circuits
-
-[Node-RED Quantum wiki](https://github.com/louislefevre/node-red-contrib-quantum/wiki)
 
 
 [Circuit Initialisation nodes](../../wiki/Circuit-Initialisation-Nodes)
@@ -110,9 +110,16 @@ Node-RED Quantum requires at minimum [Node-RED 1.0](https://nodered.org) and [Py
 
 [Circuit Output nodes](../../wiki/Circuit-Output-Nodes)
 
+For detailed information on how to use each node, please head to the [Node-RED Quantum wiki](https://github.com/louislefevre/node-red-contrib-quantum/wiki).
+
+<br /><br />
 
 # *'Quantum Algorithms'* nodes - Leveraging quantum computing
 
-[Node-RED Quantum wiki](https://github.com/louislefevre/node-red-contrib-quantum/wiki)
+For detailed information on how to use each node, please head to the [Node-RED Quantum wiki](https://github.com/louislefevre/node-red-contrib-quantum/wiki).
+
+<br /><br />
 
 # Tutorials & Examples
+
+<br /><br />
