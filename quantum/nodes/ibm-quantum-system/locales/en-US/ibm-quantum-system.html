@@ -1,13 +1,111 @@
 <script type="text/html" data-help-name="ibm-quantum-system">
+  <p>
+    This node sends the quantum circuit to be run on an actual quantum system and outputs the results.
+    The quantum backends are provided by IBM Quantum Services.
+  </p>
+  <p>
+    <b>1 -</b>
+    To do so, you need to open an <a href="https://www.ibm.com/account/">IBMid account</a> (free) and use it to 
+    sign in with <a href="https://quantum-computing.ibm.com/">IBM Quantum</a>. From the dashboard, 
+    you will be able to copy your API token and paste it into the node's properties. 
+    <br/><br/>
+    <b>2 -</b>
+    Then, you can either choose to run your circuit on:
+    <ul>
+      <li>The least busy remote IBM quantum simulator</li>
+      <li>The least busy actual IBM quantum system</li>
+    </ul>
+    <b>OR</b>
+  </p>
+  <p>
+    If you want to use a specific quantum backend from IBM, you can indicate 
+    its name in the 'Specific Quantum Backend' input field (e.g. 'ibmq_lima'). If empty, the node 
+    will use the least busy backend with enough qubits to run your circuit.
+    <br /><br />
+    You can find a list of 
+    <a href="https://quantum-computing.ibm.com/services?services=systems&systems=yours">quantum backends</a>
+    in your IBM Quantum account. <br/>
+    Please be aware that because of cloud services availability, your circuit will be put in a queue, 
+    waiting to be executed on an IBM backend which can take some time. You can check your 
+    <a href="https://quantum-computing.ibm.com/jobs?jobs=circuit">job status</a> from your IBM Quantum account.
+    <br /><br />
+    <b>3 -</b> 
+    Indicate the number of times you would like to simulate the circuit (shots). 
+    <br /><br />
+    <b>4 -</b>
+    By default, this node only returns the results (counts) of the quantum circuit. 
+    However, you can select the 'Verbose' output option to include more information such as the
+    quantum machine it was run on, the job ID, the time it took to run etc.
+    <br /><br />
+    <b>5 -</b>
+    Finally, place this node at the end of the quantum circuit and connect all qubit objects.
+    <br />
+    If not all qubit objects are connected, the node will assume that 
+    the circuit has not finished running and will wait indefinitely.
+    <br /><br />
+    The <b>output of a quantum circuit</b> correspond to the value of the classical bits that were set up with the circuit. <br />
+    The <i>Measure</i> node is the only node capable of changing a classical bit value. Simulating a quantum circuit
+    without any <i>Measure</i> nodes will simply result in all the shots generating the same number: the default classical 
+    bits value (e.g. 000 for 3 bits).
+    <br /><br />
+    The number of shots refers to the number of times the circuit is run to obtain
+    a probability distribution of results. This is due to the probabilistic nature of qubit measurements.<br />
+    The 'counts' refer to the number of shots that resulted in each output of the circuit.<br />
+    For more information about qubit measurements, please refer to the <i>Measure</i> node documentation.
+    <br /><br />
+    <a href="https://quantum-computing.ibm.com/services/docs/services/manage/systems/">About IBM Quantum Systems</a> <br/>
+    <a href="https://qiskit.org/documentation/stubs/qiskit.result.Result.html#qiskit.result.Result.get_counts">Counts output - Qiskit documentation</a>
+    <br /><br />
+  </p>
+
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>payload
+          <span class="property-type">object</span>
+      </dt>
+      <dd>All qubit objects of the quantum circuit.</dd>
+      <dt class="optional">topic 
+        <span class="property-type">string</span>
+      </dt>
+      <dd>"Quantum Circuit"</dd>
+  </dl>
+
+  <h3>Outputs</h3>
+    <dl class="message-properties">
+      <dt>payload
+          <span class="property-type">dictionary</span>
+      </dt>
+      <dd>
+        A dictionary where each key correspond to a different output (e.g. 00, 01, 10, 11) and
+        the associated value is the count: the number of shots that resulted in this output.
+        <br /><br />
+        To illustrate, a two qubits circuit run with 1000 shots could output:<br/>
+        {00: 25, 01: 925, 10: 25, 11: 25}
+      </dd>
+      <dt class="optional">topic 
+        <span class="property-type">string</span>
+      </dt>
+      <dd>"Quantum Circuit"</dd>
+    </dl>
+
+  <br />
+  <h3>Details</h3>
+    <br />
     <p>
-      <!-- Node documentation goes here. -->
-      This node is for running your quantum flow on an actual quantum computer via
-      IBM Quantum. <br /><br />
-      To use this node you must enter your API token for your IBM Quantum account
-      and enter the quantum backend which you would like to use to run your
-      quantum flow. <br /><br />
-      By default, this node returns only the results of the quantum flow, but the
-      'Verbose' output option can be selected to include information about the
-      quantum machine it was run on, the job ID, etc.
+      Qubit objects can be generated from:
+      <ul>
+      <li><i>Quantum Circuit</i> node in 'Bits only' mode.</li>
+      <li><i>Quantum Register</i> node along with <i>Quantum Circuit</i> in 'Register' mode.</li>
+      </ul>
+      Unless specified, qubits are initialised in the 0 state.
+      <br /><br />
+      <b>
+        For a brief summary of the main quantum computing concepts, please refer to the 
+        <i>Details</i> section of the <i>Quantum Circuit</i> node.
+      </b>
+      <br /><br />
+      <a href="https://flows.nodered.org/node/node-red-contrib-quantum">Node-RED Quantum documentation - Node-RED website</a><br/>
+      <a href="https://www.npmjs.com/package/node-red-contrib-quantum">Node-RED Quantum documentation - NPM website</a>
+      <br /><br />
     </p>
   </script>

@@ -39,10 +39,22 @@ const SAME_QUBIT_RECEIVED_TWICE =
 'Please connect the right number of qubits to the node. For circuit output nodes, ' +
 'all qubits should be connected as input. There should be only 1 instance of each qubit at all times in the circuit.';
 
+const NOT_BIT_STRING =
+'Only bit string consisting 0 and 1 are allowed';
+
 const BLOCH_SPHERE_WITH_MEASUREMENT =
 'The "Bloch Sphere Diagram" node is not compatible with "Measure" nodes because ' +
 'measuring a qubit can collapse its state and lead to inconsistencies.\n'+
 'Please disconnect or remove any "Measure" node from the quantum circuit.';
+
+const GREATER_THAN_TWO =
+'The input integer should be greater than 2';
+
+const INPUT_ODD_INTEGER =
+'The input integer should be odd';
+
+const INPUT_AN_INTEGER =
+'The input number should an integer';
 
 function validateQubitInput(msg) {
   let keys = Object.keys(msg.payload);
@@ -66,6 +78,14 @@ function validateRegisterInput(msg) {
   } else if ((keys.includes('register') && typeof msg.payload.register !== 'number') || keys.includes('qubit')) {
     return new Error(NOT_REGISTER_OBJECT);
   } else return null;
+};
+
+function validateGroversInput(msg) {
+  const regex = new RegExp('^[0-1]{1,}$');
+  if (!regex.test(msg.payload)) {
+    return new Error(NOT_BIT_STRING);
+  }
+  return null;
 };
 
 function validateQubitsFromSameCircuit(qubits) {
@@ -106,6 +126,19 @@ function validateRegisterStrucutre(structureInitialised, strucutreExpected) {
   }
 };
 
+function validateShorsInput(msg) {
+  if (msg.payload < 3) {
+    return new Error(GREATER_THAN_TWO);
+  }
+  if (msg.payload % 2 === 0) {
+    return new Error(INPUT_ODD_INTEGER);
+  }
+  if (typeof(msg.payload) !== 'number' || msg.payload % 1 !== 0) {
+    return new Error(INPUT_AN_INTEGER);
+  }
+  return null;
+};
+
 module.exports = {
   NOT_QUANTUM_NODE,
   USE_REGISTER_NODES,
@@ -120,4 +153,6 @@ module.exports = {
   validateRegisterInput,
   validateQubitsFromSameCircuit,
   validateRegisterStrucutre,
+  validateGroversInput,
+  validateShorsInput,
 };

@@ -7,34 +7,27 @@ const {PythonShellClass} = require('../../python');
 const shell = new PythonShellClass();
 
 module.exports = function(RED) {
-  function ShorsNode(config) {
+  function GroversNode(config) {
     RED.nodes.createNode(this, config);
-    this.name = config.name;
+    this.name = config.name || 'Grovers';
 
     this.on('input', async function(msg, send, done) {
-<<<<<<< HEAD
-      // let error = errors.validateShorsInput(msg);
-      // if (error) {
-      //   done(error);
-      //   return;
-      // }
-      const params = Number(msg.payload);
-      const script = util.format(snippets.SHORS, params);
-=======
-      let error = errors.validateShorsInput(msg);
+      let error = errors.validateGroversInput(msg);
       if (error) {
         done(error);
         return;
       }
-      const script = util.format(snippets.SHORS, msg.payload);
->>>>>>> 7c529b7fee59e80670f05584f4ad33ab9491c826
+
+      const script = util.format(snippets.GROVERS, msg.payload);
       await shell.start();
       await shell.execute(script, (err, data) => {
         if (err) {
           done(err);
         } else {
+          data = data.split('\n');
           msg.payload = {
-            listOfFactors: data,
+            topMeasurement: data[0],
+            iterationsNum: Number(data[1]),
           };
           send(msg);
           done();
@@ -43,5 +36,5 @@ module.exports = function(RED) {
       shell.stop();
     });
   }
-  RED.nodes.registerType('shors', ShorsNode);
+  RED.nodes.registerType('grovers', GroversNode);
 };

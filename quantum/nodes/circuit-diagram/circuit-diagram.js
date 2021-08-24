@@ -93,10 +93,6 @@ module.exports = function(RED) {
           return;
         }
 
-        // Emptying the runtime variables upon output
-        node.qubits = [];
-        node.qreg = '';
-
         let script = snippets.CIRCUIT_DIAGRAM + snippets.ENCODE_IMAGE;
         await shell.execute(script, (err, data) => {
           if (err) {

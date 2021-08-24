@@ -4,7 +4,6 @@ const nodeTestHelper = testUtil.nodeTestHelper;
 const assert = require('chai').assert;
 const shell = require('../../quantum/python').PythonShell;
 
-
 describe('ShorsNode', function() {
   beforeEach(function(done) {
     nodeTestHelper.startServer(done);
@@ -50,8 +49,6 @@ describe('ShorsNode', function() {
         finally{
           shell.stop();
         }
-      });
-
       shorsTestNode.receive({payload: 15});
     });
   });
