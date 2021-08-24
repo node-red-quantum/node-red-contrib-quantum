@@ -2,8 +2,8 @@ const util = require('util');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
 const {FlowBuilder} = require('../flow-builder');
-const rotationGateNode = require('../../quantum/nodes/rotation-gate/rotation-gate.js');
-const snippets = require('../../quantum/snippets.js');
+const rotationGateNode = require('../../nodes/quantum/rotation-gate/rotation-gate.js');
+const snippets = require('../../nodes/snippets.js');
 
 
 describe('RotationGateNode', function() {
