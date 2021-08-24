@@ -129,6 +129,7 @@ module.exports = function(RED) {
             output[i].res = msg.res;
           }
         };
+        state.del('binaryString');
       }
 
       // Sending one register object per node output
@@ -136,7 +137,6 @@ module.exports = function(RED) {
       await shell.execute(script, (err) => {
         if (err) done(err);
         else {
-          state.del('binaryString');
           send(output);
           done();
         }
