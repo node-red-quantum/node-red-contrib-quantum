@@ -5,7 +5,7 @@ const {dirname} = require('path');
 
 
 function formatDate(date) {
-  let year = date.getFullYear();
+  let year = String(date.getFullYear());
   let month = String(date.getMonth() + 1).padStart(2, '0');
   let day = String(date.getDate()).padStart(2, '0');
   let hour = String(date.getHours()).padStart(2, '0');
