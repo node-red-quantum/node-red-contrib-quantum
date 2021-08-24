@@ -1,9 +1,9 @@
 const util = require('util');
 const testUtil = require('../test-util');
-const classicalRegisterNode = require('../../quantum/nodes/classical-register/classical-register.js');
+const classicalRegisterNode = require('../../nodes/quantum/classical-register/classical-register.js');
 const {FlowBuilder} = require('../flow-builder');
 const nodeTestHelper = testUtil.nodeTestHelper;
-const snippets = require('../../quantum/snippets.js');
+const snippets = require('../../nodes/snippets.js');
 
 describe('ClassicalRegisterNode', function() {
   beforeEach(function(done) {

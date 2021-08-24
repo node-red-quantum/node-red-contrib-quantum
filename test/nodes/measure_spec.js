@@ -2,8 +2,8 @@ const util = require('util');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
 const {FlowBuilder} = require('../flow-builder');
-const measureNode = require('../../quantum/nodes/measure/measure.js');
-const snippets = require('../../quantum/snippets.js');
+const measureNode = require('../../nodes/quantum/measure/measure.js');
+const snippets = require('../../nodes/snippets.js');
 
 
 describe('MeasureNode', function() {

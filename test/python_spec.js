@@ -1,4 +1,4 @@
-const shell = require('../quantum/python').PythonShell;
+const shell = require('../nodes/python').PythonShell;
 const assert = require('chai').assert;
 const dedent = require('dedent-js');
 
