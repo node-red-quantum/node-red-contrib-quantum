@@ -9,7 +9,6 @@ module.exports = function(RED) {
   function NotGateNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
-    const node = this;
 
     this.on('input', async function(msg, send, done) {
       let script = '';
@@ -26,7 +25,7 @@ module.exports = function(RED) {
       if (typeof msg.payload.register === 'undefined') {
         script += util.format(snippets.NOT_GATE, msg.payload.qubit);
       } else {
-        script += util.format(snippets.NOT_GATE, `msg.payload.registerVar + '[' + msg.payload.qubit + ']'`);
+        script += util.format(snippets.NOT_GATE, msg.payload.registerVar + '[' + msg.payload.qubit + ']');
       }
 
       // Run the script in the python shell, and if no error occurs

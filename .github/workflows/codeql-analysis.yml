@@ -3,8 +3,12 @@ name: "CodeQL"
 on:
   push:
     branches: [ master ]
+    paths:
+      - '**.js'
   pull_request:
     branches: [ master ]
+    paths:
+      - '**.js'
 
 jobs:
   analyze:
@@ -18,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript', 'python' ]
+        language: ['javascript']
 
     steps:
     - name: Checkout repository

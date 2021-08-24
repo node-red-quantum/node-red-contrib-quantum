@@ -133,7 +133,7 @@
 
 <script type="text/html" data-template-name="measure">
   <div class="form-row">
-    <label for="node-input-name"><i class="fa fa-tag"></i> Measure Node</label>
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
   <div class="form-row" hidden>
@@ -143,14 +143,4 @@
     <input type="text" id="node-input-classicalRegistersOrBits" disabled />
   </div>
   <div id="reg-form"></div>
-</script>
-
-<script type="text/html" data-help-name="measure">
-  <p>
-    This node measures the value of a qubit in order to convert the
-    superpositioned qubit to a classical bit of value 0 or 1. <br /><br />
-    To use this node you must have a classical bits initialised in the circuit
-    then you must select the classical bit to which you wish to send the result
-    of the measurement.
-  </p>
 </script>

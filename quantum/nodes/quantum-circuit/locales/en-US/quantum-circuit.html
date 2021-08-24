@@ -1,0 +1,139 @@
+<script type="text/html" data-help-name="quantum-circuit">
+  <p>
+    This node initialises a quantum circuit. 
+  </p>
+  <p>
+    To use this node, first select whether you wish to build a circuit with:
+    <ul>
+      <li><b>Bits only</b> &#8594; qubits & classical bits</li>
+      <li><b>Registers & Bits</b> &#8594; quantum & classical registers storing qubits and classical bits respectively</li>
+    </ul>
+    Registers are used to group bits with the same role together
+    for circuit structuring purposes.
+    <br /><br />
+    Then, you must inform the number of:
+    <ul>
+      <li>Qubits & Classical bits in <b>Bits only</b> mode</li>
+      <li>Quantum & Classical registers in <b>Registers</b> mode</li>
+    </ul>
+    This will define the number of outputs of the <i>Quantum Circuit</i> node. 
+    <br/><br/>
+    In fact, the node will generate and output:
+    <ul>
+      <li>Qubit objects in <b>Bits only</b> mode: to flow through the quantum gate nodes of the algorithm
+      <li>Register objects in <b>Registers</b> mode: must be connected to <i>Quantum Register</i> & <i>Classical Register</i> nodes</li>
+    </ul>
+    <br />
+    By default, qubits are initialised in the '0 state'. <br/>
+    To initialise the qubits in a specific state ('0' or '1'), you can pass a binary string in <code>msg.payload.binaryString</code> 
+    to the <i>Quantum Circuit</i> node. The string must have a length equal to the total number of qubits in the circuit: 1 bit 
+    initialises 1 qubit (e.g. '001101' for a 6 qubits circuit). <br />
+    The first (visually higher) qubit will be set according to the first bit of the string, second higher qubit by the second bit, etc. 
+    <br /><br />
+    Classical bits, either in a register or as individual bits, are crucial in a quantum circuit to store the result of qubit measurements.
+    <br /><br />
+    <a href="https://qiskit.org/documentation/stubs/qiskit.circuit.QuantumCircuit.html">Quantum Circuit - Qiskit documentation</a>
+    <br /><br />
+    <a href="https://flows.nodered.org/node/node-red-contrib-quantum">Node-RED Quantum documentation - Node-RED website</a><br/>
+    <a href="https://www.npmjs.com/package/node-red-contrib-quantum">Node-RED Quantum documentation - NPM website</a>
+    <br /><br />
+  </p>
+
+  <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">any</span>
+        </dt>
+        <dd>The Quantum Circuit will be triggered upon receiving any message.</dd>
+        <dt class="optional">payload.binaryString
+          <span class="property-type">string</span>
+        </dt>
+        <dd>
+          This optional property can be used to specify a binary string according to which the qubit states will be initialised.
+        </dd>
+        <dt class="optional">topic 
+          <span class="property-type">string</span>
+        </dt>
+        <dd>The topic (optional) can be set to anything.</dd>
+    </dl>
+  
+  <h3>Outputs</h3>
+    <h5><b>Bits only</b> mode</h4>
+      <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">object</span>
+        </dt>
+        <dd>
+          The same number of qubits objects that was specified in the properties, one per node output port.
+          The first qubit (lowest index) will be the visually higher qubit, second qubit the second higher, etc.
+        </dd>
+        <dt class="optional">topic 
+          <span class="property-type">string</span>
+        </dt>
+        <dd>"Quantum Circuit"</dd>
+      </dl>
+
+    <h5><b>Registers</b> mode</h5>
+    <dl class="message-properties">
+      <dt>payload
+          <span class="property-type">object</span>
+      </dt>
+      <dd>
+        The same number of register objects (quantum & classical) that was specified in the properties, one per node output port.
+        The first register (lowest index) will be the visually higher register, second register the second higher, etc.
+      </dd>
+      <dt class="optional">topic 
+        <span class="property-type">string</span>
+      </dt>
+      <dd>"Quantum Circuit"</dd>
+    </dl>
+
+  <br />
+  <h3>Details</h3>
+    <br />
+    <h5>Qubit State</h5>
+    <p>
+      A qubit is the same to a quantum computer than what a bit is to a classical computer: the smallest unit of information.
+      <br /><br />
+      <a href="https://qiskit.org/textbook/ch-states/representing-qubit-states.html#statevectors"> Classical vs Quantum bits - Qiskit textbook</a>
+      <br /><br />
+      The <b>Bloch sphere</b> representation is considered as the most simple and ludic way to understand & visualise a qubit (see image below).
+      <br /><br />
+      In contrast with classical bits that can only be in a '0' or a '1' state, qubits can store much more information.
+      In fact, all points on the sphere represent a different qubit state, the usual classical bit states being labelled as:
+      <ul>
+        <li>State 0</li>
+        <li>State 1</li>
+      </ul>
+      Quantum states that are in between those 2 points are a weighted combination of the '0' and '1' states. This is called <b>superposition</b>. <br/>
+      To set the qubit in a particular state, we operate rotations or reflections of the <b>Bloch sphere</b> while keeping the x, y and z axis unchanged.
+      <br /><br />
+      <b>Example:</b> Applying a &#960; radians rotation about the x-axis on a qubit that is in the '0 state' will put it in the '1 state'. 
+      <br/><br/>
+      <a href="https://qiskit.org/textbook/ch-states/representing-qubit-states.html#bloch-sphere-2">Bloch Sphere - Qiskit textbook</a>
+    </p>
+
+    <blockquote class="imgur-embed-pub" lang="en" data-id="a/Wn9xZ9F" data-context="false" >
+      <a href="//imgur.com/a/Wn9xZ9F">Bloch Sphere representation of quantum bits &amp; Probabilistic measurements</a>
+    </blockquote>
+
+    <h5>Qubit Measurement</h5>
+    <p>
+      It is very important to understand that, even though a qubit can take an infinite number of states, our technology only allows us to measure '0' or '1', like on a classical bit.
+      <br/><br/>
+      Since we measure and interpret a qubit state using classical machines, this can be seen as a projection of quantum computing back to classical computing: from quantum states back to binary values.
+      <br /><br />
+      This leads to probabilistic measurement results.
+      In terms of the <b>Bloch Sphere</b>, the closest the qubit state is from the '1 state', the more likely we are to measure a '1'.
+      <br/><br/>
+      <b>Example:</b> If we measure a 1000 times a qubit that has a state in the x-y plane, then we will get more or less 500 '0' measurements and 500 '1' measurements. 
+      <br/><br/>
+      <b>Careful -</b> The act of measuring a qubit collapses the qubit state: the state of the qubit after being measured 
+      is not representative of the qubit state before the measurement.<br/>
+      Please measure the qubits at the end of the quantum circuit or reset them after a measurement.
+      <br /><br />
+      <a href="https://qiskit.org/textbook/ch-states/representing-qubit-states.html#rules-measurement">Qubit measurement - Qiskit textbook</a>
+    </p>
+  
+  <script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+</script>

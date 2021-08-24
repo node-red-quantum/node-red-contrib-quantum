@@ -2,58 +2,54 @@
 
 const os = require('os');
 const path = require('path');
-const appRoot = require('app-root-path').path;
-const dedent = require('dedent-js');
 const fileSystem = require('fs');
-const pythonScript = require('python-shell').PythonShell;
 const pythonExecutable = os.platform() === 'win32' ? 'venv/Scripts/python.exe' : 'venv/bin/python';
-const pythonPath = path.resolve(appRoot, pythonExecutable);
+const pythonPath = path.resolve(__dirname + '/..', pythonExecutable);
 const childProcess = require('child_process');
+const replaceAll = require('string.prototype.replaceall');
 const Mutex = require('async-mutex').Mutex;
 const mutex = new Mutex();
 
 
-function createPromise(process) {
+async function createPromise(process) {
   return new Promise((resolve, reject) => {
-    let outputData = '';
-    let errorData = '';
+    let stdoutData = '';
+    let stderrData = '';
+    let stdoutDone = false;
+    let stderrDone = false;
+
+    let done = function() {
+      process.stdout.removeAllListeners();
+      process.stderr.removeAllListeners();
+      if (stderrData.trim()) {
+        reject(stderrData.trim());
+      } else {
+        resolve(stdoutData.trim());
+      }
+    };
 
     process.stdout.on('data', function(data) {
-      let done = false;
-
-      if (data.match(/#CommandStart#/)) {
-        data = data.replace(/#CommandStart#/, '');
-      } if (data.match(/#CommandEnd#/)) {
-        data = data.replace(/#CommandEnd#/, '');
-        done = true;
-      }
-      outputData += data;
-
-      if (done) {
-        process.stdout.removeAllListeners();
-        process.stderr.removeAllListeners();
-        if (errorData.trim()) {
-          reject(errorData);
-        } else {
-          resolve(outputData);
+      stdoutData += data;
+      if (stdoutData.includes('#StdoutEnd#')) {
+        stdoutData = stdoutData.replace('#StdoutEnd#', '');
+        stdoutDone = true;
+        if (stdoutDone && stderrDone) {
+          done();
         }
       }
     });
 
     process.stderr.on('data', function(data) {
-      if (data.includes('>>>')) {
-        data = data.replace(/>>>/g, '');
-      } if (data.includes('...')) {
-        data = data.replace(/.../g, '');
+      stderrData += data;
+      if (stderrData.includes('#StderrEnd#')) {
+        stderrData = replaceAll(stderrData, '>>>', '');
+        stderrData = replaceAll(stderrData, '...', '');
+        stderrData = stderrData.replace('#StderrEnd#', '');
+        stderrDone = true;
+        if (stdoutDone && stderrDone) {
+          done();
+        }
       }
-
-      // When the input is a code block, the result will sometimes (seemingly non-deterministicly)
-      // be a single period. This is a workaround to prevent it being added to the output.
-      if (data.trim() === '.') {
-        data = '';
-      }
-
-      errorData += data;
     });
   });
 }
@@ -68,6 +64,8 @@ class PythonShell {
   constructor(path) {
     this.path = path ? path : pythonPath;
     this.script = '';
+    this.process = null;
+    this.lastCommand = '';
   }
 
   /**
@@ -88,25 +86,25 @@ class PythonShell {
    * @throws {Error} Throws an Error if the Python process has not been started.
   */
   async execute(command, callback) {
-    if (!this.process) {
-      throw new Error('Python process has not been started - call start() before executing commands.');
-    }
+    return mutex.runExclusive(async () => {
+      if (!this.process) {
+        throw new Error('Python process has not been started - call start() before executing commands.');
+      }
 
-    let promise;
-    await mutex.runExclusive(async () => {
-      command = command ? dedent(command) : '';
-      this.script += '\n' + command + '\n';
-      command = '\nprint("#CommandStart#")\n' + command + '\nprint("#CommandEnd#")\n';
+      command = command ? command : '';
+      this.lastCommand = command;
+      command = '\n' + command + '\n';
+      this.script += command;
+      command += '\nprint("#StdoutEnd#")\n';
+      command += 'from sys import stderr; print("#StderrEnd#", file=stderr)\n';
 
-      promise = createPromise(this.process)
-          .then((data) => callback !== undefined ? callback(null, data.trim()) : data.trim())
-          .catch((err) => callback !== undefined ? callback(err.trim(), null) : err.trim());
-
+      let promise = createPromise(this.process)
+          .then((data) => callback !== undefined ? callback(null, data) : data)
+          .catch((err) => callback !== undefined ? callback(err, null) : err);
       this.process.stdin.write(command);
-      promise = await promise;
-    });
 
-    return promise;
+      return promise;
+    });
   }
 
   /**
@@ -119,7 +117,7 @@ class PythonShell {
    * and system information. If not required, this can be ignored.
    * @throws {Error} Throws an Error object if path to the Python executable cannot be found.
   */
-  start() {
+  async start() {
     if (!this.process) {
       if (!fileSystem.existsSync(this.path)) {
         throw new Error(`cannot resolve path for Python executable: ${this.path}`);
@@ -141,10 +139,13 @@ class PythonShell {
   */
   stop() {
     if (this.process) {
-      this.process.stdin.end();
+      this.process.stdin.destroy();
+      this.process.stdout.destroy();
+      this.process.stderr.destroy();
       this.process.kill();
       this.process = null;
       this.script = '';
+      this.lastCommand = '';
     }
   }
 
@@ -158,7 +159,7 @@ class PythonShell {
    * and system information. If not required, this can be ignored.
    * @throws {Error} Throws an Error if the Python executable cannot be found.
   */
-  restart() {
+  async restart() {
     this.stop();
     return this.start();
   }
@@ -171,47 +172,4 @@ class PythonShell {
  * functions, and objects which are created will be kept in memory until the flow ends.
 */
 module.exports.PythonShell = new PythonShell();
-
-/**
- * Runs a Python script file.
- *
- * @param {string}   scriptPath Directory path to the script (excludes file name)
- * @param {string}   scriptName File name of the script
- * @param {string[]} args       Arguments to pass to the script
- * @param {Function} callback   Callback function to invoke with the script results
- * @throws {Error} Throws an Error if the Python executable cannot be found.
-*/
-module.exports.runScript = function(scriptPath, scriptName, args, callback) {
-  if (!fileSystem.existsSync(pythonPath)) {
-    throw new Error(`cannot resolve path for Python executable: ${pythonPath}`);
-  }
-
-  const options = {
-    pythonPath: pythonPath,
-    scriptPath: scriptPath,
-    args: args,
-  };
-
-  pythonScript.run(scriptName, options, callback);
-};
-
-/**
- * Runs a string of Python code.
- *
- * @param {string}   code     Python code to be executed
- * @param {string[]} args     Arguments to pass to the code
- * @param {Function} callback Callback function to invoke with the code results
- * @throws {Error} Throws an Error if the Python executable cannot be found.
-*/
-module.exports.runString = function(code, args, callback) {
-  if (!fileSystem.existsSync(pythonPath)) {
-    throw new Error(`cannot resolve path for Python executable: ${pythonPath}`);
-  }
-
-  const options = {
-    pythonPath: pythonPath,
-    args: args,
-  };
-
-  pythonScript.runString(code, options, callback);
-};
+module.exports.PythonShellClass = PythonShell;
