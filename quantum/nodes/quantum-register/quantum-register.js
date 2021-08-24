@@ -46,7 +46,8 @@ module.exports = function(RED) {
         registerName: node.name,
         registerVar: 'qr' + msg.payload.register.toString(),
       };
-      state.setRuntime('quantumCircuit[' + msg.payload.register.toString() + ']', register);
+      let quantumCircuit = state.get('quantumCircuit');
+      quantumCircuit[msg.payload.register.toString()] = register;
 
       // get quantum circuit config and circuit ready event from flow context
       let quantumCircuitConfig = state.get('quantumCircuitConfig');
@@ -89,7 +90,7 @@ module.exports = function(RED) {
         binaryArr = state.get('binaryString');
       }
       for (let i = 0; i < node.outputs; i++) {
-        if (binaryArr.shift() == 1) {
+        if (binaryArr && binaryArr.shift() == 1) {
           initScript += util.format(snippets.NOT_GATE, `qr${msg.payload.register}[${i}]`);
         }
         output[i] = {
