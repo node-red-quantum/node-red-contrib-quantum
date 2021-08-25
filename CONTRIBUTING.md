@@ -15,8 +15,8 @@ Guidelines on setting up the project, creating new nodes, and writing unit tests
 
 ## Creating Nodes
 - Basic templates for new nodes can be found in the [*templates*](templates/) directory.  
-- Copy the appropriate node template to [*quantum/nodes*](quantum/nodes/), and ensure that you replace every instance of templates name with the name of your new node (including the folder and file names).  
-- For the node to appear in Node-RED, it needs to be added to [*package.json*](package.json). Navigate to the file and locate the "node-red" key, and under "nodes" add the name of your new node and the path of its JavaScript file from root (e.g.`"node-template": "quantum/nodes/node-template/node-template.js"`).  
+- Copy the appropriate node template to [*nodes/quantum*](nodes/quantum/) or [*nodes/quantum-algorithms*](nodes/quantum-algorithms), and ensure that you replace every instance of templates name with the name of your new node (including the folder and file names).  
+- For the node to appear in Node-RED, it needs to be added to [*package.json*](package.json). Navigate to the file and locate the "node-red" key, and under "nodes" add the name of your new node and the path of its JavaScript file from root (e.g.`"node-template": "nodes/quantum/node-template/node-template.js"`).  
 - Before committing any JavaScript code, run the linting command:  
   `npm run lint`  
 
