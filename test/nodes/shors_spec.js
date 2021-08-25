@@ -25,4 +25,26 @@ describe('ShorsNode', function() {
       done();
     });
   });
+  it('return success output on valid input', function(done) {
+    let flow = [{id: 'shorsNode', type: 'shors', wires: [['helperNode']]},
+      {id: 'helperNode', type: 'helper'}];
+
+    nodeTestHelper.load(shorsNode, flow, function() {
+      let shorsTestNode = nodeTestHelper.getNode('shorsNode');
+      let helperNode = nodeTestHelper.getNode('helperNode');
+      console.log('loaded here');
+
+      helperNode.on('input', function(msg) {
+        const expectedPayload = {listOfFactors: '[3, 5]'};
+        try {
+          assert.deepEqual(msg.payload.listOfFactors, expectedPayload.listOfFactors);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+
+      shorsTestNode.receive({payload: 15});
+    });
+  });
 });
