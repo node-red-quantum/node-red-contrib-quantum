@@ -217,7 +217,7 @@ result = exact_eigensolver.run()
 print_result(result)
 `;
 
-const VQE =
+const QVE =
 ` backend = Aer.get_backend("statevector_simulator")
 seed = 50
 
