@@ -2,8 +2,8 @@ const util = require('util');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
 const {FlowBuilder} = require('../flow-builder');
-const identityGateNode = require('../../quantum/nodes/identity-gate/identity-gate.js');
-const snippets = require('../../quantum/snippets.js');
+const identityGateNode = require('../../nodes/quantum/identity-gate/identity-gate.js');
+const snippets = require('../../nodes/snippets.js');
 
 const flow = new FlowBuilder();
 

@@ -2,8 +2,8 @@ const util = require('util');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
 const {FlowBuilder} = require('../flow-builder');
-const swapNode = require('../../quantum/nodes/swap/swap.js');
-const snippets = require('../../quantum/snippets.js');
+const swapNode = require('../../nodes/quantum/swap/swap.js');
+const snippets = require('../../nodes/snippets.js');
 
 const flow = new FlowBuilder();
 

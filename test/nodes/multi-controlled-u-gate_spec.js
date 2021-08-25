@@ -2,8 +2,8 @@ const util = require('util');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
 const {FlowBuilder} = require('../flow-builder');
-const multiControlledUGateNode = require('../../quantum/nodes/multi-controlled-u-gate/multi-controlled-u-gate.js');
-const snippets = require('../../quantum/snippets.js');
+const multiControlledUGateNode = require('../../nodes/quantum/multi-controlled-u-gate/multi-controlled-u-gate.js');
+const snippets = require('../../nodes/snippets.js');
 
 const flow = new FlowBuilder();
 

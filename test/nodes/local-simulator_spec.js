@@ -2,8 +2,8 @@ const util = require('util');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
 const {FlowBuilder} = require('../flow-builder');
-const localSimulatorNode = require('../../quantum/nodes/local-simulator/local-simulator.js');
-const snippets = require('../../quantum/snippets.js');
+const localSimulatorNode = require('../../nodes/quantum/local-simulator/local-simulator.js');
+const snippets = require('../../nodes/snippets.js');
 
 const flow = new FlowBuilder();
 

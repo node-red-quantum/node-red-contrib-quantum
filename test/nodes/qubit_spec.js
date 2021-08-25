@@ -1,5 +1,5 @@
+const qubitNode = require('../../nodes/quantum/qubit/qubit.js');
 const testUtil = require('../test-util');
-const qubitNode = require('../../quantum/nodes/qubit/qubit.js');
 const {FlowBuilder} = require('../flow-builder.js');
 const nodeTestHelper = testUtil.nodeTestHelper;
 
