@@ -35,16 +35,16 @@ describe('ShorsNode', function() {
       console.log('loaded here');
 
       helperNode.on('input', function(msg) {
-        const expectedPayload = {listOfFactors: '[3, 5]'};
+        const expectedFactors = '[3, 5]';
         try {
-          assert.strictEqual(msg.payload.listOfFactors, expectedPayload.listOfFactors);
+          assert.strictEqual(msg.payload.listOfFactors, expectedFactors);
           done();
         } catch (err) {
           done(err);
         }
       });
 
-      shorsTestNode.receive({payload: '15'});
+      shorsTestNode.receive({payload: 15});
     });
   });
 });
