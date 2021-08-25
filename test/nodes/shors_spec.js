@@ -44,7 +44,7 @@ describe('ShorsNode', function() {
         }
       });
 
-      shorsTestNode.receive({payload: 15});
+      shorsTestNode.receive({payload: '15'});
     });
   });
 });
