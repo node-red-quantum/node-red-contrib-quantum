@@ -23,4 +23,15 @@
       <label for="node-input-name"><i class="fa fa-tag"></i> portfolio optimisation</label>
       <input type="text" id="node-input-name" placeholder="Name" />
     </div>
+
+    <div class="form-now">
+      <label for="node-solvermethod"> Portfolio Optimisation Eigensolvers
+        <select name="solverMethod" id="node-solvermethod">
+          <option value="nme">NumPy Minimum Eigensolver (NME)</option>
+          <option value="vqe">Variational Quantum Eigensolver (VQE)</option>
+          <option value="QAOA">Quantum Approximate Optimization Algorithm (QAOA)</option>
+        </select>
+      </label>
+    </div>
+
 </script>

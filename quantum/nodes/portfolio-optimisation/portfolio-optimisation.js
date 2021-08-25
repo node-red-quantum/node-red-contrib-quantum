@@ -11,6 +11,7 @@ module.exports = function(RED) {
     this.name = config.name;
     this.qubits = [];
     this.qreg = '';
+    this.solverMethod = config.solverMethod;
     const node = this;
 
     // Define a 'reset' function to empty the runtime variables upon sending node output
@@ -99,6 +100,7 @@ module.exports = function(RED) {
 
         // Define the node's Qiskit script in `snippets.js`
         script += util.format(snippets.TEMPLATE);
+        send(this.solverMethod);
 
         // Run the Qiskit script in the python shell
         // If no error occur, send the qubit object as node output

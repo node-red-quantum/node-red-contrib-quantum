@@ -211,7 +211,7 @@ def print_result(result):
     print("%10s\t%.4f\t\t%.4f" %(x, value, probability))
 `;
 
-const NUMPYMINIMUMEIGENSOLVER =
+const NME =
 `exact_eigensolver = NumPyMinimumEigensolver(qubitOp)
 result = exact_eigensolver.run()
 print_result(result)
@@ -277,7 +277,7 @@ module.exports = {
   CU_GATE,
   ENCODE_IMAGE,
   PORTFOLIO_OPTIMISATION,
-  NUMPYMINIMUMEIGENSOLVER,
+  NME,
   QVE,
   QAOA
 };
