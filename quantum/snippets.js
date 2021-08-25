@@ -163,12 +163,12 @@ buffer.close()
 
 const PORTFOLIO_OPTIMISATION =
 `from qiskit.circuit.library import TwoLocal
-from qiskit.aqua import QuantumInstance
-from qiskit.finance.applications.ising import portfolio
-from qiskit.optimization.applications.ising.common import sample_most_likely
-from qiskit.finance.data_providers import RandomDataProvider
-from qiskit.aqua.algorithms import VQE, QAOA, NumPyMinimumEigensolver
-from qiskit.aqua.components.optimizers import COBYLA
+from qiskit.utils import QuantumInstance
+import qiskit_finance.applications
+from qiskit_optimization.applications.ising.common import sample_most_likely
+from qiskit_finance.data_providers import RandomDataProvider
+from qiskit.algorithms import VQE, QAOA, NumPyMinimumEigensolver
+from qiskit.algorithms.optimizers import COBYLA
 import numpy as np
 import matplotlib.pylot as plt
 import datatime
@@ -186,7 +186,7 @@ sigma = data.get_period_return_covariance_matrix()
 q = 0.5
 budget = num_assets // 2
 penalty = num_assets
-qubitOp, offset = portfolio.get_operator(mu, sigma, q, budget, penalty)
+qubitOp, offset = portfolioOptimization.get_operator(mu, sigma, q, budget, penalty)
 
 def index_to_selection(i, num_assets):
   s = "{0:b}".format(i).rjust(num_assets)
@@ -194,21 +194,21 @@ def index_to_selection(i, num_assets):
 
 def print_result(result):
   selection = sample_most_likely(result.eigenstate)
-  value = portfolio.portfolio_value(selection, mu, sigma, q, budget, penalty)
+  value = portfolioOptimization.portfolio_value(selection, mu, sigma, q, budget, penalty)
   print("Optimal: Selection {}, value {:.4f}".format(selection, value))
 
   eigenvector = result.eigenstate if isinstance(result.eigenstate, np.ndarray) else result.eigenstate.to_matrix()
   probabilities = np.abs(eigenvector)**2
   i_sorted = reversed(np.argsort(probabilities))
-  print("\n-----------------------Full Result-----------------------")
-  print("selection\tvalue\t\tprobability")
+  print("\\n-----------------------Full Result-----------------------")
+  print("selection\\tvalue\\t\\tprobability")
   print("---------------------------------------------------------")
 
   for i in i_sorted:
     x = index_to_selection(i, num_assets)
-    value = portfolio.portfolio_value(x, mu, sigma, q, budget, penalty)
+    value = portfolioOptimization.portfolio_value(x, mu, sigma, q, budget, penalty)
     probability = probabilities[i]
-    print("%10s\t%.4f\t\t%.4f" %(x, value, probability))
+    print("%10s\\t%.4f\\t\\t%.4f" %(x, value, probability))
 `;
 
 const NME =

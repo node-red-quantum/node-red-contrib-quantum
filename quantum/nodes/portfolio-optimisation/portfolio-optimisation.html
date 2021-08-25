@@ -4,6 +4,7 @@
       color: "#A8A8A8", 
       defaults: { // Add node default variables if needed
         name: { value: "" },
+        solverMethod: {value: "", required: true},
       },
       inputs: 1,
       outputs: 1,
@@ -28,8 +29,8 @@
       <label for="node-solvermethod"> Portfolio Optimisation Eigensolvers
         <select name="solverMethod" id="node-solvermethod">
           <option value="nme">NumPy Minimum Eigensolver (NME)</option>
-          <option value="vqe">Variational Quantum Eigensolver (VQE)</option>
-          <option value="QAOA">Quantum Approximate Optimization Algorithm (QAOA)</option>
+          <option value="qve">Variational Quantum Eigensolver (VQE)</option>
+          <option value="qaoa">Quantum Approximate Optimization Algorithm (QAOA)</option>
         </select>
       </label>
     </div>
