@@ -37,7 +37,7 @@ describe('ShorsNode', function() {
       helperNode.on('input', function(msg) {
         const expectedPayload = {listOfFactors: '[3, 5]'};
         try {
-          assert.deepEqual(msg.payload.listOfFactors, expectedPayload.listOfFactors);
+          assert.strictEqual(msg.payload.listOfFactors, expectedPayload.listOfFactors);
           done();
         } catch (err) {
           done(err);
