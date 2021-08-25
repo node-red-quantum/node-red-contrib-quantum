@@ -20,7 +20,7 @@ module.exports = function(RED) {
       let script = snippets.PORTFOLIO_OPTIMISATION;
       console.log(node.solverMethod);
 
-      if (node.solverMethod == 'qve'){
+      if (node.solverMethod == 'vqe'){
         script += snippets.QVE;
 
       } else if (node.solverMethod == 'qaoa'){
