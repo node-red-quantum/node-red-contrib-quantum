@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# This script sets up a Python virtual environment and installs Qiskit.
-# Note that this is designed to be run in POSIX-compatible environments
-# which use Bash and has not been fully tested.
+# This script sets up a Python virtual environment and installs dependencies.
+# Note that this script is designed to be run in POSIX-compatible environments
+# which use Bash.
 
 # Check OS for paths.
 venv="$PWD/venv"
@@ -37,13 +37,13 @@ fi
 
 # Check that Python path exists. If not, exit unsuccessfully.
 if [[ ! -x "$python_path" ]]; then
-  echo "Error: failed to execute $python_path"
+  echo "Error: failed to find $python_path"
   exit 1
 fi
 
 # Check that pip path exists. If not, exit unsuccessfully.
 if [[ ! -x "$pip_path" ]]; then
-  echo "Error: failed to execute $pip_path"
+  echo "Error: failed to find $pip_path"
   exit 1
 fi
 
@@ -58,11 +58,13 @@ for i in "${!packages[@]}"; do
 
     # If package requires specific version, add it to the command.
     if [ ! -z "${packages[$i]}" ]; then
-      i="$i==${packages[$i]}"
+      pkg_cmd="$i==${packages[$i]}"
+	else
+	  pkg_cmd="$i"
     fi
 
     # Install package.
-    if "$pip_path" install --quiet "$i"; then
+    if "$pip_path" install --quiet "$pkg_cmd"; then
       echo "Successfully installed $i"
     else
       echo "Error: failed to install $i"
