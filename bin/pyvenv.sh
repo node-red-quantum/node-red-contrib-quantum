@@ -35,32 +35,39 @@ else
   echo "Using virtual environment at $venv"
 fi
 
+# Check that Python path exists. If not, exit unsuccessfully.
+if [[ ! -x "$python_path" ]]; then
+  echo "Error: failed to execute $python_path"
+  exit 1
+fi
+
+# Check that pip path exists. If not, exit unsuccessfully.
+if [[ ! -x "$pip_path" ]]; then
+  echo "Error: failed to execute $pip_path"
+  exit 1
+fi
+
+# Dependencies list (empty value means use latest version).
+declare -A packages=(["qiskit"]="" ["matplotlib"]="3.3.4" ["pylatexenc"]="")
 
 # Install package dependencies.
-declare -a packages=("qiskit" "matplotlib==3.3.4" "pylatexenc")
-for i in "${packages[@]}"; do
-  # Check if the package is installed. If yes, exit successfully.
-  if [[ -x "$python_path" ]]; then
-    if "$python_path" -c "import $i" &>/dev/null; then
-      echo "$i is installed"
-      continue
-    fi
-  else
-    echo "Error: failed to execute $python_path"
-    exit 1
-  fi
-
-  # Install package within the virtual environment using pip.
-  if [[ -x "$pip_path" ]]; then
+for i in "${!packages[@]}"; do
+  # Check if the package is installed. If no, install package.
+  if ! "$python_path" -c "import $i" &>/dev/null; then
     echo "Installing $i..."
+
+    # If package requires specific version, add it to the command.
+    if [ ! -z "${packages[$i]}" ]; then
+      i="$i==${packages[$i]}"
+    fi
+
+    # Install package.
     if "$pip_path" install --quiet "$i"; then
       echo "Successfully installed $i"
     else
       echo "Error: failed to install $i"
-      continue
     fi
   else
-    echo "Error: failed to execute $pip_path"
-    exit 1
+    echo "$i is installed"
   fi
 done
