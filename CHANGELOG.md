@@ -1,3 +1,11 @@
+### v0.2.0 - 25-08-2021
+- Improve documentation.
+- Improve front end interface for gate nodes.
+- Add bloch sphere node.
+- Add multi-controlled-U-gate node.
+- Add grovers algorithm node.
+- Add IBM quantum system node.
+
 ### v0.1.1 - 09/08/2021
 - Fix incorrect path to the Python executable
 - Fix Python error messages sometimes being incomplete

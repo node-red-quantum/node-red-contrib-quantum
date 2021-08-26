@@ -161,6 +161,17 @@ print(b64_str)
 buffer.close()
 `;
 
+const SHORS =
+`from qiskit import Aer
+from qiskit.algorithms import Shor
+
+backend = Aer.get_backend('qasm_simulator')
+shor = Shor(quantum_instance=backend)
+result = shor.factor(%s)
+factors = [] if result.factors == [] else result.factors[0]
+print(factors)
+`;
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,
@@ -190,4 +201,5 @@ module.exports = {
   BLOCH_SPHERE,
   CU_GATE,
   ENCODE_IMAGE,
+  SHORS,
 };
