@@ -1,8 +1,9 @@
 const groversNode = require('../../nodes/quantum-algorithms/grovers/grovers.js');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
+const {FlowBuilder} = require('../flow-builder');
+const errors = require('../../nodes/errors');
 const assert = require('chai').assert;
-
 
 describe('GroversNode', function() {
   beforeEach(function(done) {
@@ -19,34 +20,38 @@ describe('GroversNode', function() {
   });
 
   it('default name outputs correctly', function(done) {
-    let flow = [{id: 'groversNode', type: 'grovers', wires: []}];
-    nodeTestHelper.load(groversNode, flow, function() {
+    flow = new FlowBuilder();
+    flow.add('grovers', 'groversNode', []);
+
+    nodeTestHelper.load(flow.nodes, flow.flow, function() {
       let groversTestNode = nodeTestHelper.getNode('groversNode');
-      groversTestNode.should.have.property('name', 'Grovers');
+      groversTestNode.should.have.property('name', 'grovers');
       done();
     });
   });
 
   it('return success output on valid input', function(done) {
-    let flow = [{id: 'groversNode', type: 'grovers', wires: [['helperNode']]},
-      {id: 'helperNode', type: 'helper'}];
+    flow = new FlowBuilder();
+    flow.add('grovers', 'n1', [['n2']]);
+    flow.addOutput('n2');
 
-    nodeTestHelper.load(groversNode, flow, function() {
+    const givenInput = {payload: '111111'};
+    const expectedOutput = {topMeasurement: '111111', iterationsNum: 6};
+    testUtil.correctOutputReceived(flow, givenInput, expectedOutput, done);
+  });
+
+  it('should fail on invalid input', function(done) {
+    flow = new FlowBuilder();
+    flow.add('grovers', 'groversNode', []);
+
+    nodeTestHelper.load(flow.nodes, flow.flow, function() {
       let groversTestNode = nodeTestHelper.getNode('groversNode');
-      let helperNode = nodeTestHelper.getNode('helperNode');
-
-      helperNode.on('input', function(msg) {
-        const expectedPayload = {topMeasurement: '111111', iterationsNum: 6};
-        try {
-          assert.strictEqual(msg.payload.topMeasurement, expectedPayload.topMeasurement);
-          assert.strictEqual(msg.payload.iterationsNum, expectedPayload.iterationsNum);
-          done();
-        } catch (err) {
-          done(err);
-        }
+      groversTestNode.on('call:error', (call)=> {
+        const actualError = call.firstArg;
+        assert.strictEqual(actualError.message, errors.NOT_BIT_STRING);
+        done();
       });
-
-      groversTestNode.receive({payload: '111111'});
+      groversTestNode.receive({payload: '111112'});
     });
   });
 });
