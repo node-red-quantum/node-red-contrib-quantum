@@ -56,6 +56,9 @@ const INPUT_ODD_INTEGER =
 const INPUT_AN_INTEGER =
 'The input number should an integer';
 
+const NO_INTERNET =
+'Failed to connect to the internet.';
+
 function validateQubitInput(msg) {
   let keys = Object.keys(msg.payload);
 
@@ -152,6 +155,7 @@ module.exports = {
   GREATER_THAN_TWO,
   INPUT_ODD_INTEGER,
   INPUT_AN_INTEGER,
+  NO_INTERNET,
   validateQubitInput,
   validateRegisterInput,
   validateQubitsFromSameCircuit,
