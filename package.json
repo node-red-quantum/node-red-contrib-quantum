@@ -30,10 +30,11 @@
     "setup": "npm install --silent && npm run link",
     "link": "bash bin/link.sh || bin/link.sh",
     "venv": "bash bin/pyvenv.sh || bin/pyvenv.sh",
+    "psvenv": "powershell -NoProfile -ExecutionPolicy Bypass -File ./bin/pyvenv.ps1",
     "test": "mocha \"test/**/*_spec.js\" --timeout 10000",
     "clean": "rm -r venv/ & npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
     "lint": "eslint --fix --ignore-path .gitignore .",
-    "postinstall": "npm run venv"
+    "postinstall": "npm run venv || npm run psvenv"
   },
   "dependencies": {
     "async-mutex": "^0.3.1",
