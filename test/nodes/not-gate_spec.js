@@ -2,8 +2,8 @@ const util = require('util');
 const testUtil = require('../test-util');
 const nodeTestHelper = testUtil.nodeTestHelper;
 const {FlowBuilder} = require('../flow-builder');
-const notGateNode = require('../../quantum/nodes/not-gate/not-gate.js');
-const snippets = require('../../quantum/snippets.js');
+const notGateNode = require('../../nodes/quantum/not-gate/not-gate.js');
+const snippets = require('../../nodes/snippets.js');
 
 
 describe('NotGateNode', function() {

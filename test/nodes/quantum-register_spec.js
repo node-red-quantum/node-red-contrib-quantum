@@ -1,9 +1,9 @@
 const util = require('util');
 const testUtil = require('../test-util');
-const quantumRegisterNode = require('../../quantum/nodes/quantum-register/quantum-register.js');
+const quantumRegisterNode = require('../../nodes/quantum/quantum-register/quantum-register.js');
 const {FlowBuilder} = require('../flow-builder');
 const nodeTestHelper = testUtil.nodeTestHelper;
-const snippets = require('../../quantum/snippets.js');
+const snippets = require('../../nodes/snippets.js');
 
 
 describe('QuantumRegisterNode', function() {
