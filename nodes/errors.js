@@ -47,6 +47,9 @@ const BLOCH_SPHERE_WITH_MEASUREMENT =
 'measuring a qubit can collapse its state and lead to inconsistencies.\n'+
 'Please disconnect or remove any "Measure" node from the quantum circuit.';
 
+const NO_INTERNET =
+'Failed to connect to the internet.';
+
 function validateQubitInput(msg) {
   let keys = Object.keys(msg.payload);
 
@@ -127,6 +130,7 @@ module.exports = {
   QUBITS_FROM_DIFFERENT_CIRCUITS,
   SAME_QUBIT_RECEIVED_TWICE,
   BLOCH_SPHERE_WITH_MEASUREMENT,
+  NO_INTERNET,
   validateQubitInput,
   validateRegisterInput,
   validateQubitsFromSameCircuit,

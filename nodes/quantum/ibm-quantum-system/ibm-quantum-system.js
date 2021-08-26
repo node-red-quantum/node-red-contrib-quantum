@@ -1,6 +1,7 @@
 'use strict';
 
 const util = require('util');
+const isOnline = require('is-online');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
@@ -126,6 +127,18 @@ module.exports = function(RED) {
           script += util.format(snippets.IBMQ_SYSTEM_VERBOSE, node.shots);
         } else {
           script += util.format(snippets.IBMQ_SYSTEM_RESULT, node.shots);
+        }
+
+        if (!await isOnline()) {
+          node.status({
+            fill: 'red',
+            shape: 'dot',
+            text: 'Failed to connect',
+          });
+
+          done(new Error(errors.NO_INTERNET));
+          reset();
+          return;
         }
 
         await shell.execute(script, (err, data) => {
