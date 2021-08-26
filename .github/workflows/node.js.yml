@@ -45,17 +45,13 @@ jobs:
         path: venv/
         key: ${{ runner.os }}-venv-${{ hashFiles('bin/pyvenv.sh') }}
 
-    - name: Setup Python virtual environment
-      if: steps.cache-venv.outputs.cache-hit != 'true'
-      run: |
-        if [ "$RUNNER_OS" == "Linux" ]; then
-            npm run venv
-        elif [ "$RUNNER_OS" == "Windows" ]; then
-            npm run psvenv
-        else
-            echo "$RUNNER_OS not supported"
-            exit 1
-        fi
+    - name: Setup Python virtual environment (Linux)
+      if: runner.os == 'Linux' && steps.cache-venv.outputs.cache-hit != 'true'
+      run: npm run venv
+
+    - name: Setup Python virtual environment (Windows)
+      if: runner.os == 'Windows' && steps.cache-venv.outputs.cache-hit != 'true'
+      run: npm run psvenv
 
     - name: Install dependencies
       run: npm ci
