@@ -63,18 +63,6 @@ function commandExecuted(flowBuilder, command, done) {
 }
 
 
-// Test that using gates without quantum circuit node throws an error.
-// function nonQuantumFlow(node, nodeName, done) {
-//   let flow = [{id: 'n1', type: 'helper'},
-//     {id: 'n2', type: nodeName, name: nodeName, wires: [['n3']]},
-//     {id: 'n3', type: 'helper'}];
-
-//   nodeTestHelper.load(node, flow, function() {
-
-//   });
-// }
-
-
 module.exports = {
   nodeTestHelper,
   isLoaded,
