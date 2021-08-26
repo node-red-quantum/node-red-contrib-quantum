@@ -15,11 +15,11 @@ describe('ShorsNode', function() {
     nodeTestHelper.stopServer(done);
   });
 
-  xit('load node', function(done) {
+  it('load node', function(done) {
     testUtil.isLoaded(shorsNode, 'shors', done);
   });
 
-  xit('default name outputs correctly', function(done) {
+  it('default name outputs correctly', function(done) {
     flow = new FlowBuilder();
     flow.add('shors', 'shorsNode', [[]]);
 
