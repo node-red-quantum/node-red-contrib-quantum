@@ -4,20 +4,23 @@ on:
   push:
     branches: [ master ]
     paths:
+      - '.github/workflows/node.js.yml'
       - 'nodes/**'
       - 'test/**'
   pull_request:
     branches: [ master ]
     paths:
+      - '.github/workflows/node.js.yml'
       - 'nodes/**'
       - 'test/**'
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
+        os: [ubuntu-latest, windows-latest]
         node-version: [12.x, 14.x, 16.x]
         python-version: [3.9]
 
@@ -44,7 +47,15 @@ jobs:
 
     - name: Setup Python virtual environment
       if: steps.cache-venv.outputs.cache-hit != 'true'
-      run: npm run venv
+      run: |
+        if [ "$RUNNER_OS" == "Linux" ]; then
+            npm run venv
+        elif [ "$RUNNER_OS" == "Windows" ]; then
+            npm run psvenv
+        else
+            echo "$RUNNER_OS not supported"
+            exit 1
+        fi
 
     - name: Install dependencies
       run: npm ci
