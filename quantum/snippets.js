@@ -170,7 +170,7 @@ from qiskit.utils import algorithm_globals
 from qiskit.algorithms import VQE, QAOA, NumPyMinimumEigensolver
 from qiskit.algorithms.optimizers import COBYLA
 
-from qiskit_finance.applications.optimization import portfolioOptimization
+from qiskit_finance.applications.optimization import PortfolioOptimization
 from qiskit_finance.data_providers import RandomDataProvider
 
 from qiskit_optimization.algorithms import MinimumEigenOptimizer
@@ -178,13 +178,13 @@ from qiskit_optimization.applications import OptimizationApplication
 from qiskit_optimization.converters import QuadraticProgramToQubo
 
 import numpy as np
-import matplotlib.pylot as plt
-import datatime
+import matplotlib.pyplot as plt
+import datetime
 
 num_assets = 4
 seed = 123
 
-stucks = [("TICKERS%s" % i) for i in range(num_assets)]
+stocks = [("TICKERS%s" % i) for i in range(num_assets)]
 data = RandomDataProvider(tickers=stocks, 
   start=datetime.datetime(2020,1,1), 
   end=datetime.datetime(2020,1,30),
@@ -197,7 +197,7 @@ sigma = data.get_period_return_covariance_matrix()
 q = 0.5
 budget = num_assets // 2
 penalty = num_assets
-portfolio = portfolioOptimization(expected_returns=mu, covariances=sigma, risk_factor=q, budget=budget)
+portfolio = PortfolioOptimization(expected_returns=mu, covariances=sigma, risk_factor=q, budget=budget)
 qp = portfolio.to_quadratic_program()
 
 def index_to_selection(i, num_assets):
@@ -209,7 +209,6 @@ def print_result(result):
   selection = result.x
   value = result.fval
   print("Optimal: Selection {}, value {:.4f}".format(selection, value))
-
   eigenstate = result.min_eigen_solver_result.eigenstate
   eigenvector = eigenstate if isinstance(eigenstate, np.ndarray) else eigenstate.to_matrix()
   probabilities = np.abs(eigenvector)**2
@@ -217,30 +216,32 @@ def print_result(result):
   print("\\n-----------------------Full Result-----------------------")
   print("selection\\tvalue\\t\\tprobability")
   print("---------------------------------------------------------")
-
   for i in i_sorted:
     x = index_to_selection(i, num_assets)
     value = QuadraticProgramToQubo().convert(qp).objective.evaluate(x)
     probability = probabilities[i]
     print("%10s\\t%.4f\\t\\t%.4f" %(x, value, probability))
+
 `;
 
 const NME =
-`exact_mes = numPyMinimumEigensolver()
+`from qiskit.algorithms import NumPyMinimumEigensolver
+exact_mes = NumPyMinimumEigensolver()
 exact_eigensolver = MinimumEigenOptimizer(exact_mes)
 result = exact_eigensolver.solve(qp)
 print_result(result)
 `;
 
 const VQE =
-`algorithm_globals.random_seed = 1234
+`from qiskit.algorithms import VQE
+algorithm_globals.random_seed = 1234
 backend = Aer.get_backend("statevector_simulator")
 
 cobyla = COBYLA()
 cobyla.set_options(maxiter=500)
 ry = TwoLocal(num_assets, "ry", "cz", reps=3, entanglement="full")
 quantum_instance = QuantumInstance(backend=backend, seed_simulator=seed, seed_transpiler=seed)
-vqe_mes = VQE(ry, optimizer=cobyla, quantum_instance=quantum_instace)
+vqe_mes = VQE(ry, optimizer=cobyla, quantum_instance=quantum_instance)
 vqe = MinimumEigenOptimizer(vqe_mes)
 
 result = vqe.solve(qp)
@@ -248,7 +249,8 @@ print_result(result)
 `;
 
 const QAOA = 
-`algorithm_globals.random_seed = 1234
+`from qiskit.algorithms import QAOA
+algorithm_globals.random_seed = 1234
 backend = Aer.get_backend("statevector_simulator")
 
 cobyla = COBYLA()
@@ -257,7 +259,7 @@ quantum_instance = QuantumInstance(backend=backend, seed_simulator=seed, seed_tr
 qaoa_mes = QAOA(optimizer=cobyla, reps=3, quantum_instance=quantum_instance)
 qaoa = MinimumEigenOptimizer(qaoa_mes)
 
-result = qaoa.run(qp)
+result = qaoa.solve(qp)
 print_result(result)
 `;
 
