@@ -30,13 +30,14 @@
     "setup": "(npm run link && npm run venv) && echo Setup complete - run 'npm start' to open Node-RED",
     "link": "bash bin/link.sh || bin/link.sh",
     "venv": "bash bin/pyvenv.sh || bin/pyvenv.sh",
-    "test": "mocha \"test/**/*_spec.js\" --timeout 15000",
+    "test": "mocha \"test/**/*_spec.js\" --timeout 10000",
     "clean": "rm -r venv/ & npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
     "lint": "eslint --fix --ignore-path .gitignore .",
     "postinstall": "npm run venv"
   },
   "dependencies": {
     "async-mutex": "^0.3.1",
+    "is-online": "^9.0.1",
     "string.prototype.replaceall": "^1.0.5"
   },
   "devDependencies": {

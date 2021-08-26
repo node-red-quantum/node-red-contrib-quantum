@@ -42,8 +42,27 @@ function commandExecuted(flowBuilder, command, done) {
   });
 }
 
+function correctOutputReceived(flow, givenInput, expectedOutput, done) {
+  nodeTestHelper.load(flow.nodes, flow.flow, function() {
+    const inputNode = nodeTestHelper.getNode(flow.inputId);
+    const outputNode = nodeTestHelper.getNode(flow.outputId);
+    outputNode.on('input', function(msg) {
+      try {
+        assert.deepEqual(msg.payload, expectedOutput);
+        done();
+      } catch (err) {
+        done(err);
+      } finally {
+        shell.stop();
+      }
+    });
+    inputNode.receive(givenInput);
+  });
+}
+
 module.exports = {
   nodeTestHelper,
   isLoaded,
   commandExecuted,
+  correctOutputReceived,
 };

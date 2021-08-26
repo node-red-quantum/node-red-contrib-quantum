@@ -29,6 +29,7 @@ describe('ShorsNode', function() {
       done();
     });
   });
+
   it('return success output on valid input', function(done) {
     flow = new FlowBuilder();
     flow.add('shors', 'shorsNode', [['helperNode']]);
@@ -50,7 +51,7 @@ describe('ShorsNode', function() {
 
       inputNode.receive({payload: 15});
     });
-  });
+  }).timeout(25000);
 
   it('return error for input less than 3', function(done) {
     flow = new FlowBuilder();
