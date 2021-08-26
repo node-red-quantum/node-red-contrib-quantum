@@ -29,6 +29,7 @@ describe('ShorsNode', function() {
       done();
     });
   });
+
   it('return success output on valid input', function(done) {
     flow = new FlowBuilder();
     flow.add('shors', 'shorsNode', [['helperNode']]);
@@ -52,11 +53,11 @@ describe('ShorsNode', function() {
     });
   });
 
-  it('return error for input less than 3', function(done){
+  it('return error for input less than 3', function(done) {
     flow = new FlowBuilder();
     flow.add('shors', 'shorsNode', []);
 
-    nodeTestHelper.load(flow.nodes, flow.flow,  function(){
+    nodeTestHelper.load(flow.nodes, flow.flow, function() {
       let shorsTestNode = nodeTestHelper.getNode('shorsNode');
       shorsTestNode.on('call:error', (call)=> {
         const actualError = call.firstArg;
@@ -64,14 +65,14 @@ describe('ShorsNode', function() {
         done();
       });
       shorsTestNode.receive({payload: 1});
-    })
+    });
   });
 
-  it('return error for even input', function(done){
+  it('return error for even input', function(done) {
     flow = new FlowBuilder();
     flow.add('shors', 'shorsNode', []);
 
-    nodeTestHelper.load(flow.nodes, flow.flow,  function(){
+    nodeTestHelper.load(flow.nodes, flow.flow, function() {
       let shorsTestNode = nodeTestHelper.getNode('shorsNode');
       shorsTestNode.on('call:error', (call)=> {
         const actualError = call.firstArg;
@@ -79,14 +80,14 @@ describe('ShorsNode', function() {
         done();
       });
       shorsTestNode.receive({payload: 4});
-    })
+    });
   });
 
-  it('return error for non-integer input', function(done){
+  it('return error for non-integer input', function(done) {
     flow = new FlowBuilder();
     flow.add('shors', 'shorsNode', []);
 
-    nodeTestHelper.load(flow.nodes, flow.flow,  function(){
+    nodeTestHelper.load(flow.nodes, flow.flow, function() {
       let shorsTestNode = nodeTestHelper.getNode('shorsNode');
       shorsTestNode.on('call:error', (call)=> {
         const actualError = call.firstArg;
@@ -94,6 +95,6 @@ describe('ShorsNode', function() {
         done();
       });
       shorsTestNode.receive({payload: 'a'});
-    })
+    });
   });
 });
