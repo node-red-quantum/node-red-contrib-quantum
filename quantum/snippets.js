@@ -186,8 +186,8 @@ seed = %s
 
 stocks = [("TICKERS%s" % i) for i in range(num_assets)]
 data = RandomDataProvider(tickers=stocks, 
-  start=datetime.datetime(2020,1,1), 
-  end=datetime.datetime(2021,1,30),
+  start=datetime.datetime(%s), 
+  end=datetime.datetime(%s),
   seed=seed)
 
 data.run()

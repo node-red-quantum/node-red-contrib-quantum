@@ -18,14 +18,19 @@ module.exports = function(RED) {
     this.startDate = config.start;
     this.endDate = config.end;
     const node = this;
+
+    
     
     this.on('input', async function(msg, send, done) {
-      
+      let startDateStr = node.startDate.toString().replace(/-0+/g, ",").replace (/-/g, ",");
+      let endDateStr = node.endDate.toString().replace(/-0+/g, ",").replace (/-/g, ",");
       // Define the node's Qiskit script in `snippets.js`
-      let script = util.format(snippets.PORTFOLIO_OPTIMISATION, node.assets, node.seeds, "%s", );
-      console.log(node.solverMethod);
-      console.log(node.startDate);
-      console.log(node.endDate);
+      let script = util.format(
+        snippets.PORTFOLIO_OPTIMISATION, node.assets, node.seeds, 
+        "%s",
+        startDateStr,
+        endDateStr
+      );
 
       if (node.solverMethod == 'vqe'){
         script += snippets.VQE;
