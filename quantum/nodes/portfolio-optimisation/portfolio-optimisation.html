@@ -1,38 +1,40 @@
 <script type="text/javascript">
-    RED.nodes.registerType("portfolio-optimisation", { // Change the name
-      category: "quantum",
-      color: "#A8A8A8", 
-      defaults: { // Add node default variables if needed
-        name: { value: "" },
-        solverMethod: {value: "", required: true},
+  RED.nodes.registerType("portfolio-optimisation", { // Change the name
+    category: "quantum-algorithms",
+    color: "#A8A8A8", 
+    defaults: { // Add node default variables if needed
+      name: { value: "" },
+      solverMethod: 
+      { value: "", 
+        required: true
       },
-      inputs: 1,
-      outputs: 1,
-      icon: "font-awesome/fa-microchip", // Change the icon
-      align: "left", 
-      paletteLabel: "portfoliooptimisation node", // Change the palette name
-      label: function () {
-        return this.name || "portfolio optimisationnode"; // Change the node label
-      },
-      inputLabels: "Qubits",
-      outputLabels: "Output", // Change the output label
-    });
-  </script>
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-microchip", // Change the icon
+    align: "left", 
+    paletteLabel: "portfolio optimisation node", // Change the palette name
+    label: function () {
+      return this.name || "portfolio optimisation"; // Change the node label
+    },
+    inputLabels: "Qubits",
+    outputLabels: "Output", // Change the output label
+    
+  });
+</script>
   
-  <script type="text/html" data-template-name="portfolio-optimisation"> <!-- Change the name -->
-    <div class="form-row">
-      <label for="node-input-name"><i class="fa fa-tag"></i> portfolio optimisation</label>
-      <input type="text" id="node-input-name" placeholder="Name" />
-    </div>
+<script type="text/html" data-template-name="portfolio-optimisation"> <!-- Change the name -->
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> portfolio optimisation</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
 
-    <div class="form-now">
-      <label for="node-solvermethod"> Portfolio Optimisation Eigensolvers
-        <select name="solverMethod" id="node-solvermethod">
-          <option value="nme">NumPy Minimum Eigensolver (NME)</option>
-          <option value="vqe">Variational Quantum Eigensolver (VQE)</option>
-          <option value="qaoa">Quantum Approximate Optimization Algorithm (QAOA)</option>
-        </select>
-      </label>
-    </div>
-
+  <div class="form-now">
+    <label for="node-input-solverMethod"> Portfolio Optimisation Eigensolvers</label>
+    <select name="solverMethod" id="node-input-solverMethod">
+      <option value="NME">NumPy Minimum Eigensolver (NME)</option>
+      <option value="VQE">Variational Quantum Eigensolver (VQE)</option>
+      <option value="QAOA">Quantum Approximate Optimization Algorithm (QAOA)</option>
+    </select>
+  </div>
 </script>

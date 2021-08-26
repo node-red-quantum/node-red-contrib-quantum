@@ -10,9 +10,10 @@ const errors = require('../../errors');
 module.exports = function(RED) {
   function PortfolioOptimisationNode(config) { // Change the name
     RED.nodes.createNode(this, config);
-    this.name = config.name;
-    this.solverMethod = config.solverMethod;
     const node = this;
+    this.name = config.name;
+    this.solverMethod = config.solverMethod || "none";
+    
 
     this.on('input', async function(msg, send, done) {
       
@@ -21,7 +22,7 @@ module.exports = function(RED) {
       console.log(node.solverMethod);
 
       if (node.solverMethod == 'vqe'){
-        script += snippets.QVE;
+        script += snippets.VQE;
 
       } else if (node.solverMethod == 'qaoa'){
         script += snippets.QAOA;
@@ -42,7 +43,7 @@ module.exports = function(RED) {
           done(err);
         } else {
           // Store the node's output in `msg.payload` and send it
-          msg.payload = '';
+          msg.payload = data;
           send(msg);
           done();
         }
