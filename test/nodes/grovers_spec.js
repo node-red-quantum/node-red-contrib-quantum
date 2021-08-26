@@ -4,8 +4,6 @@ const {FlowBuilder} = require('../flow-builder');
 const groversNode = require('../../quantum/nodes/grovers/grovers.js');
 const errors = require('../../quantum/errors');
 const assert = require('chai').assert;
-const errors = require('../../quantum/errors');
-
 
 describe('GroversNode', function() {
   beforeEach(function(done) {
@@ -49,21 +47,8 @@ describe('GroversNode', function() {
     nodeTestHelper.load(flow.nodes, flow.flow, function() {
       let groversTestNode = nodeTestHelper.getNode('groversNode');
       groversTestNode.on('call:error', (call)=> {
-        assert.strictEqual(call.firstArg.message, errors.NOT_BIT_STRING);
-        done();
-      });
-      groversTestNode.receive({payload: '111112'});
-    });
-  });
-
-  it('should fail on invalid input', function(done) {
-    let flow = [{id: 'groversNode', type: 'grovers', wires: [['helperNode']]},
-      {id: 'helperNode', type: 'helper'}];
-
-    nodeTestHelper.load(groversNode, flow, function() {
-      let groversTestNode = nodeTestHelper.getNode('groversNode');
-      groversTestNode.on('call:error', call => {
-        call.should.be.calledWithExactly(errors.NOT_BIT_STRING);
+        const actualError = call.firstArg;
+        assert.strictEqual(actualError.message, errors.NOT_BIT_STRING);
         done();
       });
       groversTestNode.receive({payload: '111112'});
