@@ -181,13 +181,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import datetime
 
-num_assets = 4
-seed = 123
+num_assets = %s
+seed = %s
 
 stocks = [("TICKERS%s" % i) for i in range(num_assets)]
 data = RandomDataProvider(tickers=stocks, 
   start=datetime.datetime(2020,1,1), 
-  end=datetime.datetime(2020,1,30),
+  end=datetime.datetime(2021,1,30),
   seed=seed)
 
 data.run()

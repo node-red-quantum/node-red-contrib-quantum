@@ -4,10 +4,26 @@
     color: "#A8A8A8", 
     defaults: { // Add node default variables if needed
       name: { value: "" },
-      solverMethod: 
-      { value: "", 
+      solverMethod: { 
+        value: "", 
         required: true
       },
+      seeds:{
+        value: 123,
+        required: true
+      },
+      assets:{
+        value: 4,
+        required: true
+      },
+      start:{
+        value: "",
+        required: true
+      },
+      end:{
+        value: "",
+        required: true
+      }
     },
     inputs: 1,
     outputs: 1,
@@ -19,7 +35,6 @@
     },
     inputLabels: "Qubits",
     outputLabels: "Output", // Change the output label
-    
   });
 </script>
   
@@ -28,7 +43,6 @@
     <label for="node-input-name"><i class="fa fa-tag"></i> portfolio optimisation</label>
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
-
   <div class="form-now">
     <label for="node-input-solverMethod"> Portfolio Optimisation Eigensolvers</label>
     <select name="solverMethod" id="node-input-solverMethod">
@@ -36,5 +50,29 @@
       <option value="VQE">Variational Quantum Eigensolver (VQE)</option>
       <option value="QAOA">Quantum Approximate Optimization Algorithm (QAOA)</option>
     </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-seeds" id="number-seeds"
+      ><i class="fa">Seeds</i>
+    </label>
+    <input type="number" min="1" id="node-input-seeds" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-assets" id="number-assets"
+      ><i class="fa">assets (qubits)</i>
+    </label>
+    <input type="number" min="1" id="node-input-assets" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-start" id="number-start"
+      ><i class="fa">Start Date</i>
+    </label>
+    <input type="date" id="node-input-start" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-end" id="number-end"
+      ><i class="fa">End Date</i>
+    </label>
+    <input type="date" id="node-input-end" />
   </div>
 </script>

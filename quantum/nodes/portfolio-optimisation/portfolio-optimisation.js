@@ -10,16 +10,22 @@ const errors = require('../../errors');
 module.exports = function(RED) {
   function PortfolioOptimisationNode(config) { // Change the name
     RED.nodes.createNode(this, config);
-    const node = this;
+    
     this.name = config.name;
     this.solverMethod = config.solverMethod || "none";
+    this.seeds = config.seeds || 123;
+    this.assets = config.assets || 4;
+    this.startDate = config.start;
+    this.endDate = config.end;
+    const node = this;
     
-
     this.on('input', async function(msg, send, done) {
       
       // Define the node's Qiskit script in `snippets.js`
-      let script = snippets.PORTFOLIO_OPTIMISATION;
+      let script = util.format(snippets.PORTFOLIO_OPTIMISATION, node.assets, node.seeds);
       console.log(node.solverMethod);
+      console.log(node.startDate);
+      console.log(node.endDate);
 
       if (node.solverMethod == 'vqe'){
         script += snippets.VQE;
