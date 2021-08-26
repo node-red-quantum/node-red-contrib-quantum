@@ -4,11 +4,13 @@ on:
   push:
     branches: [ master ]
     paths:
-      - 'quantum/**'
+      - 'nodes/**'
+      - 'test/**'
   pull_request:
     branches: [ master ]
     paths:
-      - 'quantum/**'
+      - 'nodes/**'
+      - 'test/**'
 
 jobs:
   build:

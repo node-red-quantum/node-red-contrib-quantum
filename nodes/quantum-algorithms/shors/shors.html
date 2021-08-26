@@ -1,0 +1,26 @@
+<script type="text/javascript">
+  RED.nodes.registerType("shors", {
+    category: "quantum algorithms",
+    color: "#737177",
+    defaults: {
+      name: { value: "" },
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-search",
+    align: "right",
+    paletteLabel: "shors",
+    label: function () {
+      return this.name || "shors";
+    },
+    inputLabels: "Input",
+    outputLabels: "Output",
+  });
+</script>
+
+<script type="text/html" data-template-name="shors">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+</script>
