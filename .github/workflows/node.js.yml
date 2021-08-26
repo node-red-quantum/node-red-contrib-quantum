@@ -40,7 +40,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: venv/
-        key: ${{ runner.os }}-venv
+        key: ${{ runner.os }}-venv-${{ hashFiles('bin/pyvenv.sh') }}
 
     - name: Setup Python virtual environment
       if: steps.cache-venv.outputs.cache-hit != 'true'
