@@ -1,6 +1,7 @@
 'use strict';
 
 const util = require('util');
+const isOnline = require('is-online');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
@@ -100,12 +101,6 @@ module.exports = function(RED) {
           return;
         }
 
-        node.status({
-          fill: 'orange',
-          shape: 'dot',
-          text: 'Job running...',
-        });
-
         let script = '';
 
         if (node.preferredBackend) {
@@ -127,6 +122,24 @@ module.exports = function(RED) {
         } else {
           script += util.format(snippets.IBMQ_SYSTEM_RESULT, node.shots);
         }
+
+        if (!await isOnline()) {
+          node.status({
+            fill: 'red',
+            shape: 'dot',
+            text: 'Failed to connect',
+          });
+
+          done(new Error(errors.NO_INTERNET));
+          reset();
+          return;
+        }
+
+        node.status({
+          fill: 'orange',
+          shape: 'dot',
+          text: 'Job running...',
+        });
 
         await shell.execute(script, (err, data) => {
           if (err) {
