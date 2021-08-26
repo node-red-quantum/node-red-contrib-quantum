@@ -1,0 +1,46 @@
+<script type="text/javascript">
+  RED.nodes.registerType("barrier", {
+    category: "quantum",
+    color: "#33B1FF",
+    defaults: {
+      name: { value: "" },
+      outputs: {
+        value: "",
+        required: true,
+        validate: function (x) {
+          x = parseInt(x);
+          if (Number.isInteger(x) && x > 0) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+      },
+    },
+    inputs: 1,
+    icon: "font-awesome/fa-ellipsis-v",
+    align: "left",
+    paletteLabel: "barrier",
+    label: function () {
+      return this.name || "barrier";
+    },
+    inputLabels: "Qubits",
+    outputLabels: function (index) {
+      if (index == 0) return "Top qubit";
+      else if (index == this.outputs - 1) return "Bottom qubit";
+      else return "Qubit";
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="barrier">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+  <div class="form-row">
+    <br />
+    <label for="node-input-outputs">Number of qubits to control</label>
+    <input type="number" min="1" id="node-input-outputs" style="margin-bottom: 40px;"/>
+  </div>
+</script>

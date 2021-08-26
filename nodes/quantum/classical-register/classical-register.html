@@ -1,0 +1,124 @@
+<script type="text/javascript">
+  RED.nodes.registerType("classical-register", {
+    category: "quantum",
+    color: "#A8A8A8",
+    defaults: {
+      name: {
+        value: "",
+        required: true,
+        validate: function (x) {
+          // Deleting the error message, if any
+          if (document.getElementById("error-message")) {
+            document.getElementById("error-message").innerHTML = "";
+          }
+          // Input validation for node name
+          x = x.trim().toLowerCase();
+          if (!x.match(/^[0-9 a-z]+$/)) return false;
+          // Input validation for node name availability
+          else {
+            let regName = x.replace(/ /g, "_");
+            let regId = this.id;
+            let available = true;
+
+            if (typeof this.classicalRegisters === "undefined") {
+              if (document.getElementById("error-message")) {
+                document.getElementById("error-message").innerHTML =
+                  'Please select the "Registers & Bits" option <br> in the "Quantum Circuit" node to use registers';
+              }
+              available = false;
+            } else {
+              if (this.classicalRegisters.length !== 0) {
+                this.classicalRegisters.forEach((register) => {
+                  if (register.regName == regName && regId != register.nodeid) {
+                    if (document.getElementById("error-message")) {
+                      document.getElementById("error-message").innerHTML =
+                        "Classical register name already in use <br> please enter another name.";
+                    }
+                    available = false;
+                  }
+                });
+              }
+            }
+
+            return available;
+          }
+        },
+      },
+      classicalBits: {
+        value: "",
+        required: true,
+        validate: function (x) {
+          x = parseInt(x);
+          if (Number.isInteger(x) && x > 0) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+      },
+      classicalRegisters: {
+        value: "",
+      },
+    },
+    inputs: 1,
+    outputs: 0,
+    icon: "font-awesome/fa-circle-o",
+    align: "right",
+    paletteLabel: "classical register",
+    label: function () {
+      return this.name || "classical register";
+    },
+    inputLabels: "quantum circuit node",
+
+    oneditprepare: async function () {
+      let data = await $.getJSON("quantum-circuit/structure");
+      if (data.success) {
+        let structure = data.structure;
+        if (structure === "registers") {
+          let data = await $.getJSON("quantum-circuit/registers");
+          this.classicalRegisters = data.classicalRegisters;
+        } else {
+          this.classicalRegisters = undefined;
+        }
+      }
+    },
+
+    oneditsave: function () {
+      let cbits = document.getElementById("node-input-classicalBits").value;
+      let nameInput = document.getElementById("node-input-name").value;
+      let regName = nameInput.trim().toLowerCase().replace(/ /g, "_");
+      let regVarName = "cr_" + regName;
+      let regId = this.id;
+
+      $.post(
+        "quantum-circuit/update-register",
+        {
+          nodeid: regId,
+          regName: regName,
+          regVarName: regVarName,
+          bits: cbits,
+        },
+        (p) => p
+      );
+    },
+
+    oneditdelete: function () {
+      $.post("quantum-circuit/delete-register", { nodeid: this.id }, (p) => p);
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="classical-register">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+  <div class="form-row">
+    <p id="error-message" style="color: red"></p>
+  </div>
+  <div class="form-row">
+    <br />
+    <label for="node-input-number-bits">Number of bits</label>
+    <input type="number" min="1" id="node-input-classicalBits" />
+  </div>
+</script>

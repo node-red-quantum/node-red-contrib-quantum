@@ -1,0 +1,58 @@
+<script type="text/html" data-help-name="single-qubit-quantum-gate-template"> <!-- Change name -->
+  <p>
+    <!-- Short (1 sentence) description of the node's objective for hovering effect -->
+  </p>
+  <p>
+    <!-- In depth description of the node's features and how to use (node properties, node connections, ...) -->
+    <br /><br />
+    <!-- For quantum gates, explain the geometric operation in terms of the Bloch Sphere -->
+    <br/><br/>
+    <a href="">Template gate - Qiskit textbook</a><br/> <!-- Insert url to Qiskit textbook -->
+    <a href="">Template gate - Qiskit documentation</a> <!-- Insert url to Qiskit documentation -->
+  </p>
+
+  <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">object</span>
+        </dt>
+        <dd>The qubit object to apply the gate to.</dd>
+        <dt class="optional">topic 
+          <span class="property-type">string</span>
+        </dt>
+        <dd>"Quantum Circuit"</dd>
+    </dl>
+
+  <h3>Outputs</h3>
+    <dl class="message-properties">
+      <dt>payload
+          <span class="property-type">object</span>
+      </dt>
+      <dd>The same qubit object that was received as input.</dd>
+      <dt class="optional">topic 
+        <span class="property-type">string</span>
+      </dt>
+      <dd>"Quantum Circuit"</dd>
+    </dl>
+
+  <br />
+  <h3>Details</h3>
+    <br />
+    <p>
+      Qubit objects can be generated from:
+      <ul>
+        <li><i>Quantum Circuit</i> node in 'Bits only' mode.</li>
+        <li><i>Quantum Register</i> node along with <i>Quantum Circuit</i> in 'Register' mode.</li>
+      </ul>
+      Unless specified, qubits are initialised in the 0 state.
+      <br /><br />
+      <b>
+        For a brief summary of the main quantum computing concepts, please refer to the 
+        <i>Details</i> section of the <i>Quantum Circuit</i> node.
+      </b>
+      <br /><br />
+      <a href="https://flows.nodered.org/node/node-red-contrib-quantum">Node-RED Quantum documentation - Node-RED website</a><br/>
+      <a href="https://www.npmjs.com/package/node-red-contrib-quantum">Node-RED Quantum documentation - NPM website</a>
+      <br /><br />
+    </p>
+  </script>

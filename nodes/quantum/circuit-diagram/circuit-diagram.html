@@ -1,0 +1,23 @@
+<script type="text/javascript">
+  RED.nodes.registerType("circuit-diagram", {
+    category: "quantum",
+    color: "#A8A8A8",
+    defaults: {
+      name: { value: "" },
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-picture-o",
+    paletteLabel: "circuit diagram",
+    label: function () {
+      return this.name || "circuit diagram";
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="circuit-diagram">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+</script>

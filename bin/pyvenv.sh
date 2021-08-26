@@ -35,27 +35,32 @@ else
   echo "Using virtual environment at $venv"
 fi
 
-# Check if Qiskit package is installed. If yes, exit successfully.
-if [[ -x "$python_path" ]]; then
-  if "$python_path" -c "import qiskit" &>/dev/null; then
-    echo "Qiskit is installed"
-    exit 0
-  fi
-else
-  echo "Error: failed to execute $python_path"
-  exit 1
-fi
 
-# Install Qiskit within the virtual environment using pip.
-if [[ -x "$pip_path" ]]; then
-  echo "Installing Qiskit..."
-  if "$pip_path" install --quiet qiskit; then
-    echo "Successfully installed Qiskit"
+# Install package dependencies.
+declare -a packages=("qiskit" "matplotlib==3.3.4" "pylatexenc")
+for i in "${packages[@]}"; do
+  # Check if the package is installed. If yes, exit successfully.
+  if [[ -x "$python_path" ]]; then
+    if "$python_path" -c "import $i" &>/dev/null; then
+      echo "$i is installed"
+      continue
+    fi
   else
-    echo "Error: failed to install Qiskit"
+    echo "Error: failed to execute $python_path"
     exit 1
   fi
-else
-  echo "Error: failed to execute $pip_path"
-  exit 1
-fi
+
+  # Install package within the virtual environment using pip.
+  if [[ -x "$pip_path" ]]; then
+    echo "Installing $i..."
+    if "$pip_path" install --quiet "$i"; then
+      echo "Successfully installed $i"
+    else
+      echo "Error: failed to install $i"
+      continue
+    fi
+  else
+    echo "Error: failed to execute $pip_path"
+    exit 1
+  fi
+done

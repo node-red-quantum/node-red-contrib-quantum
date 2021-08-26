@@ -1,0 +1,30 @@
+<script type="text/javascript">
+  RED.nodes.registerType("multi-qubits-quantum-gate-template", { // Change the name
+    category: "quantum",
+    color: "#FA4D56", // Change the node color to match with previous quantum nodes
+    defaults: { // Add node default variables if needed
+      name: { value: "" },
+    },
+    inputs: 1,
+    outputs: 2, // Change the number of output qubits according to the quantum operation
+    icon: "font-awesome/fa-close", // Change the icon
+    align: "left", // Change the icon alignement to match with previous quantum nodes
+    paletteLabel: "multi qubits quantum gate template", // Change the palette name
+    label: function () {
+      return this.name || "multi qubit gate"; // Change the node label
+    },
+    inputLabels: "Qubits",
+    outputLabels: function (index) {
+      if (index == 0) return "Top qubit";
+      else if (index == this.outputs - 1) return "Bottom qubit";
+      else return "Qubit";
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="multi-qubits-quantum-gate-template"> <!-- Change the name -->
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+</script>

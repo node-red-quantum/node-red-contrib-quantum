@@ -1,0 +1,198 @@
+<script type="text/javascript">
+  RED.nodes.registerType("unitary-gate", {
+    category: "quantum",
+    color: "#8A3FFC",
+    defaults: {
+      name: { value: "" },
+      theta: {
+        value: 0,
+        required: true,
+      },
+      phi: {
+        value: 0,
+        required: true,
+      },
+      lambda: {
+        value: 0,
+        required: true,
+      },
+    },
+    inputs: 1,
+    outputs: 1,
+    paletteLabel: "unitary gate",
+    icon: "font-awesome/fa-underline",
+    align: "right",
+    label: function () {
+      return this.name || "unitary";
+    },
+    inputLabels: "Qubit",
+    outputLabels: "Qubit",
+
+    oneditprepare: function () {
+      document.getElementById("node-input-theta-slider").onchange = function () {
+        document.getElementById("node-input-theta").value = this.value;
+      };
+      document.getElementById("node-input-theta").onchange = function () {
+        let input = this.value;
+        if (input < -2 || input > 2) this.value = input%2;
+        document.getElementById("node-input-theta-slider").value = this.value;
+      };
+
+      document.getElementById("node-input-phi-slider").onchange = function () {
+        document.getElementById("node-input-phi").value = this.value;
+      };
+      document.getElementById("node-input-phi").onchange = function () {
+        let input = this.value;
+        if (input < -2 || input > 2) this.value = input%2;
+        document.getElementById("node-input-phi-slider").value = this.value;
+      };
+
+      document.getElementById("node-input-lambda-slider").onchange = function () {
+        document.getElementById("node-input-lambda").value = this.value;
+      };
+      document.getElementById("node-input-lambda").onchange = function () {
+        let input = this.value;
+        if (input < -2 || input > 2) this.value = input%2;
+        document.getElementById("node-input-lambda-slider").value = this.value;
+      };
+
+      document.getElementById("node-input-theta").value = this.theta;
+      document.getElementById("node-input-theta-slider").value = this.theta;
+
+      document.getElementById("node-input-phi").value = this.phi;
+      document.getElementById("node-input-phi-slider").value = this.phi;
+
+      document.getElementById("node-input-lambda").value = this.lambda;
+      document.getElementById("node-input-lambda-slider").value = this.lambda;
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="unitary-gate">
+  <style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+  </style>
+
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+
+  <div class="form-row">
+    <br />
+    <label for="node-input-theta" id="theta-label" style="width:100%;"><span style="font-size: 150%;">&theta; </span> Theta angle (radians)</label>
+    <div style="width:75%; float:left;">
+      <input
+        style="width:100%"
+        type="range"
+        id="node-input-theta-slider"
+        name="theta"
+        min="-2"
+        max="2"
+        step="0.01"
+        list="labels"
+      /> 
+      <div style="width:33.33%; text-align:left; float:left;">-2&#960;</div>
+      <div style="width:33.33%; text-align:center; float:left;">0</div>
+      <div style="width:33.33%; text-align:right; float:left;">2&#960;</div>
+    </div>
+    <div style="width:20%; float:left;">
+      <input
+        style="width:60%; float:right; text-align: right;"
+        type="number"
+        id="node-input-theta"
+        name="theta-text"
+        placeholder="0"
+        step="any"
+      /> 
+    </div>
+    <div style="width:5%; float:left; text-align: center; font-size: x-large; margin-top:4px">
+      &#960;
+    </div>
+  </div>
+
+  <div class="form-row">
+    <br />
+    <label for="node-input-phi" id="phi-label" style="width:100%;"><span style="font-size: 150%;">&phi; </span> Phi angle (radians)</label>
+    <div style="width:75%; float:left;">
+      <input
+        style="width:100%"
+        type="range"
+        id="node-input-phi-slider"
+        name="phi"
+        min="-2"
+        max="2"
+        step="0.01"
+        list="labels"
+      /> 
+      <div style="width:33.33%; text-align:left; float:left;">-2&#960;</div>
+      <div style="width:33.33%; text-align:center; float:left;">0</div>
+      <div style="width:33.33%; text-align:right; float:left;">2&#960;</div>
+    </div>
+    <div style="width:20%; float:left;">
+      <input
+        style="width:60%; float:right; text-align: right;"
+        type="number"
+        id="node-input-phi"
+        name="phi-text"
+        placeholder="0"
+        step="any"
+      /> 
+    </div>
+    <div style="width:5%; float:left; text-align: center; font-size: x-large; margin-top:4px">
+      &#960;
+    </div>
+  </div>
+
+  <div class="form-row">
+    <br />
+    <label for="node-input-lambda" id="lambda-label" style="width:100%;"><span style="font-size: 150%;">&lambda; </span> Lambda angle (radians)</label>
+    <div style="width:75%; float:left;">
+      <input
+        style="width:100%"
+        type="range"
+        id="node-input-lambda-slider"
+        name="lambda"
+        min="-2"
+        max="2"
+        step="0.01"
+        list="labels"
+      /> 
+      <div style="width:33.33%; text-align:left; float:left;">-2&#960;</div>
+      <div style="width:33.33%; text-align:center; float:left;">0</div>
+      <div style="width:33.33%; text-align:right; float:left;">2&#960;</div>
+    </div>
+    <div style="width:20%; float:left;">
+      <input
+        style="width:60%; float:right; text-align: right;"
+        type="number"
+        id="node-input-lambda"
+        name="lambda-text"
+        placeholder="0"
+        step="any"
+      /> 
+    </div>
+    <div style="width:5%; float:left; text-align: center; font-size: x-large; margin-top:4px">
+      &#960;
+    </div>
+  </div>
+
+  <datalist id="labels">
+    <option value="-2"></option>
+    <option value="-1.5"></option>
+    <option value="-1"></option>
+    <option value="-0.5"></option>
+    <option value="0"></option>
+    <option value="0.5"></option>
+    <option value="1"></option>
+    <option value="1.5"></option>
+    <option value="2"></option>
+  </datalist>
+</script>
