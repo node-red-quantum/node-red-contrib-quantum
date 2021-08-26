@@ -22,7 +22,7 @@ module.exports = function(RED) {
     this.on('input', async function(msg, send, done) {
       
       // Define the node's Qiskit script in `snippets.js`
-      let script = util.format(snippets.PORTFOLIO_OPTIMISATION, node.assets, node.seeds);
+      let script = util.format(snippets.PORTFOLIO_OPTIMISATION, node.assets, node.seeds, "%s", );
       console.log(node.solverMethod);
       console.log(node.startDate);
       console.log(node.endDate);
