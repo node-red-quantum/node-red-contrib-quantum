@@ -44,12 +44,8 @@ function commandExecuted(flowBuilder, command, done) {
 
 function correctOutputReceived(flow, givenInput, expectedOutput, done) {
   nodeTestHelper.load(flow.nodes, flow.flow, function() {
-    const inputNodeId = flow.flow[0].id;
-    const inputNode = nodeTestHelper.getNode(inputNodeId);
-
-    const outputNodeId = flow.flow[flow.flow.length - 1].id;
-    const outputNode = nodeTestHelper.getNode(outputNodeId);
-
+    const inputNode = nodeTestHelper.getNode(flow.inputId);
+    const outputNode = nodeTestHelper.getNode(flow.outputId);
     outputNode.on('input', function(msg) {
       try {
         assert.deepEqual(msg.payload, expectedOutput);

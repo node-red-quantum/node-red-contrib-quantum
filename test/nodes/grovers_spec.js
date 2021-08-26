@@ -3,6 +3,7 @@ const nodeTestHelper = testUtil.nodeTestHelper;
 const {FlowBuilder} = require('../flow-builder');
 const groversNode = require('../../quantum/nodes/grovers/grovers.js');
 const errors = require('../../quantum/errors');
+const assert = require('chai').assert;
 
 
 describe('GroversNode', function() {
@@ -37,7 +38,6 @@ describe('GroversNode', function() {
 
     const givenInput = {payload: '111111'};
     const expectedOutput = {topMeasurement: '111111', iterationsNum: 6};
-
     testUtil.correctOutputReceived(flow, givenInput, expectedOutput, done);
   });
 
@@ -47,8 +47,8 @@ describe('GroversNode', function() {
 
     nodeTestHelper.load(flow.nodes, flow.flow, function() {
       let groversTestNode = nodeTestHelper.getNode('groversNode');
-      groversTestNode.on('call:error', (call) => {
-        call.should.be.calledWithExactly(errors.NOT_BIT_STRING);
+      groversTestNode.on('call:error', (call)=> {
+        assert.strictEqual(call.firstArg.message, errors.NOT_BIT_STRING);
         done();
       });
       groversTestNode.receive({payload: '111112'});
