@@ -101,12 +101,6 @@ module.exports = function(RED) {
           return;
         }
 
-        node.status({
-          fill: 'orange',
-          shape: 'dot',
-          text: 'Job running...',
-        });
-
         let script = '';
 
         if (node.preferredBackend) {
@@ -140,6 +134,12 @@ module.exports = function(RED) {
           reset();
           return;
         }
+
+        node.status({
+          fill: 'orange',
+          shape: 'dot',
+          text: 'Job running...',
+        });
 
         await shell.execute(script, (err, data) => {
           if (err) {
