@@ -28,8 +28,8 @@
   "scripts": {
     "start": "node-red || npx node-red",
     "setup": "npm install --silent && npm run link",
-    "link": "bash bin/link.sh || bin/link.sh",
-    "venv": "bash bin/pyvenv.sh || bin/pyvenv.sh",
+    "link": "bash bin/link.sh",
+    "venv": "bash bin/pyvenv.sh",
     "psvenv": "powershell -NoProfile -ExecutionPolicy Bypass -File ./bin/pyvenv.ps1",
     "test": "mocha \"test/**/*_spec.js\" --timeout 10000",
     "clean": "rm -r venv/ & npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
