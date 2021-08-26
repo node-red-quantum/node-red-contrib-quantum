@@ -57,4 +57,9 @@ jobs:
       run: npm ci
 
     - name: Run test suite
-      run: npm test
+      run: npm run coverage
+
+    - name: Log coverage
+      uses: coverallsapp/github-action@1.1.3
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}

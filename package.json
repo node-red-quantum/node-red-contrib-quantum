@@ -32,6 +32,7 @@
     "venv": "bash bin/pyvenv.sh",
     "psvenv": "powershell -NoProfile -ExecutionPolicy Bypass -File ./bin/pyvenv.ps1",
     "test": "mocha \"test/**/*_spec.js\" --timeout 10000",
+    "coverage": "nyc --reporter=lcovonly --reporter=text npm test",
     "clean": "rm -r venv/ & npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
     "lint": "eslint --fix --ignore-path .gitignore .",
     "postinstall": "npm run venv || npm run psvenv"
@@ -48,7 +49,8 @@
     "eslint-config-google": "^0.14.0",
     "mocha": "^9.0.3",
     "node-red": "^1.3.5",
-    "node-red-node-test-helper": "^0.2.7"
+    "node-red-node-test-helper": "^0.2.7",
+    "nyc": "^15.1.0"
   },
   "engines": {
     "node": ">=12.0.0"
@@ -78,9 +80,8 @@
       "script": "nodes/quantum/script/script.js",
       "local-simulator": "nodes/quantum/local-simulator/local-simulator.js",
       "ibm-quantum-system": "nodes/quantum/ibm-quantum-system/ibm-quantum-system.js",
-      "grovers":  "nodes/quantum-algorithms/grovers/grovers.js",
-      "shors":  "nodes/quantum-algorithms/shors/shors.js"
-
+      "grovers": "nodes/quantum-algorithms/grovers/grovers.js",
+      "shors": "nodes/quantum-algorithms/shors/shors.js"
     }
   }
 }
