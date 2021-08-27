@@ -3,14 +3,8 @@ name: Node.js CI
 on:
   push:
     branches: [ master ]
-    paths:
-      - 'nodes/**'
-      - 'test/**'
   pull_request:
     branches: [ master ]
-    paths:
-      - 'nodes/**'
-      - 'test/**'
 
 jobs:
   build:
