@@ -161,6 +161,11 @@ print(b64_str)
 buffer.close()
 `;
 
+const INITIALIZE = 
+`from qiskit.quantum_info import Statevector
+qc.initialize(Statevector.from_label('%s').data, %s)
+`;
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,
@@ -190,4 +195,5 @@ module.exports = {
   BLOCH_SPHERE,
   CU_GATE,
   ENCODE_IMAGE,
+  INITIALIZE,
 };

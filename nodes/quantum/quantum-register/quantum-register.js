@@ -85,14 +85,7 @@ module.exports = function(RED) {
 
       // Creating an array of messages to be sent
       // Each message represents a different qubit
-      let binaryArr = undefined;
-      if (state.get('binaryString')) {
-        binaryArr = state.get('binaryString');
-      }
       for (let i = 0; i < node.outputs; i++) {
-        if (binaryArr && binaryArr.shift() == 1) {
-          initScript += util.format(snippets.NOT_GATE, `qr${msg.payload.register}[${i}]`);
-        }
         output[i] = {
           topic: 'Quantum Circuit',
           payload: {
@@ -116,11 +109,15 @@ module.exports = function(RED) {
       });
       // wait for quantum circuit to be initialised
       await circuitReady();
+      let binaryString = state.get('binaryString');
+      if (binaryString) {
+        initScript += util.format(snippets.INITIALIZE, binaryString, `qc.qubits`);
+        state.del('binaryString');
+      }
       if (initScript != '') {
         await shell.execute(initScript, (err) => {
           if (err) done(err);
         });
-        if (binaryArr.length == 0) state.del('binaryString');
       }
       send(output);
       done();

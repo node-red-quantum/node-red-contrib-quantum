@@ -68,7 +68,7 @@ module.exports = function(RED) {
           return;
         }
         // Set temporary flow context
-        state.setRuntime('binaryString', binaryString.split('').map(x => parseInt(x)));
+        state.setRuntime('binaryString', binaryString);
       }
 
       // Creating a temporary 'quantumCircuitArray' flow context array
@@ -101,11 +101,7 @@ module.exports = function(RED) {
         script += util.format(snippets.QUANTUM_CIRCUIT, node.qbitsreg + ', ' + node.cbitsreg);
         let binaryString = state.get('binaryString');
         if (binaryString) {
-          for (let i = 0; i < binaryString.length; i++) {
-            if (binaryString[i] == 1) {
-              script += util.format(snippets.NOT_GATE, i);
-            }
-          }
+          script += util.format(snippets.INITIALIZE, binaryString, `qc.qubits`);
         }
         // Add arguments to quantum circuit code
 
