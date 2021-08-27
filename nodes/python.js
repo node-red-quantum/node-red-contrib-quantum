@@ -46,6 +46,12 @@ async function createPromise(process) {
         stderrData = replaceAll(stderrData, '...', '');
         stderrData = stderrData.replace('#StderrEnd#', '');
         stderrDone = true;
+
+        // Remove '>' if it is only character in the string
+        if (stderrData.includes('>') && !replaceAll(stderrData, '>', '').trim()) {
+          stderrData = replaceAll(stderrData, '>', '').trim();
+        }
+
         if (stdoutDone && stderrDone) {
           done();
         }

@@ -2,6 +2,7 @@
 
 [![platform](https://img.shields.io/badge/platform-Node--RED-red)](https://nodered.org)
 [![CI Status](https://img.shields.io/github/workflow/status/louislefevre/node-red-contrib-quantum/Node.js%20CI)](https://github.com/louislefevre/node-red-contrib-quantum/actions/workflows/node.js.yml)
+[![Coverage Status](https://img.shields.io/coveralls/github/louislefevre/node-red-contrib-quantum)](https://coveralls.io/github/louislefevre/node-red-contrib-quantum?branch=master)
 [![NPM](https://img.shields.io/npm/v/node-red-contrib-quantum)](https://www.npmjs.com/package/node-red-contrib-quantum)
 [![Node](https://img.shields.io/node/v/node-red-contrib-quantum)](https://nodejs.org/en/)
 
