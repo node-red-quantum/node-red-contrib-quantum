@@ -26,15 +26,18 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "start": "node-red || npx node-red",
+    "start": "export NODE_ENV=dev && (node-red || npx node-red)",
     "setup": "npm install --silent && npm run link",
-    "link": "bash bin/link.sh",
+    "test": "export NODE_ENV=dev && mocha \"test/**/*_spec.js\" --timeout 10000",
+    "coverage": "nyc --reporter=lcovonly --reporter=text npm test",
     "venv": "bash bin/pyvenv.sh",
     "psvenv": "powershell -NoProfile -ExecutionPolicy Bypass -File ./bin/pyvenv.ps1",
-    "test": "mocha \"test/**/*_spec.js\" --timeout 10000",
-    "coverage": "nyc --reporter=lcovonly --reporter=text npm test",
-    "clean": "rm -r venv/ & npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
+    "link": "bash bin/link.sh",
     "lint": "eslint --fix --ignore-path .gitignore .",
+    "rmlogs": "rm -r logs/",
+    "rmvenv": "rm -r venv/",
+    "unlink": "npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
+    "clean": "npm run rmlogs & npm run rmvenv & npm run unlink",
     "postinstall": "npm run venv || npm run psvenv"
   },
   "dependencies": {

@@ -4,13 +4,17 @@ const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
+const logger = require('../../logger');
 
 module.exports = function(RED) {
   function HadamardGateNode(config) {
     RED.nodes.createNode(this, config);
     const node = this;
 
+    logger.trace(this.id, 'Initialised hadamard gate');
+
     node.on('input', async (msg, send, done) => {
+      logger.trace(node.id, 'Hadamard gate received input');
       let script = '';
 
       // Validate the node input msg: check for qubit object.
@@ -18,6 +22,7 @@ module.exports = function(RED) {
       // Stop the node execution upon an error
       let error = errors.validateQubitInput(msg);
       if (error) {
+        logger.error(node.id, error);
         done(error);
         return;
       }
@@ -28,8 +33,11 @@ module.exports = function(RED) {
 
       // execute the script and pass the quantum register config to the output if no errors occurred
       await shell.execute(script, (err) => {
-        if (err) done(err);
-        else {
+        logger.trace(node.id, 'Executed hadamard gate command');
+        if (err) {
+          logger.error(node.id, err);
+          done(err);
+        } else {
           send(msg);
           done();
         }

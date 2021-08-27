@@ -4,6 +4,7 @@ const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
+const logger = require('../../logger');
 
 module.exports = function(RED) {
   function RotationGateNode(config) {
@@ -13,7 +14,10 @@ module.exports = function(RED) {
     this.angle = config.angle;
     const node = this;
 
+    logger.trace(this.id, 'Initialised rotation gate');
+
     this.on('input', async function(msg, send, done) {
+      logger.trace(node.id, 'Rotation gate received input');
       let script = '';
 
       // Validate the node input msg: check for qubit object.
@@ -21,6 +25,7 @@ module.exports = function(RED) {
       // Stop the node execution upon an error
       let error = errors.validateQubitInput(msg);
       if (error) {
+        logger.error(node.id, error);
         done(error);
         return;
       }
@@ -42,14 +47,17 @@ module.exports = function(RED) {
       // Run the script in the python shell, and if no error occurs
       // then send msg object to the next node
       await shell.execute(script, (err) => {
-        if (err) done(err);
-        else {
-          send(msg);
+        logger.trace(node.id, 'Executed rotation gate command');
+        if (err) {
+          logger.error(node.id, err);
+          done(err);
+        } else {
           node.status({
             fill: 'grey',
             shape: 'dot',
             text: node.axis.toUpperCase() + ' axis: \xa0' + node.angle.toString() + '\u03C0',
           });
+          send(msg);
           done();
         };
       });
