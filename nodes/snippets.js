@@ -164,21 +164,14 @@ buffer.close()
 const PORTFOLIO_OPTIMISATION =
 `from qiskit import Aer
 from qiskit.circuit.library import TwoLocal
-from qiskit.utils import QuantumInstance
-from qiskit.utils import algorithm_globals
-
-from qiskit.algorithms import VQE, QAOA, NumPyMinimumEigensolver
-from qiskit.algorithms.optimizers import COBYLA
 
 from qiskit_finance.applications.optimization import PortfolioOptimization
 from qiskit_finance.data_providers import RandomDataProvider
 
-from qiskit_optimization.algorithms import MinimumEigenOptimizer
 from qiskit_optimization.applications import OptimizationApplication
 from qiskit_optimization.converters import QuadraticProgramToQubo
 
 import numpy as np
-import matplotlib.pyplot as plt
 import datetime
 
 num_assets = %s
@@ -225,7 +218,8 @@ def print_result(result):
 `;
 
 const NME =
-`from qiskit.algorithms import NumPyMinimumEigensolver
+`from qiskit_optimization.algorithms import MinimumEigenOptimizer
+from qiskit.algorithms import NumPyMinimumEigensolver
 exact_mes = NumPyMinimumEigensolver()
 exact_eigensolver = MinimumEigenOptimizer(exact_mes)
 result = exact_eigensolver.solve(qp)
@@ -233,7 +227,11 @@ print_result(result)
 `;
 
 const VQE =
-`from qiskit.algorithms import VQE
+`from qiskit_optimization.algorithms import MinimumEigenOptimizer
+from qiskit.utils import algorithm_globals
+from qiskit.utils import QuantumInstance
+from qiskit.algorithms import VQE
+from qiskit.algorithms.optimizers import COBYLA
 algorithm_globals.random_seed = 1234
 backend = Aer.get_backend("statevector_simulator")
 
@@ -249,7 +247,11 @@ print_result(result)
 `;
 
 const QAOA =
-`from qiskit.algorithms import QAOA
+`from qiskit_optimization.algorithms import MinimumEigenOptimizer
+from qiskit.utils import algorithm_globals
+from qiskit.utils import QuantumInstance
+from qiskit.algorithms import QAOA
+from qiskit.algorithms.optimizers import COBYLA
 algorithm_globals.random_seed = 1234
 backend = Aer.get_backend("statevector_simulator")
 
