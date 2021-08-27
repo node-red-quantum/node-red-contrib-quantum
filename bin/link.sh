@@ -16,15 +16,6 @@ package="node-red-contrib-quantum"
 repo_path="$PWD"
 red_path="$HOME/.node-red"
 
-# Install dependencies for package.
-echo "Installing/updating dependencies for $package..."
-if npm install --silent; then
-  echo "Successfully installed dependencies"
-else
-  echo "Error: failed to install dependencies"
-  exit 1
-fi
-
 # Check if Node-RED user directory exists. If no, create it.
 if [[ ! -d "$red_path" ]]; then
   echo "Creating Node-RED user directory at $red_path..."
