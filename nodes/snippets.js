@@ -178,7 +178,6 @@ from qiskit_optimization.applications import OptimizationApplication
 from qiskit_optimization.converters import QuadraticProgramToQubo
 
 import numpy as np
-import matplotlib.pyplot as plt
 import datetime
 
 num_assets = %s
