@@ -10,6 +10,7 @@ module.exports = function(RED) {
   function IdentityGateNode(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
+    const node = this;
 
     logger.trace(this.id, 'Initialised identity gate');
 
