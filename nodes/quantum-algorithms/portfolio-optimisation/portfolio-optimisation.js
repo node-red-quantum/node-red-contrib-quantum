@@ -10,7 +10,6 @@ const errors = require('../../errors');
 module.exports = function(RED) {
   function PortfolioOptimisationNode(config) { // Change the name
     RED.nodes.createNode(this, config);
-
     this.name = config.name;
     this.solverMethod = config.solverMethod || 'none';
     this.seeds = config.seeds || 123;
