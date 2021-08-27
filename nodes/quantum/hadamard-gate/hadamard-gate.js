@@ -22,6 +22,7 @@ module.exports = function(RED) {
       // Stop the node execution upon an error
       let error = errors.validateQubitInput(msg);
       if (error) {
+        logger.error(node.id, error);
         done(error);
         return;
       }
@@ -33,8 +34,10 @@ module.exports = function(RED) {
       // execute the script and pass the quantum register config to the output if no errors occurred
       await shell.execute(script, (err) => {
         logger.trace(node.id, 'Executed hadamard gate command');
-        if (err) done(err);
-        else {
+        if (err) {
+          logger.error(node.id, err);
+          done(err);
+        } else {
           send(msg);
           done();
         }

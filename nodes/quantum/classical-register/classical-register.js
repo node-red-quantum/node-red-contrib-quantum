@@ -5,6 +5,7 @@ const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const stateManager = require('../../state').StateManager;
 const errors = require('../../errors');
+const logger = require('../../logger');
 
 module.exports = function(RED) {
   function ClassicalRegisterNode(config) {
@@ -14,7 +15,10 @@ module.exports = function(RED) {
     this.classicalBits = config.classicalBits;
     const node = this;
 
+    logger.trace(this.id, 'Initialised classical register');
+
     this.on('input', async function(msg, send, done) {
+      logger.trace(node.id, 'Classical register received input');
       const state = stateManager.getState(msg.circuitId);
 
       // Validate the node input msg: check for register object.
@@ -22,6 +26,7 @@ module.exports = function(RED) {
       // Stop the node execution upon an error
       let error = errors.validateRegisterInput(msg);
       if (error) {
+        logger.error(node.id, error);
         done(error);
         return;
       }
@@ -33,8 +38,18 @@ module.exports = function(RED) {
       );
 
       await shell.execute(crscript, (err) => {
-        if (err) node.error(err);
+        if (err) {
+          error = err;
+        } else {
+          error = null;
+        }
       });
+
+      if (error) {
+        logger.error(node.id, error);
+        done(error);
+        return;
+      }
 
       // Completing the 'quantumCircuit' flow context array
       let register = {
@@ -55,6 +70,7 @@ module.exports = function(RED) {
         // And counting how many registers were initialised so far.
         let [error, count] = errors.validateRegisterStrucutre(structure, msg.payload.structure);
         if (error) {
+          logger.error(node.id, error);
           done(error);
           return;
         }
@@ -75,8 +91,13 @@ module.exports = function(RED) {
           // Run the script in the python shell, and if no error occurs
           // then notify the runtime when the node is done.
           await shell.execute(circuitScript, (err) => {
-            if (err) done(err);
-            else done();
+            logger.trace(node.id, 'Executed classical register command');
+            if (err) {
+              logger.error(node.id, err);
+              done(err);
+            } else {
+              done();
+            };
           });
         }
       }

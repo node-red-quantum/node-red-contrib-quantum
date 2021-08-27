@@ -108,6 +108,7 @@ module.exports = function(RED) {
       await shell.execute(script, (err) => {
         logger.trace(node.id, 'Executed quantum circuit command');
         if (err) {
+          logger.error(node.id, err);
           done(err);
         } else {
           send(output);

@@ -26,6 +26,7 @@ module.exports = function(RED) {
       // Stop the node execution upon an error
       let error = errors.validateQubitInput(msg);
       if (error) {
+        logger.error(node.id, error);
         done(error);
         return;
       }
@@ -39,6 +40,7 @@ module.exports = function(RED) {
       await shell.execute(script, (err) => {
         logger.trace(node.id, 'Executed measure command');
         if (err) {
+          logger.error(node.id, err);
           done(err);
         } else {
           const status = (!node.selectedRegVarName) ? `Result: cbit ${node.selectedBit}`:
