@@ -38,8 +38,6 @@ module.exports = function(RED) {
         script += snippets.NME;
       }
 
-      console.log(script);
-
       await shell.start();
 
       // Run the Qiskit script in the python shell
