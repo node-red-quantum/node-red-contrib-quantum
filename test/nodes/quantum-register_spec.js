@@ -5,6 +5,7 @@ const {FlowBuilder} = require('../flow-builder');
 const nodeTestHelper = testUtil.nodeTestHelper;
 const snippets = require('../../nodes/snippets.js');
 
+const flow = new FlowBuilder();
 
 describe('QuantumRegisterNode', function() {
   beforeEach(function(done) {
@@ -12,6 +13,7 @@ describe('QuantumRegisterNode', function() {
   });
 
   afterEach(function(done) {
+    flow.reset();
     nodeTestHelper.unload();
     nodeTestHelper.stopServer(done);
   });
@@ -23,7 +25,6 @@ describe('QuantumRegisterNode', function() {
   xit('execute command', function(done) {
     // Test is disabled until issue #87 is fixed
     let command = util.format(snippets.QUANTUM_REGISTER, '0', '1, "quantum_register"');
-    let flow = new FlowBuilder();
     flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'registers', outputs: '1', qbitsreg: '1', cbitsreg: '0'});
     flow.add('quantum-register', 'n1', [['n2']]);
     flow.addOutput('n2');

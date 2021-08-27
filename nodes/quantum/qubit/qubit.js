@@ -1,6 +1,7 @@
 'use strict';
 
 const errors = require('../../errors');
+const logger = require('../../logger');
 
 module.exports = function(RED) {
   function QubitNode(config) {
@@ -9,12 +10,17 @@ module.exports = function(RED) {
     this.name = config.name;
     const node = this;
 
+    logger.trace(this.id, 'Initialised qubit');
+
     this.on('input', function(msg, send, done) {
+      logger.trace(node.id, 'Qubit received input');
+
       // Validate the node input msg: check for qubit object.
       // Return corresponding errors or null if no errors.
       // Stop the node execution upon an error
       let error = errors.validateQubitInput(msg);
       if (error) {
+        logger.error(node.id, error);
         done(error);
         return;
       }

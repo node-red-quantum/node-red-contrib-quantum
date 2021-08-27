@@ -5,6 +5,7 @@ const {FlowBuilder} = require('../flow-builder');
 const toffoliGateNode = require('../../nodes/quantum/toffoli-gate/toffoli-gate.js');
 const snippets = require('../../nodes/snippets.js');
 
+const flow = new FlowBuilder();
 
 describe('ToffoliGateNode', function() {
   beforeEach(function(done) {
@@ -12,6 +13,7 @@ describe('ToffoliGateNode', function() {
   });
 
   afterEach(function(done) {
+    flow.reset();
     nodeTestHelper.unload();
     nodeTestHelper.stopServer(done);
   });
@@ -20,9 +22,29 @@ describe('ToffoliGateNode', function() {
     testUtil.isLoaded(toffoliGateNode, 'toffoli-gate', done);
   });
 
+  xit('pass qubit through gate', function(done) {
+    flow.add('quantum-circuit', 'n0', [['n1'], ['n1'], ['n1']],
+        {structure: 'qubits', outputs: '3', qbitsreg: '3', cbitsreg: '3'});
+    flow.add('toffoli-gate', 'n1', [['n2'], ['n2'], ['n2']], {targetPosition: 'Upper'});
+    flow.addOutput('n2');
+
+    let payloadObject = [
+      {structure: {qubits: 3, cbits: 3},
+        register: undefined,
+        qubit: 0},
+      {structure: {qubits: 3, cbits: 3},
+        register: undefined,
+        qubit: 1},
+      {structure: {qubits: 3, cbits: 3},
+        register: undefined,
+        qubit: 2},
+    ];
+
+    testUtil.qubitsPassedThroughGate(flow, payloadObject, done);
+  });
+
   it('execute command', function(done) {
     let command = util.format(snippets.TOFFOLI_GATE, '0', '2', '1');
-    let flow = new FlowBuilder();
     flow.add('quantum-circuit', 'n0', [['n1'], ['n2'], ['n3']],
         {structure: 'qubits', outputs: '3', qbitsreg: '3', cbitsreg: '1'});
     flow.add('hadamard-gate', 'n1', [['n4']]);
@@ -34,3 +56,4 @@ describe('ToffoliGateNode', function() {
     testUtil.commandExecuted(flow, command, done);
   });
 });
+

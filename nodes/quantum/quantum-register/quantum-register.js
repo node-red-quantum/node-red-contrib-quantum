@@ -5,6 +5,7 @@ const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const stateManager = require('../../state').StateManager;
 const errors = require('../../errors');
+const logger = require('../../logger');
 
 module.exports = function(RED) {
   function QuantumRegisterNode(config) {
@@ -14,7 +15,10 @@ module.exports = function(RED) {
     this.outputs = parseInt(config.outputs);
     const node = this;
 
+    logger.trace(this.id, 'Initialised quantum register');
+
     this.on('input', async function(msg, send, done) {
+      logger.trace(node.id, 'Quantum register received input');
       const state = stateManager.getState(msg.circuitId);
       let script = '';
       let initScript = '';
@@ -25,6 +29,7 @@ module.exports = function(RED) {
       // Stop the node execution upon an error
       let error = errors.validateRegisterInput(msg);
       if (error) {
+        logger.error(node.id, error);
         done(error);
         return;
       }
@@ -62,6 +67,7 @@ module.exports = function(RED) {
         // And counting how many registers were initialised so far.
         let [error, count] = errors.validateRegisterStrucutre(structure, msg.payload.structure);
         if (error) {
+          logger.error(node.id, error);
           done(error);
           return;
         }
@@ -105,9 +111,22 @@ module.exports = function(RED) {
       // Run the script in the python shell, and if no error occurs
       // then send one qubit object per node output
       await shell.execute(script, (err) => {
-        if (err) done(err);
+        logger.trace(node.id, 'Executed quantum register command');
+        if (err) {
+          error = err;
+        } else {
+          error = null;
+        }
       });
+
+      if (error) {
+        logger.error(node.id, error);
+        done(error);
+        return;
+      }
+
       // wait for quantum circuit to be initialised
+      logger.trace(node.id, 'Quantum register waiting for circuit to be ready');
       await circuitReady();
       let binaryString = state.get('binaryString');
       if (binaryString) {

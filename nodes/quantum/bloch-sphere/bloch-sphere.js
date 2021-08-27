@@ -3,6 +3,7 @@
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
+const logger = require('../../logger');
 
 module.exports = function(RED) {
   function BlochSphereNode(config) {
@@ -17,12 +18,16 @@ module.exports = function(RED) {
       node.qreg = '';
     };
 
+    logger.trace(this.id, 'Initialised bloch sphere');
+
     this.on('input', async function(msg, send, done) {
+      logger.trace(node.id, 'Bloch sphere received input');
       let script = '';
       let qubitsArrived = true;
 
       let error = errors.validateQubitInput(msg);
       if (error) {
+        logger.error(node.id, error);
         done(error);
         reset();
         return;
@@ -51,7 +56,9 @@ module.exports = function(RED) {
           Object.keys(node.qreg).includes(msg.payload.registerVar) &&
           node.qreg[msg.payload.registerVar].count == node.qreg[msg.payload.registerVar].total
         )) {
-          done(new Error(errors.QUBITS_FROM_DIFFERENT_CIRCUITS));
+          let error = new Error(errors.QUBITS_FROM_DIFFERENT_CIRCUITS);
+          logger.error(node.id, error);
+          done(error);
           reset();
           return;
         }
@@ -84,22 +91,22 @@ module.exports = function(RED) {
         // Checking that all qubits received as input are from the same quantum circuit
         let error = errors.validateQubitsFromSameCircuit(node.qubits);
         if (error) {
+          logger.error(node.id, error);
           done(error);
           reset();
           return;
         }
 
         script += snippets.BLOCH_SPHERE + snippets.ENCODE_IMAGE;
-        await shell.execute(script, (err, data)=>{
+        await shell.execute(script, (err, data) => {
+          logger.trace(node.id, 'Executed bloch sphere command');
           if (err) {
-            // check if it is because the script contains a measurement
-            // `snippets.MEASURE.toString().substring(0, 11)` output is: 'qc.measure('
+            // Check if error is due to script containing a measurement
             if (shell.script.includes(snippets.MEASURE.toString().substring(0, 11))) {
-              done(new Error(errors.BLOCH_SPHERE_WITH_MEASUREMENT));
-            // Other errors
-            } else {
-              done(err);
+              err = new Error(errors.BLOCH_SPHERE_WITH_MEASUREMENT);
             }
+            logger.error(node.id, err);
+            done(err);
           } else {
             msg.payload = data.split('\'')[1];
             msg.encoding = 'base64';

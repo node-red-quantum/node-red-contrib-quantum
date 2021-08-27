@@ -166,6 +166,16 @@ const INITIALIZE =
 qc.initialize(Statevector.from_label('%s').data, %s)
 `;
 
+const SHORS =
+`from qiskit import Aer
+from qiskit.algorithms import Shor
+backend = Aer.get_backend('qasm_simulator')
+shor = Shor(quantum_instance=backend)
+result = shor.factor(%s)
+factors = [] if result.factors == [] else result.factors[0]
+print(factors)
+`;
+
 module.exports = {
   IMPORTS,
   QUANTUM_CIRCUIT,
@@ -196,4 +206,5 @@ module.exports = {
   CU_GATE,
   ENCODE_IMAGE,
   INITIALIZE,
+  SHORS,
 };
