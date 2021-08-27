@@ -8,6 +8,7 @@ const NODES = {
   'cnot-gate': require('../nodes/quantum/cnot-gate/cnot-gate.js'),
   'controlled-u-gate': require('../nodes/quantum/controlled-u-gate/controlled-u-gate.js'),
   'grovers': require('../nodes/quantum-algorithms/grovers/grovers.js'),
+  'shors': require('../nodes/quantum-algorithms/shors/shors'),
   'hadamard-gate': require('../nodes/quantum/hadamard-gate/hadamard-gate.js'),
   'ibm-quantum-system': require('../nodes/quantum/ibm-quantum-system/ibm-quantum-system.js'),
   'identity-gate': require('../nodes/quantum/identity-gate/identity-gate.js'),

@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "async-mutex": "^0.3.1",
+    "is-online": "^9.0.1",
     "string.prototype.replaceall": "^1.0.5"
   },
   "devDependencies": {
@@ -76,7 +77,9 @@
       "script": "nodes/quantum/script/script.js",
       "local-simulator": "nodes/quantum/local-simulator/local-simulator.js",
       "ibm-quantum-system": "nodes/quantum/ibm-quantum-system/ibm-quantum-system.js",
-      "grovers": "nodes/quantum-algorithms/grovers/grovers.js"
+      "grovers":  "nodes/quantum-algorithms/grovers/grovers.js",
+      "shors":  "nodes/quantum-algorithms/shors/shors.js"
+
     }
   }
 }
