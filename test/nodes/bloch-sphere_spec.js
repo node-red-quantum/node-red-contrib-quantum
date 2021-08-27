@@ -4,6 +4,7 @@ const {FlowBuilder} = require('../flow-builder');
 const blochSphereNode = require('../../nodes/quantum/bloch-sphere/bloch-sphere.js');
 const snippets = require('../../nodes/snippets.js');
 
+const flow = new FlowBuilder();
 
 describe('BlochSphereNode', function() {
   beforeEach(function(done) {
@@ -11,6 +12,7 @@ describe('BlochSphereNode', function() {
   });
 
   afterEach(function(done) {
+    flow.reset();
     nodeTestHelper.unload();
     nodeTestHelper.stopServer(done);
   });
@@ -21,7 +23,6 @@ describe('BlochSphereNode', function() {
 
   it('execute command', function(done) {
     let command = snippets.BLOCH_SPHERE + snippets.ENCODE_IMAGE;
-    let flow = new FlowBuilder();
     flow.add('quantum-circuit', 'n0', [['n1'], ['n2'], ['n3']],
         {structure: 'qubits', outputs: '3', qbitsreg: '3', cbitsreg: '1'});
     flow.add('hadamard-gate', 'n1', [['n4']]);
