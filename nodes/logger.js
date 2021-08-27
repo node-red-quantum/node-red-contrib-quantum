@@ -37,6 +37,7 @@ function logToFile(fileName, logLevel, id, message) {
 
 let fileName = formatDate(new Date());
 fileName = fileName.replace(/ /g, '_');
+fileName = fileName.replace(/:/g, '-');
 fileName = `logs/${fileName}.log`;
 
 module.exports = {
