@@ -5,12 +5,15 @@ const {FlowBuilder} = require('../flow-builder');
 const nodeTestHelper = testUtil.nodeTestHelper;
 const snippets = require('../../nodes/snippets.js');
 
+const flow = new FlowBuilder();
+
 describe('ClassicalRegisterNode', function() {
   beforeEach(function(done) {
     nodeTestHelper.startServer(done);
   });
 
   afterEach(function(done) {
+    flow.reset();
     nodeTestHelper.unload();
     nodeTestHelper.stopServer(done);
   });
@@ -21,7 +24,6 @@ describe('ClassicalRegisterNode', function() {
 
   it('execute command', function(done) {
     let command = util.format(snippets.CLASSICAL_REGISTER, '_test', '3, "test"');
-    let flow = new FlowBuilder();
     flow.add('quantum-circuit', 'n0', [['n1'], ['n2']],
         {structure: 'registers', outputs: '2', qbitsreg: '1', cbitsreg: '1'});
     flow.add('quantum-register', 'n1', [['n3']], {outputs: '1'});

@@ -4,6 +4,7 @@ const {FlowBuilder} = require('../flow-builder');
 const circuitDiagramNode = require('../../nodes/quantum/circuit-diagram/circuit-diagram.js');
 const snippets = require('../../nodes/snippets.js');
 
+const flow = new FlowBuilder();
 
 describe('CircuitDiagramNode', function() {
   beforeEach(function(done) {
@@ -11,6 +12,7 @@ describe('CircuitDiagramNode', function() {
   });
 
   afterEach(function(done) {
+    flow.reset();
     nodeTestHelper.unload();
     nodeTestHelper.stopServer(done);
   });
@@ -21,7 +23,6 @@ describe('CircuitDiagramNode', function() {
 
   it('execute command', function(done) {
     let command = snippets.CIRCUIT_DIAGRAM + snippets.ENCODE_IMAGE;
-    let flow = new FlowBuilder();
     flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
     flow.add('hadamard-gate', 'n1', [['n2']]);
     flow.add('measure', 'n2', [['n3']], {selectedBit: '0'});

@@ -26,14 +26,19 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "start": "node-red || npx node-red",
-    "setup": "(npm run link && npm run venv) && echo Setup complete - run 'npm start' to open Node-RED",
-    "link": "bash bin/link.sh || bin/link.sh",
-    "venv": "bash bin/pyvenv.sh || bin/pyvenv.sh",
-    "test": "mocha \"test/**/*_spec.js\" --timeout 10000",
-    "clean": "rm -r venv/ & npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
+    "start": "export NODE_ENV=dev && (node-red || npx node-red)",
+    "setup": "npm install --silent && npm run link",
+    "test": "export NODE_ENV=dev && mocha \"test/**/*_spec.js\" --timeout 10000",
+    "coverage": "nyc --reporter=lcovonly --reporter=text npm test",
+    "venv": "bash bin/pyvenv.sh",
+    "psvenv": "powershell -NoProfile -ExecutionPolicy Bypass -File ./bin/pyvenv.ps1",
+    "link": "bash bin/link.sh",
     "lint": "eslint --fix --ignore-path .gitignore .",
-    "postinstall": "npm run venv"
+    "rmlogs": "rm -r logs/",
+    "rmvenv": "rm -r venv/",
+    "unlink": "npm uninstall --prefix ~/.node-red/ node-red-contrib-quantum",
+    "clean": "npm run rmlogs & npm run rmvenv & npm run unlink",
+    "postinstall": "npm run venv || npm run psvenv"
   },
   "dependencies": {
     "async-mutex": "^0.3.1",
@@ -47,7 +52,8 @@
     "eslint-config-google": "^0.14.0",
     "mocha": "^9.0.3",
     "node-red": "^1.3.5",
-    "node-red-node-test-helper": "^0.2.7"
+    "node-red-node-test-helper": "^0.2.7",
+    "nyc": "^15.1.0"
   },
   "engines": {
     "node": ">=12.0.0"
