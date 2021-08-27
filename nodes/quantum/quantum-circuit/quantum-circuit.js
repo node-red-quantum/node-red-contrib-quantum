@@ -4,6 +4,7 @@ const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const stateManager = require('../../state').StateManager;
+const logger = require('../../logger');
 
 const EventEmitter = require('events');
 const quantumCircuitReady = new EventEmitter();
@@ -49,7 +50,10 @@ module.exports = function(RED) {
       });
     });
 
+    logger.trace(this.id, 'Initialised quantum circuit');
+
     this.on('input', async function(msg, send, done) {
+      logger.trace(node.id, 'Quantum circuit received input');
       state.resetRuntime();
       let script = '';
       script += snippets.IMPORTS;
@@ -102,8 +106,11 @@ module.exports = function(RED) {
       // Sending one register object per node output
       await shell.restart();
       await shell.execute(script, (err) => {
-        if (err) done(err);
-        else {
+        logger.trace(node.id, 'Executed quantum circuit command');
+        if (err) {
+          logger.error(node.id, err);
+          done(err);
+        } else {
           send(output);
           done();
         }

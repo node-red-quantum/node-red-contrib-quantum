@@ -5,6 +5,8 @@ const {FlowBuilder} = require('../flow-builder');
 const ibmQuantumSystemNode = require('../../nodes/quantum/ibm-quantum-system/ibm-quantum-system.js');
 const snippets = require('../../nodes/snippets.js');
 
+const flow = new FlowBuilder();
+
 // DO NOT COMMIT YOUR API TOKEN!
 const API_TOKEN = '';
 
@@ -14,6 +16,7 @@ describe('IBMQuantumSystemNode', function() {
   });
 
   afterEach(function(done) {
+    flow.reset();
     nodeTestHelper.unload();
     nodeTestHelper.stopServer(done);
   });
@@ -25,7 +28,6 @@ describe('IBMQuantumSystemNode', function() {
   xit('execute command', function(done) {
     // Disabled for now until we can use GitHub secrets to pass an API key to this test for CI.
     let command = util.format(snippets.IBMQ_SYSTEM_DEFAULT + snippets.IBMQ_SYSTEM_RESULT, API_TOKEN, '1');
-    let flow = new FlowBuilder();
     flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
     flow.add('hadamard-gate', 'n1', [['n2']]);
     flow.add('measure', 'n2', [['n3']], {selectedBit: '0'});
