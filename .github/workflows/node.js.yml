@@ -3,14 +3,8 @@ name: Node.js CI
 on:
   push:
     branches: [ master ]
-    paths:
-      - 'nodes/**'
-      - 'test/**'
   pull_request:
     branches: [ master ]
-    paths:
-      - 'nodes/**'
-      - 'test/**'
 
 jobs:
   build:
@@ -51,3 +45,9 @@ jobs:
 
     - name: Run test suite
       run: npm test
+
+    - name: Archive logs
+      uses: actions/upload-artifact@v2
+      with:
+        name: logs
+        path: logs/*
