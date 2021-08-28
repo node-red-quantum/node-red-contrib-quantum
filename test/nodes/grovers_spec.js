@@ -42,16 +42,10 @@ describe('GroversNode', function() {
 
   it('should fail on invalid input', function(done) {
     flow = new FlowBuilder();
-    flow.add('grovers', 'groversNode', []);
+    flow.add('grovers', 'n1', []);
 
-    nodeTestHelper.load(flow.nodes, flow.flow, function() {
-      let groversTestNode = nodeTestHelper.getNode('groversNode');
-      groversTestNode.on('call:error', (call)=> {
-        const actualError = call.firstArg;
-        assert.strictEqual(actualError.message, errors.NOT_BIT_STRING);
-        done();
-      });
-      groversTestNode.receive({payload: '111112'});
-    });
+    const givenInput = {payload: "11112"};
+    const expectedMessage = errors.NOT_BIT_STRING;
+    testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
   });
 });

@@ -4,6 +4,7 @@ const quantumRegisterNode = require('../../nodes/quantum/quantum-register/quantu
 const {FlowBuilder} = require('../flow-builder');
 const nodeTestHelper = testUtil.nodeTestHelper;
 const snippets = require('../../nodes/snippets.js');
+const errors = require('../../nodes/errors');
 
 const flow = new FlowBuilder();
 
@@ -30,5 +31,21 @@ describe('QuantumRegisterNode', function() {
     flow.addOutput('n2');
 
     testUtil.commandExecuted(flow, command, done);
+  });
+
+  it('should fail on receiving input from non-quantum nodes', function(done) {
+    flow.add('quantum-register', 'n1', [[]], {outputs: 2});
+
+    const givenInput = {payload: '', topic: ''};
+    const expectedMessage = errors.NOT_QUANTUM_NODE;
+    testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
+  });
+
+  it('should fail on receiving non-qubit object', function(done) {
+    flow.add('quantum-register', 'n1', [[]], {outputs: 2});
+
+    const givenInput = {payload: {structure: '', qubit: 3}, topic: 'Quantum Circuit'};
+    const expectedMessage = errors.NOT_REGISTER_OBJECT;
+    testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
   });
 });

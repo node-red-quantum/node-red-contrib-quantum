@@ -44,7 +44,6 @@ function commandExecuted(flowBuilder, command, done) {
     let inputNode = nodeTestHelper.getNode(flowBuilder.inputId);
     let outputNode = nodeTestHelper.getNode(flowBuilder.outputId);
     let called = false;
-
     outputNode.on('input', function() {
       if (called) return;
       try {
@@ -62,10 +61,10 @@ function commandExecuted(flowBuilder, command, done) {
   });
 }
 
-function correctOutputReceived(flow, givenInput, expectedOutput, done) {
-  nodeTestHelper.load(flow.nodes, flow.flow, function() {
-    const inputNode = nodeTestHelper.getNode(flow.inputId);
-    const outputNode = nodeTestHelper.getNode(flow.outputId);
+function correctOutputReceived(flowBuilder, givenInput, expectedOutput, done) {
+  nodeTestHelper.load(flowBuilder.nodes, flowBuilder.flow, function() {
+    const inputNode = nodeTestHelper.getNode(flowBuilder.inputId);
+    const outputNode = nodeTestHelper.getNode(flowBuilder.outputId);
     outputNode.on('input', function(msg) {
       try {
         assert.deepEqual(msg.payload, expectedOutput);
@@ -80,10 +79,24 @@ function correctOutputReceived(flow, givenInput, expectedOutput, done) {
   });
 }
 
+function nodeFailed(flowBuilder, nodeId, givenInput, expectedMessage, done) {
+  nodeTestHelper.load(flowBuilder.nodes, flowBuilder.flow, function() {
+    let inputNode = nodeTestHelper.getNode(flowBuilder.inputId);
+    let targetNode = nodeTestHelper.getNode(nodeId);
+    targetNode.on('call:error', (call)=> {
+      const actualError = call.firstArg;
+      assert.strictEqual(actualError.message, expectedMessage);
+      done();
+    });
+    inputNode.receive(givenInput);
+  });
+}
+
 module.exports = {
   nodeTestHelper,
   isLoaded,
   qubitsPassedThroughGate,
   commandExecuted,
   correctOutputReceived,
+  nodeFailed
 };

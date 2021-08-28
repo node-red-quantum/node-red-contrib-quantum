@@ -4,6 +4,7 @@ const nodeTestHelper = testUtil.nodeTestHelper;
 const {FlowBuilder} = require('../flow-builder');
 const swapNode = require('../../nodes/quantum/swap/swap.js');
 const snippets = require('../../nodes/snippets.js');
+const errors = require('../../nodes/errors');
 
 const flow = new FlowBuilder();
 
@@ -49,4 +50,23 @@ describe('SwapNode', function() {
 
     testUtil.commandExecuted(flow, command, done);
   });
+
+  it('should fail on receiving input from non-quantum nodes', function(done) {
+    flow.add('swap', 'n1', [['n2']]);
+    flow.addOutput('n2');
+
+    const givenInput = {payload: '', topic: ''};
+    const expectedMessage = errors.NOT_QUANTUM_NODE;
+    testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
+  });
+
+  it('should fail on receiving non-qubit object', function(done) {
+    flow.add('swap', 'n1', [['n2']]);
+    flow.addOutput('n2');
+
+    const givenInput = {payload: {structure: '', qubit: 3}, topic: 'Quantum Circuit'};
+    const expectedMessage = errors.NOT_QUBIT_OBJECT;
+    testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
+  });
+
 });

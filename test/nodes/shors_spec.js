@@ -5,12 +5,15 @@ const assert = require('chai').assert;
 const errors = require('../../nodes/errors');
 const {FlowBuilder} = require('../flow-builder');
 
+const flow = new FlowBuilder();
+
 describe('ShorsNode', function() {
   beforeEach(function(done) {
     nodeTestHelper.startServer(done);
   });
 
   afterEach(function(done) {
+    flow.reset();
     nodeTestHelper.unload();
     nodeTestHelper.stopServer(done);
   });
@@ -20,7 +23,6 @@ describe('ShorsNode', function() {
   });
 
   it('default name outputs correctly', function(done) {
-    flow = new FlowBuilder();
     flow.add('shors', 'shorsNode', [[]]);
 
     nodeTestHelper.load(flow.nodes, flow.flow, function() {
@@ -31,70 +33,37 @@ describe('ShorsNode', function() {
   });
 
   it('return success output on valid input', function(done) {
-    flow = new FlowBuilder();
     flow.add('shors', 'shorsNode', [['helperNode']]);
     flow.addOutput('helperNode');
 
-    nodeTestHelper.load(flow.nodes, flow.flow, function() {
-      let inputNode = nodeTestHelper.getNode(flow.inputId);
-      let outputNode = nodeTestHelper.getNode(flow.outputId);
-
-      outputNode.on('input', function(msg) {
-        const expectedFactors = '[3, 5]';
-        try {
-          assert.strictEqual(msg.payload.listOfFactors, expectedFactors);
-          done();
-        } catch (err) {
-          done(err);
-        }
-      });
-
-      inputNode.receive({payload: 15});
-    });
+    const givenInput = {payload: 15};
+    const expectedOutput = {
+      listOfFactors: '[3, 5]'
+    };
+    testUtil.correctOutputReceived(flow, givenInput, expectedOutput, done);
   }).timeout(25000);
 
   it('return error for input less than 3', function(done) {
-    flow = new FlowBuilder();
-    flow.add('shors', 'shorsNode', []);
+    flow.add('shors', 'n1', []);
 
-    nodeTestHelper.load(flow.nodes, flow.flow, function() {
-      let shorsTestNode = nodeTestHelper.getNode('shorsNode');
-      shorsTestNode.on('call:error', (call)=> {
-        const actualError = call.firstArg;
-        assert.strictEqual(actualError.message, errors.GREATER_THAN_TWO);
-        done();
-      });
-      shorsTestNode.receive({payload: 1});
-    });
+    const givenInput = {payload: 1};
+    const expectedMessage = errors.GREATER_THAN_TWO;
+    testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
   });
 
   it('return error for even input', function(done) {
-    flow = new FlowBuilder();
-    flow.add('shors', 'shorsNode', []);
+    flow.add('shors', 'n1', []);
 
-    nodeTestHelper.load(flow.nodes, flow.flow, function() {
-      let shorsTestNode = nodeTestHelper.getNode('shorsNode');
-      shorsTestNode.on('call:error', (call)=> {
-        const actualError = call.firstArg;
-        assert.strictEqual(actualError.message, errors.INPUT_ODD_INTEGER);
-        done();
-      });
-      shorsTestNode.receive({payload: 4});
-    });
+    const givenInput = {payload: 4};
+    const expectedMessage = errors.INPUT_ODD_INTEGER;
+    testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
   });
 
   it('return error for non-integer input', function(done) {
-    flow = new FlowBuilder();
-    flow.add('shors', 'shorsNode', []);
+    flow.add('shors', 'n1', []);
 
-    nodeTestHelper.load(flow.nodes, flow.flow, function() {
-      let shorsTestNode = nodeTestHelper.getNode('shorsNode');
-      shorsTestNode.on('call:error', (call)=> {
-        const actualError = call.firstArg;
-        assert.strictEqual(actualError.message, errors.INPUT_AN_INTEGER);
-        done();
-      });
-      shorsTestNode.receive({payload: 'a'});
-    });
+    const givenInput = {payload: 'a'};
+    const expectedMessage = errors.INPUT_AN_INTEGER;
+    testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
   });
 });
