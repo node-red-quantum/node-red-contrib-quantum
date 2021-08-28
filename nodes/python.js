@@ -12,15 +12,24 @@ if (!fileSystem.existsSync(pythonPath)) {
   throw new Error(`cannot resolve path for Python executable: ${pythonPath}`);
 }
 
-
-/**
- * The global Python shell for the project.
- *
- * This shell instance will be maintained throughout the entire lifetime of a flow. Any variables,
- * functions, and objects which are created will be kept in memory until the flow ends.
-*/
 module.exports = {
+  /**
+   * The path to the Python executable.
+   *
+   * This path points to the Python virtual environment and adapts depending on the platform.
+  */
   PythonPath: pythonPath,
+
+  /**
+   * The global Python shell instance.
+   *
+   * This shell instance will be maintained throughout the entire lifetime of a flow. Any variables,
+   * functions, and objects which are created will be kept in memory until the flow ends.
+  */
   PythonShell: new PythonInteractive(pythonPath),
-  PythonShellClass: PythonInteractive,
+
+  /**
+   * Class definition for creating a Python shell instance.
+  */
+  PythonInteractive: PythonInteractive,
 };

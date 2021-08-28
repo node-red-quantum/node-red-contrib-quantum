@@ -4,8 +4,8 @@ const util = require('util');
 const snippets = require('../../snippets');
 const errors = require('../../errors');
 const logger = require('../../logger');
-const {PythonShellClass, PythonPath} = require('../../python');
-const shell = new PythonShellClass(PythonPath);
+const {PythonInteractive, PythonPath} = require('../../python');
+const shell = new PythonInteractive(PythonPath);
 
 module.exports = function(RED) {
   function ShorsNode(config) {
