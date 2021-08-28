@@ -4,8 +4,8 @@ const util = require('util');
 const snippets = require('../../snippets');
 const errors = require('../../errors');
 const logger = require('../../logger');
-const {PythonShellClass} = require('../../python');
-const shell = new PythonShellClass();
+const {PythonShellClass, PythonPath} = require('../../python');
+const shell = new PythonShellClass(PythonPath);
 
 module.exports = function(RED) {
   function ShorsNode(config) {
@@ -36,33 +36,32 @@ module.exports = function(RED) {
         return;
       }
 
-      const params = Number(msg.payload);
-      const script = util.format(snippets.SHORS, params);
-      await shell.start();
-      await shell.execute(script, (err, data) => {
-        logger.trace(node.id, 'Executed shors command');
-        if (err) {
-          node.status({
-            fill: 'red',
-            shape: 'dot',
-            text: 'Factorisation failed!',
+      let params = Number(msg.payload);
+      let script = util.format(snippets.SHORS, params);
+
+      shell.start();
+      await shell.execute(script)
+          .then((data) => {
+            node.status({
+              fill: 'green',
+              shape: 'dot',
+              text: 'Factorisation completed!',
+            });
+            msg.payload = {listOfFactors: data};
+            send(msg);
+            done();
+          }).catch((err) => {
+            node.status({
+              fill: 'red',
+              shape: 'dot',
+              text: 'Factorisation failed!',
+            });
+            logger.error(node.id, err);
+            done(err);
+          }).finally(() => {
+            logger.trace(node.id, 'Executed shors command');
+            shell.stop();
           });
-          logger.error(node.id, err);
-          done(err);
-        } else {
-          node.status({
-            fill: 'green',
-            shape: 'dot',
-            text: 'Factorisation completed!',
-          });
-          msg.payload = {
-            listOfFactors: data,
-          };
-          send(msg);
-          done();
-        }
-      });
-      shell.stop();
     });
   }
   RED.nodes.registerType('shors', ShorsNode);

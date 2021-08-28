@@ -102,19 +102,19 @@ module.exports = function(RED) {
         }
 
         let script = snippets.CIRCUIT_DIAGRAM + snippets.ENCODE_IMAGE;
-        await shell.execute(script, (err, data) => {
-          logger.trace(node.id, 'Executed circuit diagram command');
-          if (err) {
-            logger.error(node.id, err);
-            done(err);
-          } else {
-            msg.payload = data.split('\'')[1];
-            msg.encoding = 'base64';
-            send(msg);
-            done();
-          }
-          reset();
-        });
+        await shell.execute(script)
+            .then((data) => {
+              msg.payload = data.split('\'')[1];
+              msg.encoding = 'base64';
+              send(msg);
+              done();
+            }).catch((err) => {
+              logger.error(node.id, err);
+              done(err);
+            }).finally(() => {
+              logger.trace(node.id, 'Executed circuit diagram command');
+              reset();
+            });
       }
     });
   };

@@ -12,7 +12,7 @@ module.exports = function(RED) {
 
     this.on('input', function(msg, send, done) {
       logger.trace(node.id, 'Script received input');
-      msg.payload = shell.script.trim();
+      msg.payload = shell.history().join('\n');
       send(msg);
       done();
     });

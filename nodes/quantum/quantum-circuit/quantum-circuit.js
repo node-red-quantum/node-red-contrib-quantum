@@ -104,17 +104,17 @@ module.exports = function(RED) {
       }
 
       // Sending one register object per node output
-      await shell.restart();
-      await shell.execute(script, (err) => {
-        logger.trace(node.id, 'Executed quantum circuit command');
-        if (err) {
-          logger.error(node.id, err);
-          done(err);
-        } else {
-          send(output);
-          done();
-        }
-      });
+      shell.restart();
+      await shell.execute(script)
+          .then(() => {
+            send(output);
+            done();
+          }).catch((err) => {
+            logger.error(node.id, err);
+            done(err);
+          }).finally(() => {
+            logger.trace(node.id, 'Executed quantum circuit command');
+          });
     });
   }
 

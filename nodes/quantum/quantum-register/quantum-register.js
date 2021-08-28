@@ -104,14 +104,14 @@ module.exports = function(RED) {
 
       // Run the script in the python shell, and if no error occurs
       // then send one qubit object per node output
-      await shell.execute(script, (err) => {
-        logger.trace(node.id, 'Executed quantum register command');
-        if (err) {
-          error = err;
-        } else {
-          error = null;
-        }
-      });
+      await shell.execute(script)
+          .then(() => {
+            error = null;
+          }).catch((err) => {
+            error = err;
+          }).finally(() => {
+            logger.trace(node.id, 'Executed quantum register command');
+          });
 
       if (error) {
         logger.error(node.id, error);

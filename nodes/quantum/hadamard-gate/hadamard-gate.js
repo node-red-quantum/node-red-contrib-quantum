@@ -32,16 +32,16 @@ module.exports = function(RED) {
         qrConfig.register ? `${qrConfig.registerVar}[${qrConfig.qubit}]` : `${qrConfig.qubit}`);
 
       // execute the script and pass the quantum register config to the output if no errors occurred
-      await shell.execute(script, (err) => {
-        logger.trace(node.id, 'Executed hadamard gate command');
-        if (err) {
-          logger.error(node.id, err);
-          done(err);
-        } else {
-          send(msg);
-          done();
-        }
-      });
+      await shell.execute(script)
+          .then(() => {
+            send(msg);
+            done();
+          }).catch((err) => {
+            logger.error(node.id, err);
+            done(err);
+          }).finally(() => {
+            logger.trace(node.id, 'Executed hadamard gate command');
+          });
     });
   }
 

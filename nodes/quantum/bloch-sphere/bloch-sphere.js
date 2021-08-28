@@ -98,23 +98,23 @@ module.exports = function(RED) {
         }
 
         script += snippets.BLOCH_SPHERE + snippets.ENCODE_IMAGE;
-        await shell.execute(script, (err, data) => {
-          logger.trace(node.id, 'Executed bloch sphere command');
-          if (err) {
-            // Check if error is due to script containing a measurement
-            if (shell.script.includes(snippets.MEASURE.toString().substring(0, 11))) {
-              err = new Error(errors.BLOCH_SPHERE_WITH_MEASUREMENT);
-            }
-            logger.error(node.id, err);
-            done(err);
-          } else {
-            msg.payload = data.split('\'')[1];
-            msg.encoding = 'base64';
-            send(msg);
-            done();
-          }
-          reset();
-        });
+        await shell.execute(script)
+            .then((data) => {
+              msg.payload = data.split('\'')[1];
+              msg.encoding = 'base64';
+              send(msg);
+              done();
+            }).catch((err) => {
+              // Check if error is due to script containing a measurement
+              if (shell.script.includes(snippets.MEASURE.toString().substring(0, 11))) {
+                err = new Error(errors.BLOCH_SPHERE_WITH_MEASUREMENT);
+              }
+              logger.error(node.id, err);
+              done(err);
+            }).finally(() => {
+              logger.trace(node.id, 'Executed bloch sphere command');
+              reset();
+            });
       }
     });
   };

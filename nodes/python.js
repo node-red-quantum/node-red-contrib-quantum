@@ -19,5 +19,8 @@ if (!fileSystem.existsSync(pythonPath)) {
  * This shell instance will be maintained throughout the entire lifetime of a flow. Any variables,
  * functions, and objects which are created will be kept in memory until the flow ends.
 */
-module.exports.PythonShell = new PythonInteractive();
-module.exports.PythonShellClass = PythonInteractive;
+module.exports = {
+  PythonPath: pythonPath,
+  PythonShell: new PythonInteractive(pythonPath),
+  PythonShellClass: PythonInteractive,
+};
