@@ -41,7 +41,7 @@ describe('QuantumRegisterNode', function() {
     testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
   });
 
-  it('should fail on receiving non-qubit object', function(done) {
+  it('should fail on receiving non-register object', function(done) {
     flow.add('quantum-register', 'n1', [[]], {outputs: 2});
 
     const givenInput = {payload: {structure: '', qubit: 3}, topic: 'Quantum Circuit'};
