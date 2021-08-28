@@ -20,22 +20,25 @@ function isLoaded(node, nodeName, done) {
 }
 
 // Test that qubits sucessfully passed through the gate.
-function qubitsPassedThroughGate(generatedFlow, expectedPayload, done) {
+function qubitsPassedThroughGate(generatedFlow, expectedPayloadList, done) {
   nodeTestHelper.load(generatedFlow.nodes, generatedFlow.flow, function() {
-    let inputNode = nodeTestHelper.getNode(generatedFlow.inputId);
+    let circuitNode = nodeTestHelper.getNode(generatedFlow.inputId);
     let outputNode = nodeTestHelper.getNode(generatedFlow.outputId);
-
+    let actualPayloadList = [];
     outputNode.on('input', function(msg) {
       try {
-        msg.should.have.property('payload', expectedPayload);
-        done();
+        actualPayloadList.push(msg.payload);
+        if (actualPayloadList.length === circuitNode.qbitsreg) {
+          assert.sameDeepMembers(actualPayloadList, expectedPayloadList);
+          done();
+        }
       } catch (err) {
         done(err);
       } finally {
         shell.stop();
       }
     });
-    inputNode.receive({payload: ''});
+    circuitNode.receive({payload: ''});
   });
 }
 

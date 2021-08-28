@@ -28,13 +28,13 @@ describe('UnitaryGateNode', function() {
     flow.add('unitary-gate', 'n1', [['n2']], {theta: '1', phi: '1', lambda: '1'});
     flow.addOutput('n2');
 
-    let payloadObject = {
+    let payloadObjectList = [{
       structure: {qubits: 1, cbits: 1},
       register: undefined,
       qubit: 0,
-    };
+    }];
 
-    testUtil.qubitsPassedThroughGate(flow, payloadObject, done);
+    testUtil.qubitsPassedThroughGate(flow, payloadObjectList, done);
   });
 
   it('execute command', function(done) {

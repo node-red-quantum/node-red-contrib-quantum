@@ -28,13 +28,13 @@ describe('PhaseGateNode', function() {
     flow.add('phase-gate', 'n1', [['n2']], {phase: '1'});
     flow.addOutput('n2');
 
-    let payloadObject = {
+    let payloadObjectList = [{
       structure: {qubits: 1, cbits: 1},
       register: undefined,
       qubit: 0,
-    };
+    }];
 
-    testUtil.qubitsPassedThroughGate(flow, payloadObject, done);
+    testUtil.qubitsPassedThroughGate(flow, payloadObjectList, done);
   });
 
   it('execute command', function(done) {

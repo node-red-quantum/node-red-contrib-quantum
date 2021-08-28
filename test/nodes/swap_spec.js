@@ -23,13 +23,13 @@ describe('SwapNode', function() {
     testUtil.isLoaded(swapNode, 'swap', done);
   });
 
-  xit('pass qubit through node', function(done) {
+  it('pass qubit through node', function(done) {
     flow.add('quantum-circuit', 'n0', [['n1'], ['n1']],
         {structure: 'qubits', outputs: '2', qbitsreg: '2', cbitsreg: '2'});
     flow.add('swap', 'n1', [['n2'], ['n2']]);
     flow.addOutput('n2');
 
-    let payloadObject = [
+    let payloadObjectList = [
       {structure: {qubits: 2, cbits: 2},
         register: undefined,
         qubit: 0},
@@ -38,7 +38,7 @@ describe('SwapNode', function() {
         qubit: 1},
     ];
 
-    testUtil.qubitsPassedThroughGate(flow, payloadObject, done);
+    testUtil.qubitsPassedThroughGate(flow, payloadObjectList, done);
   });
 
   it('execute command', function(done) {

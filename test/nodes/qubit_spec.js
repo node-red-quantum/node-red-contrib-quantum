@@ -26,13 +26,13 @@ describe('QubitNode', function() {
     flow.add('qubit', 'n1', [['n2']]);
     flow.addOutput('n2');
 
-    let payloadObject = {
+    let payloadObjectList = [{
       structure: {qubits: 1, cbits: 1},
       register: undefined,
       qubit: 0,
-    };
+    }];
 
-    testUtil.qubitsPassedThroughGate(flow, payloadObject, done);
+    testUtil.qubitsPassedThroughGate(flow, payloadObjectList, done);
   });
 
   it('should fail on receiving input from non-quantum nodes', function(done) {
