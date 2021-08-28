@@ -1,8 +1,8 @@
 # node-red-quantum <!-- omit in toc -->
 
 [![platform](https://img.shields.io/badge/platform-Node--RED-red)](https://nodered.org)
-[![CI Status](https://img.shields.io/github/workflow/status/louislefevre/node-red-contrib-quantum/Node.js%20CI)](https://github.com/louislefevre/node-red-contrib-quantum/actions/workflows/node.js.yml)
-[![Coverage Status](https://img.shields.io/coveralls/github/louislefevre/node-red-contrib-quantum)](https://coveralls.io/github/louislefevre/node-red-contrib-quantum?branch=master)
+[![CI Status](https://img.shields.io/github/workflow/status/node-red-quantum/node-red-contrib-quantum/Node.js%20CI)](https://github.com/node-red-quantum/node-red-contrib-quantum/actions/workflows/node.js.yml)
+[![Coverage Status](https://img.shields.io/coveralls/github/node-red-quantum/node-red-contrib-quantum)](https://coveralls.io/github/node-red-quantum/node-red-contrib-quantum?branch=master)
 [![NPM](https://img.shields.io/npm/v/node-red-contrib-quantum)](https://www.npmjs.com/package/node-red-contrib-quantum)
 [![Node](https://img.shields.io/node/v/node-red-contrib-quantum)](https://nodejs.org/en/)
 
@@ -102,7 +102,7 @@ Referred to as a "spooky action at a distance" by Albert Einstein, **entanglemen
 <br /><br />
 Two qubits are said to be **entangled** when their relative states rely on each other. In other words, changing or knowing the state of one qubit can change the state of the other qubit. This connection is independent of time and space: the two qubits can be miles appart and the connection will still be instantaneous.
 <br /><br />
-In practice, **entanglement** arises when the operation of a gate on a qubit is conditional on the state of another qubit (similar to an `if` block in classical computing). These gates are often referred to as [multi-qubits quantum gates](https://github.com/louislefevre/node-red-contrib-quantum/wiki/Quantum-Gate-Nodes/#multi-qubits-quantum-gates). 
+In practice, **entanglement** arises when the operation of a gate on a qubit is conditional on the state of another qubit (similar to an `if` block in classical computing). These gates are often referred to as [multi-qubits quantum gates](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Quantum-Gate-Nodes/#multi-qubits-quantum-gates). 
 <br /><br />
 <b>Example -</b> A CNOT gate applies a NOT gate (0 &#8594; 1 & 1 &#8594; 0) to the 'target' qubit **if and only if** the 'control' qubit is in the '1' state.
 <br /><br />
@@ -120,23 +120,23 @@ The 2 qubits are now <b>entangled</b>. If we measure one of them to be in the '1
 # *'Quantum'* nodes - Building quantum circuits
 
 
-* [Circuit Initialisation nodes](https://github.com/louislefevre/node-red-contrib-quantum/wiki/Circuit-Initialisation-Nodes)
+* [Circuit Initialisation nodes](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Circuit-Initialisation-Nodes)
 
-* [Qubit Control nodes](https://github.com/louislefevre/node-red-contrib-quantum/wiki/Qubit-Control-Nodes)
+* [Qubit Control nodes](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Qubit-Control-Nodes)
 
-* [Quantum Gate nodes](https://github.com/louislefevre/node-red-contrib-quantum/wiki/Quantum-Gate-Nodes)
+* [Quantum Gate nodes](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Quantum-Gate-Nodes)
 
-* [Circuit Output nodes](https://github.com/louislefevre/node-red-contrib-quantum/wiki/Circuit-Output-Nodes)
+* [Circuit Output nodes](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Circuit-Output-Nodes)
 
 <br/>
 
-For detailed information on how to use each node, please head to the [Node-RED Quantum wiki](https://github.com/louislefevre/node-red-contrib-quantum/wiki).
+For detailed information on how to use each node, please head to the [Node-RED Quantum wiki](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki).
 
 <br />
 
 # *'Quantum Algorithms'* nodes - Leveraging quantum computing
 
-For detailed information on how to use each node, please head to the [Node-RED Quantum wiki](https://github.com/louislefevre/node-red-contrib-quantum/wiki).
+For detailed information on how to use each node, please head to the [Node-RED Quantum wiki](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki).
 
 <br />
 

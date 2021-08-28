@@ -4,13 +4,13 @@
   "description": "Quantum computing functionality for Node-RED",
   "author": "Louis Lefevre",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/louislefevre/node-red-contrib-quantum#readme",
+  "homepage": "https://github.com/node-red-quantum/node-red-contrib-quantum#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/louislefevre/node-red-contrib-quantum.git"
+    "url": "https://github.com/node-red-quantum/node-red-contrib-quantum.git"
   },
   "bugs": {
-    "url": "https://github.com/louislefevre/node-red-contrib-quantum/issues"
+    "url": "https://github.com/node-red-quantum/node-red-contrib-quantum/issues"
   },
   "keywords": [
     "node-red",
