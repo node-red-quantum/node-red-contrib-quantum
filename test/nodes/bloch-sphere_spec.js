@@ -22,7 +22,7 @@ describe('BlochSphereNode', function() {
     testUtil.isLoaded(blochSphereNode, 'bloch-sphere', done);
   });
 
-  xit('execute command', function(done) {
+  it('execute command', function(done) {
     let command = snippets.BLOCH_SPHERE + snippets.ENCODE_IMAGE;
     flow.add('quantum-circuit', 'n0', [['n1'], ['n2'], ['n3']],
         {structure: 'qubits', outputs: '3', qbitsreg: '3', cbitsreg: '1'});

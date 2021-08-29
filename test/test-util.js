@@ -46,9 +46,7 @@ function commandExecuted(flowBuilder, command, done) {
   nodeTestHelper.load(flowBuilder.nodes, flowBuilder.flow, function() {
     let inputNode = nodeTestHelper.getNode(flowBuilder.inputId);
     let outputNode = nodeTestHelper.getNode(flowBuilder.outputId);
-    let called = false;
-    outputNode.on('input', function() {
-      if (called) return;
+    outputNode.once('input', function() {
       try {
         assert.strictEqual(shell.lastCommand, command);
         done();
@@ -56,10 +54,8 @@ function commandExecuted(flowBuilder, command, done) {
         done(err);
       } finally {
         shell.stop();
-        called = true;
       }
     });
-
     inputNode.receive({payload: ''});
   });
 }
