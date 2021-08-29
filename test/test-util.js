@@ -64,7 +64,7 @@ function correctOutputReceived(flowBuilder, givenInput, expectedOutput, done) {
   nodeTestHelper.load(flowBuilder.nodes, flowBuilder.flow, function() {
     const inputNode = nodeTestHelper.getNode(flowBuilder.inputId);
     const outputNode = nodeTestHelper.getNode(flowBuilder.outputId);
-    outputNode.on('input', function(msg) {
+    outputNode.once('input', function(msg) {
       try {
         assert.deepEqual(msg.payload, expectedOutput);
         done();
