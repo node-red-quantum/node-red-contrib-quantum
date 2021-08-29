@@ -38,7 +38,7 @@ describe('ShorsNode', function() {
 
     const givenInput = {payload: 15};
     const expectedOutput = {
-      listOfFactors: '[3, 5]'
+      listOfFactors: '[3, 5]',
     };
     testUtil.correctOutputReceived(flow, givenInput, expectedOutput, done);
   }).timeout(25000);

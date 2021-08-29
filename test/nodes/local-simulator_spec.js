@@ -51,5 +51,4 @@ describe('LocalSimulatorNode', function() {
     const expectedMessage = errors.NOT_QUBIT_OBJECT;
     testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
   });
-
 });

@@ -58,7 +58,7 @@ describe('ToffoliGateNode', function() {
   });
 
   it('should fail on receiving input from non-quantum nodes', function(done) {
-    flow.add('toffoli-gate', 'n1', [['n2'],['n2'],['n2']], {targetPosition: 'Middle'});
+    flow.add('toffoli-gate', 'n1', [['n2'], ['n2'], ['n2']], {targetPosition: 'Middle'});
     flow.addOutput('n2');
 
     const givenInput = {payload: '', topic: ''};
@@ -67,13 +67,12 @@ describe('ToffoliGateNode', function() {
   });
 
   it('should fail on receiving non-qubit object', function(done) {
-    flow.add('toffoli-gate', 'n1', [['n2'],['n2'],['n2']], {targetPosition: 'Middle'});
+    flow.add('toffoli-gate', 'n1', [['n2'], ['n2'], ['n2']], {targetPosition: 'Middle'});
     flow.addOutput('n2');
 
     const givenInput = {payload: {structure: '', qubit: 3}, topic: 'Quantum Circuit'};
     const expectedMessage = errors.NOT_QUBIT_OBJECT;
     testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
   });
-
 });
 

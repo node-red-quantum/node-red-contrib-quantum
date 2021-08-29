@@ -97,5 +97,5 @@ module.exports = {
   qubitsPassedThroughGate,
   commandExecuted,
   correctOutputReceived,
-  nodeFailed
+  nodeFailed,
 };

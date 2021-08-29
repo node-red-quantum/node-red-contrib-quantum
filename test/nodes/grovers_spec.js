@@ -44,7 +44,7 @@ describe('GroversNode', function() {
     flow = new FlowBuilder();
     flow.add('grovers', 'n1', []);
 
-    const givenInput = {payload: "11112"};
+    const givenInput = {payload: '11112'};
     const expectedMessage = errors.NOT_BIT_STRING;
     testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
   });

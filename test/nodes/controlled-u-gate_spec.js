@@ -26,7 +26,7 @@ describe('ControlledUGateNode', function() {
   it('pass qubit through gate', function(done) {
     flow.add('quantum-circuit', 'n0', [['n1'], ['n1']],
         {structure: 'qubits', outputs: '2', qbitsreg: '2', cbitsreg: '2'});
-    flow.add('controlled-u-gate', 'n1', [['n2'],['n2']],
+    flow.add('controlled-u-gate', 'n1', [['n2'], ['n2']],
         {targetPosition: 'Upper', theta: '0', phi: '0', lambda: '0', gamma: '0'});
     flow.addOutput('n2');
 
@@ -34,7 +34,7 @@ describe('ControlledUGateNode', function() {
       structure: {qubits: 2, cbits: 2},
       register: undefined,
       qubit: 0,
-    },{
+    }, {
       structure: {qubits: 2, cbits: 2},
       register: undefined,
       qubit: 1,
@@ -56,7 +56,7 @@ describe('ControlledUGateNode', function() {
 
   it('should fail on receiving input from non-quantum nodes', function(done) {
     flow.add('controlled-u-gate', 'n1', [['n2']],
-      {targetPosition: 'Upper', theta: '0', phi: '0', lambda: '0', gamma: '0'});
+        {targetPosition: 'Upper', theta: '0', phi: '0', lambda: '0', gamma: '0'});
     flow.addOutput('n2');
 
     const givenInput = {payload: '', topic: ''};
@@ -66,7 +66,7 @@ describe('ControlledUGateNode', function() {
 
   it('should fail on receiving non-qubit object', function(done) {
     flow.add('controlled-u-gate', 'n1', [['n2']],
-      {targetPosition: 'Upper', theta: '0', phi: '0', lambda: '0', gamma: '0'});
+        {targetPosition: 'Upper', theta: '0', phi: '0', lambda: '0', gamma: '0'});
     flow.addOutput('n2');
 
     const givenInput = {payload: {structure: '', qubit: 3}, topic: 'Quantum Circuit'};
