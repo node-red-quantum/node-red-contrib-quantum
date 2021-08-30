@@ -1,5 +1,3 @@
-<!-- markdownlint-disable MD022 MD032 MD024 -->
-
 # node-red-quantum
 [![Platform](https://img.shields.io/badge/platform-Node--RED-red)](https://nodered.org)
 [![CI Status](https://img.shields.io/github/workflow/status/node-red-quantum/node-red-contrib-quantum/Node.js%20CI)](https://github.com/node-red-quantum/node-red-contrib-quantum/actions/workflows/node.js.yml)
