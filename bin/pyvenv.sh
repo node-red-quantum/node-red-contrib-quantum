@@ -4,6 +4,9 @@
 # Note that this script is designed to be run in POSIX-compatible environments
 # which use Bash.
 
+# Dependencies list (empty value means use latest version).
+declare -A packages=(["qiskit"]="" ["matplotlib"]="3.3.4" ["pylatexenc"]="")
+
 # Check OS for paths.
 venv="$PWD/venv"
 if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]]; then
@@ -46,9 +49,6 @@ if [[ ! -x "$pip_path" ]]; then
   echo "Error: failed to find $pip_path"
   exit 1
 fi
-
-# Dependencies list (empty value means use latest version).
-declare -A packages=(["qiskit"]="" ["matplotlib"]="3.3.4" ["pylatexenc"]="")
 
 # Install package dependencies.
 for i in "${!packages[@]}"; do
