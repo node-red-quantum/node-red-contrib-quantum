@@ -46,7 +46,7 @@ describe('IBMQuantumSystemNode', function() {
 
     const givenInput = {payload: '', topic: ''};
     const expectedMessage = errors.NOT_QUANTUM_NODE;
-    testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
+    testUtil.nodeFailed(flow, givenInput, expectedMessage, done);
   });
 
   it('should fail on receiving non-qubit object', function(done) {
@@ -56,6 +56,6 @@ describe('IBMQuantumSystemNode', function() {
 
     const givenInput = {payload: {structure: '', qubit: 3}, topic: 'Quantum Circuit'};
     const expectedMessage = errors.NOT_QUBIT_OBJECT;
-    testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
+    testUtil.nodeFailed(flow, givenInput, expectedMessage, done);
   });
 });

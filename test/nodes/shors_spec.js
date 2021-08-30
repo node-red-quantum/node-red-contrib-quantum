@@ -48,7 +48,7 @@ describe('ShorsNode', function() {
 
     const givenInput = {payload: 1};
     const expectedMessage = errors.GREATER_THAN_TWO;
-    testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
+    testUtil.nodeFailed(flow, givenInput, expectedMessage, done);
   });
 
   it('return error for even input', function(done) {
@@ -56,7 +56,7 @@ describe('ShorsNode', function() {
 
     const givenInput = {payload: 4};
     const expectedMessage = errors.INPUT_ODD_INTEGER;
-    testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
+    testUtil.nodeFailed(flow, givenInput, expectedMessage, done);
   });
 
   it('return error for non-integer input', function(done) {
@@ -64,6 +64,6 @@ describe('ShorsNode', function() {
 
     const givenInput = {payload: 'a'};
     const expectedMessage = errors.INPUT_AN_INTEGER;
-    testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
+    testUtil.nodeFailed(flow, givenInput, expectedMessage, done);
   });
 });

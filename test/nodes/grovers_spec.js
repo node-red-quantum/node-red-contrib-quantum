@@ -46,6 +46,6 @@ describe('GroversNode', function() {
 
     const givenInput = {payload: '11112'};
     const expectedMessage = errors.NOT_BIT_STRING;
-    testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
+    testUtil.nodeFailed(flow, givenInput, expectedMessage, done);
   });
 });

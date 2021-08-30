@@ -78,16 +78,15 @@ function correctOutputReceived(flowBuilder, givenInput, expectedOutput, done) {
   });
 }
 
-function nodeFailed(flowBuilder, nodeId, givenInput, expectedMessage, done) {
+function nodeFailed(flowBuilder, givenInput, expectedMessage, done) {
   nodeTestHelper.load(flowBuilder.nodes, flowBuilder.flow, function() {
-    let inputNode = nodeTestHelper.getNode(flowBuilder.inputId);
-    let targetNode = nodeTestHelper.getNode(nodeId);
-    targetNode.on('call:error', (call)=> {
+    let node = nodeTestHelper.getNode(flowBuilder.inputId);
+    node.on('call:error', (call) => {
       const actualError = call.firstArg;
       assert.strictEqual(actualError.message, expectedMessage);
       done();
     });
-    inputNode.receive(givenInput);
+    node.receive(givenInput);
   });
 }
 
