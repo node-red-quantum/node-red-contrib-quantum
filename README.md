@@ -1,4 +1,4 @@
-# node-red-quantum <!-- omit in toc -->
+# node-red-quantum
 [![platform](https://img.shields.io/badge/platform-Node--RED-red)](https://nodered.org)
 [![CI Status](https://img.shields.io/github/workflow/status/node-red-quantum/node-red-contrib-quantum/Node.js%20CI)](https://github.com/node-red-quantum/node-red-contrib-quantum/actions/workflows/node.js.yml)
 [![Coverage Status](https://img.shields.io/coveralls/github/node-red-quantum/node-red-contrib-quantum)](https://coveralls.io/github/node-red-quantum/node-red-contrib-quantum?branch=master)
@@ -21,10 +21,13 @@ For information on how to contribute, please read the [CONTRIBUTING](CONTRIBUTIN
 
 ![Quantum Circuit example](./resources/quantum-circuit-examples/quantum-random-number.png)
 
-## Table of Contents <!-- omit in toc -->
-- [Pre-requisites](#pre-requisites)
-- [Install](#install)
+## Table of Contents
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
 - [About Quantum Computing](#about-quantum-computing)
+  - [Qubit State](#qubit-state)
+  - [Qubit Measurement](#qubit-measurement)
+  - [Entanglement](#entanglement)
 - [*'Quantum'* nodes - Building quantum circuits](#quantum-nodes---building-quantum-circuits)
 - [*'Quantum Algorithms'* nodes - Leveraging quantum computing](#quantum-algorithms-nodes---leveraging-quantum-computing)
 - [Tutorials & Examples](#tutorials--examples)
@@ -32,7 +35,7 @@ For information on how to contribute, please read the [CONTRIBUTING](CONTRIBUTIN
 ## Prerequisites
 Node-RED Quantum requires at minimum [Node.js 12.0.0](https://nodejs.org/en/), [Node-RED 1.0](https://nodered.org) and [Python 3](https://www.python.org/).
 
-## Install
+## Installation
 
 1. In the terminal of your machine, install **Node-RED** by executing the command:
    `sudo npm install -g --unsafe-perm node-red`.
@@ -46,7 +49,7 @@ Node-RED Quantum requires at minimum [Node.js 12.0.0](https://nodejs.org/en/), [
 
 ## About Quantum Computing
 
-### Qubit State <!-- omit in toc -->
+### Qubit State
 
 A qubit is the same to a quantum computer than what a bit is to a classical computer: the smallest unit of information.  
 [Classical vs Quantum bits - Qiskit textbook](https://qiskit.org/textbook/ch-states/representing-qubit-states.html#statevectors)
@@ -66,7 +69,7 @@ To set the qubit in a particular state, we operate rotations or reflections of t
 
 ![Bloch sphere](./resources/quantum-computing/bloch-sphere-horizontal.png)
 
-### Qubit Measurement <!-- omit in toc -->
+### Qubit Measurement
 
 It is very important to understand that, even though a qubit can take an infinite number of states, our technology only allows us to measure '0' or '1', like on a classical bit. Since we measure and interpret a qubit state using classical machines, this can be seen as a projection of quantum computing back to classical computing: from quantum states back to binary values.
 [Qubit measurement - Qiskit textbook](https://qiskit.org/textbook/ch-states/representing-qubit-states.html#rules-measurement)
@@ -78,7 +81,7 @@ In terms of the **Bloch Sphere**, the closest the qubit state is from the '1 sta
 
 **Careful** -The act of measuring a qubit collapses the qubit state: the state of the qubit after being measured is not representative of the qubit state before the measurement. Please measure the qubits at the end of the quantum circuit or reset them after a measurement.
 
-### Entanglement <!-- omit in toc -->
+### Entanglement
 Referred to as a "spooky action at a distance" by Albert Einstein, **entanglement** is a quantum phenomenon that is extremely powerful in quantum computing. It is a form of connection that can exist between any number of qubits. Here we will illustrate **entanglement** between two qubits.
 
 Two qubits are said to be **entangled** when their relative states rely on each other. In other words, changing or knowing the state of one qubit can change the state of the other qubit. This connection is independent of time and space: the two qubits can be miles appart and the connection will still be instantaneous.
