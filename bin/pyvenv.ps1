@@ -44,7 +44,7 @@ if (!(Get-Command $pip_path -errorAction SilentlyContinue)) {
 }
 
 # Dependencies list (empty value means use latest version).
-$packages = @{"qiskit"=""; "matplotlib"="3.3.4"; "pylatexenc"=""; "qiskit-finance"=""; "qiskit-optimization"=""}
+$packages = @{"qiskit"=""; "matplotlib"="3.3.4"; "pylatexenc"=""}
 
 # Install package dependencies.
 foreach ($i in $packages.GetEnumerator()) {

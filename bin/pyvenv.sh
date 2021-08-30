@@ -48,8 +48,7 @@ if [[ ! -x "$pip_path" ]]; then
 fi
 
 # Dependencies list (empty value means use latest version).
-declare -A packages=(["qiskit"]="" ["matplotlib"]="3.3.4" ["pylatexenc"]="" ["qiskit-finance"]=""
-                     ["qiskit-optimization"]="")
+declare -A packages=(["qiskit"]="" ["matplotlib"]="3.3.4" ["pylatexenc"]="")
 
 # Install package dependencies.
 for i in "${!packages[@]}"; do
