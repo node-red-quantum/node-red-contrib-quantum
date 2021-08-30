@@ -23,7 +23,7 @@ For information on how to contribute, please read the [CONTRIBUTING](CONTRIBUTIN
 
 <br /><br />
 
-# Table of contents <!-- omit in toc -->
+## Table of Contents <!-- omit in toc -->
 - [Pre-requisites](#pre-requisites)
 - [Install](#install)
 - [About Quantum Computing](#about-quantum-computing)
@@ -33,12 +33,12 @@ For information on how to contribute, please read the [CONTRIBUTING](CONTRIBUTIN
 
 <br />
 
-# Pre-requisites
+## Prerequisites
 Node-RED Quantum requires at minimum [Node.js 12.0.0](https://nodejs.org/en/), [Node-RED 1.0](https://nodered.org) and [Python 3](https://www.python.org/).
 
 <br />
 
-# Install
+## Install
 
 1. In the terminal of your machine, install **Node-RED** by executing the command:
    `sudo npm install -g --unsafe-perm node-red`.
@@ -52,9 +52,9 @@ Node-RED Quantum requires at minimum [Node.js 12.0.0](https://nodejs.org/en/), [
 
 <br />
 
-# About Quantum Computing
+## About Quantum Computing
 
-## Qubit State <!-- omit in toc -->
+### Qubit State <!-- omit in toc -->
 
 A qubit is the same to a quantum computer than what a bit is to a classical computer: the smallest unit of information.<br />
 <a href="https://qiskit.org/textbook/ch-states/representing-qubit-states.html#statevectors"> Classical vs Quantum bits - Qiskit textbook</a>
@@ -75,7 +75,7 @@ To set the qubit in a particular state, we operate rotations or reflections of t
 
 <img  src="./resources/quantum-computing/bloch-sphere-horizontal.png" width="750px"/><br />
 
-## Qubit Measurement <!-- omit in toc -->
+### Qubit Measurement <!-- omit in toc -->
 
 It is very important to understand that, even though a qubit can take an infinite number of states, our technology only allows us to measure '0' or '1', like on a classical bit. Since we measure and interpret a qubit state using classical machines, this can be seen as a projection of quantum computing back to classical computing: from quantum states back to binary values. <br />
 <a href="https://qiskit.org/textbook/ch-states/representing-qubit-states.html#rules-measurement">Qubit measurement - Qiskit textbook</a>
@@ -90,7 +90,7 @@ is not representative of the qubit state before the measurement. Please measure 
 
 <br />
 
-## Entanglement <!-- omit in toc -->
+### Entanglement <!-- omit in toc -->
 
 Referred to as a "spooky action at a distance" by Albert Einstein, **entanglement** is a quantum phenomenon that is extremely powerful in quantum computing. It is a form of connection that can exist between any number of qubits. Here we will illustrate **entanglement** between two qubits.
 <br /><br />
@@ -111,7 +111,7 @@ The 2 qubits are now <b>entangled</b>. If we measure one of them to be in the '1
 <a href="https://qiskit.org/textbook/ch-gates/multiple-qubits-entangled-states.html#entangled">Entanglement - Qiskit textbook</a>  
 <br /><br />
 
-# *'Quantum'* nodes - Building quantum circuits
+## *'Quantum'* nodes - Building quantum circuits
 * [Circuit Initialisation nodes](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Circuit-Initialisation-Nodes)
 * [Qubit Control nodes](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Qubit-Control-Nodes)
 * [Quantum Gate nodes](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Quantum-Gate-Nodes)
@@ -123,12 +123,12 @@ For detailed information on how to use each node, please head to the [Node-RED Q
 
 <br />
 
-# *'Quantum Algorithms'* nodes - Leveraging quantum computing
+## *'Quantum Algorithms'* nodes - Leveraging quantum computing
 
 For detailed information on how to use each node, please head to the [Node-RED Quantum wiki](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki).
 
 <br />
 
-# Tutorials & Examples
+## Tutorials & Examples
 
 <br />
