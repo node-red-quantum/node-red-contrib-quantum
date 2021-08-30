@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD022 MD032 MD024 -->
+
 # node-red-quantum
 [![Platform](https://img.shields.io/badge/platform-Node--RED-red)](https://nodered.org)
 [![CI Status](https://img.shields.io/github/workflow/status/node-red-quantum/node-red-contrib-quantum/Node.js%20CI)](https://github.com/node-red-quantum/node-red-contrib-quantum/actions/workflows/node.js.yml)
@@ -58,33 +60,34 @@ Applying a &#960; radians rotation about the x-axis on a qubit that is in the '0
 ![Bloch sphere](./resources/quantum-computing/bloch-sphere-horizontal.png)
 
 ### Qubit Measurement
-It is very important to understand that, even though a qubit can take an infinite number of states, our technology only allows us to measure '0' or '1', like on a classical bit. Since we measure and interpret a qubit state using classical machines, this can be seen as a projection of quantum computing back to classical computing: from quantum states back to binary values.
-[Qubit measurement - Qiskit textbook](https://qiskit.org/textbook/ch-states/representing-qubit-states.html#rules-measurement)
+It is very important to understand that even though a qubit can take an infinite number of states, modern technology only allows us to measure '0' or '1', same as a classical bit. Since we measure and interpret a qubit state using classical machines, this can be seen as a projection of quantum computing back to classical computing: from quantum states back to binary values.
 
-This leads to probabilistic measurement results.
-In terms of the **Bloch Sphere**, the closest the qubit state is from the '1 state', the more likely we are to measure a '1'.
+This leads to probabilistic measurement results. In terms of the **Bloch Sphere**, the closest the qubit state is from the '1' state, the more likely we are to measure a '1'.
 
-**Example** - If we measure a 1000 times a qubit that has a state in the x-y plane, then we will get more or less 500 '0' measurements and 500 '1' measurements.
+The act of measuring a qubit collapses the qubit state; the state of the qubit after being measured is not representative of the qubit state before the measurement. You must be careful to ensure that measurement of the qubits happens at the end of the quantum circuit, or reset them after a measurement.
 
-**Careful** -The act of measuring a qubit collapses the qubit state: the state of the qubit after being measured is not representative of the qubit state before the measurement. Please measure the qubits at the end of the quantum circuit or reset them after a measurement.
+More information on qubit measurement can be found in the [Qiskit Textbook](https://qiskit.org/textbook/ch-states/representing-qubit-states.html#rules-measurement)
+
+#### Example
+If we measure a qubit that has a state in the x-y plane 1000 times, then we will approximately get 500 '0' measurements and 500 '1' measurements.
 
 ### Entanglement
-Referred to as a "spooky action at a distance" by Albert Einstein, **entanglement** is a quantum phenomenon that is extremely powerful in quantum computing. It is a form of connection that can exist between any number of qubits. Here we will illustrate **entanglement** between two qubits.
+Referred to as a "spooky action at a distance" by Albert Einstein, **entanglement** is a quantum phenomenon that is extremely powerful in quantum computing; it is a form of connection that can exist between any number of qubits. Here we will illustrate **entanglement** between two qubits.
 
 Two qubits are said to be **entangled** when their relative states rely on each other. In other words, changing or knowing the state of one qubit can change the state of the other qubit. This connection is independent of time and space: the two qubits can be miles appart and the connection will still be instantaneous.
 
 In practice, **entanglement** arises when the operation of a gate on a qubit is conditional on the state of another qubit (similar to an `if` block in classical computing). These gates are often referred to as [multi-qubits quantum gates](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Quantum-Gate-Nodes/#multi-qubits-quantum-gates).
 
-**Example** - A CNOT gate applies a NOT gate (0 &#8594; 1 & 1 &#8594; 0) to the 'target' qubit **if and only if** the 'control' qubit is in the '1' state.
+More information on entanglement can be found in the [Qiskit Textbook](https://qiskit.org/textbook/ch-gates/multiple-qubits-entangled-states.html#entangled)
 
-Now, let's assume that the 'control' qubit is in a **superposition** state (25% '0' / 75% '1'), while the 'target' qubit is in the '0' state.
-Then, the **combined** state of the 2 qubits after applying the CNOT gate will be:
+#### Example
+A CNOT gate applies a NOT gate (0 &#8594; 1 & 1 &#8594; 0) to the 'target' qubit **if and only if** the 'control' qubit is in the '1' state.
+
+Now, let's assume that the 'control' qubit is in a **superposition** state (25% '0' / 75% '1'), while the 'target' qubit is in the '0' state. Then, the **combined** state of the 2 qubits after applying the CNOT gate will be:
 - '00' with 25% probability
 - '11' with 75% probability
 
-The 2 qubits are now **entangled** If we measure one of them to be in the '1' state, then we know that other qubit will be in the '1' state as well.
-
-[Entanglement - Qiskit textbook](https://qiskit.org/textbook/ch-gates/multiple-qubits-entangled-states.html#entangled)
+The 2 qubits are now **entangled**: if we measure one of them to be in the '1' state, then we know that other qubit will be in the '1' state as well.
 
 ## Quantum Nodes
 Quantum circuits can be built through the use of the *'quantum'* nodes provided by this library.
