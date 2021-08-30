@@ -16,6 +16,10 @@ jobs:
         node-version: [12.x, 14.x, 16.x]
         python-version: [3.9]
 
+    defaults:
+      run:
+        shell: bash
+
     steps:
     - uses: actions/checkout@v2
 
@@ -37,13 +41,9 @@ jobs:
         path: venv/
         key: ${{ runner.os }}-venv-${{ hashFiles('bin/pyvenv.sh') }}
 
-    - name: Setup Python virtual environment (Linux)
-      if: runner.os == 'Linux' && steps.cache-venv.outputs.cache-hit != 'true'
+    - name: Setup Python virtual environment
+      if: steps.cache-venv.outputs.cache-hit != 'true'
       run: npm run venv
-
-    - name: Setup Python virtual environment (Windows)
-      if: runner.os == 'Windows' && steps.cache-venv.outputs.cache-hit != 'true'
-      run: npm run psvenv
 
     - name: Install dependencies
       run: npm ci
@@ -57,6 +57,7 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Archive logs
+      if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
         name: logs
