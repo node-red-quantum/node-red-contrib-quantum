@@ -1,26 +1,23 @@
 # node-red-quantum <!-- omit in toc -->
-
 [![platform](https://img.shields.io/badge/platform-Node--RED-red)](https://nodered.org)
 [![CI Status](https://img.shields.io/github/workflow/status/node-red-quantum/node-red-contrib-quantum/Node.js%20CI)](https://github.com/node-red-quantum/node-red-contrib-quantum/actions/workflows/node.js.yml)
 [![Coverage Status](https://img.shields.io/coveralls/github/node-red-quantum/node-red-contrib-quantum)](https://coveralls.io/github/node-red-quantum/node-red-contrib-quantum?branch=master)
 [![NPM](https://img.shields.io/npm/v/node-red-contrib-quantum)](https://www.npmjs.com/package/node-red-contrib-quantum)
 [![Node](https://img.shields.io/node/v/node-red-contrib-quantum)](https://nodejs.org/en/)
 
-
 **Node-RED Quantum** provides a set of nodes to build and run quantum computing algorithms within Node-RED.
 
 Please be aware that this is a  **development version** of Node-RED Quantum, it is still a work in progress and the code is unstable. A full production-ready release will be published soon.
 
-This module is a user-friendly library that is suitable for new quantum computing users thanks to its extensive documentation. It was designed to facilitate the integration of quantum algorithms within classical programs and is fully scalable since all the elemental quantum operations are included. 
+This module is a user-friendly library that is suitable for new quantum computing users thanks to its extensive documentation. It was designed to facilitate the integration of quantum algorithms within classical programs and is fully scalable since all the elemental quantum operations are included.
 
-This Node-RED library was developed in the context of a [UCL IXN](https://www.ucl.ac.uk/computer-science/collaborate/ucl-industry-exchange-network-ucl-ixn) partnership with [IBM](https://www.ibm.com/uk-en). Defined and arranged by IBM, the project was allocated to students from UCL's computer science department as part of their Master's thesis. 
+This Node-RED library was developed in the context of a [UCL IXN](https://www.ucl.ac.uk/computer-science/collaborate/ucl-industry-exchange-network-ucl-ixn) partnership with [IBM](https://www.ibm.com/uk-en). Defined and arranged by IBM, the project was allocated to students from UCL's computer science department as part of their Master's thesis.
 
 For the latest changes, please read the [CHANGELOG](CHANGELOG.md).
 
 For more details on the authors, please read the [AUTHORS](AUTHORS) file.
 
 For information on how to contribute, please read the [CONTRIBUTING](CONTRIBUTING.md) guidelines.
-
 
 ![Quantum Circuit example](./resources/quantum-circuit-examples/quantum-random-number.png)
 
@@ -44,14 +41,11 @@ Node-RED Quantum requires at minimum [Node.js 12.0.0](https://nodejs.org/en/), [
 # Install
 
 1. In the terminal of your machine, install **Node-RED** by executing the command:
-`sudo npm install -g --unsafe-perm node-red`.
+   `sudo npm install -g --unsafe-perm node-red`.
 
 2. Once **Node-RED** has been installed, start the application by entering the command `node-red` in the terminal.
-   
 3. Navigate to **Node-RED** by following the IP address returned in the terminal. This will usually be `http://127.0.0.1:1880/`.
-   
 4. In **Node-RED**, navigate to the **Palette Manager** (top-right corner), select **Install** and search for *'quantum'*, as depicted below.
-   
 5. Install the **node-red-contrib-quantum** package. Once installed, it will show as quantum nodes in the **Palette** (on the left of the Node-RED editor). Please note that this installation may take a few minutes, as it needs to install the Python virtual environment required for executing the nodes.
 
 ![Node-RED palette manager](./resources/installation-guide/palette-manager.png)
@@ -118,14 +112,9 @@ The 2 qubits are now <b>entangled</b>. If we measure one of them to be in the '1
 <br /><br />
 
 # *'Quantum'* nodes - Building quantum circuits
-
-
 * [Circuit Initialisation nodes](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Circuit-Initialisation-Nodes)
-
 * [Qubit Control nodes](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Qubit-Control-Nodes)
-
 * [Quantum Gate nodes](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Quantum-Gate-Nodes)
-
 * [Circuit Output nodes](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Circuit-Output-Nodes)
 
 <br/>
