@@ -19,11 +19,11 @@ describe('LocalSimulatorNode', function() {
     nodeTestHelper.stopServer(done);
   });
 
-  xit('load node', function(done) {
+  it('load node', function(done) {
     testUtil.isLoaded(localSimulatorNode, 'local-simulator', done);
   });
 
-  xit('execute command', function(done) {
+  it('execute command', function(done) {
     let command = util.format(snippets.LOCAL_SIMULATOR, '1');
     flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
     flow.add('hadamard-gate', 'n1', [['n2']]);
@@ -34,7 +34,7 @@ describe('LocalSimulatorNode', function() {
     testUtil.commandExecuted(flow, command, done);
   });
 
-  xit('should fail on receiving input from non-quantum nodes', function(done) {
+  it('should fail on receiving input from non-quantum nodes', function(done) {
     flow.add('local-simulator', 'n1', [['n2']], {shots: '1'});
     flow.addOutput('n2');
 
@@ -43,7 +43,7 @@ describe('LocalSimulatorNode', function() {
     testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
   });
 
-  xit('should fail on receiving non-qubit object', function(done) {
+  it('should fail on receiving non-qubit object', function(done) {
     flow.add('local-simulator', 'n1', [['n2']], {shots: '1'});
     flow.addOutput('n2');
 
@@ -52,7 +52,7 @@ describe('LocalSimulatorNode', function() {
     testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
   });
 
-  xit('should return correct output for qubit only circuit', function(done) {
+  it('should return correct output for qubit only circuit', function(done) {
     flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
     flow.add('not-gate', 'n1', [['n2']]);
     flow.add('measure', 'n2', [['n3']], {selectedBit: '0'});
