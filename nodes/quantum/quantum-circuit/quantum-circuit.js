@@ -31,7 +31,7 @@ module.exports = function(RED) {
       set: (obj, prop, value) => {
         obj[prop] = value;
         if (Object.keys(obj).length == node.outputs) {
-          quantumCircuitReady.emit('circuitReady', obj);
+          process.nextTick(() => quantumCircuitReady.emit('circuitReady', obj));
           state.setPersistent('quantumCircuitConfig', new Proxy({}, quantumCircuitProxyHandler));
         }
         return true;

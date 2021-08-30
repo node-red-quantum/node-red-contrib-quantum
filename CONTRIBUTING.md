@@ -4,7 +4,7 @@ Guidelines on setting up the project, creating new nodes, and writing unit tests
 ## Installation
 - Install Python, Node.js, and NPM.  
 - Clone the repository and navigate into it:  
-  `git clone https://github.com/louislefevre/node-red-contrib-quantum.git`  
+  `git clone https://github.com/node-red-quantum/node-red-contrib-quantum.git`  
   `cd node-red-contrib-quantum/`  
 - Install dependencies, link the package to Node-RED, and setup the Python virtual environment:  
   `npm run setup`  
