@@ -19,11 +19,11 @@ describe('LocalSimulatorNode', function() {
     nodeTestHelper.stopServer(done);
   });
 
-  it('load node', function(done) {
+  xit('load node', function(done) {
     testUtil.isLoaded(localSimulatorNode, 'local-simulator', done);
   });
 
-  it('execute command', function(done) {
+  xit('execute command', function(done) {
     let command = util.format(snippets.LOCAL_SIMULATOR, '1');
     flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
     flow.add('hadamard-gate', 'n1', [['n2']]);
@@ -34,7 +34,7 @@ describe('LocalSimulatorNode', function() {
     testUtil.commandExecuted(flow, command, done);
   });
 
-  it('should fail on receiving input from non-quantum nodes', function(done) {
+  xit('should fail on receiving input from non-quantum nodes', function(done) {
     flow.add('local-simulator', 'n1', [['n2']], {shots: '1'});
     flow.addOutput('n2');
 
@@ -43,12 +43,40 @@ describe('LocalSimulatorNode', function() {
     testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
   });
 
-  it('should fail on receiving non-qubit object', function(done) {
+  xit('should fail on receiving non-qubit object', function(done) {
     flow.add('local-simulator', 'n1', [['n2']], {shots: '1'});
     flow.addOutput('n2');
 
     const givenInput = {payload: {structure: '', qubit: 3}, topic: 'Quantum Circuit'};
     const expectedMessage = errors.NOT_QUBIT_OBJECT;
     testUtil.nodeFailed(flow, 'n1', givenInput, expectedMessage, done);
+  });
+
+  xit('should return correct output for qubit only circuit', function(done) {
+    flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
+    flow.add('not-gate', 'n1', [['n2']]);
+    flow.add('measure', 'n2', [['n3']], {selectedBit: '0'});
+    flow.add('local-simulator', 'n3', [['n4']], {shots: '1'});
+    flow.addOutput('n4');
+
+    const givenInput = {payload: ''};
+    const expectedOutput = {'1': 1};
+    testUtil.correctOutputReceived(flow, givenInput, expectedOutput, done);
+  });
+
+  xit('should return correct output for register only circuit', function(done) {
+    flow.add('quantum-circuit', 'qc', [['qr'], ['cr']],
+      {structure: 'registers', outputs: '2', qbitsreg: '1', cbitsreg: '1'});
+    flow.add('classical-register', 'cr', [[]], {classicalBits:'2'});
+    flow.add('quantum-register', 'qr', [['ng', 'm1']], {outputs:2});
+    flow.add('not-gate', 'ng', [['m2']]);
+    flow.add('measure', 'm1', [['si']], {selectedBit: 0});
+    flow.add('measure', 'm2', [['si']], {selectedBit: 1});
+    flow.add('local-simulator', 'si', [['out']], {shots: '1'});
+    flow.addOutput('out');
+
+    const givenInput = {payload: ''};
+    const expectedOutput = {'10': 1};
+    testUtil.correctOutputReceived(flow, givenInput, expectedOutput, done);
   });
 });
