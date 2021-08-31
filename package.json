@@ -81,6 +81,7 @@
       "bloch-sphere": "nodes/quantum/bloch-sphere/bloch-sphere.js",
       "circuit-diagram": "nodes/quantum/circuit-diagram/circuit-diagram.js",
       "script": "nodes/quantum/script/script.js",
+      "histogram-simulator": "nodes/quantum/histogram-simulator/histogram-simulator.js",
       "local-simulator": "nodes/quantum/local-simulator/local-simulator.js",
       "ibm-quantum-system": "nodes/quantum/ibm-quantum-system/ibm-quantum-system.js",
       "grovers":  "nodes/quantum-algorithms/grovers/grovers.js",
