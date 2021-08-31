@@ -73,7 +73,6 @@ function validateQubitInput(msg) {
 
 function validateRegisterInput(msg) {
   let keys = Object.keys(msg.payload);
-
   if (msg.topic !== 'Quantum Circuit') {
     return new Error(NOT_QUANTUM_NODE);
   } else if (keys.includes('register') && typeof msg.payload.register === 'undefined') {

@@ -31,7 +31,7 @@ module.exports = function(RED) {
       set: (obj, prop, value) => {
         obj[prop] = value;
         if (Object.keys(obj).length == node.outputs) {
-          quantumCircuitReady.emit('circuitReady', obj);
+          process.nextTick(() => quantumCircuitReady.emit('circuitReady', obj));
           state.setPersistent('quantumCircuitConfig', new Proxy({}, quantumCircuitProxyHandler));
         }
         return true;
@@ -44,7 +44,7 @@ module.exports = function(RED) {
     state.setPersistent('isCircuitReady', () => {
       let event = state.get('quantumCircuitReadyEvent');
       return new Promise((res, rej) => {
-        event.on('circuitReady', (circuitConfig) => {
+        event.once('circuitReady', (circuitConfig) => {
           res(circuitConfig);
         });
       });
@@ -59,6 +59,21 @@ module.exports = function(RED) {
       script += snippets.IMPORTS;
 
       let output = new Array(node.outputs);
+
+      // Check if the input msg contains binar string definition
+      if (msg.payload.binaryString) {
+        // Check the length of the binary string
+        let binaryString = msg.payload.binaryString;
+        if (binaryString.length != node.outputs) {
+          done(new Error(`Binary string length mismatch. Expect: ${node.outputs}, actual: ${binaryString.length}`));
+          return;
+        } else if (!/^[01]+$/.test(binaryString)) { // Use regular expression to check if it's a valid binary string
+          done(new Error(`Input should be a binary string`));
+          return;
+        }
+        // Set temporary flow context
+        state.setRuntime('binaryString', binaryString);
+      }
 
       // Creating a temporary 'quantumCircuitArray' flow context array
       // This variable represents the quantum circuit structure
@@ -80,10 +95,19 @@ module.exports = function(RED) {
               register: i,
             },
           };
+          if (msg.req && msg.res) {
+            output[i].req = msg.req;
+            output[i].res = msg.res;
+          }
         };
       } else { // If the user does not want to use registers
-        // Add arguments to quantum circuit code
+        // initialise qubit if binary string exists
         script += util.format(snippets.QUANTUM_CIRCUIT, node.qbitsreg + ', ' + node.cbitsreg);
+        let binaryString = state.get('binaryString');
+        if (binaryString) {
+          script += util.format(snippets.INITIALIZE, binaryString, `qc.qubits`);
+        }
+        // Add arguments to quantum circuit code
 
         // Creating an array of messages to be sent
         // Each message represents a different qubit
@@ -100,7 +124,12 @@ module.exports = function(RED) {
               qubit: i,
             },
           };
+          if (msg.req && msg.res) {
+            output[i].req = msg.req;
+            output[i].res = msg.res;
+          }
         };
+        state.del('binaryString');
       }
 
       // Sending one register object per node output
