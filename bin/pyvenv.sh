@@ -56,8 +56,8 @@ for i in "${!packages[@]}"; do
     if [ ! -z "${packages[$i]}" ]; then
       pkg_cmd="$i==${packages[$i]}"
       regex_cmd="^$i\s*${packages[$i]}"
-	  else
-	    pkg_cmd="$i"
+    else
+      pkg_cmd="$i"
       regex_cmd="^$i "
     fi
 
