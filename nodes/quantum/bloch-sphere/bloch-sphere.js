@@ -32,8 +32,8 @@ module.exports = function(RED) {
         reset();
         return;
       }
-      // Throw Error if:
-      // - The user connects it to a node that is not from the quantum library
+
+      // Node 'waiting' phase: waiting for all qubits to finish execution
       if (typeof(msg.payload.register) === 'undefined') {
         node.qubits.push(msg);
         node.qreg = undefined;
