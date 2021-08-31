@@ -23,9 +23,9 @@ describe('QuantumRegisterNode', function() {
     testUtil.isLoaded(quantumRegisterNode, 'quantum-register', done);
   });
 
-  it('execute command', function(done) {
-    // Test is disabled until issue #87 is fixed
+  it('execute quantum circuit command if last register is connected', function(done) {
     let command = util.format(snippets.QUANTUM_REGISTER, '0', '1, "quantum_register"');
+    command += util.format(snippets.QUANTUM_CIRCUIT, 'qr0,');
     flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'registers', outputs: '1', qbitsreg: '1', cbitsreg: '0'});
     flow.add('quantum-register', 'n1', [['n2']], {outputs: 1});
     flow.addOutput('n2');
