@@ -4,8 +4,10 @@
 # Note that this script is designed to be run in POSIX-compatible environments
 # which use Bash.
 
+
 # Dependencies list (empty value means use latest version).
-declare -A packages=(["qiskit"]="" ["matplotlib"]="3.3.4" ["pylatexenc"]="")
+declare -A packages=(["qiskit"]="" ["matplotlib"]="3.3.4" ["pylatexenc"]="" ["qiskit-finance"]=""
+                     ["qiskit-optimization"]="")
 
 # Check OS for paths.
 venv="$PWD/venv"
