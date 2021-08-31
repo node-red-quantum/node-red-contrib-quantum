@@ -161,7 +161,7 @@ print(b64_str)
 buffer.close()
 `;
 
-const INITIALIZE = 
+const INITIALIZE =
 `from qiskit.quantum_info import Statevector
 qc.initialize(Statevector.from_label('%s').data, %s)
 `;
