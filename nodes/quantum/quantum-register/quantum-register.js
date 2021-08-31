@@ -55,7 +55,6 @@ module.exports = function(RED) {
       // get quantum circuit config and circuit ready event from flow context
       let quantumCircuitConfig = state.get('quantumCircuitConfig');
       let circuitReady = state.get('isCircuitReady');
-      quantumCircuitConfig[node.name] = register;
 
       // If the quantum circuit has not yet been initialised by another register
       if (typeof(state.get('quantumCircuit')) !== undefined) {
@@ -121,6 +120,7 @@ module.exports = function(RED) {
 
       // wait for quantum circuit to be initialised
       logger.trace(node.id, 'Quantum register waiting for circuit to be ready');
+      quantumCircuitConfig[node.name] = register;
       await circuitReady();
       send(output);
       done();
