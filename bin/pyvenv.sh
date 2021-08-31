@@ -53,13 +53,13 @@ fi
 # Install package dependencies.
 for i in "${!packages[@]}"; do
   # If package requires specific version, add it to the command.
-    if [ ! -z "${packages[$i]}" ]; then
-      pkg_cmd="$i==${packages[$i]}"
-      regex_cmd="^$i\s*${packages[$i]}"
-    else
-      pkg_cmd="$i"
-      regex_cmd="^$i "
-    fi
+  if [ ! -z "${packages[$i]}" ]; then
+    pkg_cmd="$i==${packages[$i]}"
+    regex_cmd="^$i\s*${packages[$i]}"
+  else
+    pkg_cmd="$i"
+    regex_cmd="^$i "
+  fi
 
   # Check if the package is installed. If no, install package.
   if ! "$pip_path" list --disable-pip-version-check | grep -E "$regex_cmd" &>/dev/null; then
