@@ -56,7 +56,8 @@ module.exports = function(RED) {
         registerName: node.name,
         registerVar: 'cr_' + node.name,
       };
-      state.setRuntime('quantumCircuit[' + msg.payload.register.toString() + ']', register);
+      let quantumCircuit = state.get('quantumCircuit');
+      quantumCircuit[msg.payload.register.toString()] = register;
 
       // get quantum circuit config and circuit ready event from flow context
       let quantumCircuitConfig = state.get('quantumCircuitConfig');
