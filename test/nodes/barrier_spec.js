@@ -4,6 +4,7 @@ const nodeTestHelper = testUtil.nodeTestHelper;
 const {FlowBuilder} = require('../flow-builder');
 const barrierNode = require('../../nodes/quantum/barrier/barrier.js');
 const snippets = require('../../nodes/snippets.js');
+const errors = require('../../nodes/errors');
 
 const flow = new FlowBuilder();
 
@@ -22,7 +23,7 @@ describe('BarrierNode', function() {
     testUtil.isLoaded(barrierNode, 'barrier', done);
   });
 
-  xit('pass qubit through node', function(done) {
+  it('pass qubit through node', function(done) {
     flow.add('quantum-circuit', 'n0', [['n1'], ['n2'], ['n3']],
         {structure: 'qubits', outputs: '3', qbitsreg: '3', cbitsreg: '3'});
     flow.add('hadamard-gate', 'n1', [['n3']]);
@@ -30,7 +31,7 @@ describe('BarrierNode', function() {
     flow.add('barrier', 'n3', [['n4'], ['n4'], ['n4']], {outputs: '3'});
     flow.addOutput('n4');
 
-    let payloadObject = [{
+    let payloadObjectList = [{
       structure: {qubits: 3, cbits: 3},
       register: undefined,
       qubit: 0,
@@ -44,7 +45,7 @@ describe('BarrierNode', function() {
       qubit: 2,
     }];
 
-    testUtil.qubitsPassedThroughGate(flow, payloadObject, done);
+    testUtil.qubitsPassedThroughGate(flow, payloadObjectList, done);
   });
 
   it('execute command', function(done) {
@@ -54,5 +55,23 @@ describe('BarrierNode', function() {
     flow.addOutput('n2');
 
     testUtil.commandExecuted(flow, command, done);
+  });
+
+  it('should fail on receiving input from non-quantum nodes', function(done) {
+    flow.add('barrier', 'n1', [['n2']], {outputs: '1'});
+    flow.addOutput('n2');
+
+    const givenInput = {payload: '', topic: ''};
+    const expectedMessage = errors.NOT_QUANTUM_NODE;
+    testUtil.nodeFailed(flow, givenInput, expectedMessage, done);
+  });
+
+  it('should fail on receiving non-qubit object', function(done) {
+    flow.add('barrier', 'n1', [['n2']], {outputs: '1'});
+    flow.addOutput('n2');
+
+    const givenInput = {payload: {structure: '', qubit: 3}, topic: 'Quantum Circuit'};
+    const expectedMessage = errors.NOT_QUBIT_OBJECT;
+    testUtil.nodeFailed(flow, givenInput, expectedMessage, done);
   });
 });

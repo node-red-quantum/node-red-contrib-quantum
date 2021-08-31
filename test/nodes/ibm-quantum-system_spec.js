@@ -4,6 +4,7 @@ const nodeTestHelper = testUtil.nodeTestHelper;
 const {FlowBuilder} = require('../flow-builder');
 const ibmQuantumSystemNode = require('../../nodes/quantum/ibm-quantum-system/ibm-quantum-system.js');
 const snippets = require('../../nodes/snippets.js');
+const errors = require('../../nodes/errors');
 
 const flow = new FlowBuilder();
 
@@ -37,4 +38,24 @@ describe('IBMQuantumSystemNode', function() {
 
     testUtil.commandExecuted(flow, command, done);
   }).timeout(180000); // Needs long timeout as it takes awhile for IBM server to respond
+
+  it('should fail on receiving input from non-quantum nodes', function(done) {
+    flow.add('ibm-quantum-system', 'n1', [['n2']], {api_token: API_TOKEN,
+      preferred_backend: '', preferred_output: ' Results'});
+    flow.addOutput('n2');
+
+    const givenInput = {payload: '', topic: ''};
+    const expectedMessage = errors.NOT_QUANTUM_NODE;
+    testUtil.nodeFailed(flow, givenInput, expectedMessage, done);
+  });
+
+  it('should fail on receiving non-qubit object', function(done) {
+    flow.add('ibm-quantum-system', 'n1', [['n2']], {api_token: API_TOKEN,
+      preferred_backend: '', preferred_output: ' Results'});
+    flow.addOutput('n2');
+
+    const givenInput = {payload: {structure: '', qubit: 3}, topic: 'Quantum Circuit'};
+    const expectedMessage = errors.NOT_QUBIT_OBJECT;
+    testUtil.nodeFailed(flow, givenInput, expectedMessage, done);
+  });
 });
