@@ -95,9 +95,7 @@ module.exports = function(RED) {
           return;
         }
 
-        logger.trace(node.id, 'Executed script command');
         msg.payload = shell.script.trim();
-
         send(msg);
         done();
         reset();
