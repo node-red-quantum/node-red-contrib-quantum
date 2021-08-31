@@ -23,8 +23,9 @@ describe('ClassicalRegisterNode', function() {
     testUtil.isLoaded(classicalRegisterNode, 'classical-register', done);
   });
 
-  it('execute quantum circuit initilization command if it is the last register node connected', function(done) {
-    let command = util.format(snippets.QUANTUM_CIRCUIT, 'qr0,cr_test,');
+  it('execute quantum circuit command if last register is connected', function(done) {
+    let command = util.format(snippets.CLASSICAL_REGISTER, '_test', '3, "test"');
+    command += util.format(snippets.QUANTUM_CIRCUIT, 'qr0,cr_test,');
     flow.add('quantum-circuit', 'n0', [['n1'], ['n2']],
         {structure: 'registers', outputs: '2', qbitsreg: '1', cbitsreg: '1'});
     flow.add('quantum-register', 'n1', [['n3']], {outputs: '1'});
