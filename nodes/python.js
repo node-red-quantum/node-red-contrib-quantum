@@ -2,15 +2,18 @@
 
 const os = require('os');
 const path = require('path');
-const fileSystem = require('fs');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 const pythonExecutable = os.platform() === 'win32' ? 'venv/Scripts/python.exe' : 'venv/bin/python';
 const pythonPath = path.resolve(__dirname + '/..', pythonExecutable);
 const {PythonInteractive} = require('python-interactive');
 
 
-if (!fileSystem.existsSync(pythonPath)) {
-  throw new Error(`cannot resolve path for Python executable: ${pythonPath}`);
+async function createVirtualEnvironment() {
+  const bashPath = path.resolve(__dirname + '/../bin/pyvenv.sh');
+  return exec(`bash ${bashPath}`);
 }
+
 
 module.exports = {
   /**
@@ -32,4 +35,9 @@ module.exports = {
    * Class definition for creating a Python shell instance.
   */
   PythonInteractive: PythonInteractive,
+
+  /**
+   * Create a new Python virtual environment.
+  */
+  createVirtualEnvironment: createVirtualEnvironment,
 };

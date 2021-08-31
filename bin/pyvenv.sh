@@ -64,7 +64,7 @@ for i in "${!packages[@]}"; do
     fi
 
     # Install package.
-    if "$pip_path" install --quiet "$pkg_cmd"; then
+    if "$pip_path" install --quiet --disable-pip-version-check "$pkg_cmd"; then
       echo "Successfully installed $i"
     else
       echo "Error: failed to install $i"

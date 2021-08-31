@@ -1,8 +1,9 @@
 'use strict';
 
 const util = require('util');
+const fileSystem = require('fs');
 const snippets = require('../../snippets');
-const shell = require('../../python').PythonShell;
+const {PythonShell: shell, PythonPath, createVirtualEnvironment} = require('../../python');
 const stateManager = require('../../state').StateManager;
 const logger = require('../../logger');
 
@@ -101,6 +102,35 @@ module.exports = function(RED) {
             },
           };
         };
+      }
+
+      let error;
+      if (!fileSystem.existsSync(PythonPath)) {
+        node.warn('Python virtual environment not found - creating virtual environment. Do not close Node-RED.');
+        logger.warn(node.id, 'Python virtual environment not found');
+        logger.info(node.id, 'Creating virtual environment');
+
+        await createVirtualEnvironment()
+            .then((data) => {
+              if (data.stderr) {
+                error = data.stderr;
+              } else {
+                node.log('Successfully created virtual environment');
+                logger.info(node.id, 'Created virtual environment');
+                logger.debug(node.id, data.stdout);
+              }
+            })
+            .catch((err) => {
+              error = err;
+            });
+      } else {
+        logger.info(node.id, `Using Python executable at ${PythonPath}`);
+      }
+
+      if (error) {
+        logger.error(node.id, error);
+        done(error);
+        return;
       }
 
       // Sending one register object per node output
