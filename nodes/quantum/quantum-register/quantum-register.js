@@ -21,7 +21,6 @@ module.exports = function(RED) {
       logger.trace(node.id, 'Quantum register received input');
       const state = stateManager.getState(msg.circuitId);
       let script = '';
-      let initScript = '';
       let output = new Array(node.outputs);
 
       // Validate the node input msg: check for register object.
@@ -128,16 +127,30 @@ module.exports = function(RED) {
       logger.trace(node.id, 'Quantum register waiting for circuit to be ready');
       quantumCircuitConfig[node.name] = register;
       await circuitReady();
+
       let binaryString = state.get('binaryString');
       if (binaryString) {
-        initScript += util.format(snippets.INITIALIZE, binaryString, `qc.qubits`);
+        let initScript = util.format(snippets.INITIALIZE, binaryString, `qc.qubits`);
         state.del('binaryString');
+
+        await shell.execute(initScript)
+            .then(() => {
+              error = null;
+            })
+            .catch((err) => {
+              error = err;
+            })
+            .finally(() => {
+              logger.trace(node.id, 'Executed quantum register initialise command');
+            });
+
+        if (error) {
+          logger.error(node.id, error);
+          done(error);
+          return;
+        }
       }
-      if (initScript != '') {
-        await shell.execute(initScript, (err) => {
-          if (err) done(err);
-        });
-      }
+
       send(output);
       done();
     });

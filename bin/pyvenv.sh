@@ -4,6 +4,9 @@
 # Note that this script is designed to be run in POSIX-compatible environments
 # which use Bash.
 
+# Dependencies list (empty value means use latest version).
+declare -A packages=(["qiskit"]="" ["matplotlib"]="3.3.4" ["pylatexenc"]="")
+
 # Check OS for paths.
 venv="$PWD/venv"
 if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]]; then
@@ -47,21 +50,20 @@ if [[ ! -x "$pip_path" ]]; then
   exit 1
 fi
 
-# Dependencies list (empty value means use latest version).
-declare -A packages=(["qiskit"]="" ["matplotlib"]="3.3.4" ["pylatexenc"]="")
-
 # Install package dependencies.
 for i in "${!packages[@]}"; do
-  # Check if the package is installed. If no, install package.
-  if ! "$python_path" -c "import $i" &>/dev/null; then
-    echo "Installing $i..."
+  # If package requires specific version, add it to the command.
+  if [ ! -z "${packages[$i]}" ]; then
+    pkg_cmd="$i==${packages[$i]}"
+    regex_cmd="^$i\s*${packages[$i]}"
+  else
+    pkg_cmd="$i"
+    regex_cmd="^$i "
+  fi
 
-    # If package requires specific version, add it to the command.
-    if [ ! -z "${packages[$i]}" ]; then
-      pkg_cmd="$i==${packages[$i]}"
-	else
-	  pkg_cmd="$i"
-    fi
+  # Check if the package is installed. If no, install package.
+  if ! "$pip_path" list --disable-pip-version-check | grep -E "$regex_cmd" &>/dev/null; then
+    echo "Installing $i..."
 
     # Install package.
     if "$pip_path" install --quiet --disable-pip-version-check "$pkg_cmd"; then

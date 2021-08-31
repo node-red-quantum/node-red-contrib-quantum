@@ -20,6 +20,7 @@ module.exports = function(RED) {
     this.on('input', async function(msg, send, done) {
       logger.trace(node.id, 'Classical register received input');
       const state = stateManager.getState(msg.circuitId);
+      let script = '';
 
       // Validate the node input msg: check for register object.
       // Return corresponding errors or null if no errors.
@@ -32,23 +33,10 @@ module.exports = function(RED) {
       }
 
       // Add arguments to classical register code
-      let crscript = util.format(snippets.CLASSICAL_REGISTER,
+      script += util.format(snippets.CLASSICAL_REGISTER,
           '_' + node.name,
           node.classicalBits.toString() + ', "' + node.name + '"',
       );
-
-      await shell.execute(crscript)
-          .then(() => {
-            error = null;
-          }).catch((err) => {
-            error = err;
-          });
-
-      if (error) {
-        logger.error(node.id, error);
-        done(error);
-        return;
-      }
 
       // Completing the 'quantumCircuit' flow context array
       let register = {
@@ -88,22 +76,25 @@ module.exports = function(RED) {
             circuitScript = util.format(circuitScript, register.registerVar);
           });
 
-          // Run the script in the python shell, and if no error occurs
-          // then notify the runtime when the node is done.
-          await shell.execute(circuitScript)
-              .then(() => {
-                done();
-              }).catch((err) => {
-                logger.error(node.id, err);
-                done(err);
-              }).finally(() => {
-                logger.trace(node.id, 'Executed classical register command');
-              });
+          script += circuitScript;
         }
       }
 
-      // update quantum circuit config
-      quantumCircuitConfig[node.name] = register;
+      // Run the script in the python shell, and if no error occurs
+      // then notify the runtime when the node is done.
+      await shell.execute(script)
+          .then(() => {
+            quantumCircuitConfig[node.name] = register;
+            send(output);
+            done();
+          })
+          .catch((err) => {
+            logger.error(node.id, err);
+            done(err);
+          })
+          .finally(() => {
+            logger.trace(node.id, 'Executed classical register command');
+          });
     });
   }
 
