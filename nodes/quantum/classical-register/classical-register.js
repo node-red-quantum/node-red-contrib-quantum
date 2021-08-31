@@ -14,13 +14,13 @@ module.exports = function(RED) {
     this.name = config.name.trim().toLowerCase().replace(/ /g, '_');
     this.classicalBits = config.classicalBits;
     const node = this;
-    let script = '';
-
+    
     logger.trace(this.id, 'Initialised classical register');
-
+    
     this.on('input', async function(msg, send, done) {
       logger.trace(node.id, 'Classical register received input');
       const state = stateManager.getState(msg.circuitId);
+      let script = '';
 
       // Validate the node input msg: check for register object.
       // Return corresponding errors or null if no errors.
@@ -85,22 +85,14 @@ module.exports = function(RED) {
       await shell.execute(script, (err) => {
         logger.trace(node.id, 'Executed classical register command');
         if (err) {
-          error = err;
+          logger.error(node.id, err);
+          done(err);
         } else {
-          error = null;
+          quantumCircuitConfig[node.name] = register;
+          send(output);
+          done();
         }
       });
-
-      if (error) {
-        logger.error(node.id, error);
-        done(error);
-        return;
-      }
-
-      // update quantum circuit config
-      quantumCircuitConfig[node.name] = register;
-      send(output);
-      done();
     });
   }
 
