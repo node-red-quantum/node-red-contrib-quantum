@@ -21,6 +21,7 @@ module.exports = function(RED) {
       logger.trace(node.id, 'Quantum register received input');
       const state = stateManager.getState(msg.circuitId);
       let script = '';
+      let initScript = '';
       let output = new Array(node.outputs);
 
       // Validate the node input msg: check for register object.
@@ -50,7 +51,8 @@ module.exports = function(RED) {
         registerName: node.name,
         registerVar: 'qr' + msg.payload.register.toString(),
       };
-      state.setRuntime('quantumCircuit[' + msg.payload.register.toString() + ']', register);
+      let quantumCircuit = state.get('quantumCircuit');
+      quantumCircuit[msg.payload.register.toString()] = register;
 
       // get quantum circuit config and circuit ready event from flow context
       let quantumCircuitConfig = state.get('quantumCircuitConfig');
@@ -99,6 +101,10 @@ module.exports = function(RED) {
             qubit: i,
           },
         };
+        if (msg.req && msg.res) {
+          output[i].req = msg.req;
+          output[i].res = msg.res;
+        }
       }
 
       // Run the script in the python shell, and if no error occurs
@@ -122,6 +128,16 @@ module.exports = function(RED) {
       logger.trace(node.id, 'Quantum register waiting for circuit to be ready');
       quantumCircuitConfig[node.name] = register;
       await circuitReady();
+      let binaryString = state.get('binaryString');
+      if (binaryString) {
+        initScript += util.format(snippets.INITIALIZE, binaryString, `qc.qubits`);
+        state.del('binaryString');
+      }
+      if (initScript != '') {
+        await shell.execute(initScript, (err) => {
+          if (err) done(err);
+        });
+      }
       send(output);
       done();
     });

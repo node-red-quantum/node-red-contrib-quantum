@@ -161,10 +161,14 @@ print(b64_str)
 buffer.close()
 `;
 
+const INITIALIZE = 
+`from qiskit.quantum_info import Statevector
+qc.initialize(Statevector.from_label('%s').data, %s)
+`;
+
 const SHORS =
 `from qiskit import Aer
 from qiskit.algorithms import Shor
-
 backend = Aer.get_backend('qasm_simulator')
 shor = Shor(quantum_instance=backend)
 result = shor.factor(%s)
@@ -201,5 +205,6 @@ module.exports = {
   BLOCH_SPHERE,
   CU_GATE,
   ENCODE_IMAGE,
+  INITIALIZE,
   SHORS,
 };
