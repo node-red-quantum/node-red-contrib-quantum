@@ -4,6 +4,7 @@ const nodeTestHelper = testUtil.nodeTestHelper;
 const {FlowBuilder} = require('../flow-builder');
 const multiControlledUGateNode = require('../../nodes/quantum/multi-controlled-u-gate/multi-controlled-u-gate.js');
 const snippets = require('../../nodes/snippets.js');
+const errors = require('../../nodes/errors');
 
 const flow = new FlowBuilder();
 
@@ -55,5 +56,25 @@ describe('MultiControlledUGateNode', function() {
     flow.addOutput('n2');
 
     testUtil.commandExecuted(flow, command, done);
+  });
+
+  it('should fail on receiving input from non-quantum nodes', function(done) {
+    flow.add('multi-controlled-u-gate', 'n1', [['n2'], ['n2']],
+        {outputs: '2', nbControls: '1', targetPosition: '0', theta: '0', phi: '0', lambda: '0'});
+    flow.addOutput('n2');
+
+    const givenInput = {payload: '', topic: ''};
+    const expectedMessage = errors.NOT_QUANTUM_NODE;
+    testUtil.nodeFailed(flow, givenInput, expectedMessage, done);
+  });
+
+  it('should fail on receiving non-qubit object', function(done) {
+    flow.add('multi-controlled-u-gate', 'n1', [['n2'], ['n2']],
+        {outputs: '2', nbControls: '1', targetPosition: '0', theta: '0', phi: '0', lambda: '0'});
+    flow.addOutput('n2');
+
+    const givenInput = {payload: {structure: '', qubit: 3}, topic: 'Quantum Circuit'};
+    const expectedMessage = errors.NOT_QUBIT_OBJECT;
+    testUtil.nodeFailed(flow, givenInput, expectedMessage, done);
   });
 });
