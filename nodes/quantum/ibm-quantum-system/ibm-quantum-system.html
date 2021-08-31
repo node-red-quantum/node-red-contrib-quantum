@@ -9,6 +9,7 @@
       preferred_backend: { value: "" },
       shots: { 
         value: 1, 
+        required: true,
         validate: function (x) {
           x = parseInt(x);
           if (Number.isInteger(x) && x > 0) {

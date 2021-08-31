@@ -4,7 +4,18 @@
     color: "#A8A8A8",
     defaults: {
       name: { value: "" },
-      shots: { value: 0, validate: RED.validators.number() },
+      shots: { 
+        value: 1, 
+        required: true,
+        validate: function (x) {
+          x = parseInt(x);
+          if (Number.isInteger(x) && x > 0) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+      },
     },
     inputs: 1,
     outputs: 1,
