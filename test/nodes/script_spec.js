@@ -36,15 +36,11 @@ describe('ScriptNode', function() {
         from qiskit import *
         qc = QuantumCircuit(3, 3)
 
-
         qc.h(0)
-
 
         qc.h(1)
 
-
         qc.x(2)
-
 
         qc.toffoli(0, 2, 1)`);
     testUtil.correctOutputReceived(flow, givenInput, expectedOutput, done);
