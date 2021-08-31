@@ -21,10 +21,6 @@ describe('PythonShell', function() {
     it('process starts empty', async function() {
       assert.isNull(shell.pythonProcess);
     });
-
-    it('script starts empty', async function() {
-      assert.isEmpty(shell.history);
-    });
   });
 
   describe('#start', function() {
@@ -64,14 +60,12 @@ describe('PythonShell', function() {
   });
 
   describe('#restart', function() {
-    beforeEach(async () => {
-      shell.start();
-    });
     afterEach(() => {
       shell.stop();
     });
 
     it('stop current process and start new process', async function() {
+      shell.start();
       let process = shell.pythonProcess;
       shell.restart();
       assert.notStrictEqual(shell.pythonProcess, process);
