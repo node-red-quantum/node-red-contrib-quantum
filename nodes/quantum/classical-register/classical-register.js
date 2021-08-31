@@ -16,7 +16,6 @@ module.exports = function(RED) {
     const node = this;
     
     logger.trace(this.id, 'Initialised classical register');
-    
     this.on('input', async function(msg, send, done) {
       logger.trace(node.id, 'Classical register received input');
       const state = stateManager.getState(msg.circuitId);
@@ -52,7 +51,7 @@ module.exports = function(RED) {
 
       // Run the script in the python shell, and if no error occurs
       // then notify the runtime when the node is done.
-      await shell.execute(script, async (err) => {
+      await shell.execute(script, (err) => {
         logger.trace(node.id, 'Executed classical register command');
         if (err) {
           logger.error(node.id, err);
