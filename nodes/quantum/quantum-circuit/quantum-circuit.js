@@ -27,28 +27,17 @@ module.exports = function(RED) {
 
     state.setPersistent('quantumCircuitReadyEvent', quantumCircuitReady);
 
-    const quantumCircuitProxyHandler = {
-      set: (obj, prop, value) => {
-        obj[prop] = value;
-        if (Object.keys(obj).length == node.outputs) {
-          process.nextTick(() => quantumCircuitReady.emit('circuitReady', obj));
-          state.setPersistent('quantumCircuitConfig', new Proxy({}, quantumCircuitProxyHandler));
-        }
-        return true;
-      },
-    };
-
-    let quantumCircuitConfig = new Proxy({}, quantumCircuitProxyHandler);
-    state.setPersistent('quantumCircuitConfig', quantumCircuitConfig);
-
     state.setPersistent('isCircuitReady', () => {
       let event = state.get('quantumCircuitReadyEvent');
       return new Promise((res, rej) => {
-        event.once('circuitReady', (circuitConfig) => {
-          res(circuitConfig);
+        event.once('circuitReady', () => {
+          res();
         });
       });
     });
+
+    // create an empty array in state to store register names
+    state.setPersistent('registers', []);
 
     logger.trace(this.id, 'Initialised quantum circuit');
 
@@ -94,6 +83,8 @@ module.exports = function(RED) {
               },
               register: i,
             },
+            // additional message sent to the last output
+            shouldInitCircuit: i == node.outputs - 1 ? true : false,
           };
           if (msg.req && msg.res) {
             output[i].req = msg.req;
@@ -123,6 +114,8 @@ module.exports = function(RED) {
               register: undefined,
               qubit: i,
             },
+            // additional message sent to the last output
+            shouldInitCircuit: i == node.outputs - 1 ? true : false,
           };
           if (msg.req && msg.res) {
             output[i].req = msg.req;
