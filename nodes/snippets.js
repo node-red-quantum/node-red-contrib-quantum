@@ -139,9 +139,7 @@ qc.append(UGate(%s, %s, %s).control(%s), %s)
 `;
 
 const BLOCH_SPHERE =
-`import warnings
-warnings.filterwarnings("ignore", category=UserWarning)
-from qiskit.visualization import plot_bloch_multivector
+`from qiskit.visualization import plot_bloch_multivector
 from qiskit.quantum_info import Statevector
 state = Statevector.from_instruction(qc)
 plot_bloch_multivector(state)
@@ -162,6 +160,8 @@ const ENCODE_IMAGE =
 `import matplotlib.pyplot as plt
 import base64
 import io
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
 buffer = io.BytesIO()
 plt.savefig(buffer,  format='png')
 buffer.seek(0)
