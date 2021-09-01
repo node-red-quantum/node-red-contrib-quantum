@@ -37,7 +37,7 @@ For the latest changes, please read the [CHANGELOG](CHANGELOG.md).
   - [Acknowledgements](#acknowledgements)
 
 ## Prerequisites
-Node-RED Quantum requires at minimum [Node.js 12.0.0](https://nodejs.org/en/), [Node-RED 1.0](https://nodered.org), and [Python 3](https://www.python.org/).
+Node-RED Quantum requires at minimum [Node.js 12.0.0](https://nodejs.org/en/), [Node-RED 1.0](https://nodered.org), and [Python 3](https://www.python.org/). It is also advised that you start Node-RED from a Bash shell, as it is required to prepare the Python virtual environment.
 
 Even though not required, some knowledge on how to use the Node-RED platfom can be useful. We recommend this [Node-RED tutorial](https://www.youtube.com/watch?v=3AR432bguOY) on YouTube.
 
