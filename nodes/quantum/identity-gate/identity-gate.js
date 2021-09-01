@@ -36,16 +36,16 @@ module.exports = function(RED) {
 
       // Run the script in the python shell, and if no error occurs
       // then send msg object to the next node
-      await shell.execute(script, (err) => {
-        logger.trace(node.id, 'Executed identity gate command');
-        if (err) {
-          logger.error(node.id, err);
-          done(err);
-        } else {
-          send(msg);
-          done();
-        }
-      });
+      await shell.execute(script)
+          .then(() => {
+            send(msg);
+            done();
+          }).catch((err) => {
+            logger.error(node.id, err);
+            done(err);
+          }).finally(() => {
+            logger.trace(node.id, 'Executed identity gate command');
+          });
     });
   }
   RED.nodes.registerType('identity-gate', IdentityGateNode);

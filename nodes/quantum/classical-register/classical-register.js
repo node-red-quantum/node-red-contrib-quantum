@@ -82,17 +82,19 @@ module.exports = function(RED) {
 
       // Run the script in the python shell, and if no error occurs
       // then notify the runtime when the node is done.
-      await shell.execute(script, (err) => {
-        logger.trace(node.id, 'Executed classical register command');
-        if (err) {
-          logger.error(node.id, err);
-          done(err);
-        } else {
-          quantumCircuitConfig[node.name] = register;
-          send(output);
-          done();
-        }
-      });
+      await shell.execute(script)
+          .then(() => {
+            quantumCircuitConfig[node.name] = register;
+            send(output);
+            done();
+          })
+          .catch((err) => {
+            logger.error(node.id, err);
+            done(err);
+          })
+          .finally(() => {
+            logger.trace(node.id, 'Executed classical register command');
+          });
     });
   }
 

@@ -49,25 +49,25 @@ module.exports = function(RED) {
 
       // Run the script in the python shell, and if no error occurs
       // then send msg object to the next node
-      await shell.execute(script, (err) => {
-        logger.trace(node.id, 'Executed unitary gate command');
-        if (err) {
-          logger.error(node.id, err);
-          done(err);
-        } else {
-          node.status({
-            fill: 'grey',
-            shape: 'dot',
-            text: (
-              node.theta.toString() + '\u03C0, ' +
-              node.phi.toString() + '\u03C0, ' +
-              node.lambda.toString() + '\u03C0'
-            ),
+      await shell.execute(script)
+          .then(() => {
+            node.status({
+              fill: 'grey',
+              shape: 'dot',
+              text: (
+                node.theta.toString() + '\u03C0, ' +
+                node.phi.toString() + '\u03C0, ' +
+                node.lambda.toString() + '\u03C0'
+              ),
+            });
+            send(msg);
+            done();
+          }).catch((err) => {
+            logger.error(node.id, err);
+            done(err);
+          }).finally(() => {
+            logger.trace(node.id, 'Executed unitary gate command');
           });
-          send(msg);
-          done();
-        };
-      });
     });
   }
   RED.nodes.registerType('unitary-gate', UnitaryGateNode);

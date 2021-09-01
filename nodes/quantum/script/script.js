@@ -95,7 +95,7 @@ module.exports = function(RED) {
           return;
         }
 
-        msg.payload = shell.script.trim();
+        msg.payload = shell.history.join('\n').trim();
         send(msg);
         done();
         reset();

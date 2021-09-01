@@ -4,8 +4,8 @@ const util = require('util');
 const snippets = require('../../snippets');
 const errors = require('../../errors');
 const logger = require('../../logger');
-const {PythonShellClass} = require('../../python');
-const shell = new PythonShellClass();
+const {PythonInteractive, PythonPath} = require('../../python');
+const shell = new PythonInteractive(PythonPath);
 
 module.exports = function(RED) {
   function GroversNode(config) {
@@ -25,24 +25,25 @@ module.exports = function(RED) {
         return;
       }
 
-      const script = util.format(snippets.GROVERS, msg.payload);
-      await shell.start();
-      await shell.execute(script, (err, data) => {
-        logger.trace(node.id, 'Executed grovers command');
-        if (err) {
-          logger.error(node.id, err);
-          done(err);
-        } else {
-          data = data.split('\n');
-          msg.payload = {
-            topMeasurement: data[0],
-            iterationsNum: Number(data[1]),
-          };
-          send(msg);
-          done();
-        }
-      });
-      shell.stop();
+      let script = util.format(snippets.GROVERS, msg.payload);
+
+      shell.start();
+      await shell.execute(script)
+          .then((data) => {
+            data = data.split('\n');
+            msg.payload = {
+              topMeasurement: data[0],
+              iterationsNum: Number(data[1]),
+            };
+            send(msg);
+            done();
+          }).catch((err) => {
+            logger.error(node.id, err);
+            done(err);
+          }).finally(() => {
+            logger.trace(node.id, 'Executed grovers command');
+            shell.stop();
+          });
     });
   }
   RED.nodes.registerType('grovers', GroversNode);
