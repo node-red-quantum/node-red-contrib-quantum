@@ -143,15 +143,21 @@ The nodes are organised into 4 categories:
 ### Rules 
 
 
-1. **Do not duplicate qubits -** There should always be 1 instance of each qubit at all times. 
+1. **Do not duplicate qubits -** 
+   
+   There should always be 1 instance of each qubit at all times. 
    
    A node can take multiple qubits as input but only one wire should be connected to each output. To do so, always input as many qubits as the node outputs.
 
-2. **Only 1 quantum cicuit per Node-RED tab -** A maximum of 1 quantum circuit must be used on each Node-RED tab. 
+2. **Only 1 quantum cicuit per Node-RED tab -** 
    
-   If an issue occurs with multiple circuits, please refresh the page.
+   A maximum of 1 quantum circuit must be used on each Node-RED tab. 
+   
+   If an issue occurs, please refresh the page.
 
-3. **Wait for quantum circuit to execute -** Do not double-click the inject button, wait for the circuit to have finished executing before runnning it again.
+3. **Wait for quantum circuit to execute -** 
+   
+   Do not double-click the inject button, wait for the circuit to have finished executing before runnning it again.
 
    If an issue occurs, please refresh the page.
 
