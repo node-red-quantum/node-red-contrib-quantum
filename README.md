@@ -18,18 +18,23 @@ For the latest changes, please read the [CHANGELOG](CHANGELOG.md).
 ![Quantum Circuit](./resources/quantum-circuit-examples/quantum-random-number.png)
 
 ## Table of Contents
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [About Quantum Computing](#about-quantum-computing)
-  - [Qubit state](#qubit-state)
-  - [Qubit Measurement](#qubit-measurement)
-  - [Entanglement](#entanglement)
-- [Quantum Nodes](#quantum-nodes)
-  - [How to use](#how-to-use)
-  - [Rules](#rules)
-- [Quantum Algorithm Nodes](#quantum-algorithm-nodes)
-- [Contributing](#contributing)
-- [Acknowledgements](#acknowledgements)
+- [node-red-quantum](#node-red-quantum)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [About Quantum Computing](#about-quantum-computing)
+    - [Qubit State](#qubit-state)
+      - [Example:](#example)
+    - [Qubit Measurement](#qubit-measurement)
+      - [Example:](#example-1)
+    - [Entanglement](#entanglement)
+      - [Example:](#example-2)
+  - [Quantum Nodes](#quantum-nodes)
+    - [How to Use](#how-to-use)
+    - [Rules](#rules)
+  - [Quantum Algorithm Nodes](#quantum-algorithm-nodes)
+  - [Contributing](#contributing)
+  - [Acknowledgements](#acknowledgements)
 
 ## Prerequisites
 Node-RED Quantum requires at minimum [Node.js 12.0.0](https://nodejs.org/en/), [Node-RED 1.0](https://nodered.org), and [Python 3](https://www.python.org/).
@@ -111,16 +116,12 @@ The nodes are organised into 4 categories:
 
 ### Rules
 1. **Do not duplicate qubits**  
-   There should always be 1 instance of each qubit at all times.  
+   To avoid inconsistencies, there should always be 1 instance of each qubit at all times.
    A node can take multiple qubits as input but only one wire should be connected to each output. To do so, always input as many qubits as the node outputs.
 
-2. **Only 1 quantum cicuit per Node-RED tab**  
-   A maximum of 1 quantum circuit must be used on each Node-RED tab.  
-   If an issue occurs, please refresh the page.
-
-3. **Wait for quantum circuit to execute**  
+2. **Wait for quantum circuit to execute**  
    Do not double-click the inject button, wait for the circuit to have finished executing before runnning it again.  
-   If an issue occurs, please refresh the page.
+   If such an issue occurs, please restart Node-RED.
 
 | Input nodes | Qubit nodes | Single qubit gate nodes | Multi qubits gate nodes | Output nodes |
 | :---: | :---: | :---: | :---: | :---: |
@@ -136,7 +137,7 @@ The nodes do not require any specific quantum knowledge to be used, except for s
 
 Those nodes encapsulate all the quantum-related operations so that users just have to input the right data in order to receive the quantum algorithm output. 
 
-The *'quantum algorithm'* library include:
+The *'quantum algorithm'* library includes:
 
 * [Grover's searching algorithm](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Quantum-Algorithm-Nodes#grovers-algorithm)
 * [Shor's factoring algorithm](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Quantum-Algorithm-Nodes#shors-algorithm)
