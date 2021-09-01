@@ -35,19 +35,35 @@ module.exports = function(RED) {
         script += snippets.NME;
       }
 
+      node.status({
+        fill: 'orange',
+        shape: 'dot',
+        text: 'Running algorithm...',
+      });
+
       shell.start();
       await shell.execute(script)
           .then((data) => {
+            node.status({
+              fill: 'green',
+              shape: 'dot',
+              text: 'Optimisation completed!',
+            });
             msg.payload = data;
             send(msg);
             done();
           })
           .catch((err) => {
+            node.status({
+              fill: 'red',
+              shape: 'dot',
+              text: 'Job failed!',
+            });
             logger.error(node.id, err);
             done(err);
           })
           .finally(() => {
-            logger.trace(node.id, 'Executed grovers command');
+            logger.trace(node.id, 'Executed portfolio optimisation command');
             shell.stop();
           });
     });
