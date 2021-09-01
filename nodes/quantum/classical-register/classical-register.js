@@ -89,7 +89,7 @@ module.exports = function(RED) {
           done(err);
         } else {
           quantumCircuitConfig[node.name] = register;
-          send(output);
+          //send(output);
           done();
         }
       });
