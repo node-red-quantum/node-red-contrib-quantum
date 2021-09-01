@@ -18,20 +18,18 @@ For the latest changes, please read the [CHANGELOG](CHANGELOG.md).
 ![Quantum Circuit](./resources/quantum-circuit-examples/quantum-random-number.png)
 
 ## Table of Contents
-
-
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [About Quantum Computing](#about-quantum-computing)
-    - [Qubit state](#qubit-state)
-    - [Qubit Measurement](#qubit-measurement)
-    - [Entanglement](#entanglement)
-  - [Quantum Nodes](#quantum-nodes)
-    - [How to use](#how-to-use)
-    - [Rules](#rules)
-  - [Quantum Algorithm Nodes](#quantum-algorithm-nodes)
-  - [Contributing](#contributing)
-  - [Acknowledgements](#acknowledgements)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [About Quantum Computing](#about-quantum-computing)
+  - [Qubit state](#qubit-state)
+  - [Qubit Measurement](#qubit-measurement)
+  - [Entanglement](#entanglement)
+- [Quantum Nodes](#quantum-nodes)
+  - [How to use](#how-to-use)
+  - [Rules](#rules)
+- [Quantum Algorithm Nodes](#quantum-algorithm-nodes)
+- [Contributing](#contributing)
+- [Acknowledgements](#acknowledgements)
 
 ## Prerequisites
 Node-RED Quantum requires at minimum [Node.js 12.0.0](https://nodejs.org/en/), [Node-RED 1.0](https://nodered.org), and [Python 3](https://www.python.org/).
@@ -49,7 +47,7 @@ Even though not required, some knowledge on how to use the Node-RED platfom can 
 
 ## About Quantum Computing
 
-### Qubit state
+### Qubit State
 A qubit is the same to a quantum computer as what a bit is to a classical computer: the smallest unit of information.  
 
 The **Bloch sphere** representation is considered the most simple and ludic way to understand & visualise a qubit (see example below). In contrast with classical bits that can only be in a '0' or a '1' state, qubits can store much more information. In fact, all points on the sphere represent a different qubit state, the usual classical bit states being labelled as:
@@ -60,10 +58,9 @@ Quantum states that are in between those 2 points are a weighted combination of 
 
 The Qiskit textbook provides more information on [classical vs quantum bits](https://qiskit.org/textbook/ch-states/representing-qubit-states.html#statevectors), as well as [bloch spheres](https://qiskit.org/textbook/ch-states/representing-qubit-states.html#bloch-sphere-2).
 
-**Example:** Applying a &#960; radians rotation about the x-axis on a qubit that is in the '0 state' will put it in the '1 state'.
-
+#### Example:
+Applying a &#960; radians rotation about the x-axis on a qubit that is in the '0 state' will put it in the '1 state'.
 ![Bloch sphere](./resources/quantum-computing/bloch-sphere-horizontal.png)
-<br/>
 
 ### Qubit Measurement
 It is very important to understand that even though a qubit can take an infinite number of states, modern technology only allows us to measure '0' or '1', same as a classical bit. Since we measure and interpret a qubit state using classical machines, this can be seen as a projection of quantum computing back to classical computing: from quantum states back to binary values.
@@ -74,7 +71,8 @@ The act of measuring a qubit collapses the qubit state; the state of the qubit a
 
 More information on qubit measurement can be found in the [Qiskit Textbook](https://qiskit.org/textbook/ch-states/representing-qubit-states.html#rules-measurement)
 
-**Example:** If we measure a qubit that has a state in the x-y plane 1000 times, then we will approximately get 500 '0' measurements and 500 '1' measurements.
+#### Example:
+If we measure a qubit that has a state in the x-y plane 1000 times, then we will approximately get 500 '0' measurements and 500 '1' measurements.
 
 ### Entanglement
 Referred to as a "spooky action at a distance" by Albert Einstein, **entanglement** is a quantum phenomenon that is extremely powerful in quantum computing; it is a form of connection that can exist between any number of qubits. Here we will illustrate **entanglement** between two qubits.
@@ -85,8 +83,7 @@ In practice, **entanglement** arises when the operation of a gate on a qubit is 
 
 More information on entanglement can be found in the [Qiskit Textbook](https://qiskit.org/textbook/ch-gates/multiple-qubits-entangled-states.html#entangled)
 
-**Example:** 
-
+#### Example:
 A CNOT gate applies a NOT gate (0 &#8594; 1 & 1 &#8594; 0) to the 'target' qubit **if and only if** the 'control' qubit is in the '1' state.
 
 Now, let's assume that the 'control' qubit is in a **superposition** state (25% '0' / 75% '1'), while the 'target' qubit is in the '0' state. Then, the **combined** state of the 2 qubits after applying the CNOT gate will be:
@@ -96,72 +93,34 @@ Now, let's assume that the 'control' qubit is in a **superposition** state (25% 
 The 2 qubits are now **entangled**: if we measure one of them to be in a specific state, then we know the other one will be in the same state.
 
 ## Quantum Nodes
-
 Node-RED Quantum includes a *'quantum'* library of nodes that can be used to build quantum circuits. 
 
-### How to use
-
+### How to Use
 The 'Quantum Circuit' node can generate a quantum circuit with qubits. The qubits will then flow through a certain set of nodes corresponding to quantum operations, or gates. Finally, all qubits must be connected to a single output node that will process the circuit and output the results. 
 
 The nodes are organised into 4 categories:
-- [Input](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Input-Nodes) (gray)
-  
-  Input nodes are used to set up a quantum circuit and output qubits. 
-  
-  To start with, use the 'Quantum Circuit' node to generate one qubit through each output. 
+- [Input nodes](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Input-Nodes) (gray) are used to set up a quantum circuit and output qubits. To start, use the 'Quantum Circuit' node to generate one qubit through each output.
 
-- [Qubit nodes](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Qubit-Nodes) (blue)
-  
-  Qubit nodes are used to keep track and manage qubits, such as resetting them. 
-  
-  The 'Qubit' node receives qubits as input but does not execute any operation on it. It can be used to identify qubits, by printing some text under the node, or to rearrange the position of qubits into the editor.
+- [Qubit nodes](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Qubit-Nodes) (blue) are used to keep track and manage qubits, such as resetting them. The 'Qubit' node receives qubits as input but does not execute any operation on it. It can be used to identify qubits, by printing some text under the node, or to rearrange the position of qubits into the editor.
 
-- [Quantum Gate nodes](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Quantum-Gate-Nodes)
+- [Quantum Gate nodes](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Quantum-Gate-Nodes) correspond to quantum operations. When a qubit flow through a quantum gate node, the operation is executed on the qubit. There are 2 type of quantum gates:
+  - [Singe qubit gates](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Quantum-Gate-Nodes/#single-qubit-quantum-gate) (purple) receive a qubit, execute an operation, and output the qubit. The 'NOT Gate' flips the state of the qubit (0 &#8594; 1 & 1 &#8594; 0).
+  - [Multi qubits gates](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Quantum-Gate-Nodes#multi-qubits-quantum-gates) (red) receive a certain number of qubits, execute a **control operation** and output the qubits. Control operations correspond to the conditional execution of a single quantum gate. If the 'control' qubits are in the correct state, then the gate is applied on a 'target' qubit. The 'CNOT Gate', operating on 2 qubits, applies a NOT gate on the 'target' qubit if the 'control' qubit is in the '1' state.
 
-  Quantum gate nodes correspond to quantum operations. When a qubit flow through a quantum gate node, the operation is executed on the qubit. 
-  
-  There are 2 type of quantum gates:
-  - [Singe qubit gates ](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Quantum-Gate-Nodes/#single-qubit-quantum-gate) (purple)
+- [Output nodes](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Output-Nodes) (grey) are used to process the quantum circuit and generate an output. All qubits of the quantum circuit must be connected to the same output node for it to work. The output format varies between each node, please refer to the documentation. The 'Local Simulator' node simulates a quantum computer using the local Qiskit library. It runs the quantum circuit and outputs the results.
 
-    Single qubit gates receive a qubit, execute an operation and output the qubit. 
-    
-    The 'NOT Gate' flips the state of the qubit (0 &#8594; 1 & 1 &#8594; 0). 
-
-  - [Multi qubits gates](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Quantum-Gate-Nodes#multi-qubits-quantum-gates) (red)
-
-    Multi qubit gates receive a certain number of qubits, execute a **control operation** and output the qubits. Control operations correspond to the conditional execution of a single quantum gate. If the 'control' qubits are in the correct state, then the gate is applied on a 'target' qubit.
-
-    The 'CNOT Gate', operating on 2 qubits, applies a NOT gate on the 'target' qubit if the 'control' qubit is in the '1' state.
-
-- [Output nodes](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Output-Nodes) (grey)
-
-  Output nodes are used to process the quantum circuit and generate an output. All qubits of the quantum circuit must be connected to the same output node for it to work. The output format varies between each node, please refer to the documentation.
-
-  The 'Local Simulator' node simulates a quantum computer using the local Qiskit library. It runs the quantum circuit and outputs the results.
-
-
-### Rules 
-
-
-1. **Do not duplicate qubits** 
-   
-   There should always be 1 instance of each qubit at all times. 
-   
+### Rules
+1. **Do not duplicate qubits**  
+   There should always be 1 instance of each qubit at all times.  
    A node can take multiple qubits as input but only one wire should be connected to each output. To do so, always input as many qubits as the node outputs.
 
-2. **Only 1 quantum cicuit per Node-RED tab** 
-   
-   A maximum of 1 quantum circuit must be used on each Node-RED tab. 
-   
+2. **Only 1 quantum cicuit per Node-RED tab**  
+   A maximum of 1 quantum circuit must be used on each Node-RED tab.  
    If an issue occurs, please refresh the page.
 
-3. **Wait for quantum circuit to execute** 
-   
-   Do not double-click the inject button, wait for the circuit to have finished executing before runnning it again.
-
+3. **Wait for quantum circuit to execute**  
+   Do not double-click the inject button, wait for the circuit to have finished executing before runnning it again.  
    If an issue occurs, please refresh the page.
-
-<br />
 
 | Input nodes | Qubit nodes | Single qubit gate nodes | Multi qubits gate nodes | Output nodes |
 | :---: | :---: | :---: | :---: | :---: |
@@ -171,7 +130,6 @@ The nodes are organised into 4 categories:
 More information on *'quantum'* nodes can be found in the [Node-RED Quantum wiki](https://github.com/node-red-quantum/node-red-contrib-quantum/wiki/Building-Quantum-Circuits).
 
 ## Quantum Algorithm Nodes
-
 Node-RED Quantum includes a *'quantum algorithm'* library of nodes that can be used to leverage the power of quantum computing in classical programs. 
 
 The nodes do not require any specific quantum knowledge to be used, except for some initial knowledge on the algorithm itself to have a better understanding of its use.
