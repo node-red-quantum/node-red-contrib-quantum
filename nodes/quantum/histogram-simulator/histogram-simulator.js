@@ -1,13 +1,16 @@
 'use strict';
 
+const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
 const logger = require('../../logger');
 
 module.exports = function(RED) {
-  function CircuitDiagramNode(config) {
+  function HistogramSimulator(config) {
     RED.nodes.createNode(this, config);
+    this.name = config.name;
+    this.shots = config.shots || 1;
     this.qubits = [];
     this.qreg = '';
     const node = this;
@@ -18,10 +21,10 @@ module.exports = function(RED) {
       node.qreg = '';
     };
 
-    logger.trace(this.id, 'Initialised circuit diagram');
+    logger.trace(this.id, 'Initialised histogram');
 
     this.on('input', async function(msg, send, done) {
-      logger.trace(node.id, 'Circuit diagram received input');
+      logger.trace(node.id, 'Histogram received input');
       let qubitsArrived = true;
 
       // Validate the node input msg: check for qubit object.
@@ -101,22 +104,24 @@ module.exports = function(RED) {
           return;
         }
 
-        let script = snippets.CIRCUIT_DIAGRAM + snippets.ENCODE_IMAGE;
+        let script = util.format(snippets.HISTOGRAM, node.shots) + snippets.ENCODE_IMAGE;
         await shell.execute(script)
             .then((data) => {
               msg.payload = data.split('\'')[1];
               msg.encoding = 'base64';
               send(msg);
               done();
-            }).catch((err) => {
+            })
+            .catch((err) => {
               logger.error(node.id, err);
               done(err);
-            }).finally(() => {
-              logger.trace(node.id, 'Executed circuit diagram command');
+            })
+            .finally(() => {
+              logger.trace(node.id, 'Executed histogram command');
               reset();
             });
       }
     });
   };
-  RED.nodes.registerType('circuit-diagram', CircuitDiagramNode);
+  RED.nodes.registerType('histogram-simulator', HistogramSimulator);
 };

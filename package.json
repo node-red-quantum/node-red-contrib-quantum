@@ -41,9 +41,8 @@
     "postinstall": "npm run venv || npm run psvenv"
   },
   "dependencies": {
-    "async-mutex": "^0.3.1",
     "is-online": "^9.0.1",
-    "string.prototype.replaceall": "^1.0.5"
+    "python-interactive": "^0.3.1"
   },
   "devDependencies": {
     "chai": "^4.3.4",
@@ -81,6 +80,7 @@
       "bloch-sphere": "nodes/quantum/bloch-sphere/bloch-sphere.js",
       "circuit-diagram": "nodes/quantum/circuit-diagram/circuit-diagram.js",
       "script": "nodes/quantum/script/script.js",
+      "histogram-simulator": "nodes/quantum/histogram-simulator/histogram-simulator.js",
       "local-simulator": "nodes/quantum/local-simulator/local-simulator.js",
       "ibm-quantum-system": "nodes/quantum/ibm-quantum-system/ibm-quantum-system.js",
       "grovers": "nodes/quantum-algorithms/grovers/grovers.js",

@@ -127,17 +127,17 @@ module.exports = function(RED) {
 
         // Run the script in the python shell, and if no error occurs
         // then send one qubit object per node output
-        await shell.execute(script, (err) => {
-          logger.trace(node.id, 'Executed toffoli gate command');
-          if (err) {
-            logger.error(node.id, err);
-            done(err);
-          } else {
-            send(node.qubits);
-            done();
-          }
-          reset();
-        });
+        await shell.execute(script)
+            .then(() => {
+              send(node.qubits);
+              done();
+            }).catch((err) => {
+              logger.error(node.id, err);
+              done(err);
+            }).finally(() => {
+              logger.trace(node.id, 'Executed toffoli gate command');
+              reset();
+            });
       }
     });
   }
