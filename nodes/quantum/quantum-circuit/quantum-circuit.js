@@ -1,8 +1,9 @@
 'use strict';
 
 const util = require('util');
+const fileSystem = require('fs');
 const snippets = require('../../snippets');
-const shell = require('../../python').PythonShell;
+const {PythonShell: shell, PythonPath, createVirtualEnvironment} = require('../../python');
 const stateManager = require('../../state').StateManager;
 const logger = require('../../logger');
 
@@ -132,18 +133,47 @@ module.exports = function(RED) {
         state.del('binaryString');
       }
 
+      let error;
+      if (!fileSystem.existsSync(PythonPath)) {
+        node.warn('Python virtual environment not found - creating virtual environment. Do not close Node-RED.');
+        logger.warn(node.id, 'Python virtual environment not found');
+        logger.info(node.id, 'Creating virtual environment');
+
+        await createVirtualEnvironment()
+            .then((data) => {
+              if (data.stderr) {
+                error = data.stderr;
+              } else {
+                node.log('Successfully created virtual environment');
+                logger.info(node.id, 'Created virtual environment');
+                logger.debug(node.id, data.stdout);
+              }
+            })
+            .catch((err) => {
+              error = err;
+            });
+      } else {
+        logger.info(node.id, `Using Python executable at ${PythonPath}`);
+      }
+
+      if (error) {
+        logger.error(node.id, error);
+        done(error);
+        return;
+      }
+
       // Sending one register object per node output
-      await shell.restart();
-      await shell.execute(script, (err) => {
-        logger.trace(node.id, 'Executed quantum circuit command');
-        if (err) {
-          logger.error(node.id, err);
-          done(err);
-        } else {
-          send(output);
-          done();
-        }
-      });
+      shell.restart();
+      await shell.execute(script)
+          .then(() => {
+            send(output);
+            done();
+          }).catch((err) => {
+            logger.error(node.id, err);
+            done(err);
+          }).finally(() => {
+            logger.trace(node.id, 'Executed quantum circuit command');
+          });
     });
   }
 

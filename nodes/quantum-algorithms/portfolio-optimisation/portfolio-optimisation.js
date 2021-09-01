@@ -3,7 +3,7 @@
 const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
-const errors = require('../../errors');
+const logger = require('../../logger');
 
 module.exports = function(RED) {
   function PortfolioOptimisationNode(config) {
@@ -15,7 +15,6 @@ module.exports = function(RED) {
     this.startDate = config.start;
     this.endDate = config.end;
     const node = this;
-
 
     this.on('input', async function(msg, send, done) {
       let startDateStr = node.startDate.toString().replace(/-0+/g, ',').replace(/-/g, ',');
@@ -35,19 +34,21 @@ module.exports = function(RED) {
         script += snippets.NME;
       }
 
-      await shell.start();
-
-      await shell.execute(script, (err, data) => {
-        if (err) {
-          done(err);
-        } else {
-          
-          msg.payload = data;
-          send(msg);
-          done();
-        }
-      });
-      shell.stop();
+      shell.start();
+      await shell.execute(script)
+          .then((data) => {
+            msg.payload = data;
+            send(msg);
+            done();
+          })
+          .catch((err) => {
+            logger.error(node.id, err);
+            done(err);
+          })
+          .finally(() => {
+            logger.trace(node.id, 'Executed grovers command');
+            shell.stop();
+          });
     });
   }
 

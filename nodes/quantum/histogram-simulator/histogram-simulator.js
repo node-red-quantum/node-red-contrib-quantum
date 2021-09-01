@@ -105,19 +105,21 @@ module.exports = function(RED) {
         }
 
         let script = util.format(snippets.HISTOGRAM, node.shots) + snippets.ENCODE_IMAGE;
-        await shell.execute(script, (err, data) => {
-          logger.trace(node.id, 'Executed histogram command');
-          if (err) {
-            logger.error(node.id, err);
-            done(err);
-          } else {
-            msg.payload = data.split('\'')[1];
-            msg.encoding = 'base64';
-            send(msg);
-            done();
-          }
-          reset();
-        });
+        await shell.execute(script)
+            .then((data) => {
+              msg.payload = data.split('\'')[1];
+              msg.encoding = 'base64';
+              send(msg);
+              done();
+            })
+            .catch((err) => {
+              logger.error(node.id, err);
+              done(err);
+            })
+            .finally(() => {
+              logger.trace(node.id, 'Executed histogram command');
+              reset();
+            });
       }
     });
   };
