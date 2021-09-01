@@ -2,8 +2,9 @@
 
 const util = require('util');
 const snippets = require('../../snippets');
-const shell = require('../../python').PythonShell;
 const logger = require('../../logger');
+const {PythonInteractive, PythonPath} = require('../../python');
+const shell = new PythonInteractive(PythonPath);
 
 module.exports = function(RED) {
   function PortfolioOptimisationNode(config) {
