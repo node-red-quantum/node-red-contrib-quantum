@@ -36,24 +36,23 @@ module.exports = function(RED) {
         `${node.selectedRegVarName}[${node.selectedBit}]`;
 
       script += util.format(snippets.MEASURE, params);
-
-      await shell.execute(script, (err) => {
-        logger.trace(node.id, 'Executed measure command');
-        if (err) {
-          logger.error(node.id, err);
-          done(err);
-        } else {
-          const status = (!node.selectedRegVarName) ? `Result: cbit ${node.selectedBit}`:
-          `Result: register ${node.selectedRegVarName.substring(3)} / cbit ${node.selectedBit}`;
-          node.status({
-            fill: 'grey',
-            shape: 'dot',
-            text: status,
+      await shell.execute(script)
+          .then(() => {
+            const status = (!node.selectedRegVarName) ? `Result: cbit ${node.selectedBit}`:
+            `Result: register ${node.selectedRegVarName.substring(3)} / cbit ${node.selectedBit}`;
+            node.status({
+              fill: 'grey',
+              shape: 'dot',
+              text: status,
+            });
+            send(msg);
+            done();
+          }).catch((err) => {
+            logger.error(node.id, err);
+            done(err);
+          }).finally(() => {
+            logger.trace(node.id, 'Executed measure command');
           });
-          send(msg);
-          done();
-        };
-      });
     });
   }
 

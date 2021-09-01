@@ -15,15 +15,11 @@ describe('PythonShell', function() {
     });
 
     it('python path is default', async function() {
-      assert.match(shell.path, /venv\/bin\/python|venv\/Scripts\/python.exe/);
+      assert.match(shell.pythonPath, /(venv\/bin\/python)|(venv\/Scripts\/python.exe)/);
     });
 
     it('process starts empty', async function() {
-      assert.isNull(shell.process);
-    });
-
-    it('script starts empty', async function() {
-      assert.strictEqual(shell.script, '');
+      assert.isNull(shell.pythonProcess);
     });
   });
 
@@ -33,82 +29,58 @@ describe('PythonShell', function() {
     });
 
     it('start new process', async function() {
-      await shell.start();
-      assert.isNotNull(shell.process);
+      shell.start();
+      assert.isNotNull(shell.pythonProcess);
     });
 
     it('no-op if process is already running', async function() {
-      await shell.start();
-      let process = shell.process;
-      await shell.start();
-      assert.strictEqual(shell.process, process);
-    });
-
-    it('return welcome message', async function() {
-      let msg = await shell.start();
-      assert.match(msg, /^Python 3./);
+      shell.start();
+      let process = shell.pythonProcess;
+      shell.start();
+      assert.strictEqual(shell.pythonProcess, process);
     });
   });
 
   describe('#stop', function() {
     beforeEach(async () => {
-      await shell.start();
+      shell.start();
     });
 
     it('stop current process', function() {
       shell.stop();
-      assert.isNull(shell.process);
+      assert.isNull(shell.pythonProcess);
     });
 
     it('no-op if process has already stopped', function() {
       shell.stop();
-      let process = shell.process;
+      let process = shell.pythonProcess;
       shell.stop();
-      assert.strictEqual(shell.process, process);
-    });
-
-    it('reset script', function() {
-      shell.script = 'text';
-      shell.stop();
-      assert.strictEqual(shell.script, '');
+      assert.strictEqual(shell.pythonProcess, process);
     });
   });
 
   describe('#restart', function() {
-    beforeEach(async () => {
-      await shell.start();
-    });
     afterEach(() => {
       shell.stop();
     });
 
     it('stop current process and start new process', async function() {
-      let process = shell.process;
-      await shell.restart();
-      assert.notStrictEqual(shell.process, process);
+      shell.start();
+      let process = shell.pythonProcess;
+      shell.restart();
+      assert.notStrictEqual(shell.pythonProcess, process);
     });
 
     it('start new process', async function() {
       shell.stop();
-      await shell.restart();
-      assert.isNotNull(shell.process);
-    });
-
-    it('reset script', async function() {
-      shell.script = 'text';
-      await shell.restart();
-      assert.strictEqual(shell.script.trim(), '');
-    });
-
-    it('return welcome message', async function() {
-      let msg = await shell.restart();
-      assert.match(msg, /^Python 3./);
+      shell.restart();
+      assert.isNotNull(shell.pythonProcess);
     });
   });
 
   describe('#execute', function() {
     beforeEach(async () => {
-      await shell.start();
+      shell.start();
     });
     afterEach(() => {
       shell.stop();
@@ -168,22 +140,8 @@ describe('PythonShell', function() {
     });
 
     it('return error on invalid command', async function() {
-      let output = await shell.execute('print(x)');
+      let output = await shell.execute('print(x)').catch((err) => err);
       assert.strictEqual(output, NAME_ERROR);
-    });
-
-    it('return output with callback', async function() {
-      await shell.execute('print(10)', (err, data) => {
-        assert.isNull(err);
-        assert.strictEqual(data, '10');
-      });
-    });
-
-    it('return error with callback', async function() {
-      await shell.execute('print(x)', (err, data) => {
-        assert.strictEqual(err, NAME_ERROR);
-        assert.isNull(data);
-      });
     });
 
     it('return output with promise', async function() {
@@ -191,14 +149,6 @@ describe('PythonShell', function() {
       await promise
           .then((data) => {
             assert.strictEqual(data, '10');
-          });
-    });
-
-    it('return error with promise', async function() {
-      let promise = shell.execute('print(x)');
-      await promise
-          .then((err) => {
-            assert.strictEqual(err, NAME_ERROR);
           });
     });
 
@@ -222,15 +172,15 @@ describe('PythonShell', function() {
 
     it('return errors on parallel invalid commands', async () => {
       let outputs = await Promise.all([
-        shell.execute('print(x)'),
-        shell.execute('print(x)'),
+        shell.execute('print(x)').catch((err) => err),
+        shell.execute('print(x)').catch((err) => err),
       ]);
       assert.deepEqual(outputs, [NAME_ERROR, NAME_ERROR]);
     });
 
     it('return errors and outputs on parallel mixed commands', async () => {
       let outputs = await Promise.all([
-        shell.execute('print(x)'),
+        shell.execute('print(x)').catch((err) => err),
         shell.execute('x = 10'),
         shell.execute('print(x)'),
       ]);

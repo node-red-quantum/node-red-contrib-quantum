@@ -150,28 +150,28 @@ module.exports = function(RED) {
           text: 'Job running...',
         });
 
-        await shell.execute(script, (err, data) => {
-          logger.trace(node.id, 'Executed IBM quantum system command');
-          if (err) {
-            node.status({
-              fill: 'red',
-              shape: 'dot',
-              text: 'Job failed!',
+        await shell.execute(script)
+            .then((data) => {
+              node.status({
+                fill: 'green',
+                shape: 'dot',
+                text: 'Job completed!',
+              });
+              msg.payload = data;
+              send(msg);
+              done();
+            }).catch((err) => {
+              node.status({
+                fill: 'red',
+                shape: 'dot',
+                text: 'Job failed!',
+              });
+              logger.error(node.id, err);
+              done(err);
+            }).finally(() => {
+              logger.trace(node.id, 'Executed IBM quantum system command');
+              reset();
             });
-            logger.error(node.id, err);
-            done(err);
-          } else {
-            node.status({
-              fill: 'green',
-              shape: 'dot',
-              text: 'Job completed!',
-            });
-            msg.payload = data;
-            send(msg);
-            done();
-          }
-          reset();
-        });
       }
     });
   }

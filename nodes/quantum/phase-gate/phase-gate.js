@@ -39,21 +39,21 @@ module.exports = function(RED) {
 
       // Run the script in the python shell, and if no error occurs
       // then send msg object to the next node
-      await shell.execute(script, (err) => {
-        logger.trace(node.id, 'Executed phase gate command');
-        if (err) {
-          logger.error(node.id, err);
-          done(err);
-        } else {
-          node.status({
-            fill: 'grey',
-            shape: 'dot',
-            text: 'Phase: \xa0' + node.phase.toString() + '\u03C0',
+      await shell.execute(script)
+          .then(() => {
+            node.status({
+              fill: 'grey',
+              shape: 'dot',
+              text: 'Phase: \xa0' + node.phase.toString() + '\u03C0',
+            });
+            send(msg);
+            done();
+          }).catch((err) => {
+            logger.error(node.id, err);
+            done(err);
+          }).finally(() => {
+            logger.trace(node.id, 'Executed phase gate command');
           });
-          send(msg);
-          done();
-        };
-      });
     });
   }
   RED.nodes.registerType('phase-gate', PhaseGateNode);
