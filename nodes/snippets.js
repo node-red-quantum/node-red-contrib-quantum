@@ -139,7 +139,9 @@ qc.append(UGate(%s, %s, %s).control(%s), %s)
 `;
 
 const BLOCH_SPHERE =
-`from qiskit.visualization import plot_bloch_multivector
+`import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+from qiskit.visualization import plot_bloch_multivector
 from qiskit.quantum_info import Statevector
 state = Statevector.from_instruction(qc)
 plot_bloch_multivector(state)
