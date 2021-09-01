@@ -1,5 +1,5 @@
 <script type="text/javascript">
-  RED.nodes.registerType("local-simulator", {
+  RED.nodes.registerType("histogram-simulator", {
     category: "quantum",
     color: "#A8A8A8",
     defaults: {
@@ -19,23 +19,23 @@
     },
     inputs: 1,
     outputs: 1,
-    icon: "font-awesome/fa-microchip",
-    paletteLabel: "local simulator",
+    icon: "font-awesome/fa-bar-chart",
+    paletteLabel: "histogram simulator",
     label: function () {
-      return this.name || "local simulator";
+      return this.name || "histogram";
     },
     inputLabels: "Qubits",
-    outputLabels: "Circuit output",
+    outputLabels: "Histogram",
   });
 </script>
 
-<script type="text/html" data-template-name="local-simulator">
+<script type="text/html" data-template-name="histogram-simulator">
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
   <div class="form-row">
     <label for="node-input-shots">Shots</label>
-    <input type="number" id="node-input-shots" placeholder="1000"/>
+    <input type="number" id="node-input-shots" placeholder="1000" min="1"/>
   </div>
 </script>

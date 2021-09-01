@@ -1,30 +1,35 @@
 'use strict';
 
+const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
 const logger = require('../../logger');
 
 module.exports = function(RED) {
-  function BlochSphereNode(config) {
+  function HistogramSimulator(config) {
     RED.nodes.createNode(this, config);
     this.name = config.name;
+    this.shots = config.shots || 1;
     this.qubits = [];
     this.qreg = '';
     const node = this;
 
+    // Reset runtime variables upon output or error
     const reset = function() {
       node.qubits = [];
       node.qreg = '';
     };
 
-    logger.trace(this.id, 'Initialised bloch sphere');
+    logger.trace(this.id, 'Initialised histogram');
 
     this.on('input', async function(msg, send, done) {
-      logger.trace(node.id, 'Bloch sphere received input');
-      let script = '';
+      logger.trace(node.id, 'Histogram received input');
       let qubitsArrived = true;
 
+      // Validate the node input msg: check for qubit object.
+      // Return corresponding errors or null if no errors.
+      // Stop the node execution upon an error
       let error = errors.validateQubitInput(msg);
       if (error) {
         logger.error(node.id, error);
@@ -33,12 +38,12 @@ module.exports = function(RED) {
         return;
       }
 
-      // Node 'waiting' phase: waiting for all qubits to finish execution
+      // If the quantum circuit does not have registers
       if (typeof(msg.payload.register) === 'undefined') {
-        node.qubits.push(msg);
         node.qreg = undefined;
+        node.qubits.push(msg);
 
-        // Check if all qubits arrived.
+        // If not all qubits have arrived
         if (node.qubits.length < msg.payload.structure.qubits) {
           qubitsArrived = false;
         }
@@ -87,6 +92,8 @@ module.exports = function(RED) {
         }
       }
 
+      // If all qubits have arrived,
+      // generate the circuit print script and run it
       if (qubitsArrived) {
         // Checking that all qubits received as input are from the same quantum circuit
         let error = errors.validateQubitsFromSameCircuit(node.qubits);
@@ -97,14 +104,10 @@ module.exports = function(RED) {
           return;
         }
 
-        script += snippets.BLOCH_SPHERE + snippets.ENCODE_IMAGE;
+        let script = util.format(snippets.HISTOGRAM, node.shots) + snippets.ENCODE_IMAGE;
         await shell.execute(script, (err, data) => {
-          logger.trace(node.id, 'Executed bloch sphere command');
+          logger.trace(node.id, 'Executed histogram command');
           if (err) {
-            // Check if error is due to script containing a measurement
-            if (shell.script.includes(snippets.MEASURE.toString().substring(0, 11))) {
-              err = new Error(errors.BLOCH_SPHERE_WITH_MEASUREMENT);
-            }
             logger.error(node.id, err);
             done(err);
           } else {
@@ -118,5 +121,5 @@ module.exports = function(RED) {
       }
     });
   };
-  RED.nodes.registerType('bloch-sphere', BlochSphereNode);
+  RED.nodes.registerType('histogram-simulator', HistogramSimulator);
 };

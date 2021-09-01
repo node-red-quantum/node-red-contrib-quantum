@@ -8,7 +8,8 @@
       chosen_system: { value: "" },
       preferred_backend: { value: "" },
       shots: { 
-        value: 1, 
+        value: "", 
+        required: true,
         validate: function (x) {
           x = parseInt(x);
           if (Number.isInteger(x) && x > 0) {
@@ -27,6 +28,8 @@
     label: function () {
       return this.name || "ibm quantum system";
     },
+    inputLabels: "Qubits",
+    outputLabels: "Circuit output",
   })
 </script>
 
