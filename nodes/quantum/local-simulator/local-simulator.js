@@ -4,6 +4,7 @@ const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
+const logger = require('../../logger');
 
 module.exports = function(RED) {
   function LocalSimulatorNode(config) {
@@ -20,7 +21,10 @@ module.exports = function(RED) {
       node.qreg = '';
     };
 
+    logger.trace(this.id, 'Initialised local simulator');
+
     this.on('input', async function(msg, send, done) {
+      logger.trace(node.id, 'Local simulator received input');
       let script = '';
       let qubitsArrived = true;
 
@@ -29,6 +33,7 @@ module.exports = function(RED) {
       // Stop the node execution upon an error
       let error = errors.validateQubitInput(msg);
       if (error) {
+        logger.error(node.id, error);
         done(error);
         reset();
         return;
@@ -57,7 +62,9 @@ module.exports = function(RED) {
           Object.keys(node.qreg).includes(msg.payload.registerVar) &&
           node.qreg[msg.payload.registerVar].count == node.qreg[msg.payload.registerVar].total
         )) {
-          done(new Error(errors.QUBITS_FROM_DIFFERENT_CIRCUITS));
+          let error = new Error(errors.QUBITS_FROM_DIFFERENT_CIRCUITS);
+          logger.error(node.id, error);
+          done(error);
           reset();
           return;
         }
@@ -92,6 +99,7 @@ module.exports = function(RED) {
         // Checking that all qubits received as input are from the same quantum circuit
         let error = errors.validateQubitsFromSameCircuit(node.qubits);
         if (error) {
+          logger.error(node.id, error);
           done(error);
           reset();
           return;
@@ -99,16 +107,18 @@ module.exports = function(RED) {
 
         const params = node.shots;
         script += util.format(snippets.LOCAL_SIMULATOR, params);
-        await shell.execute(script, (err, data) => {
-          if (err) {
-            done(err);
-          } else {
-            msg.payload = JSON.parse(data.replace(/'/g, '"'));
-            send(msg);
-            done();
-          }
-          reset();
-        });
+        await shell.execute(script)
+            .then((data) => {
+              msg.payload = JSON.parse(data.replace(/'/g, '"'));
+              send(msg);
+              done();
+            }).catch((err) => {
+              logger.error(node.id, err);
+              done(err);
+            }).finally(() => {
+              logger.trace(node.id, 'Executed local simulator command');
+              reset();
+            });
       }
     });
   }

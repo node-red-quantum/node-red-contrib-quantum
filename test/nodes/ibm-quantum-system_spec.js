@@ -4,6 +4,9 @@ const nodeTestHelper = testUtil.nodeTestHelper;
 const {FlowBuilder} = require('../flow-builder');
 const ibmQuantumSystemNode = require('../../nodes/quantum/ibm-quantum-system/ibm-quantum-system.js');
 const snippets = require('../../nodes/snippets.js');
+const errors = require('../../nodes/errors');
+
+const flow = new FlowBuilder();
 
 // DO NOT COMMIT YOUR API TOKEN!
 const API_TOKEN = '';
@@ -14,6 +17,7 @@ describe('IBMQuantumSystemNode', function() {
   });
 
   afterEach(function(done) {
+    flow.reset();
     nodeTestHelper.unload();
     nodeTestHelper.stopServer(done);
   });
@@ -25,7 +29,6 @@ describe('IBMQuantumSystemNode', function() {
   xit('execute command', function(done) {
     // Disabled for now until we can use GitHub secrets to pass an API key to this test for CI.
     let command = util.format(snippets.IBMQ_SYSTEM_DEFAULT + snippets.IBMQ_SYSTEM_RESULT, API_TOKEN, '1');
-    let flow = new FlowBuilder();
     flow.add('quantum-circuit', 'n0', [['n1']], {structure: 'qubits', outputs: '1', qbitsreg: '1', cbitsreg: '1'});
     flow.add('hadamard-gate', 'n1', [['n2']]);
     flow.add('measure', 'n2', [['n3']], {selectedBit: '0'});
@@ -35,4 +38,24 @@ describe('IBMQuantumSystemNode', function() {
 
     testUtil.commandExecuted(flow, command, done);
   }).timeout(180000); // Needs long timeout as it takes awhile for IBM server to respond
+
+  it('should fail on receiving input from non-quantum nodes', function(done) {
+    flow.add('ibm-quantum-system', 'n1', [['n2']], {api_token: API_TOKEN,
+      preferred_backend: '', preferred_output: ' Results'});
+    flow.addOutput('n2');
+
+    const givenInput = {payload: '', topic: ''};
+    const expectedMessage = errors.NOT_QUANTUM_NODE;
+    testUtil.nodeFailed(flow, givenInput, expectedMessage, done);
+  });
+
+  it('should fail on receiving non-qubit object', function(done) {
+    flow.add('ibm-quantum-system', 'n1', [['n2']], {api_token: API_TOKEN,
+      preferred_backend: '', preferred_output: ' Results'});
+    flow.addOutput('n2');
+
+    const givenInput = {payload: {structure: '', qubit: 3}, topic: 'Quantum Circuit'};
+    const expectedMessage = errors.NOT_QUBIT_OBJECT;
+    testUtil.nodeFailed(flow, givenInput, expectedMessage, done);
+  });
 });

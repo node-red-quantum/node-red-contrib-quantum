@@ -1,9 +1,11 @@
 'use strict';
 
 const util = require('util');
+const fileSystem = require('fs');
 const snippets = require('../../snippets');
-const shell = require('../../python').PythonShell;
+const {PythonShell: shell, PythonPath, createVirtualEnvironment} = require('../../python');
 const stateManager = require('../../state').StateManager;
+const logger = require('../../logger');
 
 const EventEmitter = require('events');
 const quantumCircuitReady = new EventEmitter();
@@ -26,35 +28,42 @@ module.exports = function(RED) {
 
     state.setPersistent('quantumCircuitReadyEvent', quantumCircuitReady);
 
-    const quantumCircuitProxyHandler = {
-      set: (obj, prop, value) => {
-        obj[prop] = value;
-        if (Object.keys(obj).length == node.outputs) {
-          quantumCircuitReady.emit('circuitReady', obj);
-          state.setPersistent('quantumCircuitConfig', new Proxy({}, quantumCircuitProxyHandler));
-        }
-        return true;
-      },
-    };
-
-    let quantumCircuitConfig = new Proxy({}, quantumCircuitProxyHandler);
-    state.setPersistent('quantumCircuitConfig', quantumCircuitConfig);
-
     state.setPersistent('isCircuitReady', () => {
       let event = state.get('quantumCircuitReadyEvent');
       return new Promise((res, rej) => {
-        event.on('circuitReady', (circuitConfig) => {
-          res(circuitConfig);
+        event.once('circuitReady', () => {
+          res();
         });
       });
     });
 
+    // create an empty array in state to store register names
+    state.setPersistent('registers', []);
+
+    logger.trace(this.id, 'Initialised quantum circuit');
+
     this.on('input', async function(msg, send, done) {
+      logger.trace(node.id, 'Quantum circuit received input');
       state.resetRuntime();
       let script = '';
       script += snippets.IMPORTS;
 
       let output = new Array(node.outputs);
+
+      // Check if the input msg contains binar string definition
+      if (msg.payload.binaryString) {
+        // Check the length of the binary string
+        let binaryString = msg.payload.binaryString;
+        if (binaryString.length != node.outputs) {
+          done(new Error(`Binary string length mismatch. Expect: ${node.outputs}, actual: ${binaryString.length}`));
+          return;
+        } else if (!/^[01]+$/.test(binaryString)) { // Use regular expression to check if it's a valid binary string
+          done(new Error(`Input should be a binary string`));
+          return;
+        }
+        // Set temporary flow context
+        state.setRuntime('binaryString', binaryString);
+      }
 
       // Creating a temporary 'quantumCircuitArray' flow context array
       // This variable represents the quantum circuit structure
@@ -75,11 +84,22 @@ module.exports = function(RED) {
               },
               register: i,
             },
+            // additional message sent to the last output
+            shouldInitCircuit: i == node.outputs - 1 ? true : false,
           };
+          if (msg.req && msg.res) {
+            output[i].req = msg.req;
+            output[i].res = msg.res;
+          }
         };
       } else { // If the user does not want to use registers
-        // Add arguments to quantum circuit code
+        // initialise qubit if binary string exists
         script += util.format(snippets.QUANTUM_CIRCUIT, node.qbitsreg + ', ' + node.cbitsreg);
+        let binaryString = state.get('binaryString');
+        if (binaryString) {
+          script += util.format(snippets.INITIALIZE, binaryString, `qc.qubits`);
+        }
+        // Add arguments to quantum circuit code
 
         // Creating an array of messages to be sent
         // Each message represents a different qubit
@@ -95,19 +115,58 @@ module.exports = function(RED) {
               register: undefined,
               qubit: i,
             },
+            // additional message sent to the last output
+            shouldInitCircuit: i == node.outputs - 1 ? true : false,
           };
+          if (msg.req && msg.res) {
+            output[i].req = msg.req;
+            output[i].res = msg.res;
+          }
         };
+        state.del('binaryString');
+      }
+
+      let error;
+      if (!fileSystem.existsSync(PythonPath)) {
+        node.warn('Python virtual environment not found - creating virtual environment. Do not close Node-RED.');
+        logger.warn(node.id, 'Python virtual environment not found');
+        logger.info(node.id, 'Creating virtual environment');
+
+        await createVirtualEnvironment()
+            .then((data) => {
+              if (data.stderr) {
+                error = data.stderr;
+              } else {
+                node.log('Successfully created virtual environment');
+                logger.info(node.id, 'Created virtual environment');
+                logger.debug(node.id, data.stdout);
+              }
+            })
+            .catch((err) => {
+              error = err;
+            });
+      } else {
+        logger.info(node.id, `Using Python executable at ${PythonPath}`);
+      }
+
+      if (error) {
+        logger.error(node.id, error);
+        done(error);
+        return;
       }
 
       // Sending one register object per node output
-      await shell.restart();
-      await shell.execute(script, (err) => {
-        if (err) done(err);
-        else {
-          send(output);
-          done();
-        }
-      });
+      shell.restart();
+      await shell.execute(script)
+          .then(() => {
+            send(output);
+            done();
+          }).catch((err) => {
+            logger.error(node.id, err);
+            done(err);
+          }).finally(() => {
+            logger.trace(node.id, 'Executed quantum circuit command');
+          });
     });
   }
 

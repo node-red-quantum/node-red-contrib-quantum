@@ -1,9 +1,11 @@
 'use strict';
 
 const util = require('util');
+const isOnline = require('is-online');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
+const logger = require('../../logger');
 
 module.exports = function(RED) {
   function IBMQuantumSystemNode(config) {
@@ -23,7 +25,10 @@ module.exports = function(RED) {
       node.qreg = '';
     };
 
+    logger.trace(this.id, 'Initialised IBM quantum system');
+
     this.on('input', async function(msg, send, done) {
+      logger.trace(node.id, 'IBM quantum system received input');
       let qubitsArrived = true;
 
       // Validate the node input msg: check for qubit object.
@@ -31,6 +36,7 @@ module.exports = function(RED) {
       // Stop the node execution upon an error
       let error = errors.validateQubitInput(msg);
       if (error) {
+        logger.error(node.id, error);
         done(error);
         reset();
         return;
@@ -60,7 +66,9 @@ module.exports = function(RED) {
           Object.keys(node.qreg).includes(msg.payload.registerVar) &&
           node.qreg[msg.payload.registerVar].count == node.qreg[msg.payload.registerVar].total
         )) {
-          done(new Error(errors.QUBITS_FROM_DIFFERENT_CIRCUITS));
+          let error = new Error(errors.QUBITS_FROM_DIFFERENT_CIRCUITS);
+          logger.error(node.id, error);
+          done(error);
           reset();
           return;
         }
@@ -95,16 +103,11 @@ module.exports = function(RED) {
         // Checking that all qubits received as input are from the same quantum circuit
         let error = errors.validateQubitsFromSameCircuit(node.qubits);
         if (error) {
+          logger.error(node.id, error);
           done(error);
           reset();
           return;
         }
-
-        node.status({
-          fill: 'orange',
-          shape: 'dot',
-          text: 'Job running...',
-        });
 
         let script = '';
 
@@ -128,26 +131,47 @@ module.exports = function(RED) {
           script += util.format(snippets.IBMQ_SYSTEM_RESULT, node.shots);
         }
 
-        await shell.execute(script, (err, data) => {
-          if (err) {
-            node.status({
-              fill: 'red',
-              shape: 'dot',
-              text: 'Job failed!',
-            });
-            done(err);
-          } else {
-            node.status({
-              fill: 'green',
-              shape: 'dot',
-              text: 'Job completed!',
-            });
-            msg.payload = data;
-            send(msg);
-            done();
-          }
+        if (!await isOnline()) {
+          node.status({
+            fill: 'red',
+            shape: 'dot',
+            text: 'Failed to connect',
+          });
+          let error = new Error(errors.NO_INTERNET);
+          logger.error(node.id, error);
+          done(error);
           reset();
+          return;
+        }
+
+        node.status({
+          fill: 'orange',
+          shape: 'dot',
+          text: 'Job running...',
         });
+
+        await shell.execute(script)
+            .then((data) => {
+              node.status({
+                fill: 'green',
+                shape: 'dot',
+                text: 'Job completed!',
+              });
+              msg.payload = data;
+              send(msg);
+              done();
+            }).catch((err) => {
+              node.status({
+                fill: 'red',
+                shape: 'dot',
+                text: 'Job failed!',
+              });
+              logger.error(node.id, err);
+              done(err);
+            }).finally(() => {
+              logger.trace(node.id, 'Executed IBM quantum system command');
+              reset();
+            });
       }
     });
   }

@@ -47,6 +47,18 @@ const BLOCH_SPHERE_WITH_MEASUREMENT =
 'measuring a qubit can collapse its state and lead to inconsistencies.\n'+
 'Please disconnect or remove any "Measure" node from the quantum circuit.';
 
+const GREATER_THAN_TWO =
+'The input integer should be greater than 2';
+
+const INPUT_ODD_INTEGER =
+'The input integer should be odd';
+
+const INPUT_AN_INTEGER =
+'The input number should an integer';
+
+const NO_INTERNET =
+'Failed to connect to the internet.';
+
 function validateQubitInput(msg) {
   let keys = Object.keys(msg.payload);
 
@@ -61,7 +73,6 @@ function validateQubitInput(msg) {
 
 function validateRegisterInput(msg) {
   let keys = Object.keys(msg.payload);
-
   if (msg.topic !== 'Quantum Circuit') {
     return new Error(NOT_QUANTUM_NODE);
   } else if (keys.includes('register') && typeof msg.payload.register === 'undefined') {
@@ -117,6 +128,19 @@ function validateRegisterStrucutre(structureInitialised, strucutreExpected) {
   }
 };
 
+function validateShorsInput(msg) {
+  if (msg.payload < 3) {
+    return new Error(GREATER_THAN_TWO);
+  }
+  if (msg.payload % 2 === 0) {
+    return new Error(INPUT_ODD_INTEGER);
+  }
+  if (typeof(msg.payload) !== 'number' || msg.payload % 1 !== 0) {
+    return new Error(INPUT_AN_INTEGER);
+  }
+  return null;
+};
+
 module.exports = {
   NOT_QUANTUM_NODE,
   USE_REGISTER_NODES,
@@ -126,10 +150,16 @@ module.exports = {
   INVALID_REGISTER_NUMBER,
   QUBITS_FROM_DIFFERENT_CIRCUITS,
   SAME_QUBIT_RECEIVED_TWICE,
+  NOT_BIT_STRING,
   BLOCH_SPHERE_WITH_MEASUREMENT,
+  GREATER_THAN_TWO,
+  INPUT_ODD_INTEGER,
+  INPUT_AN_INTEGER,
+  NO_INTERNET,
   validateQubitInput,
   validateRegisterInput,
   validateQubitsFromSameCircuit,
   validateRegisterStrucutre,
   validateGroversInput,
+  validateShorsInput,
 };

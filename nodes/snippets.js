@@ -145,6 +145,13 @@ state = Statevector.from_instruction(qc)
 plot_bloch_multivector(state)
 `;
 
+const HISTOGRAM =
+`from qiskit.visualization import plot_histogram
+simulator = Aer.get_backend('qasm_simulator')
+result = execute(qc, backend = simulator, shots = %s).result()
+plot_histogram(result.get_counts(), color='midnightblue', title="Circuit Output")
+`;
+
 const CU_GATE =
 `qc.cu(%s, %s, %s, %s, %s, %s)
 `;
@@ -159,6 +166,21 @@ buffer.seek(0)
 b64_str = base64.b64encode(buffer.read())
 print(b64_str)
 buffer.close()
+`;
+
+const INITIALIZE =
+`from qiskit.quantum_info import Statevector
+qc.initialize(Statevector.from_label('%s').data, %s)
+`;
+
+const SHORS =
+`from qiskit import Aer
+from qiskit.algorithms import Shor
+backend = Aer.get_backend('qasm_simulator')
+shor = Shor(quantum_instance=backend)
+result = shor.factor(%s)
+factors = [] if result.factors == [] else result.factors[0]
+print(factors)
 `;
 
 module.exports = {
@@ -190,4 +212,7 @@ module.exports = {
   BLOCH_SPHERE,
   CU_GATE,
   ENCODE_IMAGE,
+  INITIALIZE,
+  SHORS,
+  HISTOGRAM,
 };

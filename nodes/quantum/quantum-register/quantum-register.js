@@ -5,6 +5,7 @@ const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const stateManager = require('../../state').StateManager;
 const errors = require('../../errors');
+const logger = require('../../logger');
 
 module.exports = function(RED) {
   function QuantumRegisterNode(config) {
@@ -14,7 +15,10 @@ module.exports = function(RED) {
     this.outputs = parseInt(config.outputs);
     const node = this;
 
+    logger.trace(this.id, 'Initialised quantum register');
+
     this.on('input', async function(msg, send, done) {
+      logger.trace(node.id, 'Quantum register received input');
       const state = stateManager.getState(msg.circuitId);
       let script = '';
       let output = new Array(node.outputs);
@@ -24,9 +28,15 @@ module.exports = function(RED) {
       // Stop the node execution upon an error
       let error = errors.validateRegisterInput(msg);
       if (error) {
+        logger.error(node.id, error);
         done(error);
         return;
       }
+
+      let shouldInitCircuit = msg.shouldInitCircuit;
+      let registerArr = state.get('registers');
+      let circuitReadyEvent = state.get('quantumCircuitReadyEvent');
+      let circuitReady = state.get('isCircuitReady');
 
       // Setting node.name to "r0","r1"... if the user did not input a name
       if (node.name == '') {
@@ -39,47 +49,7 @@ module.exports = function(RED) {
           node.outputs.toString() + ', "' + node.name + '"',
       );
 
-      // Completing the 'quantumCircuit' flow context array
-      let register = {
-        registerType: 'quantum',
-        registerName: node.name,
-        registerVar: 'qr' + msg.payload.register.toString(),
-      };
-      state.setRuntime('quantumCircuit[' + msg.payload.register.toString() + ']', register);
-
-      // get quantum circuit config and circuit ready event from flow context
-      let quantumCircuitConfig = state.get('quantumCircuitConfig');
-      let circuitReady = state.get('isCircuitReady');
-      quantumCircuitConfig[node.name] = register;
-
-      // If the quantum circuit has not yet been initialised by another register
-      if (typeof(state.get('quantumCircuit')) !== undefined) {
-        let structure = state.get('quantumCircuit');
-
-        // Validating the registers' structure according to the user input in 'Quantum Circuit'
-        // And counting how many registers were initialised so far.
-        let [error, count] = errors.validateRegisterStrucutre(structure, msg.payload.structure);
-        if (error) {
-          done(error);
-          return;
-        }
-
-        // If all register initialised & the circuit has not been initialised by another register:
-        // Initialise the quantum circuit
-        if (count == structure.length && typeof(state.get('quantumCircuit')) !== undefined) {
-          // Delete the 'quantumCircuit' variable, not used anymore
-          state.del('quantumCircuit');
-
-          // Add arguments to quantum circuit code
-          let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, '%s,'.repeat(count));
-
-          structure.map((register) => {
-            circuitScript = util.format(circuitScript, register.registerVar);
-          });
-
-          script += circuitScript;
-        }
-      }
+      registerArr.push(`qr${msg.payload.register}`);
 
       // Creating an array of messages to be sent
       // Each message represents a different qubit
@@ -94,15 +64,67 @@ module.exports = function(RED) {
             qubit: i,
           },
         };
+        if (msg.req && msg.res) {
+          output[i].req = msg.req;
+          output[i].res = msg.res;
+        }
+      }
+
+      if (shouldInitCircuit) {
+        logger.trace(node.id, 'Should execute quantum circuit init command');
+        script += util.format(snippets.QUANTUM_CIRCUIT, registerArr.join(','));
       }
 
       // Run the script in the python shell, and if no error occurs
       // then send one qubit object per node output
-      await shell.execute(script, (err) => {
-        if (err) done(err);
-      });
-      // wait for quantum circuit to be initialised
-      await circuitReady();
+      await shell.execute(script)
+          .then(() => {
+            error = null;
+          }).catch((err) => {
+            error = err;
+          }).finally(() => {
+            logger.trace(node.id, 'Executed quantum register command');
+          });
+
+      if (error) {
+        logger.error(node.id, error);
+        done(error);
+        return;
+      }
+
+      if (shouldInitCircuit) {
+        logger.trace(node.id, 'Quantum register emitted circuit ready event');
+        circuitReadyEvent.emit('circuitReady', null);
+        state.del('registers');
+      } else {
+        // wait for quantum circuit to be initialised
+        logger.trace(node.id, 'Quantum register waiting for circuit to be ready');
+        await circuitReady();
+      }
+
+      let binaryString = state.get('binaryString');
+      if (binaryString) {
+        let initScript = util.format(snippets.INITIALIZE, binaryString, `qc.qubits`);
+        state.del('binaryString');
+
+        await shell.execute(initScript)
+            .then(() => {
+              error = null;
+            })
+            .catch((err) => {
+              error = err;
+            })
+            .finally(() => {
+              logger.trace(node.id, 'Executed quantum register initialise command');
+            });
+
+        if (error) {
+          logger.error(node.id, error);
+          done(error);
+          return;
+        }
+      }
+
       send(output);
       done();
     });

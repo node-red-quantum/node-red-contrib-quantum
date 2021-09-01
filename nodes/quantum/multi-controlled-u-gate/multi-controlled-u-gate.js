@@ -4,6 +4,7 @@ const util = require('util');
 const snippets = require('../../snippets');
 const shell = require('../../python').PythonShell;
 const errors = require('../../errors');
+const logger = require('../../logger');
 
 module.exports = function(RED) {
   function MultiControlledUGateNode(config) {
@@ -23,7 +24,10 @@ module.exports = function(RED) {
       node.qubits = [];
     };
 
+    logger.trace(this.id, 'Initialised multi-controlled-U gate');
+
     this.on('input', async function(msg, send, done) {
+      logger.trace(node.id, 'Multi-controlled-U gate received input');
       let script = '';
 
       // Validate the node input msg: check for qubit object.
@@ -31,6 +35,7 @@ module.exports = function(RED) {
       // Stop the node execution upon an error
       let error = errors.validateQubitInput(msg);
       if (error) {
+        logger.error(node.id, error);
         done(error);
         reset();
         return;
@@ -44,6 +49,7 @@ module.exports = function(RED) {
         // Checking that all qubits received as input are from the same quantum circuit
         let error = errors.validateQubitsFromSameCircuit(node.qubits);
         if (error) {
+          logger.error(node.id, error);
           done(error);
           reset();
           return;
@@ -129,14 +135,17 @@ module.exports = function(RED) {
 
         // Run the script in the python shell, and if no error occurs
         // then send one qubit object per node output
-        await shell.execute(script, (err) => {
-          if (err) done(err);
-          else {
-            send(node.qubits);
-            done();
-          }
-          reset();
-        });
+        await shell.execute(script)
+            .then(() => {
+              send(node.qubits);
+              done();
+            }).catch((err) => {
+              logger.error(node.id, err);
+              done(err);
+            }).finally(() => {
+              logger.trace(node.id, 'Executed multi-controlled-U gate command');
+              reset();
+            });
       }
     });
   }
