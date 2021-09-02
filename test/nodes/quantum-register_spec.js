@@ -51,7 +51,7 @@ describe('QuantumRegisterNode', function() {
 
   it('should return correct output for registers only circuits', function(done) {
     flow.add('quantum-circuit', 'qc', [['qr'], ['cr']],
-      {structure: 'registers', outputs: '2', qbitsreg: '1', cbitsreg: '1'});
+        {structure: 'registers', outputs: '2', qbitsreg: '1', cbitsreg: '1'});
     flow.add('classical-register', 'cr', [[]], {classicalBits: '2'});
     flow.add('quantum-register', 'qr', [['m1'], ['m2']], {outputs: 2});
     flow.add('measure', 'm1', [['si']], {selectedBit: 0});
@@ -61,8 +61,8 @@ describe('QuantumRegisterNode', function() {
 
     const givenInput = {
       payload: {
-        binaryString: '10'
-      }
+        binaryString: '10',
+      },
     };
     const expectedOutput = {'10': 1};
     testUtil.correctOutputReceived(flow, givenInput, expectedOutput, done);

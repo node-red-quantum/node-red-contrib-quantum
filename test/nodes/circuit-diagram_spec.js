@@ -54,8 +54,8 @@ describe('CircuitDiagramNode', function() {
   it('command executed in register-only circuit', function(done) {
     let command = snippets.CIRCUIT_DIAGRAM + snippets.ENCODE_IMAGE;
     flow.add('quantum-circuit', 'qc', [['qr']],
-      {structure: 'registers', outputs: '1', qbitsreg: '1', cbitsreg: '0'});
-    flow.add('quantum-register', 'qr', [['cd'],['cd']], {outputs: 2});
+        {structure: 'registers', outputs: '1', qbitsreg: '1', cbitsreg: '0'});
+    flow.add('quantum-register', 'qr', [['cd'], ['cd']], {outputs: 2});
     flow.add('circuit-diagram', 'cd', [['out']]);
 
     flow.addOutput('out');

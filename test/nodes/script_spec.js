@@ -48,7 +48,7 @@ describe('ScriptNode', function() {
 
   it('should return correct script for register only circuit', function(done) {
     flow.add('quantum-circuit', 'qc', [['qr'], ['cr']],
-      {structure: 'registers', outputs: '2', qbitsreg: '1', cbitsreg: '1'});
+        {structure: 'registers', outputs: '2', qbitsreg: '1', cbitsreg: '1'});
     flow.add('classical-register', 'cr', [[]], {classicalBits: '2'});
     flow.add('quantum-register', 'qr', [['sc'], ['sc']], {outputs: 2});
     flow.add('script', 'sc', [['out']]);
@@ -56,13 +56,13 @@ describe('ScriptNode', function() {
 
     const givenInput = {payload: ''};
     const expectedOutput = dedent(
-      `from math import pi
+        `from math import pi
         from qiskit import *
         
         qr0 = QuantumRegister(2, "quantum_register")
         
         cr_classical_register = ClassicalRegister(2, "classical_register")
-        qc = QuantumCircuit(qr0,cr_classical_register)`
+        qc = QuantumCircuit(qr0,cr_classical_register)`,
     );
     testUtil.correctOutputReceived(flow, givenInput, expectedOutput, done);
   });

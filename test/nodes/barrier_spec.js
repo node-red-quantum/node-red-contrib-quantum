@@ -77,7 +77,7 @@ describe('BarrierNode', function() {
 
   it('should return correct output', function(done) {
     flow.add('quantum-circuit', 'qc', [['qr'], ['cr']],
-      {structure: 'registers', outputs: '2', qbitsreg: '1', cbitsreg: '1'});
+        {structure: 'registers', outputs: '2', qbitsreg: '1', cbitsreg: '1'});
     flow.add('classical-register', 'cr', [[]], {classicalBits: '2'});
     flow.add('quantum-register', 'qr', [['ba'], ['ba']], {outputs: 2});
     flow.add('barrier', 'ba', [['m1'], ['m2']], {outputs: 2});

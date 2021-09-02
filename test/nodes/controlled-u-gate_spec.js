@@ -75,12 +75,12 @@ describe('ControlledUGateNode', function() {
   });
 
   it('should return correct output', function(done) {
-    flow.add('quantum-circuit', 'qc', [['qr'],['cr']],
-      {structure: 'registers', outputs: '2', qbitsreg: '1', cbitsreg: '1'});
-    flow.add('quantum-register', 'qr', [['cu'],['cu']], {outputs: 2});
+    flow.add('quantum-circuit', 'qc', [['qr'], ['cr']],
+        {structure: 'registers', outputs: '2', qbitsreg: '1', cbitsreg: '1'});
+    flow.add('quantum-register', 'qr', [['cu'], ['cu']], {outputs: 2});
     flow.add('classical-register', 'cr', [], {classicalBits: '2'});
-    flow.add('controlled-u-gate', 'cu', [['m1'],['m2']],
-      {targetPosition: 'Lower', theta: '0', phi: '0', lambda: '0', gamma: '0'});
+    flow.add('controlled-u-gate', 'cu', [['m1'], ['m2']],
+        {targetPosition: 'Lower', theta: '0', phi: '0', lambda: '0', gamma: '0'});
     flow.add('measure', 'm1', [['si']], {selectedBit: '0'});
     flow.add('measure', 'm2', [['si']], {selectedBit: '1'});
     flow.add('local-simulator', 'si', [['out']], {shots: '1'});

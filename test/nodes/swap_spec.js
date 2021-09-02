@@ -71,7 +71,7 @@ describe('SwapNode', function() {
 
   it('should return correct output for register only circuit', function(done) {
     flow.add('quantum-circuit', 'qc', [['qr'], ['cr']],
-      {structure: 'registers', outputs: '2', qbitsreg: '1', cbitsreg: '1'});
+        {structure: 'registers', outputs: '2', qbitsreg: '1', cbitsreg: '1'});
     flow.add('classical-register', 'cr', [[]], {classicalBits: '2'});
     flow.add('quantum-register', 'qr', [['ng'], ['sw']], {outputs: 2});
     flow.add('not-gate', 'ng', [['sw']]);
