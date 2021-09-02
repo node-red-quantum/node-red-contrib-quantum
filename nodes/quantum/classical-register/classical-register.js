@@ -14,7 +14,7 @@ module.exports = function(RED) {
     this.name = config.name.trim().toLowerCase().replace(/ /g, '_');
     this.classicalBits = config.classicalBits;
     const node = this;
-    
+
     logger.trace(this.id, 'Initialised classical register');
     this.on('input', async function(msg, send, done) {
       logger.trace(node.id, 'Classical register received input');

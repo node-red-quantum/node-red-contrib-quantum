@@ -52,4 +52,15 @@ describe('BlochSphereNode', function() {
     const expectedMessage = errors.NOT_QUBIT_OBJECT;
     testUtil.nodeFailed(flow, givenInput, expectedMessage, done);
   });
+
+  it('command executed in register-only circuit', function(done) {
+    let command = snippets.BLOCH_SPHERE + snippets.ENCODE_IMAGE;
+    flow.add('quantum-circuit', 'qc', [['qr']],
+        {structure: 'registers', outputs: '1', qbitsreg: '1', cbitsreg: '0'});
+    flow.add('quantum-register', 'qr', [['bs'], ['bs']], {outputs: 2});
+    flow.add('bloch-sphere', 'bs', [['out']]);
+    flow.addOutput('out');
+
+    testUtil.commandExecuted(flow, command, done);
+  });
 });
