@@ -157,7 +157,7 @@ module.exports = function(RED) {
                 shape: 'dot',
                 text: 'Job completed!',
               });
-              msg.payload = data;
+              msg.payload = JSON.parse(data.replace(/'/g, '"'));
               send(msg);
               done();
             }).catch((err) => {
