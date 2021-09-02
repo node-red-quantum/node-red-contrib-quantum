@@ -63,4 +63,6 @@ describe('ResetNode', function() {
     const expectedMessage = errors.NOT_QUBIT_OBJECT;
     testUtil.nodeFailed(flow, givenInput, expectedMessage, done);
   });
+
+
 });
