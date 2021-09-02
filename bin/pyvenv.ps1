@@ -5,6 +5,9 @@
 # This script sets up a Python virtual environment and installs dependencies.
 # Note that this script is designed to be run in a Windows PowerShell environment.
 
+# Dependencies list.
+$packages = @("qiskit", "matplotlib", "pylatexenc")
+
 # Use Windows paths by default.
 $venv="$((Get-Location).tostring())\venv"
 $python="python"
@@ -43,31 +46,21 @@ if (!(Get-Command $pip_path -errorAction SilentlyContinue)) {
   Exit
 }
 
-# Dependencies list (empty value means use latest version).
-$packages = @{"qiskit"=""; "matplotlib"="3.3.4"; "pylatexenc"=""}
-
 # Install package dependencies.
-foreach ($i in $packages.GetEnumerator()) {
+foreach ($i in $packages) {
   # Check if the package is installed. If no, install package.
-  Invoke-Expression "$python_path -c `"import $($i.Name)`"" >$null 2>&1
-  if ($LastExitCode -ne 0) {
-    "Installing $($i.Name)..."
-		
-    # If package requires specific version, add it to the command.
-    if ($i.Value) {
-      $pkg_cmd="$($i.Name)==$($i.Value)"
-    } else {
-      $pkg_cmd="$($i.Name)"
-    }
+  $cmd = Invoke-Expression "$pip_path list --disable-pip-version-check | Select-String -Pattern `"^$i `""
+  if ($cmd -eq $null) {
+    "Installing $i..."
 		
     # Install package.
-    Invoke-Expression "$pip_path install --quiet $pkg_cmd"
+    Invoke-Expression "$pip_path install --quiet --disable-pip-version-check $i"
     if ($LastExitCode -eq 0) {
-      "Successfully installed $($i.Name)"
+      "Successfully installed $i"
     } else {
-      "Error: failed to install $($i.Name)"
+      "Error: failed to install $i"
     }
   } else {
-    "$($i.Name) is installed"
+    "$i is installed"
   }
 }

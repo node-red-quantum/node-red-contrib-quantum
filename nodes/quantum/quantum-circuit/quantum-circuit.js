@@ -128,7 +128,7 @@ module.exports = function(RED) {
 
       let error;
       if (!fileSystem.existsSync(PythonPath)) {
-        node.warn('Python virtual environment not found - creating virtual environment. Do not close Node-RED.');
+        node.warn('Initialising Python virtual environment. Do not close Node-RED or rerun the circuit.');
         logger.warn(node.id, 'Python virtual environment not found');
         logger.info(node.id, 'Creating virtual environment');
 
