@@ -2,6 +2,24 @@ const shell = require('../nodes/python').PythonShell;
 const assert = require('chai').assert;
 const dedent = require('dedent-js');
 
+const convertNewline = `
+import sys
+sys.stdout = open(sys.__stdout__.fileno(),
+                  mode=sys.__stdout__.mode,
+                  buffering=1,
+                  encoding=sys.__stdout__.encoding,
+                  errors=sys.__stdout__.errors,
+                  newline='\\n',
+                  closefd=False)
+sys.stderr = open(sys.__stderr__.fileno(),
+                  mode=sys.__stderr__.mode,
+                  buffering=1,
+                  encoding=sys.__stderr__.encoding,
+                  errors=sys.__stderr__.errors,
+                  newline='\\n',
+                  closefd=False)
+`;
+
 const NAME_ERROR =
 `Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
@@ -15,7 +33,7 @@ describe('PythonShell', function() {
     });
 
     it('python path is default', async function() {
-      assert.match(shell.pythonPath, /(venv\/bin\/python)|(venv\/Scripts\/python.exe)/);
+      assert.match(shell.pythonPath, /(venv\/bin\/python)|(venv\\Scripts\\python.exe)/);
     });
 
     it('process starts empty', async function() {
@@ -81,6 +99,9 @@ describe('PythonShell', function() {
   describe('#execute', function() {
     beforeEach(async () => {
       shell.start();
+      if (process.platform === 'win32') {
+        await shell.execute(convertNewline);
+      }
     });
     afterEach(() => {
       shell.stop();
