@@ -8,6 +8,13 @@ const errors = require('../../nodes/errors');
 const flow = new FlowBuilder();
 
 describe('CircuitDiagramNode', function() {
+  before(function() {
+    if (process.platform !== 'linux') {
+      // eslint-disable-next-line
+      this.skip();
+    }
+  });
+
   beforeEach(function(done) {
     nodeTestHelper.startServer(done);
   });
