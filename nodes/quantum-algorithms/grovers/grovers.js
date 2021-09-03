@@ -32,7 +32,7 @@ module.exports = function(RED) {
           .then((data) => {
             data = data.split('\n');
             msg.payload = {
-              topMeasurement: data[0],
+              topMeasurement: data[0].trim(),
               iterationsNum: Number(data[1]),
             };
             send(msg);
