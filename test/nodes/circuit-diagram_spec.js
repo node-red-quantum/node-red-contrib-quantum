@@ -9,7 +9,7 @@ const flow = new FlowBuilder();
 
 describe('CircuitDiagramNode', function() {
   before(function() {
-    if (process.platform !== 'linux') {
+    if (process.platform === 'win32') {
       // eslint-disable-next-line
       this.skip();
     }
