@@ -1,0 +1,28 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+.page-header {
+    color: #fff;
+    text-align: center;
+    background-color: #8A3FFC;
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(138,63,252,1) 50%, rgba(138,63,252,1) 100%);
+}
+
+.project-tagline {
+    opacity: 0.8;
+}
+
+.btn {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.main-content h1,
+.main-content h2,
+.main-content h3,
+.main-content h4,
+.main-content h5,
+.main-content h6 {
+    color: #343a3f;
+}
