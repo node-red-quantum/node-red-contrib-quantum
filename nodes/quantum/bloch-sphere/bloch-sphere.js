@@ -106,7 +106,7 @@ module.exports = function(RED) {
               done();
             }).catch((err) => {
               // Check if error is due to script containing a measurement
-              if (shell.script.includes(snippets.MEASURE.toString().substring(0, 11))) {
+              if (shell.history.join('\n').includes(snippets.MEASURE.toString().substring(0, 11))) {
                 err = new Error(errors.BLOCH_SPHERE_WITH_MEASUREMENT);
               }
               logger.error(node.id, err);

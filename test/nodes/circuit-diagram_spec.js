@@ -8,6 +8,13 @@ const errors = require('../../nodes/errors');
 const flow = new FlowBuilder();
 
 describe('CircuitDiagramNode', function() {
+  before(function() {
+    if (process.platform === 'win32') {
+      // eslint-disable-next-line
+      this.skip();
+    }
+  });
+
   beforeEach(function(done) {
     nodeTestHelper.startServer(done);
   });
@@ -49,5 +56,17 @@ describe('CircuitDiagramNode', function() {
     const givenInput = {payload: {structure: '', qubit: 3}, topic: 'Quantum Circuit'};
     const expectedMessage = errors.NOT_QUBIT_OBJECT;
     testUtil.nodeFailed(flow, givenInput, expectedMessage, done);
+  });
+
+  it('command executed in register-only circuit', function(done) {
+    let command = snippets.CIRCUIT_DIAGRAM + snippets.ENCODE_IMAGE;
+    flow.add('quantum-circuit', 'qc', [['qr']],
+        {structure: 'registers', outputs: '1', qbitsreg: '1', cbitsreg: '0'});
+    flow.add('quantum-register', 'qr', [['cd'], ['cd']], {outputs: 2});
+    flow.add('circuit-diagram', 'cd', [['out']]);
+
+    flow.addOutput('out');
+
+    testUtil.commandExecuted(flow, command, done);
   });
 });

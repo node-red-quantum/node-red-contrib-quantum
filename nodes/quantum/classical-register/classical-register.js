@@ -16,7 +16,6 @@ module.exports = function(RED) {
     const node = this;
 
     logger.trace(this.id, 'Initialised classical register');
-
     this.on('input', async function(msg, send, done) {
       logger.trace(node.id, 'Classical register received input');
       const state = stateManager.getState(msg.circuitId);
@@ -25,6 +24,7 @@ module.exports = function(RED) {
       // Validate the node input msg: check for register object.
       // Return corresponding errors or null if no errors.
       // Stop the node execution upon an error
+      logger.trace(node.id, 'Classical register validating');
       let error = errors.validateRegisterInput(msg);
       if (error) {
         logger.error(node.id, error);
@@ -32,60 +32,32 @@ module.exports = function(RED) {
         return;
       }
 
+      let shouldInitCircuit = msg.shouldInitCircuit;
+      let registerArr = state.get('registers');
+      let circuitReadyEvent = state.get('quantumCircuitReadyEvent');
+
       // Add arguments to classical register code
       script += util.format(snippets.CLASSICAL_REGISTER,
           '_' + node.name,
           node.classicalBits.toString() + ', "' + node.name + '"',
       );
 
-      // Completing the 'quantumCircuit' flow context array
-      let register = {
-        registerType: 'classical',
-        registerName: node.name,
-        registerVar: 'cr_' + node.name,
-      };
-      let quantumCircuit = state.get('quantumCircuit');
-      quantumCircuit[msg.payload.register.toString()] = register;
+      registerArr.push(`cr_${node.name}`);
 
-      // get quantum circuit config and circuit ready event from flow context
-      let quantumCircuitConfig = state.get('quantumCircuitConfig');
-
-      // If the quantum circuit has not yet been initialised by another register
-      if (typeof(state.get('quantumCircuit')) !== undefined) {
-        let structure = state.get('quantumCircuit');
-
-        // Validating the registers' structure according to the user input in 'Quantum Circuit'
-        // And counting how many registers were initialised so far.
-        let [error, count] = errors.validateRegisterStrucutre(structure, msg.payload.structure);
-        if (error) {
-          logger.error(node.id, error);
-          done(error);
-          return;
-        }
-
-        // If all register initialised & the circuit has not been initialised by another register:
-        // Initialise the quantum circuit
-        if (count == structure.length && typeof(state.get('quantumCircuit')) !== undefined) {
-          // Delete the 'quantumCircuit' variable, not used anymore
-          state.del('quantumCircuit');
-
-          // Add arguments to quantum circuit code
-          let circuitScript = util.format(snippets.QUANTUM_CIRCUIT, '%s,'.repeat(count));
-
-          structure.map((register) => {
-            circuitScript = util.format(circuitScript, register.registerVar);
-          });
-
-          script += circuitScript;
-        }
+      if (shouldInitCircuit) {
+        logger.trace(node.id, 'Should execute quantum circuit init command');
+        script += util.format(snippets.QUANTUM_CIRCUIT, registerArr.join(','));
       }
 
       // Run the script in the python shell, and if no error occurs
       // then notify the runtime when the node is done.
       await shell.execute(script)
           .then(() => {
-            quantumCircuitConfig[node.name] = register;
-            send(output);
+            if (shouldInitCircuit) {
+              logger.trace(node.id, 'Classical register emitted circuit ready event');
+              circuitReadyEvent.emit('circuitReady', null);
+              state.del('registers');
+            }
             done();
           })
           .catch((err) => {

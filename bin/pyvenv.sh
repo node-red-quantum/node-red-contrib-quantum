@@ -5,9 +5,8 @@
 # which use Bash.
 
 
-# Dependencies list (empty value means use latest version).
-declare -A packages=(["qiskit"]="" ["matplotlib"]="3.3.4" ["pylatexenc"]="" ["qiskit-finance"]=""
-                     ["qiskit-optimization"]="")
+# Dependencies list.
+declare -a packages=("qiskit" "matplotlib" "pylatexenc" "qiskit-finance" "qiskit-optimization")
 
 # Check OS for paths.
 venv="$PWD/venv"
@@ -53,22 +52,13 @@ if [[ ! -x "$pip_path" ]]; then
 fi
 
 # Install package dependencies.
-for i in "${!packages[@]}"; do
-  # If package requires specific version, add it to the command.
-  if [ ! -z "${packages[$i]}" ]; then
-    pkg_cmd="$i==${packages[$i]}"
-    regex_cmd="^$i\s*${packages[$i]}"
-  else
-    pkg_cmd="$i"
-    regex_cmd="^$i "
-  fi
-
+for i in "${packages[@]}"; do
   # Check if the package is installed. If no, install package.
-  if ! "$pip_path" list --disable-pip-version-check | grep -E "$regex_cmd" &>/dev/null; then
+  if ! "$pip_path" list --disable-pip-version-check | grep -E "^$i " &>/dev/null; then
     echo "Installing $i..."
 
     # Install package.
-    if "$pip_path" install --quiet --disable-pip-version-check "$pkg_cmd"; then
+    if "$pip_path" install --quiet --disable-pip-version-check "$i"; then
       echo "Successfully installed $i"
     else
       echo "Error: failed to install $i"

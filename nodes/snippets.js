@@ -160,6 +160,8 @@ const ENCODE_IMAGE =
 `import matplotlib.pyplot as plt
 import base64
 import io
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
 buffer = io.BytesIO()
 plt.savefig(buffer,  format='png')
 buffer.seek(0)
