@@ -4,7 +4,11 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master ]
+    paths:
+      - '.github/workflows/node.js.yml'
+      - 'bin/'
+      - 'nodes/'
+      - 'test/'
 
 jobs:
   build:
