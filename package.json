@@ -27,6 +27,7 @@
   ],
   "scripts": {
     "start": "export NODE_ENV=dev && (node-red || npx node-red)",
+    "start:dev": "bash bin/start-dev-container.sh",
     "setup": "npm install --silent && npm run link",
     "test": "export NODE_ENV=dev && mocha \"test/**/*_spec.js\" --timeout 10000",
     "coverage": "nyc --reporter=lcovonly --reporter=text npm test",
