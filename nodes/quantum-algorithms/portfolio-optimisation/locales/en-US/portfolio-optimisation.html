@@ -1,53 +1,45 @@
 <script type="text/html" data-help-name="portfolio-optimisation"> <!-- Change name -->
   <p>
     <!-- Short (1 sentence) description of the node's objective for hovering effect -->
+    This node applies Protfolio Optimization Simulation with 3 different solver methods and custom parameters of user's choices.
   </p>
   <p>
     <!-- In depth description of the node's features and how to use (node properties, node connections, ...) -->
+  To use this node, user has to choose the solver, seeds, assets (qubits), start and end date for the simulation.  For each assets, which represent each stocks.
+  There are no other node from the quantum and quantum algorithm library are required.
     <br/><br/>
-    <a href="">Template output - Qiskit textbook</a><br/> <!-- Insert url to Qiskit textbook -->
-    <a href="">Template output - Qiskit documentation</a> <!-- Insert url to Qiskit documentation -->
+    <a href="https://qiskit.org/documentation/finance/tutorials/01_portfolio_optimization.html">Portfolio Optimization - Qiskit Documentation</a><br/>
   </p>
 
   <h3>Inputs</h3>
     <dl class="message-properties">
-        <dt>payload
+        <dt>Portfolio Optimization Solver
             <span class="property-type">object</span>
         </dt>
-        <dd>All qubit of the quantum circuit.</dd>
-        <dt class="optional">topic 
-          <span class="property-type">string</span>
+        <dd>Options between, NumPy Minimum Eigensolver (NME), Variational Quantum Eigensolver (VQE) and Quantum Approximate Optimization Algorithm (QAOA)</dd>
+        <dt class="message-properties">seeds
+          <span class="property-type">number</span>
         </dt>
-        <dd>"Quantum Circuit"</dd>
+        <dd>number of simulation for the node to run.</dd>
+        <dt class="message-properties">assets
+          <span class="property-type">number</span>
+        </dt>
+        <dd>number of stocks for the node to simulate. Assets are qubits.</dd>
+        <dt class="message-properties">start date
+          <span class="property-type">date</span>
+        </dt>
+        <dd>the start date of the simulation.</dd>
+        <dt class="message-properties">end date
+          <span class="property-type">date</span>
+        </dt>
+        <dd>the end date of the simulation.</dd>
     </dl>
 
   <h3>Outputs</h3>
     <dl class="message-properties">
-      <dt>payload
-          <span class="property-type">object</span>
+      <dt>simulation result
+          <span class="property-type">string</span>
       </dt>
-      <dd>The output generated from the quantum circuit.</dd> <!-- Change according to the quantum output being implemented -->
-      <dt class="optional">topic 
-        <span class="property-type">string</span>
-      </dt>
-      <dd>"Quantum Circuit"</dd>
+      <dd>The output will be the result of the portfolio optimization node's simulation</dd>
     </dl>
-
-  <h3>Details</h3>
-    <p>
-        Qubit objects can be generated from:
-        <ul>
-        <li><i>Quantum Circuit</i> node in 'Bits only' mode.</li>
-        <li><i>Quantum Register</i> node along with <i>Quantum Circuit</i> in 'Register' mode.</li>
-        </ul>
-
-        Unless specified, qubits are initialised in the 0 state.
-    </p>
-    
-    <p>
-      <b>
-        For a brief summary of the main quantum computing concepts, please refer to the 
-        <i>Details</i> section of the <i>Quantum Circuit</i> node.
-      </b>
-    </p>
 </script>
