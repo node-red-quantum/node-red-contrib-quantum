@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 ## Node-RED Quantum
 Quantum computing is a powerful state-of-the-art method of computation, capable of solving computational problems of astronomical proportions substantially faster than classical computers. However, the complex nature of quantum computing acts as a barrier for new developers and reduces the accessibility of the field. 
 
