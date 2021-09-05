@@ -1,38 +1,38 @@
 <script type="text/html" data-help-name="portfolio-optimisation"> <!-- Change name -->
   <p>
     <!-- Short (1 sentence) description of the node's objective for hovering effect -->
-    This node applies Protfolio Optimization Simulation with 3 different solver methods and custom parameters of user's choices.
+    This node applies Protfolio Optimisation Simulation with 1 of 3 different solver methods and custom parameters of user's choices.
   </p>
   <p>
     <!-- In depth description of the node's features and how to use (node properties, node connections, ...) -->
-  To use this node, user has to choose the solver, seeds, assets (qubits), start and end date for the simulation.  For each assets, which represent each stocks.
-  There are no other node from the quantum and quantum algorithm library are required.
+  To use this node, the user must choose the solver, seeds, assets (qubits), start date and end date for the simulation. Each asset/stock is represented by a qubit.
+  There are no other node from the quantum and quantum algorithm library are required to use this node.
     <br/><br/>
     <a href="https://qiskit.org/documentation/finance/tutorials/01_portfolio_optimization.html">Portfolio Optimization - Qiskit Documentation</a><br/>
   </p>
 
   <h3>Inputs</h3>
     <dl class="message-properties">
-        <dt>Portfolio Optimization Solver
+        <dt>Portfolio Optimisation Solver
             <span class="property-type">object</span>
         </dt>
-        <dd>Options between, NumPy Minimum Eigensolver (NME), Variational Quantum Eigensolver (VQE) and Quantum Approximate Optimization Algorithm (QAOA)</dd>
+        <dd>Options of NumPy Minimum Eigensolver (NME), Variational Quantum Eigensolver (VQE) and Quantum Approximate Optimization Algorithm (QAOA)</dd>
         <dt class="message-properties">seeds
           <span class="property-type">number</span>
         </dt>
-        <dd>number of simulation for the node to run.</dd>
+        <dd>Number of simulations for the node to run.</dd>
         <dt class="message-properties">assets
           <span class="property-type">number</span>
         </dt>
-        <dd>number of stocks for the node to simulate. Assets are qubits.</dd>
+        <dd>Number of assets to use for the portfolio optimisation simulation. Assets are represented by qubits.</dd>
         <dt class="message-properties">start date
           <span class="property-type">date</span>
         </dt>
-        <dd>the start date of the simulation.</dd>
+        <dd>The start date to consider when choosing assets for the the simulation.</dd>
         <dt class="message-properties">end date
           <span class="property-type">date</span>
         </dt>
-        <dd>the end date of the simulation.</dd>
+        <dd>The end date to consider when choosing assets for the the simulation.</dd>
     </dl>
 
   <h3>Outputs</h3>
@@ -40,6 +40,6 @@
       <dt>simulation result
           <span class="property-type">string</span>
       </dt>
-      <dd>The output will be the result of the portfolio optimization node's simulation</dd>
+      <dd> The expected return of a portfolio of max size n, where n is the number of potential assets and the assets in the portfolio are represented by bit values indicating whether or not they were in the simulated portolio. 1 indicates the asset was chosen for the portfolio and 0 indicates that it was not.</dd>
     </dl>
 </script>
