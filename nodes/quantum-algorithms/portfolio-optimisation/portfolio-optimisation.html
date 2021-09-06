@@ -40,39 +40,31 @@
   
 <script type="text/html" data-template-name="portfolio-optimisation">
   <div class="form-row">
-    <label for="node-input-name"><i class="fa fa-tag"></i> portfolio optimisation</label>
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
   <div class="form-now">
-    <label for="node-input-solverMethod">Optimisation</label>
-    <select name="solverMethod" id="node-input-solverMethod">
+    <label style="width:100px; float:left; margin-right:4px" for="node-input-solverMethod">Optimisation</label>
+    <select style="float:left; margin-bottom:12px; width:70%" name="solverMethod" id="node-input-solverMethod">
       <option value="NME">NumPy Minimum Eigensolver (NME)</option>
       <option value="VQE">Variational Quantum Eigensolver (VQE)</option>
-      <option value="QAOA">Quantum Approximate Optimization Algorithm (QAOA)</option>
+      <option value="QAOA">Quantum Approximate Optimization (QAOA)</option>
     </select>
   </div>
   <div class="form-row">
-    <label for="node-input-seeds" id="number-seeds"
-      ><i class="fa">Seeds</i>
-    </label>
+    <label for="node-input-seeds" id="number-seeds">Seeds</label>
     <input type="number" min="1" id="node-input-seeds" />
   </div>
   <div class="form-row">
-    <label for="node-input-assets" id="number-assets"
-      ><i class="fa">assets (qubits)</i>
-    </label>
+    <label for="node-input-assets" id="number-assets">Assets (qubits)</label>
     <input type="number" min="1" id="node-input-assets" />
   </div>
   <div class="form-row">
-    <label for="node-input-start" id="number-start"
-      ><i class="fa">Start Date</i>
-    </label>
+    <label for="node-input-start" id="number-start">Start Date</label>
     <input type="date" id="node-input-start" />
   </div>
   <div class="form-row">
-    <label for="node-input-end" id="number-end"
-      ><i class="fa">End Date</i>
-    </label>
+    <label for="node-input-end" id="number-end">End Date</label>
     <input type="date" id="node-input-end" />
   </div>
 </script>
