@@ -1,7 +1,7 @@
 <script type="text/javascript">
   RED.nodes.registerType("portfolio-optimisation", {
     category: "quantum algorithms",
-    color: "#A8A8A8", 
+    color: "#737177",
     defaults: {
       name: { value: "" },
       solverMethod: { 
@@ -28,13 +28,13 @@
     inputs: 1,
     outputs: 1,
     icon: "font-awesome/fa-microchip",
-    align: "left", 
-    paletteLabel: "portfolio optimisation node",
+    align: "right", 
+    paletteLabel: "portfolio optimisation",
     label: function () {
       return this.name || "portfolio optimisation";
     },
-    inputLabels: "input",
-    outputLabels: "output",
+    inputLabels: "Input",
+    outputLabels: "Output",
   });
 </script>
   
