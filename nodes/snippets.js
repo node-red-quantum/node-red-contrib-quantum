@@ -170,6 +170,110 @@ print(b64_str)
 buffer.close()
 `;
 
+const PORTFOLIO_OPTIMISATION =
+`from qiskit import Aer
+from qiskit.circuit.library import TwoLocal
+
+from qiskit_finance.applications.optimization import PortfolioOptimization
+from qiskit_finance.data_providers import RandomDataProvider
+
+from qiskit_optimization.applications import OptimizationApplication
+from qiskit_optimization.converters import QuadraticProgramToQubo
+
+import numpy as np
+import datetime
+
+num_assets = %s
+seed = %s
+
+stocks = [("TICKERS%s" % i) for i in range(num_assets)]
+data = RandomDataProvider(tickers=stocks, 
+  start=datetime.datetime(%s), 
+  end=datetime.datetime(%s),
+  seed=seed)
+
+data.run()
+mu = data.get_period_return_mean_vector()
+sigma = data.get_period_return_covariance_matrix()
+
+q = 0.5
+budget = num_assets // 2
+penalty = num_assets
+portfolio = PortfolioOptimization(expected_returns=mu, covariances=sigma, risk_factor=q, budget=budget)
+qp = portfolio.to_quadratic_program()
+
+def index_to_selection(i, num_assets):
+  s = "{0:b}".format(i).rjust(num_assets)
+  x = np.array([1 if s[i]=='1' else 0 for i in reversed(range(num_assets))])
+  return x
+
+def print_result(result):
+  selection = result.x
+  value = result.fval
+  print("Optimal: Selection {}, value {:.4f}".format(selection, value))
+  eigenstate = result.min_eigen_solver_result.eigenstate
+  eigenvector = eigenstate if isinstance(eigenstate, np.ndarray) else eigenstate.to_matrix()
+  probabilities = np.abs(eigenvector)**2
+  i_sorted = reversed(np.argsort(probabilities))
+  print("\\n-----------------------Full Result-----------------------")
+  print("selection\\tvalue\\t\\tprobability")
+  print("---------------------------------------------------------")
+  for i in i_sorted:
+    x = index_to_selection(i, num_assets)
+    value = QuadraticProgramToQubo().convert(qp).objective.evaluate(x)
+    probability = probabilities[i]
+    print("%10s\\t%.4f\\t\\t%.4f" %(x, value, probability))
+
+`;
+
+const NME =
+`from qiskit_optimization.algorithms import MinimumEigenOptimizer
+from qiskit.algorithms import NumPyMinimumEigensolver
+exact_mes = NumPyMinimumEigensolver()
+exact_eigensolver = MinimumEigenOptimizer(exact_mes)
+result = exact_eigensolver.solve(qp)
+print_result(result)
+`;
+
+const VQE =
+`from qiskit_optimization.algorithms import MinimumEigenOptimizer
+from qiskit.utils import algorithm_globals
+from qiskit.utils import QuantumInstance
+from qiskit.algorithms import VQE
+from qiskit.algorithms.optimizers import COBYLA
+algorithm_globals.random_seed = 1234
+backend = Aer.get_backend("statevector_simulator")
+
+cobyla = COBYLA()
+cobyla.set_options(maxiter=500)
+ry = TwoLocal(num_assets, "ry", "cz", reps=3, entanglement="full")
+quantum_instance = QuantumInstance(backend=backend, seed_simulator=seed, seed_transpiler=seed)
+vqe_mes = VQE(ry, optimizer=cobyla, quantum_instance=quantum_instance)
+vqe = MinimumEigenOptimizer(vqe_mes)
+
+result = vqe.solve(qp)
+print_result(result)
+`;
+
+const QAOA =
+`from qiskit_optimization.algorithms import MinimumEigenOptimizer
+from qiskit.utils import algorithm_globals
+from qiskit.utils import QuantumInstance
+from qiskit.algorithms import QAOA
+from qiskit.algorithms.optimizers import COBYLA
+algorithm_globals.random_seed = 1234
+backend = Aer.get_backend("statevector_simulator")
+
+cobyla = COBYLA()
+cobyla.set_options(maxiter=250)
+quantum_instance = QuantumInstance(backend=backend, seed_simulator=seed, seed_transpiler=seed)
+qaoa_mes = QAOA(optimizer=cobyla, reps=3, quantum_instance=quantum_instance)
+qaoa = MinimumEigenOptimizer(qaoa_mes)
+
+result = qaoa.solve(qp)
+print_result(result)
+`;
+
 const INITIALIZE =
 `from qiskit.quantum_info import Statevector
 qc.initialize(Statevector.from_label('%s').data, %s)
@@ -214,6 +318,10 @@ module.exports = {
   BLOCH_SPHERE,
   CU_GATE,
   ENCODE_IMAGE,
+  PORTFOLIO_OPTIMISATION,
+  NME,
+  VQE,
+  QAOA,
   INITIALIZE,
   SHORS,
   HISTOGRAM,

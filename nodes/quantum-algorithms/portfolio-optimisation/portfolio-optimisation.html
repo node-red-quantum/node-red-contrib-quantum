@@ -1,0 +1,70 @@
+<script type="text/javascript">
+  RED.nodes.registerType("portfolio-optimisation", {
+    category: "quantum algorithms",
+    color: "#737177",
+    defaults: {
+      name: { value: "" },
+      solverMethod: { 
+        value: "", 
+        required: true
+      },
+      seeds:{
+        value: 123,
+        required: true
+      },
+      assets:{
+        value: 4,
+        required: true
+      },
+      start:{
+        value: 2020-01-01,
+        required: true
+      },
+      end:{
+        value: 2021-01-01,
+        required: true
+      }
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-microchip",
+    align: "right", 
+    paletteLabel: "portfolio optimisation",
+    label: function () {
+      return this.name || "portfolio optimisation";
+    },
+    inputLabels: "Input",
+    outputLabels: "Output",
+  });
+</script>
+  
+<script type="text/html" data-template-name="portfolio-optimisation">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+  <div class="form-now">
+    <label style="width:100px; float:left; margin-right:4px" for="node-input-solverMethod">Optimisation</label>
+    <select style="float:left; margin-bottom:12px; width:70%" name="solverMethod" id="node-input-solverMethod">
+      <option value="NME">NumPy Minimum Eigensolver (NME)</option>
+      <option value="VQE">Variational Quantum Eigensolver (VQE)</option>
+      <option value="QAOA">Quantum Approximate Optimization (QAOA)</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-seeds" id="number-seeds">Seeds</label>
+    <input type="number" min="1" id="node-input-seeds" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-assets" id="number-assets">Assets (qubits)</label>
+    <input type="number" min="1" id="node-input-assets" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-start" id="number-start">Start Date</label>
+    <input type="date" id="node-input-start" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-end" id="number-end">End Date</label>
+    <input type="date" id="node-input-end" />
+  </div>
+</script>
