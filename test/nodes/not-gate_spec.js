@@ -68,15 +68,15 @@ describe('NotGateNode', function() {
     flow.add('quantum-circuit', 'qc', [['qr'], ['cr']],
         {structure: 'registers', outputs: '2', qbitsreg: '1', cbitsreg: '1'});
     flow.add('classical-register', 'cr', [[]], {classicalBits: '2'});
-    flow.add('quantum-register', 'qr', [['ng'], ['m2']], {outputs: 2});
-    flow.add('not-gate', 'ng', [['m1']]);
+    flow.add('quantum-register', 'qr', [['ng'], ['m1']], {outputs: 2});
+    flow.add('not-gate', 'ng', [['m2']]);
     flow.add('measure', 'm1', [['si']], {selectedBit: 0});
     flow.add('measure', 'm2', [['si']], {selectedBit: 1});
     flow.add('local-simulator', 'si', [['out']], {shots: '1'});
     flow.addOutput('out');
 
     const givenInput = {payload: ''};
-    const expectedOutput = {'01': 1};
+    const expectedOutput = {'10': 1};
     testUtil.correctOutputReceived(flow, givenInput, expectedOutput, done);
   });
 });
