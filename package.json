@@ -26,9 +26,9 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "start": "export NODE_ENV=dev && (node-red || npx node-red)",
+    "start": "export NODE_ENV=dev || set NODE_ENV=dev && node-red || npx node-red",
+    "test": "export NODE_ENV=dev || set NODE_ENV=dev && mocha \"test/**/*_spec.js\" --timeout 10000",
     "setup": "npm install --silent && npm run link",
-    "test": "export NODE_ENV=dev && mocha \"test/**/*_spec.js\" --timeout 10000",
     "coverage": "nyc --reporter=lcovonly --reporter=text npm test",
     "venv": "bash bin/pyvenv.sh",
     "psvenv": "powershell -NoProfile -ExecutionPolicy Bypass -File ./bin/pyvenv.ps1",
@@ -84,7 +84,8 @@
       "local-simulator": "nodes/quantum/local-simulator/local-simulator.js",
       "ibm-quantum-system": "nodes/quantum/ibm-quantum-system/ibm-quantum-system.js",
       "grovers": "nodes/quantum-algorithms/grovers/grovers.js",
-      "shors": "nodes/quantum-algorithms/shors/shors.js"
+      "shors": "nodes/quantum-algorithms/shors/shors.js",
+      "portfolio-optimisation": "nodes/quantum-algorithms/portfolio-optimisation/portfolio-optimisation.js"
     }
   }
 }

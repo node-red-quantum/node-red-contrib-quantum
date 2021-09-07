@@ -15,7 +15,7 @@ function formatDate(date) {
 }
 
 function logToFile(fileName, logLevel, id, message) {
-  if (process.env.NODE_ENV !== 'dev') {
+  if (!process.env.NODE_ENV || process.env.NODE_ENV.trim() !== 'dev') {
     return;
   }
 

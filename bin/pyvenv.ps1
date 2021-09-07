@@ -5,8 +5,9 @@
 # This script sets up a Python virtual environment and installs dependencies.
 # Note that this script is designed to be run in a Windows PowerShell environment.
 
+
 # Dependencies list.
-$packages = @("qiskit", "matplotlib", "pylatexenc")
+$packages = @("qiskit", "matplotlib", "pylatexenc", "qiskit-finance", "qiskit-optimization")
 
 # Use Windows paths by default.
 $venv="$((Get-Location).tostring())\venv"
@@ -49,10 +50,11 @@ if (!(Get-Command $pip_path -errorAction SilentlyContinue)) {
 # Install package dependencies.
 foreach ($i in $packages) {
   # Check if the package is installed. If no, install package.
+
   $cmd = Invoke-Expression "$pip_path list --disable-pip-version-check | Select-String -Pattern `"^$i `""
   if ($cmd -eq $null) {
     "Installing $i..."
-		
+
     # Install package.
     Invoke-Expression "$pip_path install --quiet --disable-pip-version-check $i"
     if ($LastExitCode -eq 0) {
