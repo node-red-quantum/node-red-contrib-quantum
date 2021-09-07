@@ -56,6 +56,7 @@ module.exports = function(RED) {
       for (let i = 0; i < node.outputs; i++) {
         output[i] = {
           topic: 'Quantum Circuit',
+          circuitId: msg.circuitId,
           payload: {
             structure: msg.payload.structure,
             register: node.name,
