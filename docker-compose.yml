@@ -16,7 +16,7 @@ services:
       - ./:/node-red-contrib-quantum
       - flows:/root/.node-red
     # Always try to restart the service in case of any errors
-    restart: always
+    restart: unless-stopped
 # Create docker volumes
 volumes: 
   venv:
