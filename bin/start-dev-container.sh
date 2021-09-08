@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/usr/bin/env bash
 
 # Install the quantum nodes
 cd /root/.node-red && \
