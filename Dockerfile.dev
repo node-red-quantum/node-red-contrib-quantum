@@ -5,12 +5,11 @@ RUN npm install -g nodemon
 
 WORKDIR /node-red-contrib-quantum
 
-COPY package*.json .
+COPY package*.json ./
 
 COPY bin ./bin
 
-RUN npm install && \
-    npm run setup
+RUN npm run setup
 # Expose 1880 port
 EXPOSE 1880
 # Run the initialisation script
