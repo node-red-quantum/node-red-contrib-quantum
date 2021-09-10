@@ -1,0 +1,26 @@
+version: '3'
+
+services: 
+  web:
+    build: 
+      # Use development version of dockerfile
+      context: .
+      dockerfile: Dockerfile.dev
+    ports: 
+      # Bind local port 1880 to container port 1880
+      - 1880:1880
+    volumes: 
+      - node_modules:/node-red-contrib-quantum/node_modules
+      - venv:/node-red-contrib-quantum/venv
+      # Map current directory to the working directory inside the container
+      - ./:/node-red-contrib-quantum
+      - flows:/root/.node-red
+    # Always try to restart the service in case of any errors
+    restart: unless-stopped
+# Create docker volumes
+volumes: 
+  venv:
+  node_modules:
+  flows:
+
+    

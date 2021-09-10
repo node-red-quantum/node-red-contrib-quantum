@@ -20,6 +20,7 @@ For the latest changes, please read the [CHANGELOG](CHANGELOG.md).
 ## Table of Contents
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
+  - [Docker Alternative](#docker-alternative)
 - [About Quantum Computing](#about-quantum-computing)
   - [Qubit State](#qubit-state)
   - [Qubit Measurement](#qubit-measurement)
@@ -44,6 +45,12 @@ Even though not required, some knowledge on how to use the Node-RED platfom can 
 5. Install the **node-red-contrib-quantum** package. Once installed, the quantum nodes provided by this library will show in the **Palette** (on the left-side of the Node-RED editor). Please note that this installation may take a few minutes, as it needs to install the Python virtual environment required for executing the nodes.
 
 ![Node-RED palette manager](./resources/installation-guide/palette-manager.png)
+
+### Docker Alternative
+An alternative method of installation is to set up a Docker environment:
+1. Install `docker` and `docker-compose`. The installation guide can be found on the [official Docker website](https://docs.docker.com/get-docker/).
+2. Run `docker-compose -p quantum up` to start the development container. You can also add `-d` option to run it in detached mode.
+3. If you only need the pre-configured Node.js and Python environment and to install the library on Node-RED interface, run `docker build -f Dockerfile.prod -t docker-quantum .` to build the image and then run `docker run -it -p [local-machine-port]:1880 docker-quantum` to start the container. Replace the `[local-machine-port]` with the desired port that you wish to run Node-RED on your local machine.
 
 ## About Quantum Computing
 
