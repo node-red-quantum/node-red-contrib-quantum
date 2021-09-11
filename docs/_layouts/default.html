@@ -13,7 +13,7 @@
   <body>
     <header class="site-header" role="banner">
       <div class="wrapper">
-        
+
         <a class="site-title" href="{{ "/" | absolute_url }}">{{ site.title | escape }}</a>
 
         <nav class="site-nav">
@@ -24,7 +24,7 @@
         </nav>
       </div>
     </header>
-    
+
     <section class="page-header">
       <h1 class="project-name">{{ site.title }}</h1>
       <h2 class="project-tagline">{{ site.description }}</h2>
@@ -37,6 +37,10 @@
 
     <main id="content" class="main-content" role="main">
       {{ content }}
+
+      <footer class="site-footer">
+        <span class="site-footer-credits"><a href="{{ site.github.repository_url }}">{{ site.github.repository_name }}</a> is licensed under the <a href="{{ site.github.license_url }}">{{ site.github.license_name }}</a>.</span>
+      </footer>
     </main>
   </body>
 </html>

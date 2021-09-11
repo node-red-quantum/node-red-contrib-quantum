@@ -2,6 +2,9 @@ theme: jekyll-theme-cayman
 title: Node-RED Quantum
 description: Quantum computing functionality for Node-RED
 github:
+  repository_name: Node-RED Quantum
   repository_url: https://github.com/node-red-quantum/node-red-contrib-quantum
   npm_url: https://www.npmjs.com/package/node-red-contrib-quantum
   red_url: https://flows.nodered.org/node/node-red-contrib-quantum
+  license_name: Apache License 2.0
+  license_url: https://www.apache.org/licenses/LICENSE-2.0
