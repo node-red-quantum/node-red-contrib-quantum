@@ -2,10 +2,9 @@
 layout: default
 ---
 
-## Prerequisites
+## Installation
 Node-RED Quantum requires at minimum [Node.js 12.0.0](https://nodejs.org/en/), [Node-RED 1.0](https://nodered.org), and [Python 3](https://www.python.org/) (version 3.6 or greater is recommended). You must also start Node-RED from a Bash or PowerShell environment, as it is required to execute scripts which prepare the Python virtual environment.
 
-## Installation
 Node-RED Quantum can be installed in a variety of ways: using the Node-RED interface, building from source, or through Docker. If you are having trouble installing the package, using a different means of installation may help resolve issues.
 
 ### Node-RED Palette Manager
