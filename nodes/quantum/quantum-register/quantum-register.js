@@ -56,6 +56,7 @@ module.exports = function(RED) {
       for (let i = 0; i < node.outputs; i++) {
         output[i] = {
           topic: 'Quantum Circuit',
+          circuitId: msg.circuitId,
           payload: {
             structure: msg.payload.structure,
             register: node.name,
@@ -95,7 +96,7 @@ module.exports = function(RED) {
       if (shouldInitCircuit) {
         logger.trace(node.id, 'Quantum register emitted circuit ready event');
         circuitReadyEvent.emit('circuitReady', null);
-        state.del('registers');
+        state.setPersistent('registers', []);
       } else {
         // wait for quantum circuit to be initialised
         logger.trace(node.id, 'Quantum register waiting for circuit to be ready');

@@ -56,7 +56,7 @@ module.exports = function(RED) {
             if (shouldInitCircuit) {
               logger.trace(node.id, 'Classical register emitted circuit ready event');
               circuitReadyEvent.emit('circuitReady', null);
-              state.del('registers');
+              state.setPersistent('registers', []);
             }
             done();
           })
