@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-quantum",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Quantum computing functionality for Node-RED",
   "author": "Louis Lefevre",
   "license": "Apache-2.0",

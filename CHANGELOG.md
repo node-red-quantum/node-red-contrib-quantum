@@ -1,3 +1,10 @@
+### v0.4.0 - 12-09-2021
+- Added Portfolio Optimisation node
+- Added alternative Docker installation
+- Fixed IBM Quantum System node not properly parsing JSON data
+- Fixed Quantum Register nodes breaking global state management
+- Fixed Quantum Register nodes crashing when executed twice in a row
+
 ### v0.3.0 - 01-09-2021
 - Added Shor's algorithm node
 - Added Histogram Simulator node
