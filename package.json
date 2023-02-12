@@ -41,7 +41,7 @@
     "postinstall": "npm run venv || npm run psvenv"
   },
   "dependencies": {
-    "is-online": "^9.0.1",
+    "is-online": "^10.0.0",
     "python-interactive": "^0.3.2"
   },
   "devDependencies": {
